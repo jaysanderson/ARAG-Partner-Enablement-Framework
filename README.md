@@ -174,13 +174,20 @@ The full ladder — Tier 1 (Foundations) → Tier 2 (Multi-Surface Conversationa
 | **Pass rubric** | (1) Residency demonstrably configured and verifiable. (2) BYO-LLM connection working against at least two of the three hyperscaler endpoints. (3) Rate-limit-aware client implemented (backoff, batching, request coalescing). (4) Observability dashboard tracking p50/p95 latency, retrieval recall proxy, and citation-rate. (5) Recorded explanation of the "platform-grade" pitch to a customer's CTO. |
 | **Asset delivered** | A production-readiness checklist + reference Terraform / CDK / Bicep snippets for residency-aware deployment + rate-limit-aware client templates. |
 
-### Build 7 — Mission Control (the capstone)
+### Build 7 — Mission Control (the capstone) — choose your variant
 
-| Field | Value |
+Mission Control ships in two variants. The partner picks the one that matches their book of business; the second is built later if both customer segments are in play. Both share the same chassis (forked from the Sample ARAG App), the same eight-week build plan, and the same re-skin playbook structure — they differ in corpus, graph schema, workflows, and demo buyer.
+
+| Variant | Buyer | Persona corpus | Killer moment | Brief |
+|---|---|---|---|---|
+| **Enterprise / Operations** | CTO, CIO, Chief Data Officer | Atlas Global Industries (industrial manufacturer, 5 internal KBs) | Composite-RAG incident root cause + cross-functional typed graph | `Mission-Control-Build-Brief.md` |
+| **Customer Experience** | CMO, Head of Digital, Chief Customer Officer | Aurora Outfitters (D2C outdoor retailer, 5 customer-facing KBs) | Two-voice floating chat + content-engineered CTAs + abandoned-cart composite RAG | `Mission-Control-CX-Build-Brief.md` |
+
+| Field | Value (applies to both variants) |
 |---|---|
 | **Owning track(s)** | All three tracks at Must for Elite tier |
 | **Tier mapped to** | Capstone — combines Tiers 1–4 |
-| **What the partner does** | Builds Mission Control: a single application that exercises every primitive and every tier in one branded surface. Grounded search + multi-surface chat + schema-constrained workflows + typed knowledge graph + multimodal media + custom field enrichment + production-grade ops. Mission Control is what a partner walks into a Fortune 500 CTO's office with. |
+| **What the partner does** | Builds one variant of Mission Control: a single application that exercises every primitive and every tier in one branded surface. Grounded search + multi-surface chat + schema-constrained workflows + typed knowledge graph + multimodal media + custom field enrichment + production-grade ops. Mission Control is what a partner walks into a Fortune 500 buyer's office with. |
 | **Pass rubric** | (1) Mission Control deployed at the partner's domain. (2) End-to-end demo runs in 25 minutes covering all four tiers without code edits. (3) At least one customer-specific data-augmentation agent in production. (4) Org-level recorded demo passes a Progress-led review board. |
 | **Asset delivered** | The Mission Control reference build — the flagship asset of the entire programme. **Flagged as the second of two highest-priority assets to build first; it is both the capstone and the sales-room closer.** Reference: composes patterns from every file in `Sample-ARAG-App/src/pages/` and `src/components/`. |
 
@@ -285,7 +292,9 @@ Every asset has a name, an owner, a version, and a corresponding build. No orpha
 | Composite-RAG cookbook | 4 | Solution | TODO |
 | Graph schema design template (12 verticals) | 5 | Solution | TODO |
 | Production-readiness checklist + IaC snippets | 6 | Solution | TODO |
-| Mission Control reference build | 7 | GTM + Solution | **Top-priority** |
+| Mission Control — Enterprise variant brief | 7 | GTM | **Shipped** (`Mission-Control-Build-Brief.md`) |
+| Mission Control — CX variant brief | 7 | GTM | **Shipped** (`Mission-Control-CX-Build-Brief.md`) |
+| Mission Control reference build (one variant first) | 7 | GTM + Solution | **Top-priority** |
 | Battle cards (AI12z, Caitlyn, Harvey AI) | Sell track | GTM | In progress |
 | Win/loss debrief template | Sell track | GTM | TODO |
 | Discovery checklist | Sell track | GTM | **Shipped** (`The Vault/01_Sales/Sales_Tools/`) |
