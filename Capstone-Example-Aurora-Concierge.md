@@ -1,7 +1,7 @@
-# Mission Control — Customer Experience Variant
+# Capstone Example — Aurora Concierge (Customer Experience)
 
 > **Status:** Brief. Build not started.
-> **Role in the programme:** Build 7 capstone, **Variant B** of two. The other variant — `Mission-Control-Build-Brief.md` — is the Enterprise / Internal Operations variant. Partners pick one based on their book of business and ship the second only when they've expanded into the other segment.
+> **Role in the programme:** Build 7 capstone, **Variant B** of two. The other variant — `Capstone-Example-Atlas-Operations.md` — is the Enterprise / Internal Operations variant. Partners pick one based on their book of business and ship the second only when they've expanded into the other segment.
 > **Owner:** Jay Sanderson (programme); Progress Solution lead (build).
 > **Target ship:** End of 90-day rollout window (Day 90), in parallel with the Enterprise variant where partner bandwidth allows.
 > **When to pick this variant:** When the partner's customers are CMOs, Heads of Digital, Chief Customer Officers, retail/D2C/B2C operators, content businesses, or anyone whose AI budget sits inside the customer-facing P&L rather than IT.
@@ -10,7 +10,7 @@
 
 ## 1. Why the CX variant exists
 
-The Enterprise Mission Control closes the room with a CTO. The CX Mission Control closes the room with a CMO. Different buyer, different language, different proof points — but the same chassis and the same five primitives underneath. Partners with a digital / commerce / content book of business were losing to point solutions (Algolia, Bloomreach, Klevu, Coveo, Yext) every time they led with the Enterprise variant. Those buyers don't want "control room for unstructured knowledge"; they want **conversion, retention, and personalization** that they can actually explain to their CFO.
+The Enterprise capstone closes the room with a CTO. Aurora Concierge closes the room with a CMO. Different buyer, different language, different proof points — but the same chassis and the same five primitives underneath. Partners with a digital / commerce / content book of business were losing to point solutions (Algolia, Bloomreach, Klevu, Coveo, Yext) every time they led with the Enterprise variant. Those buyers don't want "control room for unstructured knowledge"; they want **conversion, retention, and personalization** that they can actually explain to their CFO.
 
 This variant does three jobs:
 
@@ -35,7 +35,7 @@ Where the Enterprise variant earns trust with the CTO by showing residency, BYO-
 
 ## 3. The Persona Corpus — Aurora Outfitters
 
-Mission Control: CX demos against **Aurora Outfitters**, a fictional D2C outdoor and adventure retailer. 250+ SKUs across hiking, climbing, camping, and technical apparel. Four-region operation (NA / EU / APAC / ANZ). Direct-to-consumer with a strong loyalty program ("Aurora Trail Club") and an ambassador-led content engine.
+Aurora Concierge demos against **Aurora Outfitters**, a fictional D2C outdoor and adventure retailer. 250+ SKUs across hiking, climbing, camping, and technical apparel. Four-region operation (NA / EU / APAC / ANZ). Direct-to-consumer with a strong loyalty program ("Aurora Trail Club") and an ambassador-led content engine.
 
 Aurora is chosen because:
 
@@ -92,7 +92,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 ### Out of scope (explicitly)
 
 - Real customer transactional data. The "abandoned cart" demo uses a fictional Sara Chen with a hand-crafted session history.
-- Live integration with a real ecommerce platform (Shopify / commercetools / Salesforce Commerce). Customers see real integration during a POC; Mission Control: CX shows the *capability*, not a productized connector.
+- Live integration with a real ecommerce platform (Shopify / commercetools / Salesforce Commerce). Customers see real integration during a POC; Aurora Concierge shows the *capability*, not a productized connector.
 - Multi-tenant per-customer storefronts. The chassis is single-brand.
 - Email / SMS delivery infrastructure. The abandoned-cart win-back demo generates the message — it doesn't send it. The presenter says "this drops into your Klaviyo / Braze / Iterable in three lines."
 - Loyalty-points calculation engine. Loyalty workflows recommend actions; they don't run the points ledger.
@@ -105,7 +105,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  Mission Control: CX Frontend (Vite + React)                 │
+│  Aurora Concierge Frontend (Vite + React)                 │
 │  Aurora-branded shell • 6 demo surfaces                      │
 │  Floating chat (prospect ↔ Trail Club Member)                │
 └─────────────────────────────────────────────────────────────┘
@@ -210,7 +210,7 @@ Each workflow is a schema-constrained generation pattern that mirrors a real dig
 - **What it does:** Given a destination, dates, party size, experience level, and known sizing profile, generates a structured trip plan combining packing list, daily itinerary, gear recommendations from the Aurora catalog, ambassador-authored tips, and safety / weather notes.
 - **Inputs:** `destination` (dropdown), `dates`, `party_size`, `experience_level`, `customer_segment`, `sizing_profile`.
 - **ARAG primitive:** P3 (Constrain) — `askForJson` with schema `{ trip_overview: {...}, packing_list: [{ category, product_recommendation, source_url, why }], daily_plan: [{ day, distance, elevation, activity, gear_focus }], ambassador_tips: [{ ambassador_name, tip, source_url }], safety_notes: [...] }`.
-- **Why it lands in the room:** Every D2C retailer has tried to build this with a Notion template, a Shopify app, or a no-code form. Mission Control: CX generates one in 12 seconds from the brand's own product + content + ambassador corpus, every recommendation cited to a source page the customer can deep-link into.
+- **Why it lands in the room:** Every D2C retailer has tried to build this with a Notion template, a Shopify app, or a no-code form. Aurora Concierge generates one in 12 seconds from the brand's own product + content + ambassador corpus, every recommendation cited to a source page the customer can deep-link into.
 
 ### 6.2 Loyalty-Personalization Engine
 
@@ -226,7 +226,7 @@ Each workflow is a schema-constrained generation pattern that mirrors a real dig
 - **Inputs:** `product_id` (or `category`), optional `customer_segment` for positioning.
 - **ARAG primitive:** P3 + P4 (Constrain + Reason over relations) — this is the cross-primitive workflow that mirrors the Enterprise variant's Compliance-Trace. Schema-constrained output that *traverses the journey graph* to populate the pair-with section.
 - **Schema:** `{ product: { name, summary, price, brand_pillars }, comparison_table: [{ attribute, this_product, alternative_1, alternative_2 }], pairs_with: [{ name, why_this_pairing, source_url }], ambassador_tips: [{ ambassador_name, tip, source_url }], segment_positioning: { for_weekend_adventurers: "...", for_thru_hikers: "...", for_alpine_pros: "..." } }`.
-- **Why it lands:** Every retailer has cross-sell widgets. None of them are grounded in *brand expertise*. Mission Control: CX cross-sells using the same ambassador-authored content the brand spends millions producing for marketing — which is the moment the CMO realises content and commerce just merged.
+- **Why it lands:** Every retailer has cross-sell widgets. None of them are grounded in *brand expertise*. Aurora Concierge cross-sells using the same ambassador-authored content the brand spends millions producing for marketing — which is the moment the CMO realises content and commerce just merged.
 
 ---
 
@@ -251,7 +251,7 @@ Same overall shape as the Enterprise variant. Effort estimates are nearly identi
 
 ### Phase 3 — Sample-ARAG-App fork + Aurora re-skin (Weeks 3–4)
 
-- Fork `Sample-ARAG-App` into `Mission-Control-CX`.
+- Fork `Sample-ARAG-App` into `Capstone-Aurora-Concierge`.
 - Strip ARAKS branding. Replace with Aurora — sandstone + alpine-blue palette, generous whitespace, photography-led hero.
 - Replace the static markdown content pages with Aurora landing copy.
 - Configure the floating chat with two voices — Shopper (prospect) and Trail Club Member. The Shopper voice prompt should match the Sample ARAG App's prospect-mode floating chat almost verbatim (the CTA-only rules); the Member voice should match the research-assistant style.
@@ -311,7 +311,7 @@ The talk track for the CMO room.
 
 > "Most AI demos for retail are chatbots over PDFs. This is not that.
 >
-> Mission Control: CX is a complete digital-experience platform built on Progress Agentic RAG. Conversational discovery, two-voice concierge, structured personalization, customer-journey reasoning, and abandoned-cart intelligence — all behind one API key, all from one corpus of your product, content, and customer data.
+> Aurora Concierge is a complete digital-experience platform built on Progress Agentic RAG. Conversational discovery, two-voice concierge, structured personalization, customer-journey reasoning, and abandoned-cart intelligence — all behind one API key, all from one corpus of your product, content, and customer data.
 >
 > The brand I'm demoing against is Aurora Outfitters. Fictional D2C outdoor retailer — six hero products, four ambassadors, five destinations, three customer segments. The corpus is everything Aurora's content and merchandising teams already produce: product pages, fit guides, trail guides, ambassador videos, loyalty content, brand pillars. Nothing custom. Just their existing content, with five custom fields per asset that drive the AI behaviour."
 
@@ -440,7 +440,7 @@ The talk track for the CMO room.
 >
 > 3. **One platform, not five.** Search, chat, personalization, journey reasoning, winback intelligence — same API, same KB, same content team. Every AI feature you'll ship in the next three years lives behind this one engine.
 >
-> The next step is a four-week co-engineered POC against your own catalog and content. We pick one of the workflows you saw today, replace Aurora with your brand, and Mission Control becomes your team's daily driver inside one quarter. Let me show you the scoping doc."
+> The next step is a four-week co-engineered POC against your own catalog and content. We pick one of the workflows you saw today, replace Aurora with your brand, and Aurora Concierge becomes your team's daily driver inside one quarter. Let me show you the scoping doc."
 
 *[End of 25-minute demo.]*
 
@@ -448,7 +448,7 @@ The talk track for the CMO room.
 
 ## 10. Re-Skin Playbook (CX variant)
 
-A partner takes Mission Control: CX and re-points it at their customer's brand. The work follows the same shape as the Enterprise variant but uses different anchor categories.
+A partner takes Aurora Concierge and re-points it at their customer's brand. The work follows the same shape as the Enterprise variant but uses different anchor categories.
 
 ### What stays
 
@@ -474,13 +474,13 @@ The CX variant takes slightly longer to re-skin than the Enterprise variant beca
 
 ### Tier-3 customer offering
 
-Partners offer "Mission Control: CX Co-Engineering" as a fixed-scope package: **4-week re-skin + 1-week dry run + delivered demo asset + 30-day content-engineering retainer**. Price band: $50–100K. The retainer is the recurring-revenue hook — every customer needs ongoing field engineering as their catalog and content evolve.
+Partners offer "Aurora Concierge Co-Engineering" as a fixed-scope package: **4-week re-skin + 1-week dry run + delivered demo asset + 30-day content-engineering retainer**. Price band: $50–100K. The retainer is the recurring-revenue hook — every customer needs ongoing field engineering as their catalog and content evolve.
 
 ---
 
 ## 11. Variant comparison (Enterprise vs CX)
 
-For partners deciding which Mission Control to build first.
+For partners deciding which Aurora Concierge to build first.
 
 | Dimension | Enterprise | CX |
 |---|---|---|
@@ -501,7 +501,7 @@ A partner whose book of business skews enterprise-IT builds the Enterprise varia
 
 ## 12. Success criteria — what "done" looks like (CX variant)
 
-Mission Control: CX ships when *all* of the following are true:
+Aurora Concierge ships when *all* of the following are true:
 
 1. The full 25-minute demo runs end-to-end without code edits in front of two reviewers, no keyboard touches outside the documented hotkeys.
 2. The Aurora customer-journey graph returns at least 150 typed-entity nodes and 400 typed relations across the product, content, and loyalty KBs.

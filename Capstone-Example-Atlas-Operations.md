@@ -1,4 +1,4 @@
-# Mission Control — Build Brief
+# Capstone Example — Atlas Operations (Enterprise)
 
 > **Status:** Brief. Build not started.
 > **Role in the programme:** Build 7 capstone + flagship reference + strategic-account sales-room closer.
@@ -8,34 +8,34 @@
 
 ---
 
-## 1. Why Mission Control exists
+## 1. Why Atlas Operations exists
 
-The Partner Enablement Framework names two top-priority assets: the Agent Workshop (Build 3) and Mission Control (Build 7). Of the two, Mission Control carries more weight because it does three jobs at once:
+The Partner Enablement Framework names two top-priority assets: the Agent Workshop (Build 3) and Atlas Operations (Build 7). Of the two, Atlas Operations carries more weight because it does three jobs at once:
 
-1. **Capstone.** It's the final certification artefact for every track. An individual at Solution-4 or Deliver-4 must have shipped and demoed a Mission Control variant against a real customer's corpus.
-2. **Sales-room closer.** It's the one thing a partner walks into a Fortune 500 CTO's office with that *cannot be reproduced* by a competitor's free trial. Mission Control is the proof that ARAG is a platform, not a chatbot.
-3. **Re-skin chassis.** Every partner customer demo starts with a fork of Mission Control. Partners customise the corpus, the entity schema, the branding, and the workflows — but the chassis ships in working condition. This is how the programme scales without every partner SE re-inventing the same demo from the Sample ARAG App.
+1. **Capstone.** It's the final certification artefact for every track. An individual at Solution-4 or Deliver-4 must have shipped and demoed a capstone example against a real customer's corpus.
+2. **Sales-room closer.** It's the one thing a partner walks into a Fortune 500 CTO's office with that *cannot be reproduced* by a competitor's free trial. Atlas Operations is the proof that ARAG is a platform, not a chatbot.
+3. **Re-skin chassis.** Every partner customer demo starts with a fork of Atlas Operations. Partners customise the corpus, the entity schema, the branding, and the workflows — but the chassis ships in working condition. This is how the programme scales without every partner SE re-inventing the same demo from the Sample ARAG App.
 
-The Sample ARAG App proves what ARAG *can do* across 30+ patterns. Mission Control proves what an *enterprise platform built on ARAG* looks like in production, in one coherent product, against a recognisable enterprise corpus, with at least one custom data-augmentation agent live.
+The Sample ARAG App proves what ARAG *can do* across 30+ patterns. Atlas Operations proves what an *enterprise platform built on ARAG* looks like in production, in one coherent product, against a recognisable enterprise corpus, with at least one custom data-augmentation agent live.
 
 ---
 
-## 2. The Demo Buyer (the person Mission Control is built for)
+## 2. The Demo Buyer (the person Atlas Operations is built for)
 
-Mission Control is a sales weapon. Every design decision in this brief is filtered through the question "does this help the partner close the room?"
+Atlas Operations is a sales weapon. Every design decision in this brief is filtered through the question "does this help the partner close the room?"
 
 - **Persona:** Enterprise CTO, CIO, or Chief Data Officer. 50,000+ employee company. Has seen four AI vendor demos this quarter, all of which were chatbots over PDFs.
 - **What they care about:** Residency. Vendor lock-in. Cost-of-ownership over five years. Whether this is a feature their dev team will inherit and grow, or another wrapper they'll have to rip out next year.
 - **What they're sceptical of:** "Magic" demos against pristine sandbox data. They want to see structured outputs, graph reasoning, and integration patterns — because that's what their architects have told them to look for.
 - **What they leave with:** A 25-minute walkthrough they can describe to their board in three sentences. A reference architecture diagram. A clear understanding of the four-tier capability ladder. An invitation to a co-engineered POC against their corpus.
 
-Mission Control's job is to compress that journey into 25 minutes.
+Atlas Operations's job is to compress that journey into 25 minutes.
 
 ---
 
 ## 3. The Persona Corpus — Atlas Global Industries
 
-Mission Control demos against a fictional multinational manufacturer: **Atlas Global Industries**. Atlas is a 50,000-employee, four-region (NA/EU/APAC/LATAM), publicly listed industrial group with five business units (Industrial Equipment, Energy Systems, Building Automation, Logistics Software, Customer Services).
+Atlas Operations demos against a fictional multinational manufacturer: **Atlas Global Industries**. Atlas is a 50,000-employee, four-region (NA/EU/APAC/LATAM), publicly listed industrial group with five business units (Industrial Equipment, Energy Systems, Building Automation, Logistics Software, Customer Services).
 
 Atlas is chosen because:
 
@@ -75,7 +75,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 - All five KBs ingested into separate ARAG knowledge boxes with EU region for the demo (USA region failover documented but not deployed).
 - One bespoke data-augmentation agent extracting a typed graph across the engineering and customer-success KBs.
-- Five branded demo surfaces (one per tier of the capability ladder, plus the Mission Control landing page).
+- Five branded demo surfaces (one per tier of the capability ladder, plus the Atlas Operations landing page).
 - Three custom Tier 3 workflows (schema-constrained generation) live and demo-ready.
 - One Tier 4 composite RAG flow live (the "incident root cause" workflow).
 - BYO-LLM toggle in the UI: switch between three named LLM endpoints during the demo to show parity (Azure OpenAI / Google Vertex / AWS Bedrock).
@@ -86,11 +86,11 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 ### Out of scope (explicitly)
 
-- Real customer data. Mission Control is a demo asset, not a deployable customer product. Customers see their own corpus during a co-engineered POC, not in Mission Control.
-- Authentication beyond a hard-coded demo user. No SSO, no multi-tenant. The framework's Tier 4 production-readiness conversations point at Build 6 deliverables, not at Mission Control.
+- Real customer data. Atlas Operations is a demo asset, not a deployable customer product. Customers see their own corpus during a co-engineered POC, not in Atlas Operations.
+- Authentication beyond a hard-coded demo user. No SSO, no multi-tenant. The framework's Tier 4 production-readiness conversations point at Build 6 deliverables, not at Atlas Operations.
 - Mobile-first responsive design. Demo runs on a 13" laptop or larger. Tablet rendering acceptable but not optimised.
-- Search relevance tuning beyond defaults. Mission Control demos *what's possible*, not *what's tuned*. Tuning conversations happen in customer POCs.
-- Per-partner branding inside the canonical Mission Control. Branding flexibility lives in the re-skin playbook (Section 10), not the master build.
+- Search relevance tuning beyond defaults. Atlas Operations demos *what's possible*, not *what's tuned*. Tuning conversations happen in customer POCs.
+- Per-partner branding inside the canonical Atlas Operations. Branding flexibility lives in the re-skin playbook (Section 10), not the master build.
 
 ---
 
@@ -100,7 +100,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  Mission Control Frontend (Next.js or Vite + React)          │
+│  Atlas Operations Frontend (Next.js or Vite + React)          │
 │  Branded shell • 5 demo surfaces • BYO-LLM toggle            │
 └─────────────────────────────────────────────────────────────┘
                               │
@@ -134,18 +134,18 @@ These anchors get embedded into every document the corpus generator produces. Th
 ### 5.2 Frontend stack
 
 - **Framework:** Next.js 14 (App Router) or Vite + React 18 — choose whichever the build owner is fastest in. The Sample ARAG App is Vite; staying consistent reduces fork cost.
-- **Styling:** Tailwind CSS with a Mission-Control-specific palette (dark control-room aesthetic — slate-950 base, electric-blue and amber accents). Avoid the ARAKS teal/navy palette so the two repos are visually distinct.
+- **Styling:** Tailwind CSS with a Atlas-Operations-specific palette (dark control-room aesthetic — slate-950 base, electric-blue and amber accents). Avoid the ARAKS teal/navy palette so the two repos are visually distinct.
 - **Routing:** React Router v7 (matches Sample ARAG App). Five top-level routes plus the landing page.
 - **State:** React Context for the BYO-LLM toggle, the active KB, and the demo "presenter mode" hotkeys. No Redux, no Zustand — keep dependencies thin.
 
 ### 5.3 Backend stack
 
-- **ARAG only.** No custom backend. Mission Control talks directly to ARAG endpoints exactly the way the Sample ARAG App does. This is itself a demo point — *there is no middleware to maintain*.
+- **ARAG only.** No custom backend. Atlas Operations talks directly to ARAG endpoints exactly the way the Sample ARAG App does. This is itself a demo point — *there is no middleware to maintain*.
 - **BYO-LLM toggle:** Implemented as a per-KB ARAG configuration. Customer's "imagine this is your Azure tenant" question is answered by flipping the toggle live during the demo.
 
 ### 5.4 Data-augmentation agent — the typed graph
 
-The graph is the *single most differentiated* piece of Mission Control. It's what no competitor can demo against an enterprise corpus in under 30 minutes.
+The graph is the *single most differentiated* piece of Atlas Operations. It's what no competitor can demo against an enterprise corpus in under 30 minutes.
 
 **Entity schema (lock during Phase 2):**
 
@@ -179,7 +179,7 @@ The graph is the *single most differentiated* piece of Mission Control. It's wha
 
 **Agent tool:** Use the `arag-graph-agent` skill from `anthropic-skills` to design and generate the extraction agent. The skill samples the KB, analyses the domain, designs the schema (which can be hand-tuned against the table above), and produces a ready-to-run Python script. Run the agent against all five KBs. Persist results to the member-knowledge graph endpoint.
 
-**Why this matters:** The buyer in the room has never seen a graph generated from their own content. Every other AI vendor demos retrieval; only ARAG demos *structured reasoning over relationships*. Mission Control is the proof.
+**Why this matters:** The buyer in the room has never seen a graph generated from their own content. Every other AI vendor demos retrieval; only ARAG demos *structured reasoning over relationships*. Atlas Operations is the proof.
 
 ### 5.5 The five demo surfaces
 
@@ -205,7 +205,7 @@ Each workflow is a schema-constrained generation pattern that mirrors a real ent
 - **What it does:** Given a new hire's role and team, generates a 30/60/90-day onboarding plan combining HR policies, product overviews, customer assignments, and required reading.
 - **Inputs:** `role` (free text), `team` (dropdown), `region` (dropdown).
 - **ARAG primitive:** P3 (Constrain) — `askForJson` with schema `{ plan: { day_30: [...], day_60: [...], day_90: [...] }, required_reading: [{ title, kb, url }], assigned_customer_intros: [{ customer, csm_employee, talking_points: [...] }] }`.
-- **Why it lands in the room:** Every CTO has tried to solve onboarding with a Notion template. Mission Control generates a personalised one from cross-KB content in 8 seconds.
+- **Why it lands in the room:** Every CTO has tried to solve onboarding with a Notion template. Atlas Operations generates a personalised one from cross-KB content in 8 seconds.
 
 ### 6.2 Battle-Card Generator
 
@@ -213,7 +213,7 @@ Each workflow is a schema-constrained generation pattern that mirrors a real ent
 - **Inputs:** `customer` (dropdown of 5 fictional Atlas customers), `competitor` (free text).
 - **ARAG primitive:** P3 (Constrain).
 - **Schema:** `{ positioning: { our_strengths: [...], our_weaknesses: [...] }, customer_context: { tenure_years, current_products, prior_objections }, regional_pricing: { region, list_price, typical_discount }, recommended_proof_points: [{ title, source_url }] }`.
-- **Why it lands:** Sales-content generation is the most common enterprise AI ask. Mission Control shows it grounded, structured, and demo-able in seconds.
+- **Why it lands:** Sales-content generation is the most common enterprise AI ask. Atlas Operations shows it grounded, structured, and demo-able in seconds.
 
 ### 6.3 Compliance-Trace Generator
 
@@ -221,7 +221,7 @@ Each workflow is a schema-constrained generation pattern that mirrors a real ent
 - **Inputs:** `regulation` (dropdown of 5 fictional regulations).
 - **ARAG primitive:** P3 + P4 (Constrain + Reason over relations). This is the cross-primitive demo workflow — schema-constrained output that *includes a graph traversal* in the prompt.
 - **Schema:** `{ regulation: { name, summary }, governed_products: [{ name, compliance_status, last_audit_date }], outstanding_audit_findings: [{ id, severity, owner, deadline }], related_policies: [{ name, version }] }`.
-- **Why it lands:** Compliance officers in the room cry. This is the workflow that turns Mission Control from "cool demo" into "we need to talk to procurement."
+- **Why it lands:** Compliance officers in the room cry. This is the workflow that turns Atlas Operations from "cool demo" into "we need to talk to procurement."
 
 ---
 
@@ -243,10 +243,10 @@ Total target: **8 weeks of focused work**, or **4 weeks at 2 FTE**. Phases can r
 - Run the agent against all five KBs. Verify graph queries return clean results (no GUID noise, no default-NER pollution).
 - **Exit criteria:** `POST /v1/kb/{id}/graph` with `{prop:'generated', by:'data-augmentation'}` returns a typed graph the build owner is willing to demo on camera.
 
-### Phase 3 — Sample-ARAG-App fork + Mission Control reskin (Weeks 3–4)
+### Phase 3 — Sample-ARAG-App fork + Atlas Operations reskin (Weeks 3–4)
 
-- Fork `Sample-ARAG-App` into a new private repo `Mission-Control`.
-- Strip ARAKS branding. Replace with Mission Control design system (dark slate base, electric-blue and amber accents).
+- Fork `Sample-ARAG-App` into a new private repo `Capstone-Atlas-Operations`.
+- Strip ARAKS branding. Replace with Atlas Operations design system (dark slate base, electric-blue and amber accents).
 - Replace `ContentPage`-style static markdown rendering with the Atlas-themed landing copy.
 - Wire BYO-LLM toggle as a UI element backed by ARAG configuration.
 - Replace `kb-site-content` and `kb-member-knowledge` env vars with the five Atlas KBs.
@@ -269,7 +269,7 @@ Total target: **8 weeks of focused work**, or **4 weeks at 2 FTE**. Phases can r
 - Residency badge visible in the header — shows "EU" or "USA" based on the active KB region.
 - Rate-limit-aware client (backoff + request coalescing) implemented in the ARAG client wrapper.
 - Observability dashboard (Grafana or simple in-app panel) showing p50/p95 latency, citation rate, and BYO-LLM endpoint distribution. Visible from a `/ops` route.
-- **Exit criteria:** A live CTO question about residency, lock-in, or rate limits has a one-click visual answer from inside Mission Control.
+- **Exit criteria:** A live CTO question about residency, lock-in, or rate limits has a one-click visual answer from inside Atlas Operations.
 
 ### Phase 6 — Demo script + recording + re-skin playbook (Week 7–8)
 
@@ -303,11 +303,11 @@ This is the script the build owner rehearses to certification. Times are cumulat
 
 > "Most AI demos you've seen this quarter are chatbots over PDFs. This is not that.
 >
-> Mission Control is a single application built on Progress Agentic RAG. It's an enterprise control room for unstructured knowledge — search, chat, structured generation, knowledge-graph reasoning, multimodal retrieval, and production operations, all behind one API key.
+> Atlas Operations is a single application built on Progress Agentic RAG. It's an enterprise control room for unstructured knowledge — search, chat, structured generation, knowledge-graph reasoning, multimodal retrieval, and production operations, all behind one API key.
 >
 > The corpus I'm demoing against is a fictional company called Atlas Global Industries. Fifty thousand employees, four regions, five business units. Five separate knowledge bases — HR, Engineering, Sales, Customer Success, Compliance.
 >
-> Two things to notice before we start. Top-right: this is running in the EU region — you can flip to USA in one click. Top-right also: the BYO-LLM toggle — Mission Control is using Azure OpenAI right now; I can swap to Google Vertex or AWS Bedrock without restarting anything. Watch."
+> Two things to notice before we start. Top-right: this is running in the EU region — you can flip to USA in one click. Top-right also: the BYO-LLM toggle — Atlas Operations is using Azure OpenAI right now; I can swap to Google Vertex or AWS Bedrock without restarting anything. Watch."
 
 *[Click BYO-LLM toggle from Azure to Vertex. Watch the badge change.]*
 
@@ -413,7 +413,7 @@ This is the script the build owner rehearses to certification. Times are cumulat
 > 2. The LLM you already pay for. Azure, Vertex, Bedrock. ARAG orchestrates; you pick the model.
 > 3. A platform, not a feature. Every AI surface you'll ship in the next three years lives behind this API.
 >
-> The next step is a four-week co-engineered POC against your own corpus. We pick one of the workflows you saw today, replace Atlas with your data, and Mission Control becomes *your* Mission Control. Let me show you the scoping doc."
+> The next step is a four-week co-engineered POC against your own corpus. We pick one of the workflows you saw today, replace Atlas with your data, and Atlas Operations becomes *your* Atlas Operations. Let me show you the scoping doc."
 
 *[End of 25-minute demo.]*
 
@@ -423,7 +423,7 @@ This is the script the build owner rehearses to certification. Times are cumulat
 
 This section lives in the repo as a separate `RESKIN.md` once the build ships. Brief sketch here so partners know what they're signing up for.
 
-A partner takes Mission Control and re-points it at their customer's domain. The work is structured, time-boxed, and uses the same skills (`progress-kb-use-case-generator`, `arag-graph-agent`) that built the master.
+A partner takes Atlas Operations and re-points it at their customer's domain. The work is structured, time-boxed, and uses the same skills (`progress-kb-use-case-generator`, `arag-graph-agent`) that built the master.
 
 ### What stays
 
@@ -448,13 +448,13 @@ A partner takes Mission Control and re-points it at their customer's domain. The
 
 ### Tier-3 customer offering
 
-Partners offer "Mission Control Co-Engineering" as a fixed-scope, fixed-price engagement: **3-week re-skin + 1-week dry run + delivered demo asset**. Price band: $40–80K depending on corpus complexity. Sold as the entry point to a $250K+ Tier 3 platform engagement. Customers keep the deliverable.
+Partners offer "Atlas Co-Engineering" as a fixed-scope, fixed-price engagement: **3-week re-skin + 1-week dry run + delivered demo asset**. Price band: $40–80K depending on corpus complexity. Sold as the entry point to a $250K+ Tier 3 platform engagement. Customers keep the deliverable.
 
 ---
 
 ## 11. Success criteria — what "done" looks like
 
-Mission Control ships when *all* of the following are true:
+Atlas Operations ships when *all* of the following are true:
 
 1. The full 25-minute demo runs end-to-end without code edits, in front of two reviewers, without the build owner touching the keyboard outside of the documented hotkeys.
 2. The Atlas knowledge graph returns at least 200 typed-entity nodes and 500 typed relations across all five KBs.
@@ -482,7 +482,7 @@ Mission Control ships when *all* of the following are true:
 | Re-skin playbook (`RESKIN.md`) | Build owner | TODO |
 | Internal review board | Progress Solution lead | TODO |
 
-**Critical path:** Phase 1 → 2 → 3. Without the corpus and the graph, the workflows have nothing to work against. If the build slips, the right thing to cut is Phase 5 observability — not Phase 2 graph extraction. The graph is what makes Mission Control un-cloneable.
+**Critical path:** Phase 1 → 2 → 3. Without the corpus and the graph, the workflows have nothing to work against. If the build slips, the right thing to cut is Phase 5 observability — not Phase 2 graph extraction. The graph is what makes Atlas Operations un-cloneable.
 
 ---
 

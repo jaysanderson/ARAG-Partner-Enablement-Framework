@@ -78,7 +78,7 @@ This is the spine of certification. The matrix below shows the bar each track mu
 | **Discovery & qualification** | Must | Should | Aware |
 | **Win/loss debrief & competitive response** | Must | Should | Aware |
 | **Sample ARAG App walkthrough** | Should | Must | Must |
-| **Mission Control reference build** | Should | Must | Must |
+| **Build 7 capstone** | Should | Must | Must |
 
 A partner organisation reaches a given tier only when at least one named individual meets every Must in every relevant track. No exceptions.
 
@@ -174,22 +174,22 @@ The full ladder — Tier 1 (Foundations) → Tier 2 (Multi-Surface Conversationa
 | **Pass rubric** | (1) Residency demonstrably configured and verifiable. (2) BYO-LLM connection working against at least two of the three hyperscaler endpoints. (3) Rate-limit-aware client implemented (backoff, batching, request coalescing). (4) Observability dashboard tracking p50/p95 latency, retrieval recall proxy, and citation-rate. (5) Recorded explanation of the "platform-grade" pitch to a customer's CTO. |
 | **Asset delivered** | A production-readiness checklist + reference Terraform / CDK / Bicep snippets for residency-aware deployment + rate-limit-aware client templates. |
 
-### Build 7 — Mission Control (the capstone) — choose your variant
+### Build 7 — The Capstone (pick your wow build)
 
-Mission Control ships in two variants. The partner picks the one that matches their book of business; the second is built later if both customer segments are in play. Both share the same chassis (forked from the Sample ARAG App), the same eight-week build plan, and the same re-skin playbook structure — they differ in corpus, graph schema, workflows, and demo buyer.
+The capstone ships with two worked examples. The partner picks the one that matches their book of business; the second is built later if both customer segments are in play. Both share the same chassis (forked from the Sample ARAG App), the same eight-week build plan, and the same re-skin playbook structure — they differ in corpus, graph schema, workflows, and demo buyer.
 
 | Variant | Buyer | Persona corpus | Killer moment | Brief |
 |---|---|---|---|---|
-| **Enterprise / Operations** | CTO, CIO, Chief Data Officer | Atlas Global Industries (industrial manufacturer, 5 internal KBs) | Composite-RAG incident root cause + cross-functional typed graph | `Mission-Control-Build-Brief.md` |
-| **Customer Experience** | CMO, Head of Digital, Chief Customer Officer | Aurora Outfitters (D2C outdoor retailer, 5 customer-facing KBs) | Two-voice floating chat + content-engineered CTAs + abandoned-cart composite RAG | `Mission-Control-CX-Build-Brief.md` |
+| **Enterprise / Operations** | CTO, CIO, Chief Data Officer | Atlas Global Industries (industrial manufacturer, 5 internal KBs) | Composite-RAG incident root cause + cross-functional typed graph | `Capstone-Example-Atlas-Operations.md` |
+| **Customer Experience** | CMO, Head of Digital, Chief Customer Officer | Aurora Outfitters (D2C outdoor retailer, 5 customer-facing KBs) | Two-voice floating chat + content-engineered CTAs + abandoned-cart composite RAG | `Capstone-Example-Aurora-Concierge.md` |
 
 | Field | Value (applies to both variants) |
 |---|---|
 | **Owning track(s)** | All three tracks at Must for Elite tier |
 | **Tier mapped to** | Capstone — combines Tiers 1–4 |
-| **What the partner does** | Builds one variant of Mission Control: a single application that exercises every primitive and every tier in one branded surface. Grounded search + multi-surface chat + schema-constrained workflows + typed knowledge graph + multimodal media + custom field enrichment + production-grade ops. Mission Control is what a partner walks into a Fortune 500 buyer's office with. |
-| **Pass rubric** | (1) Mission Control deployed at the partner's domain. (2) End-to-end demo runs in 25 minutes covering all four tiers without code edits. (3) At least one customer-specific data-augmentation agent in production. (4) Org-level recorded demo passes a Progress-led review board. |
-| **Asset delivered** | The Mission Control reference build — the flagship asset of the entire programme. **Flagged as the second of two highest-priority assets to build first; it is both the capstone and the sales-room closer.** Reference: composes patterns from every file in `Sample-ARAG-App/src/pages/` and `src/components/`. |
+| **What the partner does** | Builds one variant of the capstone: a single application that exercises every primitive and every tier in one branded surface. Grounded search + multi-surface chat + schema-constrained workflows + typed knowledge graph + multimodal media + custom field enrichment + production-grade ops. The capstone is what a partner walks into a Fortune 500 buyer's office with. |
+| **Pass rubric** | (1) The capstone deployed at the partner's domain. (2) End-to-end demo runs in 25 minutes covering all four tiers without code edits. (3) At least one customer-specific data-augmentation agent in production. (4) Org-level recorded demo passes a Progress-led review board. |
+| **Asset delivered** | The capstone reference build — the flagship asset of the entire programme. **Flagged as the second of two highest-priority assets to build first; it is both the curriculum capstone and the sales-room closer.** Reference: composes patterns from every file in `Sample-ARAG-App/src/pages/` and `src/components/`. |
 
 ### §3.5 — Prompt engineering patterns to teach explicitly (cross-cutting through Builds 2–7)
 
@@ -225,9 +225,9 @@ Individual certifications gate organisational tiers. Organisational tiers gate c
 
 Each named individual at a partner org can hold certifications stacked along their track:
 
-- **Sell track**: Sell-1 (Builds 0–1), Sell-2 (Builds 0–2 + win/loss + discovery), Sell-3 (full Sell competencies + Mission Control walkthrough).
-- **Solution track**: Solution-1 (Builds 0–2), Solution-2 (Builds 0–4), Solution-3 (Builds 0–6), Solution-4 (full Solution + Mission Control).
-- **Deliver track**: Deliver-1 (Builds 0–2), Deliver-2 (Builds 0–4), Deliver-3 (Builds 0–6), Deliver-4 (full Deliver + Mission Control).
+- **Sell track**: Sell-1 (Builds 0–1), Sell-2 (Builds 0–2 + win/loss + discovery), Sell-3 (full Sell competencies + capstone walkthrough).
+- **Solution track**: Solution-1 (Builds 0–2), Solution-2 (Builds 0–4), Solution-3 (Builds 0–6), Solution-4 (full Solution + Build 7 capstone).
+- **Deliver track**: Deliver-1 (Builds 0–2), Deliver-2 (Builds 0–4), Deliver-3 (Builds 0–6), Deliver-4 (full Deliver + Build 7 capstone).
 
 ### Gates
 
@@ -244,8 +244,8 @@ Four tiers, each requiring a minimum count of current certifications across the 
 |---|---|---|
 | **Registered** | Build 0 completion per named contact | Sandbox access, public assets, no MDF, standard margin |
 | **Authorized** | 2× Sell-2 + 1× Solution-2 + 1× Deliver-2 | MDF eligibility, +5pt margin band, deal-reg protection, partner Slack |
-| **Premier** | 3× Sell-3 + 2× Solution-3 + 2× Deliver-3 + 1× Mission Control walkthrough cert | +10pt margin band, qualified lead share, joint POCs, named partner manager, quarterly QBR with Progress GTM |
-| **Elite** | 4× Sell-3 + 3× Solution-4 + 3× Deliver-4 + 1× Mission Control build cert per FY | +15pt margin band, strategic-account joint pursuit, custom MDF, RFP support, sub-distribution rights in agreed geos |
+| **Premier** | 3× Sell-3 + 2× Solution-3 + 2× Deliver-3 + 1× capstone walkthrough cert | +10pt margin band, qualified lead share, joint POCs, named partner manager, quarterly QBR with Progress GTM |
+| **Elite** | 4× Sell-3 + 3× Solution-4 + 3× Deliver-4 + 1× capstone build cert per FY | +15pt margin band, strategic-account joint pursuit, custom MDF, RFP support, sub-distribution rights in agreed geos |
 
 Every tier review is annual, organisation-level, and decided on certification count and the partner health scorecard (Part VII). Tiers can drop as well as rise. Loss-of-tier triggers a 90-day "back to standard" notice — not a cliff — to keep the relationship intact while the partner re-stocks competency.
 
@@ -261,7 +261,7 @@ A partner's journey from first contact to advocate runs through five stages. Eac
 | **Onboard** | 30 days from agreement | Build 0 complete for at least one named individual per track (Sell, Solution, Deliver). Sandbox provisioned. Sample ARAG App running locally. | Partner Manager + Partner SE |
 | **Activate** | 60 days from onboard exit | First Build 3 (schema-constrained generation) submitted and passed. First customer demo recorded. Authorized tier reached. | Partner SE + Partner |
 | **Scale** | 6 months from activate exit | At least one customer in production at Tier 2 or Tier 3. Premier tier reached. Quarterly QBR cadence established. | Partner Manager + Partner GM |
-| **Advocate** | Continuous | Public reference. Joint marketing event. At least one Mission Control walkthrough delivered to a customer. Elite tier reached. | Channel GM |
+| **Advocate** | Continuous | Public reference. Joint marketing event. At least one capstone walkthrough delivered to a customer. Elite tier reached. | Channel GM |
 
 **Time-to-first-build is the make-or-break leading indicator.** A partner who hasn't passed Build 0 within 30 days of onboarding is statistically unlikely to ever reach Authorized. If TTV-to-Build-0 slips past 45 days, the partner is moved to a recovery track or de-activated. No exceptions, because false-hope partners poison the program's measured economics.
 
@@ -292,18 +292,18 @@ Every asset has a name, an owner, a version, and a corresponding build. No orpha
 | Composite-RAG cookbook | 4 | Solution | TODO |
 | Graph schema design template (12 verticals) | 5 | Solution | TODO |
 | Production-readiness checklist + IaC snippets | 6 | Solution | TODO |
-| Mission Control — Enterprise variant brief | 7 | GTM | **Shipped** (`Mission-Control-Build-Brief.md`) |
-| Mission Control — CX variant brief | 7 | GTM | **Shipped** (`Mission-Control-CX-Build-Brief.md`) |
-| Mission Control reference build (one variant first) | 7 | GTM + Solution | **Top-priority** |
+| Capstone example — Atlas Operations (Enterprise) | 7 | GTM | **Shipped** (`Capstone-Example-Atlas-Operations.md`) |
+| Capstone example — Aurora Concierge (CX) | 7 | GTM | **Shipped** (`Capstone-Example-Aurora-Concierge.md`) |
+| Capstone reference build (one example first) | 7 | GTM + Solution | **Top-priority** |
 | Battle cards (AI12z, Caitlyn, Harvey AI) | Sell track | GTM | In progress |
 | Win/loss debrief template | Sell track | GTM | TODO |
 | Discovery checklist | Sell track | GTM | **Shipped** (`The Vault/01_Sales/Sales_Tools/`) |
 
-### 6.3 Mission Control — the flagship reference
+### 6.3 The capstone — the flagship wow build
 
-Mission Control is the asset that closes the strategic-account sale. It's a deployed application combining every tier of the capability ladder behind one branded surface, sitting on a working data-augmentation agent and a typed knowledge graph. Partners walk into a CTO meeting with it and the meeting changes.
+The capstone is the asset that closes the strategic-account sale. It's a deployed application combining every tier of the capability ladder behind one branded surface, sitting on a working data-augmentation agent and a typed knowledge graph. Partners walk into a CTO meeting with it and the meeting changes.
 
-Building Mission Control is the next major work item in this programme. It is both the curriculum capstone and the marquee sales artefact.
+Building the capstone is the next major work item in this programme. It is both the curriculum capstone and the marquee sales artefact.
 
 ### 6.4 Battle cards
 
@@ -411,7 +411,7 @@ This programme is too heavy to launch all at once. The first 90 days deliver the
 
 ### Days 61–90 — Scale
 
-- Mission Control reference build deployed at Progress and at one pilot partner's domain. **This is the priority asset for this window.**
+- capstone reference build deployed at Progress and at one pilot partner's domain. **This is the priority asset for this window.**
 - Builds 4–6 shipped with full rubrics.
 - First Premier-tier partner achieved.
 - Programme opened to wider recruitment.
@@ -522,7 +522,7 @@ A single map from "what the customer asked for" to "what to show in the Sample A
 | "We need video search that jumps to the moment." | `/search` for a topic, click a video result, transcript syncs | Tier 4 | Build 5 |
 | "We want this to evolve as our knowledge grows." | `fetchTopicLabels` + `searchRelatedResources` widening | Tier 4 | Build 5 |
 | "How do we know it's enterprise-grade?" | Walk through Build 6 — residency, BYO-LLM, rate limits | Tier 4 | Build 6 |
-| "Show us your reference customer build." | Mission Control walkthrough | Capstone | Build 7 |
+| "Show us your reference customer build." | capstone walkthrough | Capstone | Build 7 |
 
 ---
 
@@ -545,6 +545,6 @@ The repo is private at https://github.com/jaysanderson/Sample-ARAG-App. When you
 This framework is genuinely comprehensive. That comprehensiveness is also its weakness — it's only as good as the **assets behind it**. Right now the assets are *named* but not *built*. The two with the highest combined leverage are:
 
 1. **Build 3 — the Agent Workshop notebook.** This is the asset that converts a "we already use ChatGPT" objection into a Tier 3 conversation. Without it, partners stall at Tier 2.
-2. **Build 7 — Mission Control.** This is the asset that closes the strategic-account sale. It's also the curriculum capstone. It earns its build cost back on its first reference customer.
+2. **Build 7 — The Capstone (Atlas or Aurora).** This is the asset that closes the strategic-account sale. It's also the curriculum capstone. It earns its build cost back on its first reference customer.
 
-Mission Control is the next major work item. It's both the curriculum capstone and the sales-room closer, and it should be built before the wider partner programme opens.
+The capstone is the next major work item. It's both the curriculum capstone and the sales-room closer, and it should be built before the wider partner programme opens.
