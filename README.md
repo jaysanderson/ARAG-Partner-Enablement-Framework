@@ -68,7 +68,7 @@ This is the spine of certification. The matrix below shows the bar each track mu
 | **Tier 2 — multi-surface conversational intelligence** | Should | Must | Must |
 | **Tier 3 — structured AI workflows (askForJson)** | Aware | Must | Must |
 | **Tier 4 — agentic & knowledge-graph platform** | Aware | Must | Must |
-| **Prompt engineering patterns (Part III §3.5)** | Aware | Must | Must |
+| **Prompt engineering patterns** (`courses/Developer-Foundations.md` §4) | Aware | Must | Must |
 | **Gating & monetisation patterns** | Should | Must | Should |
 | **Field engineering as a service** | Aware | Must | Must |
 | **Composite RAG / agentic patterns** | Aware | Must | Must |
@@ -98,122 +98,35 @@ Every Tier 2–4 use case is built by composing 2–4 of these in series or para
 
 ---
 
-## Part III — The Build Curriculum (Builds 0–7)
+## Part III — Course Catalogue
 
-Builds are the spine. Each build is a hands-on exercise against a real ARAG sandbox, ships a specific artefact, and carries a pass/fail rubric. Builds are owned by one or more tracks and map directly to the technical capability ladder.
+The framework's competency ladder is delivered through courses. Each course bundles a hands-on curriculum, pass/fail rubrics, and a named certification. Course completion drives partner certs; partner certs drive org tier (Part IV); org tier drives commercial terms.
 
-The full ladder — Tier 1 (Foundations) → Tier 2 (Multi-Surface Conversational Intelligence) → Tier 3 (Structured AI Workflows) → Tier 4 (Agentic & Knowledge-Graph Platform) — is the *what*. The Builds 0–7 are the *how partners learn to do it*.
+| Course | Status | Awarded cert | Doc |
+|---|---|---|---|
+| **Developer Foundations** | Shipped | Developer Foundations Practitioner | `courses/Developer-Foundations.md` |
+| **Advanced Extraction & Retrieval Strategies** | Shipped | AE&RS Specialist | `courses/Advanced-Extraction-and-Retrieval-Strategies.md` |
+| **Sales Foundations** | Planned (target Q3) | Sales Foundations Practitioner | TBD |
+| **Solution Architecture Mastery** | Planned (target Q4) | Solution Architect Specialist | TBD |
+| **Production Operations & SLOs** | Planned (target Q4) | Operations Specialist | TBD |
 
-### Build 0 — Hello ARAG
+Each shipped course doc is self-contained — partners can read it end-to-end and execute against it without flipping back to the framework. The framework README sets the *system* (operating model, certification structure, lifecycle, measurement); the courses ship the *curriculum* (builds, rubrics, assets, capstones).
 
-| Field | Value |
-|---|---|
-| **Owning track(s)** | Sell, Solution, Deliver — all three start here |
-| **Tier mapped to** | Tier 1 prep |
-| **What the partner does** | Provisions a sandbox KB, ingests 10 documents from their own corpus, makes their first `/ask` call from `curl`, runs `/find` for a semantic search, opens the Sample ARAG App and points it at their KB |
-| **Pass rubric** | (1) Sandbox KB provisioned and reachable. (2) Three successful streamed answers against their content with citations rendered. (3) Sample ARAG App `/assistant` page running locally against their KB. Reviewer signs off. |
-| **Asset delivered** | A 30-minute recorded run-through of the partner's own corpus answering three of their customer's most common questions. This is the first thing they show in a customer meeting. |
+A partner organisation cannot reach Authorized tier without at least one Developer Foundations Practitioner on staff. Cannot reach Premier without at least one AE&RS Specialist. Cannot reach Elite without a multi-Specialist team plus delivered capstones at customers. See Part IV for the full stack.
 
-### Build 1 — Grounded search & drop-in widgets
+### §3.1 — The Technical Capability Ladder (how customers buy)
 
-| Field | Value |
-|---|---|
-| **Owning track(s)** | Sell (Should), Deliver (Must) |
-| **Tier mapped to** | Tier 1 |
-| **What the partner does** | Embeds `<nuclia-search-bar>`, `<nuclia-chat>`, `<nuclia-popup>` on a real partner website with branded theming (`--nuclia-color-primary`, base64'd CSS via `csspath`). Configures content-type filters and label filters. Ships a `?q=` deep-link experience. |
-| **Pass rubric** | (1) Widgets live on a public URL. (2) Branded styling matches the partner brand. (3) Search results return content-type-filtered and topic-filtered. (4) Demo-ready in under five minutes. |
-| **Asset delivered** | A "Demo a chatbot in 30 minutes" playbook with the partner's branded widget HTML snippet and a slide describing how the same KB powers both the search bar and the chat. See `Sample-ARAG-App/src/pages/widgets/WidgetShowcasePage.tsx` and `snippetData.ts`. |
+The Courses are how partners learn. The Tiers are how customers buy. Each tier should be internalised by every Sell-track and Solution-track individual.
 
-### Build 2 — Multi-surface conversational intelligence
+**Tier 1 — Foundations: Grounded Search & Q&A.** Replace dumb search and chat experiments with a single retrieval-grounded answer engine that cites sources. $30–80K ACV ceiling. Sells as a feature. Delivered by Developer Foundations Builds 0–1.
 
-| Field | Value |
-|---|---|
-| **Owning track(s)** | Sell (Should), Solution (Must), Deliver (Must) |
-| **Tier mapped to** | Tier 2 |
-| **What the partner does** | Builds a floating chat with two distinct prompt modes — *prospect* (concise + one CTA from the corpus) and *member* (detailed + multi-source citations). Both modes route to the same KB; the only difference is the prompt and the post-processing. Implements `{context}`/`{question}` placeholders, query-prefix language switching, and resource-scoped chat. |
-| **Pass rubric** | (1) Two prompt modes demonstrably differ in voice, length, and CTA behaviour. (2) A `Respond in {language}: ` prefix produces a working multilingual answer. (3) Resource-scoped chat correctly focuses the model on a single document. (4) Deep-link share URLs auto-fire once and strip themselves cleanly. |
-| **Asset delivered** | A "Three voices, one KB" demo script with the partner's own copy. Reference: `Sample-ARAG-App/src/components/chat/FloatingChat.tsx` (the canonical Tier 2 example), `ResourceChatTab.tsx`, `ResearchAssistantPage.tsx`. |
+**Tier 2 — Multi-Surface Conversational Intelligence.** One KB, multiple prompt voices, KB routing by user state, deep-link sharing, multilingual via query prefix, embedded widgets, field-engineered CTAs. The differentiation tier. Doubles ACV. Delivered by Developer Foundations Build 2 + AE&RS Build 5 (field engineering).
 
-### Build 3 — Schema-constrained generation (the agent workshop)
+**Tier 3 — Structured AI Workflows.** `answer_json_schema` as a programmable backend. Dynamic certifications, adaptive onboarding paths, intelligent CTAs, content classification, case triage, quote generation, comparison tables. Moat-building tier. $80–250K engagements. Delivered by Developer Foundations Builds 3–4 + AE&RS Builds 1–4.
 
-| Field | Value |
-|---|---|
-| **Owning track(s)** | Solution (Must), Deliver (Must) |
-| **Tier mapped to** | Tier 3 |
-| **What the partner does** | Designs and ships three `askForJson` workflows against the partner's own KB: a follow-up question generator, a dynamic FAQ generator, and a domain taxonomy generator. Learns to handle the strict-mode `additionalProperties:false` requirement, the three response-shape fallbacks, and the "schema permissive, code strict" pattern (mixed-type schemas with client-side validation). |
-| **Pass rubric** | (1) Three schemas committed to the partner's repo. (2) Each schema validated against at least 20 production inputs. (3) Mixed-shape schema (MC + free-text) generated correctly. (4) Recorded demo explaining the difference between `askForJson` and the manual-JSON-via-prompt-with-regex pattern, and when to use each. |
-| **Asset delivered** | The Agent Workshop notebook — a reusable Jupyter / TypeScript template with five worked schema examples. Reference: `Sample-ARAG-App/src/pages/ExamPage.tsx` (six distinct generation patterns in one file — the canonical Tier 3 reference) and `src/context/CertificationContext.tsx`. **Flagged as one of the two highest-priority assets to build first.** |
+**Tier 4 — Agentic & Knowledge-Graph Platform.** Custom data-augmentation agents, typed graphs, hybrid retrieval, multimodal field bundles, composite RAG. Strategic-account tier. $500K–$2M ACV, multi-year. Delivered by Developer Foundations Builds 5–7 + AE&RS Builds 6–8.
 
-### Build 4 — Composite RAG (the on-ramp to agentic)
-
-| Field | Value |
-|---|---|
-| **Owning track(s)** | Solution (Should), Deliver (Must) |
-| **Tier mapped to** | Tier 3 → Tier 4 bridge |
-| **What the partner does** | Implements "generate → evaluate citations → if low confidence, fire `/find` → synthesise augmented context → re-ask" in a real workflow. Builds at least one production pattern: study-guide-with-fallback, low-confidence-answer-retry, or multi-step research synthesis. |
-| **Pass rubric** | (1) Working composite flow with measurable improvement over single-shot `/ask`. (2) Latency budget documented and within target. (3) Recorded explanation of where the boundary sits between "augmenting retrieval" and "running a true agent." |
-| **Asset delivered** | A composite-RAG cookbook with three recipes — retry-on-low-citations, multi-pass synthesis, retrieve-then-rerank. Reference: `Sample-ARAG-App/src/components/certification/ExamStudyPanel.tsx` (the cleanest live example). |
-
-### Build 5 — Typed knowledge graph & data augmentation agents
-
-| Field | Value |
-|---|---|
-| **Owning track(s)** | Solution (Must), Deliver (Must) |
-| **Tier mapped to** | Tier 4 |
-| **What the partner does** | Designs a bespoke entity/relation schema for the partner's domain (e.g., LEGAL: PARTY/MATTER/JURISDICTION/STATUTE/JUDGE; or PHARMA: COMPOUND/TARGET/TRIAL/PI). Configures a data-augmentation agent to extract that schema. Ships a graph navigation UI that filters to `{prop:'generated', by:'data-augmentation'}`, supports fuzzy entity search, undirected path traversal, and incremental in-place graph expansion. Wires entity-to-resources lookup using hybrid `features:['keyword','semantic']`. |
-| **Pass rubric** | (1) A typed schema of at least 8 entity types and 8 relation types committed and documented. (2) Graph queries return clean results (no NER noise, no GUID-shaped values). (3) Click-to-expand graph traversal working end-to-end. (4) Recorded demo answering a customer question that *cannot* be answered by single-shot retrieval — only by traversing the graph. |
-| **Asset delivered** | A graph schema design template (12 worked vertical examples — legal, pharma, financial services, film production, compliance, etc.). Reference: `Sample-ARAG-App/src/lib/graphApi.ts`, `graphConstants.ts`, and `pages/KnowledgeGraphPage.tsx`. |
-
-### Build 6 — Production readiness
-
-| Field | Value |
-|---|---|
-| **Owning track(s)** | Solution (Must), Deliver (Must) |
-| **Tier mapped to** | Tier 4 (operational) |
-| **What the partner does** | Configures data residency (EU or USA), wires BYO-LLM routing across Azure OpenAI / Google Vertex / AWS Bedrock, observes the default 2400 req/min rate limit and designs around it, hardens authentication, instruments observability, and stress-tests the workload. |
-| **Pass rubric** | (1) Residency demonstrably configured and verifiable. (2) BYO-LLM connection working against at least two of the three hyperscaler endpoints. (3) Rate-limit-aware client implemented (backoff, batching, request coalescing). (4) Observability dashboard tracking p50/p95 latency, retrieval recall proxy, and citation-rate. (5) Recorded explanation of the "platform-grade" pitch to a customer's CTO. |
-| **Asset delivered** | A production-readiness checklist + reference Terraform / CDK / Bicep snippets for residency-aware deployment + rate-limit-aware client templates. |
-
-### Build 7 — The Capstone (pick your wow build)
-
-The capstone ships with two worked examples. The partner picks the one that matches their book of business; the second is built later if both customer segments are in play. Both share the same chassis (forked from the Sample ARAG App), the same eight-week build plan, and the same re-skin playbook structure — they differ in corpus, graph schema, workflows, and demo buyer.
-
-| Variant | Buyer | Persona corpus | Killer moment | Brief |
-|---|---|---|---|---|
-| **Enterprise / Operations** | CTO, CIO, Chief Data Officer | Atlas Global Industries (industrial manufacturer, 5 internal KBs) | Composite-RAG incident root cause + cross-functional typed graph | `Capstone-Example-Atlas-Operations.md` |
-| **Customer Experience** | CMO, Head of Digital, Chief Customer Officer | Aurora Outfitters (D2C outdoor retailer, 5 customer-facing KBs) | Two-voice floating chat + content-engineered CTAs + abandoned-cart composite RAG | `Capstone-Example-Aurora-Concierge.md` |
-
-| Field | Value (applies to both variants) |
-|---|---|
-| **Owning track(s)** | All three tracks at Must for Elite tier |
-| **Tier mapped to** | Capstone — combines Tiers 1–4 |
-| **What the partner does** | Builds one variant of the capstone: a single application that exercises every primitive and every tier in one branded surface. Grounded search + multi-surface chat + schema-constrained workflows + typed knowledge graph + multimodal media + custom field enrichment + production-grade ops. The capstone is what a partner walks into a Fortune 500 buyer's office with. |
-| **Pass rubric** | (1) The capstone deployed at the partner's domain. (2) End-to-end demo runs in 25 minutes covering all four tiers without code edits. (3) At least one customer-specific data-augmentation agent in production. (4) Org-level recorded demo passes a Progress-led review board. |
-| **Asset delivered** | The capstone reference build — the flagship asset of the entire programme. **Flagged as the second of two highest-priority assets to build first; it is both the curriculum capstone and the sales-room closer.** Reference: composes patterns from every file in `Sample-ARAG-App/src/pages/` and `src/components/`. |
-
-### §3.5 — Prompt engineering patterns to teach explicitly (cross-cutting through Builds 2–7)
-
-| Pattern | When to use |
-|---|---|
-| `system` only | Voice control, format control, length control. Fastest. |
-| `system` + `user` with `{context}`/`{question}` | When you need fine control over how retrieval is injected. |
-| Query prefix only | A/B-able verbosity ("Research mode"), language switching ("Respond in French: "), resource scoping ("Regarding the resource X:"). Cheapest. |
-| `answer_json_schema` | When the response feeds an API, a UI, or another ARAG call. |
-| Manual JSON via system prompt + regex extract | When you need streaming + structured output. |
-
-Teach partners to start with system-only, escalate to user-template when retrieval injection needs control, escalate to schema when the next consumer is code, and reach for manual-JSON only when both streaming and structure are required.
-
-### §3.6 — The Technical Capability Ladder (tiers in their full form)
-
-The Builds are how partners learn. The Tiers are how customers buy. Each tier should be internalised by every Sell-track and Solution-track individual.
-
-**Tier 1 — Foundations: Grounded Search & Q&A.** Replace dumb search and chat experiments with a single retrieval-grounded answer engine that cites sources. $30–80K ACV ceiling. Sells as a feature.
-
-**Tier 2 — Multi-Surface Conversational Intelligence.** One KB, multiple prompt voices, KB routing by user state, deep-link sharing, multilingual via query prefix, embedded widgets, field-engineered CTAs. The differentiation tier. Doubles ACV.
-
-**Tier 3 — Structured AI Workflows.** `askForJson` as a programmable backend. Dynamic certifications, adaptive onboarding paths, intelligent CTAs, content classification, case triage, quote generation, comparison tables. Moat-building tier. $80–250K engagements.
-
-**Tier 4 — Agentic & Knowledge-Graph Platform.** Custom data-augmentation agents, typed graphs, hybrid retrieval, multimodal field bundles, composite RAG. Strategic-account tier. $500K–$2M ACV, multi-year. (Full enumeration of cross-cutting capabilities — gating, deep-link, field engineering, multilingual, composite RAG — lives in the Cross-Cutting Capabilities appendix.)
+(Full enumeration of cross-cutting capabilities — gating, deep-link, field engineering, multilingual, composite RAG — lives in the Cross-Cutting Capabilities appendix.)
 
 ---
 
@@ -225,9 +138,16 @@ Individual certifications gate organisational tiers. Organisational tiers gate c
 
 Each named individual at a partner org can hold certifications stacked along their track:
 
-- **Sell track**: Sell-1 (Builds 0–1), Sell-2 (Builds 0–2 + win/loss + discovery), Sell-3 (full Sell competencies + capstone walkthrough).
-- **Solution track**: Solution-1 (Builds 0–2), Solution-2 (Builds 0–4), Solution-3 (Builds 0–6), Solution-4 (full Solution + Build 7 capstone).
-- **Deliver track**: Deliver-1 (Builds 0–2), Deliver-2 (Builds 0–4), Deliver-3 (Builds 0–6), Deliver-4 (full Deliver + Build 7 capstone).
+- **Sell track** (full course is *Sales Foundations*, planned for Q3; interim certs derive from Developer Foundations Sell-relevant builds):
+  - Sell-1: Developer Foundations Builds 0–1 walkthrough.
+  - Sell-2: Developer Foundations Builds 0–2 + win/loss + discovery competencies (interim — fully replaced when Sales Foundations course ships).
+  - Sell-3: Full Sell competencies + recorded capstone walkthrough.
+- **Solution track**:
+  - Solution-1: Developer Foundations Builds 0–2.
+  - Solution-2: Developer Foundations Practitioner (full).
+  - Solution-3: Developer Foundations Practitioner + AE&RS Specialist Builds 1–4.
+  - Solution-4: Developer Foundations Practitioner + AE&RS Specialist (full) + Build 7 capstone deployed at the partner's domain.
+- **Deliver track**: parallel to Solution with the same course-cert milestones — Deliver-1 through Deliver-4. Stricter delivery-quality rubrics where applicable.
 
 ### Gates
 
@@ -259,7 +179,7 @@ A partner's journey from first contact to advocate runs through five stages. Eac
 |---|---|---|---|
 | **Recruit** | 30 days from first contact | Mutual fit confirmed; partnership agreement signed; named individuals across three tracks identified | Channel Manager |
 | **Onboard** | 30 days from agreement | Build 0 complete for at least one named individual per track (Sell, Solution, Deliver). Sandbox provisioned. Sample ARAG App running locally. | Partner Manager + Partner SE |
-| **Activate** | 60 days from onboard exit | First Build 3 (schema-constrained generation) submitted and passed. First customer demo recorded. Authorized tier reached. | Partner SE + Partner |
+| **Activate** | 60 days from onboard exit | First Developer Foundations Build 3 (schema-constrained generation) submitted and passed. First customer demo recorded. Authorized tier reached. | Partner SE + Partner |
 | **Scale** | 6 months from activate exit | At least one customer in production at Tier 2 or Tier 3. Premier tier reached. Quarterly QBR cadence established. | Partner Manager + Partner GM |
 | **Advocate** | Continuous | Public reference. Joint marketing event. At least one capstone walkthrough delivered to a customer. Elite tier reached. | Channel GM |
 
@@ -281,20 +201,31 @@ The programme runs on five infrastructure pieces. Each is owned, versioned, and 
 
 Every asset has a name, an owner, a version, and a corresponding build. No orphan assets, no "miscellaneous" folder. If an asset can't be mapped to a build, it doesn't ship.
 
-| Asset | Build | Owner | Status |
+| Asset | Course / Build | Owner | Status |
 |---|---|---|---|
-| Sample ARAG App reference repo | All builds | GTM | **Shipped** |
-| Partner Enablement Framework (this doc) | All builds | GTM | **Shipped** |
-| ARAG primitives slide deck | 0 | GTM | TODO |
-| Widget showcase + branded snippets | 1 | Solution | Stub |
-| "Three voices, one KB" demo script | 2 | GTM | TODO |
-| Agent Workshop notebook | 3 | Solution | **Top-priority** |
-| Composite-RAG cookbook | 4 | Solution | TODO |
-| Graph schema design template (12 verticals) | 5 | Solution | TODO |
-| Production-readiness checklist + IaC snippets | 6 | Solution | TODO |
-| Capstone example — Atlas Operations (Enterprise) | 7 | GTM | **Shipped** (`Capstone-Example-Atlas-Operations.md`) |
-| Capstone example — Aurora Concierge (CX) | 7 | GTM | **Shipped** (`Capstone-Example-Aurora-Concierge.md`) |
-| Capstone reference build (one example first) | 7 | GTM + Solution | **Top-priority** |
+| Sample ARAG App reference repo | Cross-course | GTM | **Shipped** |
+| Umbrella framework (this doc) | All courses | GTM | **Shipped** |
+| Developer Foundations course doc | Foundations | GTM | **Shipped** (`courses/Developer-Foundations.md`) |
+| Advanced Extraction & Retrieval Strategies course doc | Advanced | GTM | **Shipped** (`courses/Advanced-Extraction-and-Retrieval-Strategies.md`) |
+| ARAG primitives slide deck | Foundations Build 0 | GTM | TODO |
+| Widget showcase + branded snippets | Foundations Build 1 | Solution | Stub |
+| "Three voices, one KB" demo script | Foundations Build 2 | GTM | TODO |
+| Agent Workshop notebook | Foundations Build 3 | Solution | **Top-priority** |
+| Composite-RAG cookbook | Foundations Build 4 | Solution | TODO |
+| Graph schema design template (12 verticals) | Foundations Build 5 / Advanced Build 6 | Solution | TODO |
+| Production-readiness checklist + IaC snippets | Foundations Build 6 | Solution | TODO |
+| Capstone example — Atlas Operations (Enterprise) | Foundations Build 7 | GTM | **Shipped** (`Capstone-Example-Atlas-Operations.md`) |
+| Capstone example — Aurora Concierge (CX) | Foundations Build 7 | GTM | **Shipped** (`Capstone-Example-Aurora-Concierge.md`) |
+| Capstone reference build (one example first) | Foundations Build 7 | GTM + Solution | **Top-priority** |
+| Eval-harness template + golden-set template | Advanced Build 1 | Solution | TODO |
+| Chunking spec template + decision tree | Advanced Build 2 | Solution | TODO |
+| Hybrid-retrieval decision matrix + A/B runner | Advanced Build 3 | Solution | TODO |
+| Labelset design template + classifier guide | Advanced Build 4 | Solution | TODO |
+| Field-engineering playbook + author training + A/B scaffolding | Advanced Build 5 | Solution | **Top-priority (recurring revenue lever)** |
+| Agent design template + 10 vertical schemas | Advanced Build 6 | Solution | TODO |
+| Multimodal extraction recipe book | Advanced Build 7 | Solution | TODO |
+| Agentic-patterns cookbook + observability template | Advanced Build 8 | Solution | TODO |
+| Tuning-report template | Advanced Build 9 | Solution | **Top-priority (commercial deliverable)** |
 | Battle cards (AI12z, Caitlyn, Harvey AI) | Sell track | GTM | In progress |
 | Win/loss debrief template | Sell track | GTM | TODO |
 | Discovery checklist | Sell track | GTM | **Shipped** (`The Vault/01_Sales/Sales_Tools/`) |
@@ -331,10 +262,10 @@ The programme is measured continuously and reviewed on a fixed cadence. Leading 
 
 ### 7.1 Leading KPIs (track weekly)
 
-- **Time-to-first-build** — days from onboard kickoff to Build 0 pass. Target ≤ 30 days; alarm at 45.
-- **Build-completion velocity** — builds passed per partner per quarter. Floor at 1 build/quarter for Authorized+, alarm at 0.
+- **Time-to-first-build** — days from onboard kickoff to Developer Foundations Build 0 pass. Target ≤ 30 days; alarm at 45.
+- **Build-completion velocity** — course-builds passed per partner per quarter. Floor at 1 build/quarter for Authorized+, alarm at 0.
 - **Sandbox activity** — API calls per partner per week. Zero-activity weeks trigger a partner-manager check-in.
-- **Advanced-build attach rate** — proportion of certified partners holding at least one Build 3+ cert. **This is the single most important leading indicator** of whether the programme is producing platform-level competency or just chatbot resellers.
+- **Advanced-cert attach rate** — proportion of Developer Foundations Practitioners who go on to earn AE&RS Specialist. **This is the single most important leading indicator** of whether the programme is producing platform-level competency or just chatbot resellers — Foundations alone produces Tier-1 sellers; AE&RS produces Tier-3 and Tier-4 platform sellers.
 - **Recorded-demo submission rate** — submissions per partner per quarter.
 - **Office-hours attendance** — % of partners with at least one named attendee per month.
 
@@ -394,25 +325,26 @@ This programme is too heavy to launch all at once. The first 90 days deliver the
 
 ### Days 0–30 — Foundation
 
-- Ship Build 0–2 fully (Hello ARAG, Widgets, Multi-surface chat). Recorded-demo gates working.
+- Ship Developer Foundations Builds 0–2 fully (Hello ARAG, Widgets, Multi-surface chat). Recorded-demo gates working.
 - Lock the partner agreement template, tier definitions, and commercial terms.
 - Stand up sandbox provisioning automation.
-- Ship the asset library v0 (battle cards, Sample ARAG App reference, Discovery checklist, Build 0–2 rubrics).
+- Ship the asset library v0 (battle cards, Sample ARAG App reference, Discovery checklist, Foundations Builds 0–2 rubrics, both course docs).
 - Recruit the first three pilot partners.
-- **Decision point at day 30:** are pilot partners on track to pass Build 0 by day 45? If no, fix onboarding before scaling.
+- **Decision point at day 30:** are pilot partners on track to pass Developer Foundations Build 0 by day 45? If no, fix onboarding before scaling.
 
 ### Days 31–60 — Pilot Wave
 
-- Pilot partners ship Builds 1–2. First customer demos recorded.
-- Build 3 (Agent Workshop) shipped as a fully gated asset. **This is the priority build for this window.**
+- Pilot partners ship Foundations Builds 1–2. First customer demos recorded.
+- Foundations Build 3 (Agent Workshop) shipped as a fully gated asset. **This is the priority build for this window.**
 - Battle cards refined based on first customer pushback.
 - Pilot partners reach Authorized tier; first MDF dollars released.
 - Weekly build clinic cadence stabilised.
 
 ### Days 61–90 — Scale
 
-- capstone reference build deployed at Progress and at one pilot partner's domain. **This is the priority asset for this window.**
-- Builds 4–6 shipped with full rubrics.
+- Capstone reference build deployed at Progress and at one pilot partner's domain. **This is the priority asset for this window.**
+- Foundations Builds 4–6 shipped with full rubrics.
+- AE&RS Specialist course opened for early-adopter pilot partners (Builds 1–3 of the Advanced course rubric-ready).
 - First Premier-tier partner achieved.
 - Programme opened to wider recruitment.
 - First Quarterly Review held with all pilot partners.
