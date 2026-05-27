@@ -6,53 +6,31 @@
 
 | | |
 |---|---|
-| **Owning track(s)** | Sell, Solution, Deliver — all three tracks start here |
+| **Capability** | Provision a sandbox KB, make first API calls, set up the vibe-coding workflow |
 | **Tier mapped to** | Tier 1 prep |
-| **Prerequisite** | None — this is the on-ramp |
-| **Estimated effort** | 4–6 hours focused, including reading |
+| **Prerequisite** | Read [`vibe-coding-guide.md`](../../vibe-coding-guide.md) first |
+| **Estimated effort** | 2–3 hours focused |
+| **Video length** | 12 minutes |
 
 ## Start here
 
-Work through the three course-material files for this Build in order:
+Work through the four files for this Build in order:
 
-1. **[lesson.md](lesson.md)** — concepts, ARAG patterns, why this Build matters. Read first.
-2. **[walkthrough.md](walkthrough.md)** — step-by-step build instructions with code and verification checklist.
-3. **[quiz.md](quiz.md)** — 8 MC + 1 short answer; pass = 7/8 + credible short answer.
+1. **[lesson.md](lesson.md)** — what ARAG is, the auth model, the three endpoints you'll touch today. Read first (or watch the video).
+2. **[video-script.md](video-script.md)** — production-ready talk track + shot list for the video version of the lesson. Watch the video if it's been recorded; otherwise the script is your guide.
+3. **[walkthrough.md](walkthrough.md)** — vibe-coded exercise: provision a KB, make calls, ask an AI to write `ask.mjs` for you, verify.
+4. **[quiz.md](quiz.md)** — 6 multiple-choice + 1 short answer. Pass = 5/6 + credible short answer.
 
-The rest of this README is a quick-reference summary. The full content lives in the three files above.
+## What you can do after this Build
 
----
-
-## What the partner does
-
-Provisions a sandbox KB. Ingests 10 documents from their own corpus. Makes their first `/ask` call from `curl`. Runs `/find` for a semantic search. Opens the []() and points it at their KB.
-
-## Pass rubric
-
-1. Sandbox KB provisioned and reachable.
-2. Three successful streamed answers against the partner's own content with citations rendered.
-3.  `/assistant` page running locally against the partner's KB.
-4. Reviewer signs off.
-
-## Asset delivered
-
-A 30-minute recorded run-through of the partner's own corpus answering three of their customer's most common questions. This is the first thing they show in a customer meeting.
-
----
-
-## Workspace
-
-This folder is the working space for everything supporting Build 0. Drop materials here as they are built:
-
-- `walkthrough.md` — step-by-step exercise (KB provisioning, ingest, first calls)
-- `setup/` — sandbox provisioning scripts, env templates
-- `slides/` — slide deck for the build clinic
-- `recording-template.md` — script for the 30-minute partner recording
-- `verification.md` — reviewer checklist
-
-The course README (`../../README.md`) is the canonical curriculum source; this README mirrors the build's at-a-glance for fast reference.
+- Provision a Nuclia KB and ingest documents into it.
+- Make `/find` and `/ask` calls (sync and streaming) from `curl`.
+- Direct an AI coding assistant to write a working ARAG client in 5 minutes.
+- Read the response shape for `/find` (paragraphs + scores) and `/ask` (NDJSON stream).
+- Recognise the difference between the platform (ARAG) and the application code you'll generate against it.
 
 ## See also
 
 - Parent course: [Developer Foundations](../../README.md)
-- Next build: [Build 1 — Grounded search & drop-in widgets](../build-1-grounded-search-widgets/)
+- Vibe-coding mental model: [`../../vibe-coding-guide.md`](../../vibe-coding-guide.md)
+- Next: [Build 1 — The Five Primitives](../build-1-five-primitives/)

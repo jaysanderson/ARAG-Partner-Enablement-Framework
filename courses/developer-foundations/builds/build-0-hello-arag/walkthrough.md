@@ -1,44 +1,47 @@
 # Build 0 — Walkthrough: Hello ARAG
 
-> Estimated time: 3–4 hours focused. Complete the [lesson](lesson.md) first.
+> Estimated time: 2–3 hours focused. Complete the [lesson](lesson.md) (or watch the [video](video-script.md)) first.
 
 ## Prerequisites
 
-- Progress ARAG sandbox account provisioned and accessible.
-- `curl` installed locally.
-- Node.js 18+ and `npm` installed.
-- Git installed.
-- A folder of ~10 documents to ingest. PDFs, Word docs, markdown, plain text — any of those work. If you don't have your own corpus, you can pull 10 markdown files from `/tree/main/knowledge-base/kb-site-content` as a starter.
+- Progress ARAG sandbox account provisioned.
+- Local terminal with `curl` and `jq`.
+- A folder of ~10 documents (PDFs, markdown, plain text — your own corpus or a sample).
+- One AI coding assistant set up (Claude Code, Cursor, GitHub Copilot, or ChatGPT).
 
-## 1. Provision your sandbox KB
+## 1. Provision your KB (5 min)
 
-In the Nuclia dashboard (link provided in your sandbox account email):
+In the Nuclia dashboard:
 
-1. Create a new knowledge base. Name it something memorable like `<your-org>-foundations-sandbox`.
-2. **Region:** choose EU (we'll use EU throughout the course unless a customer requires USA).
-3. **LLM:** leave on default for Build 0; you'll wire BYO-LLM in Build 6.
+1. Create a new knowledge base. Name it `<your-org>-foundations`.
+2. **Region:** EU (we'll cover residency in Build 10).
+3. **Generative model:** leave on default for now; BYO-LLM lands in Build 10.
 
-After the KB is created, copy three values into a local `.env` file:
+Save these into `.env` in a working folder:
 
 ```bash
 NUCLIA_API_URL=https://aws-eu-1.rag.progress.cloud/api/v1
-NUCLIA_KB_ID=<the-uuid-of-your-kb>
-NUCLIA_API_KEY=<the-service-account-jwt>
+NUCLIA_KB_ID=<your-kb-uuid>
+NUCLIA_API_KEY=<your-service-account-jwt>
 ```
 
-The exact `NUCLIA_API_URL` differs by region; copy it from the dashboard's "Endpoint" field. **Do not commit this `.env` to git.**
+Don't commit this file.
 
-## 2. Ingest 10 documents
+## 2. Ingest 10 documents (10 min)
 
-Use the Nuclia upload UI for Build 0. (Programmatic ingest comes later in the course.)
+Drag-and-drop 10 documents into the KB in the dashboard. Wait until all show as "indexed" — usually 30 seconds per document.
 
-1. Drag-and-drop 10 documents into your KB.
-2. Wait until processing completes — typically 30 seconds per document. The UI shows progress per resource.
-3. Verify each document has a title, a non-empty text-extraction body, and a status of "indexed".
+Pick documents you understand the content of. The point isn't quality of corpus — it's that you can sanity-check the model's answers.
 
-## 3. First `/find` call
+## 3. First `/find` call (10 min)
 
-Open a terminal and run:
+Source your `.env`:
+
+```bash
+set -a; source .env; set +a
+```
+
+Run:
 
 ```bash
 curl -s -X POST \
@@ -48,33 +51,13 @@ curl -s -X POST \
   "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/find" | jq .
 ```
 
-What to inspect in the response:
+Inspect the response. Confirm:
 
-- `resources` — the matching documents, keyed by resource id.
-- For each resource, `fields.<field-id>.paragraphs.<paragraph-id>` — the paragraphs that matched, with `score`, `order`, `text`, and (for video/audio) `position.start_seconds`.
-- `best_matches` — the top-ranked matches in order.
+- `resources` is populated.
+- For each resource, at least one paragraph has a `score > 0.6`.
+- `best_matches` lists the top resource ids.
 
-Read at least two complete resource entries in the response. Understand what's inside before moving on.
-
-## 4. First sync `/ask` call
-
-```bash
-curl -s -X POST \
-  -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
-  -H "Content-Type: application/json" \
-  -H "x-synchronous: true" \
-  -d '{"query":"<your question>","prefer_markdown":true,"rephrase":true,"max_tokens":500}' \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" | jq .
-```
-
-Two things to inspect:
-
-- `answer` — the generated answer, in markdown.
-- `retrieval_results.resources` and `retrieval_best_matches` — the citations the answer was grounded in.
-
-The model may say "I don't have enough information." That's a *correct* answer when the corpus is small. Don't worry about answer quality at this stage — verify the call works and the citations come back.
-
-## 5. First streaming `/ask` call
+## 4. First streaming `/ask` call (10 min)
 
 ```bash
 curl -N -X POST \
@@ -84,140 +67,79 @@ curl -N -X POST \
   "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask"
 ```
 
-`curl -N` disables output buffering so you see the NDJSON stream as it arrives. Watch the `{"item":{"type":"answer","text":"..."}}` chunks accumulate, then the `{"item":{"type":"retrieval",...}}` block, then `{"item":{"type":"status","code":"0"}}` to mark completion.
+You'll see NDJSON chunks arrive: `answer` items first, then a single `retrieval` item, then a `status` item. Confirm the stream completes cleanly.
 
-This is the call shape every subsequent Build's streaming client parses.
+## 5. Vibe-code `ask.mjs` (30 min)
 
-## 6. Write a minimal Node.js streaming client
+Open your AI coding assistant. Brief it with the prompt below (copy verbatim, swap in your environment specifics):
 
-Build a tiny script that hits the streaming `/ask` endpoint and renders the answer + citations to the terminal. No frontend, no external repos — just enough code to verify you can drive ARAG from your own programme. You'll reuse and extend this scaffolding in later Builds.
+```
+Build me a Node.js script ask.mjs that:
+
+1. Reads NUCLIA_API_URL, NUCLIA_KB_ID, and NUCLIA_API_KEY from a .env file
+   (use dotenv).
+2. Takes a query as a CLI argument: node ask.mjs "your question"
+3. Calls POST {NUCLIA_API_URL}/kb/{NUCLIA_KB_ID}/ask with header
+   X-NUCLIA-SERVICEACCOUNT: Bearer {NUCLIA_API_KEY} and body
+   {query, prefer_markdown: true, rephrase: true, max_tokens: 500}.
+4. The response is NDJSON. Each line is shaped {item: {type: "answer"|"retrieval"|"status", ...}}.
+5. As {item:{type:"answer", text}} arrives, print the text chunk to stdout immediately.
+6. When {item:{type:"retrieval", results}} arrives, capture results.best_matches.
+7. At end of stream, print "---" then list the citation resource IDs.
+
+Use plain fetch, no SDK. Handle balanced JSON parsing from the streaming
+buffer (objects may straddle chunk boundaries).
+
+When you're done, show me the file. I'll review and run it.
+```
+
+The AI will produce a script. **Read it** before running. Check:
+
+- It uses `fetch`, not an SDK.
+- It uses the right auth header.
+- It parses NDJSON correctly (handling cross-chunk boundaries).
+- It streams the answer (not buffering until the end).
+
+Save the AI's response and your prompt as `prompt-log.md` in this Build folder. The prompt is institutional knowledge — keep it.
+
+## 6. Run and verify (15 min)
 
 ```bash
-mkdir build-0-client && cd build-0-client
 npm init -y
 npm install dotenv
+node ask.mjs "your question"
 ```
 
-Create `ask.mjs`:
+You should see:
 
-```javascript
-import 'dotenv/config';
+- Answer text streaming in token-by-token.
+- A `---` separator.
+- 1–5 resource IDs of the citations.
 
-const { NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY } = process.env;
+Run it three times with three different questions. If it doesn't stream (i.e., the whole answer dumps at once), tell the AI: *"The output isn't streaming — each token should print as it arrives. The parser is buffering. Fix it."* Iterate until streaming works.
 
-const query = process.argv.slice(2).join(' ');
-if (!query) {
-  console.error('Usage: node ask.mjs "your question"');
-  process.exit(1);
-}
+## 7. Record a 5-minute walkthrough (15 min)
 
-const res = await fetch(`${NUCLIA_API_URL}/kb/${NUCLIA_KB_ID}/ask`, {
-  method: 'POST',
-  headers: {
-    'X-NUCLIA-SERVICEACCOUNT': `Bearer ${NUCLIA_API_KEY}`,
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    query,
-    prefer_markdown: true,
-    rephrase: true,
-    max_tokens: 500,
-  }),
-});
+Record yourself:
 
-if (!res.ok) {
-  console.error(`HTTP ${res.status}: ${await res.text()}`);
-  process.exit(1);
-}
+1. (60 sec) Showing the Nuclia dashboard with your KB and ingested docs.
+2. (60 sec) Running the `curl /find` call. Narrating what's in the response.
+3. (60 sec) Running the `curl /ask` streaming call. Narrating the NDJSON chunks.
+4. (90 sec) Running `node ask.mjs "your question"` against two queries. Narrating the streaming behaviour + citations.
+5. (30 sec) Closing: what would change against a customer's 10,000 documents vs your 10.
 
-const decoder = new TextDecoder();
-let buffer = '';
-let citations = [];
-
-for await (const chunk of res.body) {
-  buffer += decoder.decode(chunk, { stream: true });
-
-  // Parse balanced JSON objects from the buffer
-  let depth = 0, start = 0, inString = false, escape = false;
-  for (let i = 0; i < buffer.length; i++) {
-    const ch = buffer[i];
-    if (escape) { escape = false; continue; }
-    if (ch === '\\' && inString) { escape = true; continue; }
-    if (ch === '"') { inString = !inString; continue; }
-    if (inString) continue;
-    if (ch === '{') depth++;
-    else if (ch === '}' && --depth === 0) {
-      const text = buffer.slice(start, i + 1);
-      start = i + 1;
-      try {
-        const { item } = JSON.parse(text);
-        if (item?.type === 'answer' && item.text) {
-          process.stdout.write(item.text);
-        } else if (item?.type === 'retrieval' && item.results) {
-          citations = item.results.best_matches.slice(0, 5);
-        }
-      } catch { /* malformed chunk; skip */ }
-    }
-  }
-  buffer = buffer.slice(start);
-}
-
-console.log('\n\n--- Citations ---');
-for (const c of citations) {
-  console.log(`- ${c.id.split('/')[0]}`);
-}
-```
-
-Copy your `.env` from earlier into this folder. Then run:
-
-```bash
-node ask.mjs "your question here"
-```
-
-You should see the answer stream out token-by-token, followed by the citations.
-
-This is the smallest possible end-to-end ARAG client. The NDJSON-parsing logic — accumulate `answer` chunks, capture the `retrieval` item — is the foundation of every Tier 2+ chat surface you'll build in later Builds.
-
-## 7. Verify across three queries
-
-Run the script three times against your ingested content:
-
-```bash
-node ask.mjs "what does my corpus actually contain?"
-node ask.mjs "summarise the key topic in document N"
-node ask.mjs "find the section about X"
-```
-
-For each:
-
-- Watch the streaming answer arrive token-by-token.
-- Confirm the `--- Citations ---` section lists at least one resource id.
-- Open the Nuclia dashboard and confirm those resource ids match documents you ingested.
-
-If the citations list is empty, your content may not be relevant to the question — pick a question that *should* be in the corpus.
-
-## 8. Record your 30-minute walkthrough
-
-This is the deliverable. Record yourself:
-
-1. Showing the Nuclia dashboard with your KB and the 10 documents.
-2. Running `ask.mjs` three times with three different queries.
-3. For each query, narrating what's happening — what the streaming chunks are doing, what the citations are, why the answer is grounded in your content.
-4. Closing with one sentence on what a customer would do differently against their own 10,000 documents instead of your 10.
-
-Use Loom, QuickTime, OBS — anything that records screen + voice. Upload to the partner Slack `#build-clinic-submissions` channel.
+Use Loom, QuickTime, OBS. Upload to `#build-clinic-submissions`.
 
 ## Verification checklist
 
-- [ ] Sandbox KB provisioned, 10 documents ingested, all indexed.
-- [ ] `/find` call returns at least one paragraph with a non-zero score.
-- [ ] Sync `/ask` call returns an answer and citation array.
-- [ ] Streaming `/ask` call delivers NDJSON chunks; the answer accumulates from `answer` items; citations arrive in the `retrieval` item.
-- [ ] `ask.mjs` runs against three queries with non-empty citations.
-- [ ] 30-minute recording submitted.
-
-When all six are checked, you're ready for the [Build 0 quiz](quiz.md). Pass the quiz and a reviewer signs off on your recording, and you're done with Build 0.
+- [ ] KB provisioned, 10 documents ingested, all indexed.
+- [ ] `/find` `curl` call returns paragraphs with `score > 0.6`.
+- [ ] `/ask` streaming `curl` call delivers NDJSON chunks; `answer`, `retrieval`, `status` items observed.
+- [ ] `ask.mjs` script written by AI, reviewed by you, streams correctly.
+- [ ] Three queries run through the script; citations land.
+- [ ] `prompt-log.md` saved with the prompt that produced the working code.
+- [ ] 5-minute recording submitted.
 
 ## Next
 
-[Build 1 — Grounded search & drop-in widgets](../build-1-grounded-search-widgets/) → covers content-type filters, label filters, branded theming, and the Nuclia widget library — the patterns you'll embed on a real partner website.
+[Build 1 — The Five Primitives](../build-1-five-primitives/) extends today's `/find` and `/ask` into the full surface: `/ask` with schema constraints, `/graph`, `/resource`, `/labelsets`. After Build 1 you'll have seen every endpoint at least once.

@@ -1,80 +1,86 @@
 # Build 0 — Lesson: Hello ARAG
 
-> Estimated reading time: 25 minutes. Read this before starting the [walkthrough](walkthrough.md).
+> Read time: 12 minutes. Companion to the 12-minute [video](video-script.md). Either is sufficient; the video is the recommended path.
 
-## Why partners start here
+## Why you start here
 
-Every partner programme that fails at ARAG fails because the partner pitched ARAG as "ChatGPT for your data" and lost to a free trial. Build 0 exists to give you the *correct* mental model from the first day: ARAG is not a chatbot. It is a platform with five primitives, and your job — across every customer engagement you'll ever run — is to compose those primitives into something a customer is willing to pay $250K+ a year for.
+Every customer engagement past this Build assumes you understand three things:
 
-Build 0 has three concrete outcomes:
+1. **What an ARAG knowledge base is** (a unit of corpus + configuration).
+2. **How you authenticate to it** (one header, one JWT).
+3. **What the two foundational endpoints return** (`/find` and `/ask`).
 
-1. A sandbox knowledge base provisioned, with the partner's own content ingested.
-2. The  running locally against that KB.
-3. A 30-minute recording of a working Q&A flow against the partner's content. This is the first thing you show in a customer meeting.
+Without these, every subsequent Build feels like magic. With them, every subsequent Build is a small extension of the same pattern. By the end of this Build you'll have a working sandbox, made three different API calls against it, and watched an AI coding assistant write your first ARAG client in 90 seconds.
 
-That last item is the commercial point. **By the end of Build 0 you have something to demo.** You won't have closed any customers yet, but you will have a demo, and a demo with the customer's own (or your own) content gets the next meeting booked.
+## What ARAG actually is
 
-## The five primitives
+Progress Agentic RAG is a platform. The five primitives — **R**etrieve, **G**enerate, **C**onstrain (with a JSON schema), **R**eason over relations (the knowledge graph), and **S**tream-secure media — are exposed via a small set of HTTP endpoints. You'll learn all five in Build 1.
 
-Memorise these. Every Build past this one is a deeper treatment of one or more of them.
+For Build 0, you only need two of them:
 
-| # | Primitive | Endpoint | What it does |
-|---|---|---|---|
-| **P1** | **Retrieve** | `POST /v1/kb/{kbId}/find` | Semantic + keyword search. Returns paragraphs with scores, positions (timestamps for video), and resource metadata. |
-| **P2** | **Generate** | `POST /v1/kb/{kbId}/ask` | LLM answer grounded in retrieved context. Returns answer + citations. Streams as NDJSON or returns sync JSON with `x-synchronous: true` header. |
-| **P3** | **Constrain** | `POST /v1/kb/{kbId}/ask` with `answer_json_schema` | Same as P2 but output is bound to a JSON Schema. Turns ARAG into a programmable backend. |
-| **P4** | **Reason over relations** | `POST /v1/kb/{kbId}/graph` | Typed knowledge graph queries. Path traversal, fuzzy entity search, undirected expansion. |
-| **P5** | **Stream & secure media** | `GET /v1/kb/{kbId}/resource/{id}/...` | Resource fetch with all bundles; DASH-MPD video streaming with auth headers injected per segment. |
+- **`/find`** — retrieval. Sends a query, returns the matching paragraphs ranked by score.
+- **`/ask`** — generation. Sends a query, returns an LLM answer **grounded in retrieved paragraphs**, plus the citation list, in a single round trip.
 
-Build 0 uses only P1 and P2. Builds 1–6 progressively introduce the others.
+That last point is the platform's competitive position. ARAG doesn't make you wire retrieval to generation yourself. The `/ask` endpoint does retrieval + generation + citation extraction in one call. Every "we built RAG ourselves" competitor has glue code maintaining that integration. You don't.
 
-## What's actually happening in a `/ask` call
+## What a Knowledge Base is
 
-The single most under-appreciated fact about ARAG: when you call `/ask`, ARAG does **two things in one round trip**:
+A KB owns:
 
-1. It runs retrieval (`/find`-equivalent) against your KB.
-2. It passes the retrieved context to the configured LLM.
-3. It returns the generated answer **plus the citations** from the retrieval step.
+- The documents you've ingested.
+- The labelsets you've defined (Builds 6 and onwards).
+- The data-augmentation agent that extracts the typed graph (Build 7).
+- The custom indexed fields you've added (Build 8).
+- The service-account credentials.
+- The residency region (EU or USA — covered in Build 10).
+- The LLM endpoint configuration (BYO-LLM, also Build 10).
 
-You did not have to wire retrieval and generation together yourself. You did not have to manage context-window stuffing. You did not have to build a citation extractor. **That entire integration is on the other side of the API.**
+One application typically uses **one KB**. Multi-KB architectures exist but the default — and your default — is one KB per customer. You'll provision yours today.
 
-This is the source of ARAG's competitive moat against "LLM with RAG you stitched together yourself" — every partner-built RAG stack you'll meet in the field has a custom retrieval-to-LLM glue layer that someone has to maintain. ARAG doesn't.
+## Authentication: one header, one JWT
 
-## Authentication: the service-account header
-
-All requests carry one header:
+Every ARAG API call carries one header:
 
 ```
 X-NUCLIA-SERVICEACCOUNT: Bearer <your-service-account-jwt>
 ```
 
-That JWT is a long-lived token tied to a service account that you provision once per KB. It scopes to:
+That JWT is:
 
-- The KB it was issued for.
-- The operations the service account is permitted (read, write, admin).
-- The region the KB lives in.
+- Long-lived (you rotate it manually when staff changes).
+- Scoped to **one KB**.
+- Scoped to the operations the service account is permitted (read, write, admin).
 
-There is **no other auth scheme** to worry about for API access. SSO, OAuth, OIDC — those belong on top of *your* application, not on the ARAG API. When you talk to a customer's CTO about auth, the distinction matters: ARAG handles its own auth via the service-account model; how the end-user authenticates to *your* application is your concern.
+There's no OAuth, no session token, no API-key-in-query-string. **One header, one JWT.** If you see your AI assistant generating anything else, stop it.
 
-## The two response shapes you'll encounter
+## The two endpoints you'll touch today
 
-### `/find` response (retrieval-only)
+### `/find` — retrieval-only
 
-```json
+```bash
+POST /v1/kb/{kbId}/find
+Headers: X-NUCLIA-SERVICEACCOUNT: Bearer <jwt>, Content-Type: application/json
+
+Body:
+{
+  "query": "what is X?",
+  "page_size": 5,
+  "show": ["basic", "values", "origin"]
+}
+
+Response:
 {
   "resources": {
     "<resource-id>": {
       "id": "...",
       "title": "...",
-      "origin": { "url": "...", "filename": "...", "mimetype": "..." },
       "fields": {
         "<field-id>": {
           "paragraphs": {
-            "<paragraph-id>": {
+            "<para-id>": {
               "score": 0.87,
-              "order": 3,
-              "text": "...the matching paragraph text...",
-              "position": { "start_seconds": [45.2], "end_seconds": [67.8] }
+              "text": "the matching paragraph text...",
+              "position": { "start_seconds": [45.2] }
             }
           }
         }
@@ -86,70 +92,62 @@ There is **no other auth scheme** to worry about for API access. SSO, OAuth, OID
 }
 ```
 
-Three things to notice:
+Things to internalise:
 
-1. **Paragraph-level matching.** ARAG returns the paragraph that matched, not just the resource. Use this to show "the line in the document that answers the question," not "the whole document that might contain the answer."
-2. **Scores per paragraph.** Every match has a score. Build 1's eval harness in the Advanced course depends entirely on these.
-3. **`position.start_seconds` for video/audio.** If the source was a video or audio file, the matching paragraph carries its timestamp. This is the foundation of deep-link-to-the-moment UX (see ).
+- ARAG returns **paragraphs**, not just whole documents. You can show the exact line that matched.
+- Every paragraph has a **score** between 0 and 1. Lower-bound it (~0.6) when you want high precision.
+- For video/audio, the paragraph carries its **timestamp**. This is how Build 8 builds deep-link-to-the-moment UX.
 
-### `/ask` streaming response (default)
+### `/ask` — generation grounded in retrieval
 
-The streaming response is NDJSON — newline-delimited JSON. Each line is a JSON object with shape:
+```bash
+POST /v1/kb/{kbId}/ask
+Headers: X-NUCLIA-SERVICEACCOUNT: Bearer <jwt>, Content-Type: application/json
 
-```json
-{ "item": { "type": "answer", "text": "Partial answer text..." } }
-{ "item": { "type": "answer", "text": " continuing..." } }
-{ "item": { "type": "retrieval", "results": { "resources": {...}, "best_matches": [...] } } }
-{ "item": { "type": "status", "code": "0" } }
+Body:
+{
+  "query": "what is X?",
+  "prefer_markdown": true,
+  "rephrase": true,
+  "max_tokens": 500
+}
 ```
 
-You accumulate the `answer` text chunks as they arrive (for streaming UI), capture the `retrieval` block for citations, and watch for `status` to know when the call completes.
+Two response modes:
 
-NDJSON parser is at. Read that code before the walkthrough — it's 90 lines and it handles every edge case (escape sequences, partial chunks, malformed JSON). You will not write this yourself; you will copy this pattern.
+**Streaming (default)** — newline-delimited JSON. Each line is `{"item": {"type": "answer"|"retrieval"|"status", ...}}`. Accumulate `answer.text` chunks for the streaming UI; capture the `retrieval` block for citations.
 
-### Sync mode (`x-synchronous: true`)
+**Sync** — add header `x-synchronous: true`. Returns one JSON blob `{answer: "...", retrieval_results: {...}, retrieval_best_matches: [...]}`. Use for non-streaming UIs and server-to-server scripts.
 
-Add the header `x-synchronous: true` and ARAG returns one JSON blob with the full answer + citations. Use this for non-streaming UIs (search-result cards, server-to-server scripts, batch jobs). It's identical content; just no streaming.
+Always set `prefer_markdown: true` (formatted output) and `rephrase: true` (the LLM rewrites your query before retrieval — free quality lift).
 
-## What's a "Knowledge Base" in ARAG?
+## The mental model: platform vs application
 
-A KB is the unit of corpus + configuration. It owns:
+This is the core distinction in the entire course. Internalise it now.
 
-- The documents you've ingested.
-- The labelsets you've defined (Builds 4+ in the Advanced course).
-- The data-augmentation agent (Build 5+).
-- The custom indexed fields (Build 5+ in Advanced).
-- The service-account credentials.
-- The residency region (EU or USA).
-- The LLM endpoint configuration (BYO-LLM in Build 6).
+- **Platform** = ARAG. Provisioned, configured, paid for. You don't build this; you call it.
+- **Application** = the code that *calls* the platform. You direct an AI to write this. It's commodity. It's disposable.
 
-One application typically uses **one KB**. Multi-KB architectures exist (site-content + member-knowledge split is one example) but the default is single-KB, and you should design that way unless there's a clear gating or residency reason to split.
+The Build 0 walkthrough has you do both: provision a KB (platform) and ask an AI to write a 30-line script (application). Watching where the two boundaries are is the whole point of this Build.
 
-> **Where  lives.** Public repo at . Clone it before the walkthrough.
+## What you'll do in the walkthrough
 
-## Common pitfalls in Build 0
+1. Provision a sandbox KB in EU region.
+2. Drag 10 documents into the dashboard.
+3. Make a `/find` call from `curl`. Read the response.
+4. Make a streaming `/ask` call from `curl`. Watch the NDJSON stream.
+5. Open Claude Code (or Cursor / Copilot / ChatGPT). Brief it on the streaming `/ask` shape. Have it write you `ask.mjs`.
+6. Run the script. Verify the output streams correctly and the citations land.
+7. Record a 5-minute walk-through showing the three API calls plus your generated script.
 
-1. **Ingesting too much content.** Start with 10 documents. You can grow later. Ingesting 1000 documents in your first hour means waiting 30+ minutes for processing before you can do anything useful.
-2. **Forgetting `prefer_markdown: true`.** Without this in the `/ask` body, you get unformatted text. Always set it for any answer that might contain lists, tables, or code.
-3. **Not setting `rephrase: true`.** ARAG's query rephrasing is a free quality lift. The LLM rewrites the user query before retrieval. Costs you nothing; helps recall.
-4. **Trying to use OAuth or session cookies for API auth.** Stop. Use the service-account JWT in the `X-NUCLIA-SERVICEACCOUNT` header. That's the only auth path for the API.
-5. **Pulling down  and pointing it at your KB without reading  first.** The wrapper has every pattern you'll need for the next six Builds. Read it before you run it.
+## Common pitfalls
 
-## What you'll build in the walkthrough
+- **Authenticating with the wrong header.** It's `X-NUCLIA-SERVICEACCOUNT`. Not `Authorization`.
+- **Forgetting `rephrase: true`.** Free quality lift. Always set it.
+- **Forgetting `prefer_markdown: true`.** Without it, your answers come back as wall-of-text, no formatting.
+- **Asking the AI to write code before testing `curl` manually.** Always verify the endpoint behaviour with `curl` first. Then ask the AI to wrap it.
+- **Letting the AI hallucinate an SDK.** There's no first-party `nuclia` npm package. Tell the AI to use `fetch`.
 
-A 30-minute exercise:
+## What's next
 
-1. Provision a sandbox KB in the EU region.
-2. Ingest 10 documents of your own content (or use the sample corpus we provide).
-3. Make a `/find` call from `curl` and inspect the response.
-4. Make a streaming `/ask` call from `curl` and watch the NDJSON stream.
-5. Clone , point it at your KB via `.env`, run `npm run dev`, and open `/assistant`.
-6. Record yourself asking three questions in `/assistant`. Three answers, with citations. That recording is the asset you deliver.
-
-When you submit the recording for review, the reviewer is checking that you understand what you saw — not that the AI gave a perfect answer. (It won't, against 10 random documents.) Understanding is the goal.
-
-## Onward
-
-When you've finished the walkthrough and passed the [quiz](quiz.md), move to [Build 1 — Grounded search & drop-in widgets](../build-1-grounded-search-widgets/lesson.md).
-
-Each subsequent Build deepens one of the five primitives, layers in one more pattern from , and adds one more tool to the demo you walk into customer meetings with. By Build 6 you're production-ready. Build 7 is the capstone — a full-stack ARAG application demo that takes 25 minutes end-to-end and converts strategic-account CTOs.
+Build 1 — [The Five Primitives](../build-1-five-primitives/) — extends today's `/find` and `/ask` into the full surface: `/ask` with schema constraints, `/graph` for typed knowledge graphs, `/resource` for media retrieval. After Build 1 you'll have seen every endpoint at least once.
