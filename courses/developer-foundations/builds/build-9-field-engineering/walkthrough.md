@@ -1,142 +1,426 @@
-# Build 8 — Walkthrough: Field Engineering
+# Build 9 — Walkthrough: Field Engineering
 
-> Estimated time: 2 hours focused. Read the [lesson](lesson.md) first.
+> Estimated time: 2–3 hours focused. Read the [lesson](lesson.md) first.
+>
+> **This is the highest-leverage recurring-revenue Build in the framework.** Customers pay you on retainer to maintain custom fields. Get this right and you've got a $10K-a-month annuity per customer. Get it wrong and you've sold a one-off project.
 
-## Goal
+## What you'll build
 
-Add custom fields to 5 of your KB resources. Update the prompt to use them. Update the front-end to render them. A/B test two CTA variants. Demonstrate that *changing a field on a resource changes the AI's answer immediately, with no code deploy.*
+A working demonstration that **editing a custom field on a resource in the dashboard changes the AI's answer immediately — with no code deploy**.
 
-## 1. Add `callToAction` to 5 resources (30 min)
+Specifically:
 
-In the Nuclia dashboard, for each of 5 hero resources in your KB:
+- Add `callToAction` and `searchResultDisplay` fields to 5 hero resources.
+- Update the chat prompt to reference `callToAction`.
+- Update the front-end to render `searchResultDisplay` on citations.
+- A/B test two CTA variants by editing the field and watching the answer flip.
+- Write a **content-team training guide** — the artefact that makes the retainer real.
 
-1. Open the resource.
-2. Add a custom text field. Name: `callToAction`. Value: one short branded sentence, ending with → or "now", "today", etc.
+## What you'll need open
 
-Examples for an outdoor retailer corpus:
-- "Try the TerraTrek 7 in your local store →"
-- "Plan your Tasmania trip with the complete gear guide →"
-- "Book a guided alpine course with Mara Chen →"
-- "Compare with our Skyline 45L pack →"
-- "Pre-order the Helios down jacket — ships in November →"
+- **Your Build 0 KB** (10 documents).
+- **Your Nuclia dashboard** for editing custom fields.
+- **Your Build 3 React project** (we'll extend the chat) or any chat project from earlier Builds.
+- **Your terminal**, editor, AI assistant, browser.
 
-Use your own brand voice and reasonable URLs (link to a real PDP if possible, even if it's just a fictional URL for now).
+If you don't have Build 3 running, you can use Build 4 (the multilingual version layered on Build 3). Both work.
 
-## 2. Add `searchResultDisplay` to the same 5 resources (15 min)
+---
 
-Same dashboard. Add another field on each:
+## Step 1 — Pick your 5 "hero" resources (10 min)
 
-- Name: `searchResultDisplay`
-- Value: a JSON object as a string:
+Open the Nuclia dashboard. Look at your 10 documents. Pick **5 that would be the most natural CTA targets** — the ones a sales rep would point at first.
 
-```json
-{
-  "title": "Tasmania Overland Track — Gear List",
-  "description": "Mara Chen's vetted 6-day, 65km traverse gear list. Updated for 2026.",
-  "ctaLabel": "Plan your trek"
-}
+Examples:
+
+- A product datasheet → CTA could be "Try it free →"
+- An onboarding guide → CTA could be "Start the onboarding flow →"
+- A case study → CTA could be "Book a call to discuss your case →"
+
+Write the 5 titles + your planned CTAs in a notes file (`hero-resources.md` in a Build 9 project folder).
+
+If your sandbox content isn't obvious-CTA shaped, **fabricate the CTAs** — this is a demo, not a real customer engagement. Use plausible fake URLs (e.g., `https://example.com/products/foo`).
+
+---
+
+## Step 2 — Add `callToAction` to each hero resource (25 min)
+
+In the Nuclia dashboard, for each of the 5 hero resources:
+
+1. **Open the resource** (click into its detail view).
+2. Look for a **Custom Fields**, **Metadata**, or **User Metadata** panel (wording varies).
+3. **Add a new text field**:
+   - **Field name:** `callToAction`
+   - **Field value:** your branded CTA sentence, e.g., `"Read the full TerraTrek 7 review → https://example.com/terratrek-7"`
+4. Save.
+
+**You should see:** the field appears in the resource's metadata panel.
+
+### Style rules for CTAs
+
+These will go in the content-team guide later. Now's a good time to internalise them:
+
+- **One sentence.** Max 80 chars.
+- **Action verb.** "Try", "Read", "Book", "Compare", "Plan".
+- **Ends with an arrow (→) or a "now"/"today".**
+- **Includes a URL** (real or fictional) the model can convert to a markdown link.
+- **Brand voice.** No clichés. No "Click here".
+
+### Verify
+
+After adding all 5, do a quick sanity check:
+
+```bash
+export NUCLIA_API_URL="<your-url>"
+export NUCLIA_KB_ID="<your-kb-id>"
+export NUCLIA_API_KEY="<your-jwt>"
+
+curl -s \
+  -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/resource/<RESOURCE-ID>?show=basic&show=values&show=extracted" \
+  | jq '.usermetadata // .data | tostring | .[0:500]'
 ```
 
-The brand team writes title + description optimised for how the *user* will read it — not the file's actual title.
+**You should see** the `callToAction` value somewhere in the response. The exact path depends on how the dashboard saves it (`usermetadata`, `data.texts.callToAction`, or `metadata.custom`).
 
-## 3. Verify the fields appear in `/find` responses (10 min)
+If you can't find it, paste the response into your AI: *"I added a callToAction custom field. Where does it appear in this response? [paste 500-char snippet]"*
+
+---
+
+## Step 3 — Add `searchResultDisplay` to each hero resource (15 min)
+
+Same dashboard. Add a **second** custom field on each of the 5 hero resources:
+
+- **Field name:** `searchResultDisplay`
+- **Field value:** a **stringified JSON object** like:
+
+```json
+{"title":"Tasmania Overland Track — Gear List","description":"Mara Chen's vetted 6-day, 65km traverse gear list. Updated for 2026.","ctaLabel":"Plan your trek"}
+```
+
+> **Why stringified JSON?** ARAG's custom text fields accept strings. To carry structured data, we serialise as JSON and parse on the front-end. This is a common pattern — your front-end code calls `JSON.parse()` on the field value.
+
+**Style rules** (for the content team guide):
+
+- **`title`** — what the user will read. Often different from the file's actual title (which is engineer-y). Make it customer-vocabulary.
+- **`description`** — one sentence selling why the user should click. ~80 chars.
+- **`ctaLabel`** — 2-3 words for a button. "Plan your trek", "Read the review", "Book the demo".
+
+### Verify
+
+Re-run the `curl` from Step 2's verify section. **You should see** both `callToAction` and `searchResultDisplay` values present.
+
+---
+
+## Step 4 — Confirm fields surface in `/find` (10 min)
+
+The `show: ["values"]` flag includes custom fields. Pick a query that would match one of your hero resources, then:
 
 ```bash
 curl -s -X POST \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"query":"<a query that should match your hero resources>","page_size":3,"show":["basic","values","origin"]}' \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/find" | jq '.resources | to_entries | .[].value.data'
+  -d '{"query":"<query that matches a hero resource>","page_size":3,"show":["basic","values","origin"]}' \
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/find" | jq '.resources | to_entries | .[0:1] | .[].value'
 ```
 
-Look for your `callToAction` and `searchResultDisplay` field values in the response. If they don't appear, double-check the `show` array includes `values` and that the fields are set as text fields (not metadata) in the dashboard.
+**You should see** the first matched resource's full data — including your custom fields somewhere. The shape varies by tenant version; common paths:
 
-## 4. Update the chat prompt to reference the fields (20 min)
+- `.data.texts.callToAction.value.body`
+- `.usermetadata.custom.callToAction`
+- `.fielddata.callToAction`
 
-Open your `build-3-chat` (or whichever project has your prompt config). Brief the AI:
+Find where yours land. **Note the path** — you'll need it in the next steps.
 
-```
-Update the PROMPTS.prospect.system prompt in MultiSurfaceChat.tsx to:
+---
 
-"You are a knowledgeable assistant. STRICT RULES:
-(1) Maximum 3 sentences.
-(2) End your answer with the call-to-action from the most-relevant resource's
-   callToAction field in the context, formatted as a markdown link.
-(3) STOP after the link."
+## Step 5 — Update the prompt to use `callToAction` (25 min)
 
-Update PROMPTS.prospect.user to make sure the CallToAction fields are passed:
-"Context (includes CallToAction fields per resource): {context}
+Now the AI starts using your fields.
 
-Question: {question}
+### 5a. Open your existing chat project
 
-Respond concisely and end with one call-to-action link from the context."
-
-Don't change PROMPTS.member.
+```bash
+cd ~/Desktop/foundations-build-3   # or whichever has your MultiSurfaceChat
+npm run dev
 ```
 
-Reload. Ask a Prospect-mode query about one of your 5 hero resources. The model should now end with a markdown link pointing at the `callToAction` URL.
+Confirm the chat still works.
 
-## 5. Update the front-end to render `searchResultDisplay` (20 min)
+### 5b. Brief your AI
 
-Brief the AI:
+Paste:
 
 ```
-In MultiSurfaceChat.tsx (or in a search results component if you have one), update
-the citation rendering to:
+Open src/components/MultiSurfaceChat.tsx in my Vite + React project.
 
-1. If a citation's resource has a searchResultDisplay field, render the title +
-   description from that JSON object, not the raw resource title.
-2. Render a small badge with the ctaLabel from searchResultDisplay.
+Find the PROMPTS constant.
 
-Parse the searchResultDisplay field as JSON (it's a stringified JSON value).
-Graceful fallback if absent or unparseable — use the raw title.
+Update PROMPTS.prospect.system to:
+  "You are a knowledgeable assistant. STRICT RULES:
+   (1) Maximum 3 sentences.
+   (2) End your answer with the call-to-action from the most-relevant
+       resource's callToAction field in the context, formatted as a
+       markdown link [label](url).
+   (3) STOP immediately after the link — do not add any further text.
+   (4) If no callToAction is present in the context, end with a generic
+       'Learn more →' link to the most-relevant resource."
+
+Update PROMPTS.prospect.user to:
+  "Context (each resource may include a callToAction field with a branded
+   CTA sentence and URL): {context}
+
+   Question: {question}
+
+   Respond concisely. End with one call-to-action link from the
+   most-relevant resource's callToAction. STOP after the link."
+
+Do not change PROMPTS.member.
+
+If the answer is rendering through formatAssistantHtml, that helper
+already converts the first markdown link to a pill button — that
+behaviour should still work.
 ```
 
-Reload. Trigger a search that returns one of your 5 hero resources. Confirm the title + description displayed match the `searchResultDisplay` field, not the raw title.
+Send. Apply the patch.
 
-## 6. A/B test two CTA variants (15 min)
+### 5c. Test
 
-Pick one of your hero resources. Change its `callToAction` to a new variant:
+Restart the dev server (`Ctrl+C` then `npm run dev`). With **Prospect mode** selected, ask a query that should match one of your hero resources.
 
-- Original: "Try the TerraTrek 7 in your local store →"
-- Variant: "Read the TerraTrek 7 expert review →"
+**You should see:** the answer ends with a pill button labelled with text from your `callToAction` field, linking to its URL.
 
-Ask the same Prospect-mode query that returns this resource. Confirm the model now uses the variant.
+**If the answer ends with a generic CTA** (not from your field):
+- The model isn't seeing the field in the context. Open DevTools → Network → click the `/ask` request → check the response retrieval. Does the `callToAction` field appear in `retrieval_results.resources.{id}.data` (or wherever it lives)?
+- If yes but the model still ignored it, the prompt needs to be more explicit. Tell AI: *"The model is ignoring the callToAction field. Strengthen the prompt — make it impossible to interpret."*
 
-This is the demo moment — **the model's answer changed without you touching any code.** The customer's content team can iterate without partner deploys.
+### 5d. Save your prompt log
 
-## 7. Train the customer's content team (preview) (10 min)
+Create or append `prompt-log.md` with the Step 5b brief.
 
-Open `content-team-guide.md` in this folder. Sketch a one-page guide that a partner SE would hand to the customer's content team:
+---
 
-- What `callToAction` and `searchResultDisplay` are.
-- Where to edit them in the dashboard.
-- Style rules for the copy (length, voice, action verbs, ending punctuation).
-- A "before / after" example showing how a CTA edit changes the AI output.
+## Step 6 — Render `searchResultDisplay` on citations (25 min)
 
-This is the asset that makes the recurring retainer real.
+Now the UI side. Citations under each chat answer should show the customer-friendly title + description from `searchResultDisplay`, not the engineer-y file name.
 
-## 8. Record a 3-minute demo (10 min)
+### 6a. Brief your AI
 
-1. (30 sec) "Field engineering is the highest-leverage recurring-revenue lever in the entire framework. Watch."
-2. (45 sec) Show the chat. Ask a Prospect-mode query. Show the answer ending with the CTA pill from `callToAction`.
-3. (45 sec) Switch to the Nuclia dashboard. Edit `callToAction` on the resource. Save.
-4. (45 sec) Re-ask the same query in the chat. Show the new CTA appearing.
-5. (15 sec) "Customer's content team owns the CTA copy. Partner owns the platform. $10K/month per customer, ongoing."
+Paste:
+
+```
+In src/components/MultiSurfaceChat.tsx, find where citations are rendered
+under each assistant message.
+
+Update the citation rendering to:
+
+1. For each citation:
+   - Find the matching resource in the streamed citations data.
+   - Try to extract its searchResultDisplay field value (stringified JSON).
+   - JSON.parse it inside a try/catch.
+   - If parse succeeds, render:
+     <div>
+       <span class="title">{parsed.title}</span>
+       <span class="description">{parsed.description}</span>
+       <span class="cta-label-badge">{parsed.ctaLabel}</span>
+     </div>
+   - If parse fails or field is missing, render the raw title as before.
+
+2. Style the citation card with Tailwind:
+   - Title bold, ~16px
+   - Description smaller, gray
+   - ctaLabel rendered as a small pill badge
+
+3. Don't break the existing behaviour for citations without searchResultDisplay.
+
+If the streaming citations data doesn't include the searchResultDisplay field
+currently, you'll need to:
+- Update src/lib/ragClient.ts so when it yields {type: 'citations'},
+  it includes for each citation: { id, title, searchResultDisplay }.
+- Extract searchResultDisplay from the resources object in the retrieval item.
+```
+
+Send. Apply.
+
+### 6b. Test
+
+Reload the page. Ask a Prospect-mode query that matches a hero resource.
+
+**You should see:**
+
+- The answer ends in the CTA pill (from Step 5).
+- The citations underneath show the **customer-friendly title** (from `searchResultDisplay.title`), the **description**, and a small badge with the `ctaLabel`.
+- Citations from resources **without** `searchResultDisplay` still render the raw title gracefully.
+
+### 6c. Troubleshooting
+
+| Problem | Cause | Fix |
+|---|---|---|
+| Citations show raw titles even on hero resources | `searchResultDisplay` not surfacing in ragClient's citations yield | Tell AI: *"ragClient's citations don't include searchResultDisplay. Update it to extract that field from the retrieval payload."* |
+| All citations show "JSON parse error" | Field stored as object, not string | The dashboard may have JSON-decoded it. Skip the JSON.parse if it's already an object |
+| Description text overflowing | No truncation | Tell AI: *"Truncate descriptions to 100 chars with ellipsis."* |
+
+### 6d. Append to prompt log
+
+---
+
+## Step 7 — A/B test two CTA variants (15 min)
+
+**This is the demo moment.** Pick one of your hero resources.
+
+### 7a. Variant A → Variant B
+
+1. In the Nuclia dashboard, open the resource.
+2. **Note the current `callToAction` value.** Take a screenshot.
+3. Ask a Prospect-mode query that matches this resource. Screenshot the answer (CTA pill).
+4. Now **edit the `callToAction` field** to a noticeably different sentence:
+   - Original: *"Try the TerraTrek 7 in your local store →"*
+   - Variant: *"Read the TerraTrek 7 expert review →"*
+5. Save.
+6. **Don't touch your code.** Don't reload the dev server. The chat is unchanged.
+7. Ask the same query again.
+8. Screenshot the new answer.
+
+**You should see:** the CTA pill at the end of the answer now reads the variant text and links to whatever new URL you put.
+
+### 7b. The punchline
+
+**You just A/B-tested customer messaging without touching code.**
+
+This is the entire pitch of field engineering:
+
+- Partner builds the platform once.
+- Customer's content/marketing team iterates on `callToAction` and `searchResultDisplay` weekly.
+- Each edit is live in seconds.
+- Partner gets paid a retainer to:
+  - Keep the platform healthy.
+  - Train the content team.
+  - Add new field types when new use cases emerge.
+
+Save both screenshots in your project folder as `cta-variant-a.png` and `cta-variant-b.png`. Reviewers will check these.
+
+---
+
+## Step 8 — Write the content-team training guide (30 min)
+
+This is the **deliverable that makes the retainer real**. Open your AI:
+
+```
+Write me a one-page markdown document content-team-guide.md
+titled "Content Team Guide: Editing Custom Fields in [Customer KB]".
+
+It's handed to a customer's content/marketing team. Audience:
+non-engineers. Tone: confident, friendly, no jargon.
+
+Sections (in order):
+
+1. WHAT THESE FIELDS DO (2-3 sentences)
+   - callToAction → what appears at the end of every AI answer
+   - searchResultDisplay → what appears in search result cards
+   - Why this matters: editing these = changing what users see, no engineer needed
+
+2. WHERE TO EDIT (step-by-step)
+   - Login to Nuclia dashboard
+   - Open KB
+   - Find resource
+   - Open Custom Fields panel
+   - Edit field value
+   - Save
+   - Changes are live immediately
+
+3. STYLE RULES FOR callToAction
+   - One sentence, max 80 characters
+   - Start with an action verb (Try, Read, Book, Compare, Plan)
+   - End with an arrow → or "today" or "now"
+   - Include a URL the AI can convert to a link
+   - Brand voice (no clichés, no "Click here")
+
+4. STYLE RULES FOR searchResultDisplay
+   - title: what the customer reads (NOT the file's tech title)
+   - description: one sentence selling why they'd click (~80 chars)
+   - ctaLabel: 2-3 words for the button
+
+5. BEFORE/AFTER EXAMPLE
+   - Show original CTA + the AI answer that comes back
+   - Show variant CTA + the new AI answer
+   - One sentence: "this is the entire pitch"
+
+6. WHEN TO ASK YOUR PARTNER FOR HELP
+   - "I want a new type of field" (let them design)
+   - "The AI isn't picking up my edits" (debugging)
+   - "I want to A/B test 5 variants" (instrumentation)
+
+Plain markdown. One printed page if printed. No code blocks
+except for example field values.
+```
+
+Save the result as `content-team-guide.md`. **This is a high-value reviewer artefact** — they look at it specifically for clarity and customer-readiness.
+
+---
+
+## Step 9 — Update prompt log (5 min)
+
+Make sure `prompt-log.md` has:
+
+1. Step 5 brief (prompt update).
+2. Step 6 brief (citation rendering).
+3. Step 8 brief (content team guide).
+4. Any debugging prompts.
+
+---
+
+## Step 10 — Record a 3-minute demo (15 min)
+
+Record yourself walking through:
+
+1. **(30 sec)** Hook: *"Field engineering is the highest-leverage recurring-revenue lever in the framework. Watch."*
+2. **(45 sec)** Show the chat in Prospect mode. Ask a query. Show the CTA pill. Point at it: *"That label and URL come from a custom field on the resource — written by the content team, not by an engineer."*
+3. **(45 sec)** Switch to the Nuclia dashboard. Open the resource. Edit the `callToAction` field. Save. Narrate: *"Content team edit. No code. No deploy."*
+4. **(45 sec)** Switch back to the chat. Re-ask the same query. Show the new CTA pill with the variant copy. *"Live. Same KB. Same code. Two minutes later."*
+5. **(15 sec)** Close: *"Customer's content team owns the CTA copy. Partner owns the platform. $10K/month per customer, ongoing."*
 
 Upload to `#build-clinic-submissions`.
 
+---
+
 ## Verification checklist
 
-- [ ] 5 resources have `callToAction` fields.
-- [ ] 5 resources have `searchResultDisplay` fields (JSON object string).
-- [ ] Fields visible in `/find` response under `data` / `values`.
-- [ ] Prompt updated to reference `callToAction`; model produces CTA links.
-- [ ] Front-end renders `searchResultDisplay.title` + description on citations.
-- [ ] A/B test demonstrated — editing the field changes the AI answer.
-- [ ] `content-team-guide.md` written.
-- [ ] 3-minute demo recorded.
+- [ ] 5 hero resources have `callToAction` fields with branded copy.
+- [ ] 5 hero resources have `searchResultDisplay` fields (stringified JSON with title + description + ctaLabel).
+- [ ] Both fields surface in `/find` response under `show: ["values"]`.
+- [ ] Chat prompt updated; Prospect-mode answers end with the resource's `callToAction` as a pill button.
+- [ ] Citations render the customer-friendly title + description from `searchResultDisplay`.
+- [ ] A/B test demonstrated — editing `callToAction` flips the AI's answer without code change.
+- [ ] `cta-variant-a.png` and `cta-variant-b.png` screenshots saved.
+- [ ] `content-team-guide.md` written — one page, customer-ready.
+- [ ] `prompt-log.md` saved.
+- [ ] 3-minute Loom recording submitted.
+
+Then take the [Build 9 quiz](quiz.md). Pass → start [Build 10](../build-10-composite-rag/).
+
+---
+
+## Getting unstuck
+
+**Fields don't appear in `/find` response.**
+- Re-check `show: ["values"]` in the request body.
+- Different tenant versions store custom fields under different paths. Use `jq` to print the entire response and search for your field name: `... | jq . | grep -i callto`.
+
+**Model produces generic CTA, not the resource's one.**
+- The field isn't reaching the context, OR the prompt isn't explicit enough. First check the network response. If the field's there, tighten the prompt with stronger directives ("YOU MUST end with..." in caps).
+
+**`searchResultDisplay` parses but fields aren't strings.**
+- Some dashboards save it as a parsed object. Skip the JSON.parse and use it directly: `const parsed = typeof field === 'string' ? JSON.parse(field) : field;`
+
+**Editing the field doesn't change the answer.**
+- Cache. ARAG may cache retrieval briefly. Wait 30 seconds and re-ask. Or change the query slightly to bust any cache.
+
+**Anything else.**
+- Copy the symptom + the path you found the field at + the AI's response.
+- Paste into AI: *"My field [name] is at path [X] in the response but the model isn't using it. Fix the prompt or the renderer."*
+
+---
 
 ## Next
 
-[Build 10 — Composite RAG](../build-10-composite-rag/) — chaining ARAG calls. The on-ramp to agentic patterns.
+[Build 10 — Composite RAG](../build-10-composite-rag/) — chaining multiple ARAG calls into one workflow. The on-ramp to agentic patterns. Generate → eval → augment → re-ask.

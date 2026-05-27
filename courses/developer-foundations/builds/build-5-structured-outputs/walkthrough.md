@@ -1,147 +1,548 @@
 # Build 5 — Walkthrough: Structured Outputs
 
-> Estimated time: 3 hours focused. Read the [lesson](lesson.md) first.
+> Estimated time: 3–4 hours focused. Read the [lesson](lesson.md) first.
+>
+> **This is the most important Build in the course.** `answer_json_schema` is the feature that unlocks Tier-3 work (workflow generators, structured extraction, schema-validated AI). Take your time. The mental model you build here pays back for years.
 
-## Goal
+## What you'll build
 
-Three working `answer_json_schema` workflows against your sandbox KB. Plus the `additionalProperties: false` injector and the three-shape fallback wrapper. Vibe-coded; you verify.
+Three working **schema-constrained generators** — Node.js scripts that call ARAG and get back **structured JSON**, not prose:
 
-## 1. Vibe-code the `askForJson` wrapper (30 min)
+1. **FAQ generator** — give it a topic; get back 5 grounded Q&A pairs with source titles.
+2. **Taxonomy generator** — no args; get back the KB's own domain ontology.
+3. **Comparison-table generator** — give it 2-4 item names; get back a structured comparison table.
 
-Open your AI assistant:
+Plus a shared helper, `askForJson.ts`, that:
 
-```
-In a fresh Node.js project (or extending build-3-chat), create src/lib/askForJson.ts.
+- Auto-injects `additionalProperties: false` at every level of your schema (the AI failure mode #4 from the vibe-coding guide).
+- Falls back through **three** response shapes the LLM might return, so your code stays resilient.
 
-Export a function:
+## What you'll need open
 
-async function askForJson<T>(query: string, schema: any): Promise<T>
+- **Your Build 0 `.env`** (the same credentials).
+- **Your terminal**.
+- **Your editor**.
+- **Your AI assistant**.
 
-It:
-1. Reads NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY from process.env
-   (use dotenv).
-2. Recursively walks the schema and injects additionalProperties: false on
-   every nested object (and on items if items.type === 'object').
-3. POSTs to /v1/kb/{id}/ask with body:
-   { query, prefer_markdown: false, rephrase: true, answer_json_schema: {
-     name, description, parameters: { type: 'object', additionalProperties: false,
-     properties, required } } } and header x-synchronous: true.
-4. Handles three response shapes:
-   a. data.answer_json — return as-is.
-   b. data.item?.object — return as-is.
-   c. Otherwise, treat data.answer as text, strip ```json fences, regex
-      match \{[\s\S]*\} or \[[\s\S]*\], JSON.parse, return.
-5. Throws a helpful error if none of the three shapes match.
+You can extend Build 3's project or start fresh. **We recommend starting fresh** — these are CLI scripts, not React components, and a clean Node project is simpler.
 
-Use plain fetch. TypeScript generics for the return type.
-```
+---
 
-Read the result. Verify all three shape paths are present. Test against your KB with a tiny schema (e.g., `{questions: string[]}`). Save the prompt as `prompt-log-wrapper.md`.
+## Step 1 — Set up a fresh project (5 min)
 
-## 2. Workflow 1 — FAQ generator (30 min)
-
-```
-Using askForJson, write a script faq-generator.mjs:
-
-1. Takes a topic as a CLI argument.
-2. Schema: { faqs: array<{ question: string, answer: string, source_resource_title: string }> }
-3. Prompt: "Based on content related to '<topic>', generate 5 FAQ entries grounded
-   in the corpus. Each entry includes a question, a 1-2 sentence answer, and the
-   title of the source resource the answer is grounded in."
-4. Calls askForJson with that schema.
-5. Prints the FAQs to the console.
-
-Then run: node faq-generator.mjs "what's our return policy"
+```bash
+cd ~/Desktop
+mkdir foundations-build-5
+cd foundations-build-5
+npm init -y
+npm install dotenv
 ```
 
-Verify:
+**What that did:**
+- Created a fresh folder.
+- `npm init -y` initialised `package.json`.
+- Installed `dotenv` so Node can read your `.env` file.
 
-- Returns valid JSON object with `faqs` array.
-- 4–5 entries returned.
-- Each entry has all three fields.
-- `source_resource_title` corresponds to a real document in your KB (you can verify in the dashboard).
+Copy your `.env` from Build 0:
 
-If the model returns string answers without the wrapper object (e.g., just the array directly), the `additionalProperties: false` isn't applied. Tell the AI to verify the injector ran.
-
-## 3. Workflow 2 — Taxonomy generator (30 min)
-
-```
-Write taxonomy-generator.mjs:
-
-Schema: { domains: array<{ name: string, description: string }> }
-
-Prompt: "Identify 6-8 distinct knowledge domains that best represent the
-content available to you. Each domain is a coherent area of expertise. Return
-each with a 1-sentence description."
-
-Run with no arguments.
+```bash
+cp ../foundations-build-0/.env .
 ```
 
-Run it. The output is the KB's *own* taxonomy, generated. Match the domain names against your actual ingested content. Are they sensible? If they don't reflect the actual topics in your KB, your corpus is mixed — that's a Tier 3 finding for the customer (their content is heterogeneous; recommend labelsets in Build 6).
+(If your Build 0 folder is named differently, adjust the path.)
 
-## 4. Workflow 3 — Comparison-table generator (45 min)
+Open the project in VS Code:
+
+```bash
+code .
+```
+
+You should see `package.json` and `.env` in the folder. Confirm `.env` still has your three `NUCLIA_*` credentials.
+
+---
+
+## Step 2 — Vibe-code the `askForJson` wrapper (40 min)
+
+This is the **most important file you'll write in the course**. It's the helper that handles `answer_json_schema` correctly — including the three failure modes that bite partners in customer engagements.
+
+### 2a. Brief your AI
+
+Paste **exactly** (long brief — don't shorten it):
 
 ```
-Write comparison-generator.mjs:
+Create src/lib/askForJson.ts (or askForJson.mjs if you'd rather avoid
+TypeScript — both fine; pick one).
 
-CLI args: a JSON list of item names. Example:
-node comparison-generator.mjs '["Product A", "Product B", "Product C"]'
+Export an async function:
+
+  askForJson(query: string, schema: object): Promise<object>
+
+It must do these things:
+
+1. Read NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY from process.env
+   using the dotenv package (call dotenv.config() at the top).
+
+2. Recursively walk the input `schema` and inject
+   `additionalProperties: false` at EVERY level where the type is "object".
+   - If a property is itself { type: "object", ... }, inject there too.
+   - If a property is { type: "array", items: { type: "object", ... } },
+     inject on items too.
+   - Do this BEFORE sending to the API.
+   - Don't mutate the caller's schema — work on a deep clone.
+
+3. POST to ${NUCLIA_API_URL}/kb/${NUCLIA_KB_ID}/ask with:
+   - Header: X-NUCLIA-SERVICEACCOUNT: Bearer ${NUCLIA_API_KEY}
+   - Header: Content-Type: application/json
+   - Header: x-synchronous: true
+   - Body: {
+       query,
+       prefer_markdown: false,
+       rephrase: true,
+       answer_json_schema: {
+         name: schema.name || "structured_output",
+         description: schema.description || "Structured response",
+         parameters: schema.parameters || schema
+       }
+     }
+   (the caller can pass either a wrapped { name, description, parameters }
+    object OR just the parameters; handle both shapes gracefully)
+
+4. Parse the response. Handle THREE possible response shapes:
+
+   a. The happy path: response JSON has `data.answer_json` (an object).
+      Return it as-is.
+   b. The streaming-stash path: response has `data.item.object` (an object).
+      Return it as-is.
+   c. The text-fallback path: the model returned the answer in `data.answer`
+      as a string (sometimes wrapped in ```json fences). Strip the fences,
+      regex match either {[\s\S]*} or [[\s\S]*], JSON.parse, return.
+
+   If none of the three paths produce a parseable object,
+   throw a helpful error including the first 500 chars of the raw response.
+
+5. Use native fetch (Node 18+). NO external HTTP library. NO Nuclia SDK.
+
+6. Add JSDoc/TypeScript comments above the function explaining the
+   three response shapes and why we handle all three.
+```
+
+Send.
+
+### 2b. Save the AI's output
+
+- **Claude Code / Cursor:** *"Save this as src/lib/askForJson.mjs (or .ts). Create the lib folder if it doesn't exist."*
+- **Web chat:** create `src/lib/askForJson.mjs` (or `.ts`) in VS Code, paste, save.
+
+### 2c. Read the code carefully
+
+This file's quality determines whether the rest of Build 5 is easy or painful. Four checks:
+
+1. **The injector is recursive.** Find the function that walks the schema. It must descend into `properties.<key>` AND into `items` (for arrays of objects).
+2. **The three response paths exist.** Search the file for: `answer_json`, `item.object` (or `item?.object`), and a regex like `/\{[\s\S]*\}/` for the text fallback.
+3. **Auth header** is `X-NUCLIA-SERVICEACCOUNT`.
+4. **No SDK** — uses plain `fetch`.
+
+If any are missing, tell the AI: *"You forgot [X]. Re-write the file with it."*
+
+### 2d. Test the wrapper with a tiny schema
+
+Create a smoke-test file `test-wrapper.mjs`:
+
+```bash
+touch test-wrapper.mjs
+code test-wrapper.mjs
+```
+
+Paste:
+
+```js
+import { askForJson } from './src/lib/askForJson.mjs';
+
+const schema = {
+  name: "smoke_test",
+  description: "Tiny schema to verify the wrapper works.",
+  parameters: {
+    type: "object",
+    properties: {
+      questions: {
+        type: "array",
+        items: { type: "string" }
+      }
+    },
+    required: ["questions"]
+  }
+};
+
+const result = await askForJson(
+  "Suggest 3 follow-up questions someone might ask about my corpus.",
+  schema
+);
+
+console.log(JSON.stringify(result, null, 2));
+```
+
+Run:
+
+```bash
+node test-wrapper.mjs
+```
+
+**You should see:** a JSON object printed:
+
+```json
+{
+  "questions": [
+    "...",
+    "...",
+    "..."
+  ]
+}
+```
+
+If you get an error, paste the entire error into your AI: *"My askForJson wrapper produces this error. Fix it."*
+
+### 2e. Save your prompt
+
+Create `prompt-log.md` in the project root. Paste the Step 2 brief. Append every subsequent brief as you go.
+
+---
+
+## Step 3 — Workflow 1: FAQ generator (30 min)
+
+### 3a. Brief your AI
+
+Paste:
+
+```
+Using my askForJson wrapper from src/lib/askForJson.mjs, write
+faq-generator.mjs in the project root.
+
+It should:
+
+1. Take a topic as a CLI argument:
+   Usage: node faq-generator.mjs "<topic>"
+   If no topic is passed, print usage and exit.
+
+2. Define a schema:
+   {
+     type: "object",
+     properties: {
+       faqs: {
+         type: "array",
+         items: {
+           type: "object",
+           properties: {
+             question: { type: "string" },
+             answer: { type: "string" },
+             source_resource_title: { type: "string" }
+           },
+           required: ["question", "answer", "source_resource_title"]
+         }
+       }
+     },
+     required: ["faqs"]
+   }
+   (The askForJson wrapper will auto-inject additionalProperties: false
+    at every object level — don't add it manually.)
+
+3. Build the query:
+   "Based on content related to '<topic>', generate 5 FAQ entries
+    grounded in the corpus. Each entry includes a question, a 1-2
+    sentence answer, and the title of the source resource the answer
+    is grounded in."
+
+4. Call askForJson(query, schema).
+
+5. Pretty-print the FAQs to the console:
+   "1. Q: <question>
+       A: <answer>
+       Source: <source_resource_title>"
+   With blank lines between entries.
+
+ES modules. Plain Node.js.
+```
+
+Send.
+
+### 3b. Save and run
+
+Save the file as `faq-generator.mjs`. Run:
+
+```bash
+node faq-generator.mjs "onboarding"
+```
+
+(Replace `"onboarding"` with a topic that fits your corpus.)
+
+**You should see:** 5 FAQ entries printed, each with a question, an answer, and a source resource title.
+
+### 3c. Verify the output
+
+- **Is the JSON valid?** It should parse without errors.
+- **Are there 5 entries?** (Sometimes the model returns 4 — that's fine.)
+- **Do `source_resource_title` values match real documents in your KB?** Open the Nuclia dashboard and check. If the titles don't match, the model is hallucinating — open the schema and add a stricter prompt: *"DO NOT invent resource titles. Only cite titles that appear in the retrieved context."*
+
+### 3d. Troubleshooting
+
+| Problem | Cause | Fix |
+|---|---|---|
+| `result.faqs` is undefined | Wrapper response-path mismatch | Add `console.log(result)` and inspect what came back. If it's a string, the text-fallback path is needed |
+| Answers are paragraphs of prose | The model ignored the schema | Add `additionalProperties: false` confirmation — check that the wrapper actually injected it |
+| `source_resource_title` is "Unknown" or made up | Model hallucinated | Tighten the prompt — see 3c above |
+
+### 3e. Save your prompt log
+
+Append the Step 3 brief to `prompt-log.md`.
+
+---
+
+## Step 4 — Workflow 2: Taxonomy generator (30 min)
+
+### 4a. Brief your AI
+
+Paste:
+
+```
+Write taxonomy-generator.mjs in the project root.
+
+It takes NO CLI arguments. It asks the KB what its own taxonomy is.
 
 Schema:
 {
-  attributes: array<string>,
-  rows: array<{
-    attribute: string,
-    values: array<string>  // one per item in input order
-  }>
+  type: "object",
+  properties: {
+    domains: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          name: { type: "string" },
+          description: { type: "string" }
+        },
+        required: ["name", "description"]
+      }
+    }
+  },
+  required: ["domains"]
 }
 
-Prompt: "Compare these items from the corpus: <items list>. Return a comparison
-table with 5-8 rows. Each row is one attribute (e.g., price, materials,
-durability, use case) with values for each item."
+Query: "Identify 6-8 distinct knowledge domains that best represent
+the content available to you in this corpus. Each domain is a coherent
+area of expertise. Return each with a 1-sentence description."
 
-Run with three items from your corpus.
+Call askForJson(query, schema). Print as a numbered list:
+"1. <name> — <description>"
+
+ES modules.
 ```
 
-Verify:
+### 4b. Run
 
-- `attributes` has 5–8 entries.
-- Each `row.values` array has the same length as the input list.
-- The values are grounded in your KB content (you can spot-check by asking the AI to also output the source resource for each cell, as a stretch goal).
+```bash
+node taxonomy-generator.mjs
+```
 
-## 5. Inspect the three response shapes (20 min)
+**You should see:** 6–8 numbered domains, each with a one-sentence description.
 
-For each of the three workflows, modify the call once to verify the wrapper handles all three response shapes:
+### 4c. Interpret the output
 
-1. **Sync mode (default).** Already working — `data.answer_json` path.
-2. **Streaming mode.** Remove the `x-synchronous: true` header. Re-run. Verify the wrapper handles `data.item?.object`.
-3. **Force the text-fallback.** Modify the prompt to add `"Reply only in plain text with the JSON embedded."`. Re-run. Verify the regex fallback path runs.
+**This is the magic moment.** The KB just told you **its own taxonomy** — what topics it covers, in its own structure. Look at the list. Ask yourself:
 
-The point is to convince yourself all three paths actually work.
+- Do the domains match what you *think* is in your corpus?
+- Are there any surprises? (Domains you didn't realise were represented?)
+- Are any domains suspiciously vague? (e.g., "General Information" — usually means the corpus is mixed and could benefit from labelsets.)
 
-## 6. Write a 4-minute demo recording (25 min)
+**This output is a Tier-3 customer insight.** When a customer says *"we don't know what's in our docs"* — this is the script you run. It surfaces gaps and hot spots.
 
-Record yourself running each workflow with explanation:
+### 4d. Append to prompt log
 
-1. (45 sec) "ARAG isn't a chatbot. It's a programmable backend. Three workflows in four minutes."
-2. (60 sec) FAQ generator → show the typed output → narrate "this drops into our help-centre as structured data, not a paragraph."
-3. (60 sec) Taxonomy generator → show the domain list → narrate "the KB just told us its own ontology — that's a Tier 3 finding."
-4. (60 sec) Comparison-table generator → show the table → narrate "this is the comparison feature the customer was paying a separate vendor for. We just generated it from our own KB."
-5. (15 sec) "Schema-constrained generation. The Tier 3 unlock."
+---
+
+## Step 5 — Workflow 3: Comparison-table generator (45 min)
+
+### 5a. Brief your AI
+
+Paste:
+
+```
+Write comparison-generator.mjs in the project root.
+
+It takes one CLI argument: a JSON-encoded list of item names.
+Example invocation:
+  node comparison-generator.mjs '["Product A", "Product B", "Product C"]'
+
+Parse the argument with JSON.parse. If parsing fails or the result
+isn't an array of strings, print usage and exit.
+
+Schema:
+{
+  type: "object",
+  properties: {
+    attributes: {
+      type: "array",
+      items: { type: "string" }
+    },
+    rows: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          attribute: { type: "string" },
+          values: {
+            type: "array",
+            items: { type: "string" }
+          }
+        },
+        required: ["attribute", "values"]
+      }
+    }
+  },
+  required: ["attributes", "rows"]
+}
+
+Query (replace <items> with the JSON list):
+"Compare these items from the corpus: <items>. Return a comparison
+table with 5-8 rows. Each row is one attribute (e.g., price, materials,
+durability, use case) with values for each item, in the same order as
+the input list. If you don't have grounded information for a cell,
+write 'Not available' rather than guessing."
+
+Call askForJson(query, schema). Print as a markdown table:
+
+| Attribute | Item 1 | Item 2 | Item 3 |
+| --- | --- | --- | --- |
+| <attribute> | <value1> | <value2> | <value3> |
+...
+
+ES modules.
+```
+
+### 5b. Run with three items from your corpus
+
+Find three items your corpus actually contains. Examples vary by domain:
+
+- E-commerce KB: three product names.
+- Policy KB: three policies.
+- Technical KB: three components or APIs.
+
+```bash
+node comparison-generator.mjs '["Item A", "Item B", "Item C"]'
+```
+
+**You should see:** a markdown table printed to console, with one column per item and 5-8 rows of attributes. Each cell has a grounded value or "Not available."
+
+### 5c. Verify
+
+- Each row's `values` array has the same length as your input list.
+- Cells with no source data should say "Not available" (or similar) — not made-up text.
+- Spot-check 2-3 cells against your KB — open the dashboard, find a relevant document, confirm the cell value matches.
+
+If the model hallucinates cells, tighten the prompt: *"For any attribute you can't ground in the retrieved context, the value MUST be 'Not available' — never guess."*
+
+### 5d. Append to prompt log
+
+---
+
+## Step 6 — Verify the three response shapes (20 min)
+
+The `askForJson` wrapper handles three different response shapes from ARAG. You should **prove all three work** — that's how you know the wrapper is robust enough for customer engagements.
+
+### 6a. Shape A: sync mode (the happy path — already working)
+
+This is what you've been using. Confirms `data.answer_json` is parsed.
+
+### 6b. Shape B: streaming mode
+
+Temporarily edit `src/lib/askForJson.mjs` and **remove** the `"x-synchronous": "true"` header from the request. Save.
+
+Re-run one of your workflows:
+
+```bash
+node faq-generator.mjs "anything"
+```
+
+**You should see:** the same kind of output as before. The wrapper found the `item.object` path in the streaming response.
+
+**If it fails:** the wrapper's streaming-parse path isn't handling the response. Paste the error into your AI: *"With sync mode disabled, my wrapper fails with [X]. Fix the streaming-mode response handling."*
+
+Put the header back when you're done.
+
+### 6c. Shape C: text fallback
+
+Temporarily edit one of your workflow scripts. After the schema, add the following line to the query:
+
+> *"Reply only in plain text with the JSON embedded between ```json fences."*
+
+Re-run. The model will now return prose with embedded JSON instead of a clean `answer_json` field — exercising the wrapper's text-fallback regex path.
+
+**You should see:** the same output structure as before. The wrapper extracted JSON from the prose.
+
+Put the prompt back when done.
+
+### 6d. The point of this drill
+
+When you sit in a customer engagement and `/ask` returns Shape C unexpectedly (it happens — model behaviour drifts), **your code keeps working**. That resilience is what separates a Tier-3 partner from a partner who delivers something fragile.
+
+---
+
+## Step 7 — Update prompt-log.md (5 min)
+
+Make sure `prompt-log.md` has all five briefs (Step 2 wrapper, Step 3 FAQ, Step 4 taxonomy, Step 5 comparison, plus the response-shape verification narrative from Step 6).
+
+---
+
+## Step 8 — Record a 4-minute walkthrough (20 min)
+
+Record yourself:
+
+1. **(45 sec)** Hook: *"ARAG isn't a chatbot — it's a programmable backend. Watch three workflows in four minutes."*
+2. **(60 sec)** FAQ generator. Show input. Show structured output. Narrate: *"This drops straight into our help-centre as JSON. No copy-paste, no formatting work."*
+3. **(60 sec)** Taxonomy generator. Show the domain list. Narrate: *"The KB just told us its own ontology. This is a Tier-3 discovery output."*
+4. **(60 sec)** Comparison-table generator. Show the markdown table. Narrate: *"This is the comparison feature the customer is paying a separate vendor for. We just generated it from our own KB."*
+5. **(15 sec)** Close: *"Schema-constrained generation. The Tier-3 unlock."*
 
 Upload to `#build-clinic-submissions`.
 
+---
+
 ## Verification checklist
 
-- [ ] `askForJson.ts` wrapper working with three-shape fallback.
-- [ ] `additionalProperties: false` injector applied automatically.
-- [ ] FAQ generator returns typed output with source resource titles.
-- [ ] Taxonomy generator returns 6–8 sensible domains.
-- [ ] Comparison-table generator returns structured rows.
-- [ ] All three response shapes verified to parse correctly.
-- [ ] `prompt-log-wrapper.md`, `prompt-log-faq.md`, `prompt-log-taxonomy.md`, `prompt-log-comparison.md` all saved.
-- [ ] 4-minute recording submitted.
+- [ ] `src/lib/askForJson.mjs` (or `.ts`) wrapper works against your KB.
+- [ ] `additionalProperties: false` is **auto-injected** at every nesting level (read the code; verify the recursion).
+- [ ] FAQ generator returns 4-5 grounded entries with **real** source resource titles.
+- [ ] Taxonomy generator returns 6-8 sensible domains for your corpus.
+- [ ] Comparison-table generator returns a structured table with same-length value arrays.
+- [ ] All three response shapes verified (Step 6a, 6b, 6c).
+- [ ] `prompt-log.md` saved with all briefs.
+- [ ] 4-minute Loom recording submitted.
+
+Then take the [Build 5 quiz](quiz.md). Pass → start [Build 6](../build-6-data-augmentation-agents/).
+
+---
+
+## Getting unstuck
+
+**`result.faqs` (or any property) is undefined.**
+- The response shape isn't what the wrapper expected. Add `console.log(JSON.stringify(rawResponse, null, 2).slice(0, 2000))` inside the wrapper to see what came back. Send that to your AI: *"My wrapper got this response — which path should it take?"*
+
+**Model returns prose answers instead of JSON.**
+- `additionalProperties: false` injector isn't running. Add a `console.log("Schema before send:", JSON.stringify(finalSchema, null, 2))` inside the wrapper and verify the property is on every object.
+
+**Empty `domains` array (or any empty result).**
+- Your corpus is too small. With <20 documents, the model can struggle to find "6-8 distinct domains." Either ingest more docs or accept a smaller result.
+
+**"Cannot find module 'dotenv'."**
+- Run `npm install dotenv` from the project folder. Make sure your `pwd` ends in `foundations-build-5`.
+
+**Schema validation rejected by the API.**
+- The schema's `name` field is missing or contains illegal characters (use snake_case, no spaces). Or a nested object is missing `additionalProperties: false` — verify the injector is recursive.
+
+**Anything else.**
+- Copy the entire error + the command + the schema you used.
+- Paste into your AI: *"I called askForJson with [schema] and got [error]. Fix it."*
+
+---
 
 ## Next
 
-[Build 6 — Data-Augmentation Agents](../build-6-data-augmentation-agents/) — content-type and label-based filtering. The cheapest precision lever.
+[Build 6 — Data-Augmentation Agents](../build-6-data-augmentation-agents/) — three agents that enrich your KB at ingest time (Generator / Labeller / Graph). Mostly dashboard work; minimal code. The platform doing your scaling work for you.

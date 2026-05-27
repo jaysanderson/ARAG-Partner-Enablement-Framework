@@ -1,137 +1,171 @@
 # Vibe-Coding Guide for Developer Foundations
 
-> Read this **before** starting Build 0. It's the mental model that makes the rest of the course work.
+> Read this **before** starting Build 0. It's the mental model that makes the rest of the course work — especially if you're a citizen developer, starter developer, or anyone who's never run `npm install` in your life.
 
-## What "vibe coding" means in this course
+## Who this course is for
 
-Vibe coding is **delegating code generation to an AI assistant** while you stay in control of:
+You don't need to be a software engineer. You need to be **able to read, follow step-by-step instructions, and ask an AI for help when something doesn't work**. That's it.
 
-- **Intent** — what you're trying to build, and why.
-- **Architecture** — which ARAG primitive solves the problem.
-- **API contract** — the endpoint, body shape, expected response.
-- **Verification** — running the code, reading the output, catching obvious bugs.
-- **Iteration** — refining the prompt when the first output isn't right.
+Many partners completing this course are:
 
-The AI writes the code. **You direct it, verify it, ship it.** This is how every customer engagement you run going forward will work — partners who try to hand-write production ARAG integrations against a deadline lose to partners who direct AI tools well.
+- Solution engineers / pre-sales — comfortable in demos, less so in code editors.
+- Product managers and BAs — fluent in customer problems, not fluent in TypeScript.
+- Sales engineers and partner SEs — can sketch architectures but haven't shipped React in years.
+- Career-switchers and citizen developers — first technical course they've taken.
 
-## Why we teach this way
+This course is built so all of you can finish it. The trick: **you don't write the code**. Your AI assistant does. You direct it, verify it, ship it.
 
-ARAG itself is a platform that abstracts the hard parts of RAG (retrieval, generation, citation extraction, graph extraction) behind an API. Vibe coding is the same abstraction one level up: the *code* that calls the API is also commodity, also abstracted, also generated for you. What's left is **judgment** — which primitive, which schema, which prompt, which verification.
+## What "vibe coding" actually means
 
-This course is structured around the judgment, not the keystrokes.
+Vibe coding is **letting an AI write the code while you stay in control of the judgement calls**.
 
-## Recommended tooling
+Your job:
 
-Pick one or more. The Builds work with all of them.
+1. **Understand what you're trying to build** — what problem the customer has and which ARAG primitive solves it.
+2. **Tell the AI clearly what you want** — the endpoint, what goes in, what comes out, how you'll verify it works.
+3. **Read the output** — does the code do what you asked? Does it actually run? Does it use the right API call?
+4. **Fix things by talking** — if something doesn't work, paste the error into the AI and tell it what happened. The AI fixes it. You re-run.
 
-| Tool | Best for | Notes |
+You are **the boss**. The AI is **the junior engineer who never gets tired**. The course is set up to make you a great boss.
+
+## What you need before you start
+
+| Thing | What it is | How to get it |
 |---|---|---|
-| **Claude Code** | Full-project tasks, multi-file edits, terminal commands | Strongest at multi-step engineering tasks. Recommended for the capstone. |
-| **Cursor** | In-editor code generation, inline edits, fast iteration | Best when you already have a project open. |
-| **GitHub Copilot** | Inline completions while you type | Use alongside one of the above for autocomplete. |
-| **ChatGPT / Claude.ai (web)** | Schema design, API troubleshooting, debugging | Use the web app when you want to discuss design before generating code. |
+| A terminal | The black-window thing where you type commands. macOS: **Terminal** app. Windows: **PowerShell** or **WSL**. Linux: you know. | Already on your machine — open it. |
+| Node.js (a JavaScript runtime) | What runs the code you'll generate | Download from [nodejs.org](https://nodejs.org) — pick the LTS version. Run the installer. Done. |
+| Git | A way to save and share code | macOS: comes with Xcode tools. Windows: [git-scm.com/download](https://git-scm.com/download). |
+| An AI coding assistant | The thing that writes the code for you | Pick one: **Claude Code** (CLI), **Cursor** (editor), **GitHub Copilot** (autocomplete), **ChatGPT** or **Claude.ai** (web). |
+| A code editor | Where you read and tweak generated code | **VS Code** is free and the easiest: [code.visualstudio.com](https://code.visualstudio.com). Cursor is VS Code with AI baked in. |
+| A Progress ARAG sandbox account | Your KB and credentials | Provided by your partner manager. If you don't have it, ask in `#partner-onboarding`. |
 
-For the Builds you can use any combination. The walkthroughs assume you have at least one project-aware assistant (Claude Code or Cursor) for code generation, plus a web chat for ad-hoc questions.
+If you've never used a terminal: **don't panic**. You'll type maybe 5 commands per Build, and we'll explain every one. If a command confuses you, paste it into your AI assistant and ask *"what does this command do?"* — that's a perfectly legitimate move in this course.
 
-## The four-step vibe-coding pattern
+## Pick your AI assistant
 
-Every walkthrough in this course follows the same shape:
+Any of these work. Pick one, get comfortable with it, stick with it through the course.
 
-### 1. Brief the AI
+| Tool | Best for | What it feels like | Free? |
+|---|---|---|---|
+| **Claude Code** | Whole-project tasks; running terminal commands | A terminal chat where Claude can read your files and run commands | Subscription |
+| **Cursor** | Editing code in a familiar editor | VS Code with AI baked in; press Cmd+K and tell it what to do | Free tier + paid |
+| **GitHub Copilot** | Inline autocomplete as you type | Suggestions appear as ghost text in your editor | Subscription (free for students) |
+| **ChatGPT / Claude.ai (web)** | Asking questions, brainstorming, debugging | A web chat — copy-paste code in and out | Free tier + paid |
 
-Open your AI assistant. Give it a brief that includes:
+If you're brand-new to all of this, the friendliest combo is **Cursor + Claude.ai (web)**. Cursor for editing; Claude.ai for the "explain this to me" conversations.
 
-- **Goal** — one sentence on what you're building.
-- **Context** — your ARAG environment (region, KB ID, that you'll provide credentials via env vars).
-- **Endpoint(s) you want to use** — explicit reference to `/find`, `/ask`, `/graph`, etc.
-- **Body shape you expect** — list the parameters that matter (`prefer_markdown: true`, `rephrase: true`, custom prompt structure, etc.).
-- **Verification path** — how you'll check it works.
+The Builds work with all of them. Where a walkthrough says "ask your AI to do X" — use whichever tool you picked.
 
-Example brief for Build 0:
+## The four-step loop (this is the whole course)
 
-> Build me a Node.js script `ask.mjs` that hits the Progress Agentic RAG `/ask` endpoint in streaming mode. The script reads `NUCLIA_API_URL`, `NUCLIA_KB_ID`, and `NUCLIA_API_KEY` from `.env`. It takes a query as a CLI argument, sends it with `prefer_markdown: true` and `rephrase: true`, parses the NDJSON stream (objects shaped `{item: {type: 'answer'|'retrieval'|'status', ...}}`), and prints the answer text as it streams. At the end, print the citation list. Auth via `X-NUCLIA-SERVICEACCOUNT: Bearer <key>` header.
+Every walkthrough in this course follows the same shape. Get used to it now.
 
-The AI will produce code. It might get something wrong on the first pass — that's expected.
+### 1. Brief
 
-### 2. Verify the output
+Open your AI. Give it:
 
-Read the code before running it. Ask:
+- **What you want built** (one sentence).
+- **What ARAG endpoint to call** (we tell you which one in every Build).
+- **What goes in and what comes out** (we give you the body shape and response shape).
+- **How you'll know it works** (e.g., "I should see a streaming answer in the terminal").
 
-- Does it use the right endpoint URL pattern (`{NUCLIA_API_URL}/kb/{kbId}/ask`)?
-- Does it pass the auth header correctly?
-- Does it parse the NDJSON shape we described?
-- Does it handle the streaming response without buffering the whole thing first?
+A good brief is **specific**. Don't say "write me an ARAG client." Say "write me a Node.js script `ask.mjs` that calls `POST /v1/kb/{kbId}/ask` with this header and this body, parses the NDJSON stream like so, and prints answer text token-by-token."
 
-Then run it against your sandbox. Confirm:
+The course walkthroughs give you the exact brief text. Copy it. Paste it into your AI.
 
-- The answer streams (not a single blob).
-- Citations appear at the end.
-- The exit code is 0.
+### 2. Read
 
-If anything's wrong, go to step 3.
+The AI produces code. **Read it before you run it.** Three checks, every time:
 
-### 3. Iterate
+- Does it use plain `fetch`, not some made-up SDK? (See "Failure modes" below.)
+- Does the auth header say `X-NUCLIA-SERVICEACCOUNT`? (Not `Authorization`.)
+- Does the URL look like `{NUCLIA_API_URL}/kb/{kbId}/<endpoint>`?
 
-Tell the AI what you saw. Be specific:
+If yes, run it. If not, tell the AI what's wrong and let it fix it.
 
-> The script ran but only printed the answer after the whole stream finished. I want each token printed as it arrives. The NDJSON parser is buffering — fix it to flush each complete `{item:...}` object as it's parsed.
+### 3. Run
 
-The AI will fix and explain. Iterate until the output matches your expected behaviour.
+Type the command. Look at the output. We'll tell you what to expect — if the output matches, great. If not, you've found a bug.
 
-### 4. Commit the prompt + code
+### 4. Iterate
 
-Every walkthrough asks you to save your prompt log alongside the code. This isn't bureaucracy — your prompt is the artefact that lets you (or another partner SE) regenerate the code later. The code is disposable; the prompt is institutional knowledge.
+When something doesn't work:
 
-## Failure modes to watch for
+- **Copy the entire error message** out of the terminal.
+- **Paste it into your AI** with a one-line "this is what I expected vs what I got."
+- The AI explains the error and proposes a fix.
+- Apply the fix. Re-run.
 
-These are the four ways AI assistants go wrong on ARAG tasks. Catch them every time.
+This loop — brief, read, run, iterate — is **every Build in the course**. By Build 3 it'll be muscle memory.
 
-### 1. The AI fabricates an SDK that doesn't exist
+## Four AI failure modes to watch for
 
-ARAG is accessed via plain HTTPS. There's no "nuclia-sdk" npm package the AI should be importing. If the AI generates `import { Nuclia } from 'nuclia'`, stop. Tell it to use `fetch` against the documented endpoints.
+These are the four ways AI assistants reliably go wrong on ARAG tasks. Spot them every time.
 
-### 2. The AI sets the wrong auth header
+### 1. The AI invents an SDK that doesn't exist
 
-The header is `X-NUCLIA-SERVICEACCOUNT: Bearer <jwt>`. Not `Authorization`. Not `X-API-Key`. If you see anything else, fix it.
+If your AI writes `import { Nuclia } from 'nuclia'` or `from nuclia import Client` — **stop**. There's no first-party Nuclia npm or pip package. ARAG is HTTP. Tell the AI:
+
+> "There's no Nuclia SDK. Rewrite this using plain `fetch` against the API documented in my brief."
+
+### 2. The AI uses the wrong auth header
+
+It's `X-NUCLIA-SERVICEACCOUNT: Bearer <jwt>`. Not `Authorization`. Not `X-API-Key`. Not a session cookie. If you see anything else, tell the AI to fix it.
 
 ### 3. The AI assumes the wrong response shape
 
-`/find` returns `{ resources: {...}, best_matches: [...] }`. `/ask` (streaming) returns NDJSON of `{item: {type, ...}}`. `/ask` (sync, with `x-synchronous: true`) returns `{answer, retrieval_results, ...}`. If the AI's parsing logic looks unfamiliar, double-check against the actual response. Don't trust the AI's memory of API shapes — verify against `curl` output first.
+`/find` returns `{ resources: {...}, best_matches: [...] }`. `/ask` (streaming) returns NDJSON of `{item: {type, ...}}` per line. The AI's "memory" of these shapes is fuzzy — it'll sometimes invent fields. If the code crashes on a missing field, paste the actual response into the AI and tell it to fix the parser.
 
 ### 4. The AI forgets `additionalProperties: false`
 
-When generating `answer_json_schema` workflows (Build 5), the AI almost always forgets the strict-mode requirement. Every `object` schema needs `additionalProperties: false` at every nesting level. We cover the helper in Build 5.
+In Build 5 (Structured Outputs) we use JSON Schema constraints. Every `object` schema needs `additionalProperties: false` at every nesting level. The AI forgets this about 70% of the time. We've built a helper that auto-injects it; we cover this in Build 5.
 
-## What's not vibe-codeable
+## Getting unstuck (the universal pattern)
 
-Some things you do yourself, by hand:
+When something doesn't work and you don't know why, follow this script:
 
-- **Provisioning the KB** — Nuclia dashboard, 5 minutes.
-- **Ingesting documents** — drag-and-drop in the dashboard.
-- **Configuring labelsets** — dashboard UI.
-- **Picking the BYO-LLM endpoint** — dashboard config.
-- **Authoring schema designs** — you write the JSON Schema; the AI implements it.
-- **Authoring entity/relation graph schemas** — you sketch it on paper; the AI generates the extraction-agent config.
-- **Authoring `callToAction` and `searchResultDisplay` field copy** — the content team writes these (with AI help, but the brand voice is theirs).
+1. **Stop fiddling.** Don't change three things at once.
+2. **Copy the entire error message and the command that produced it.** Both.
+3. **Paste them into your AI** with: *"I ran `<command>` and got `<error>`. I expected `<what you expected>`. What's wrong and how do I fix it?"*
+4. **Read what the AI says before changing anything.** It usually explains the problem in plain English.
+5. **Apply the suggested fix.** Re-run.
+6. **If it still fails**, paste the new error and repeat.
 
-The distinction matters: the *structure* of ARAG is yours to design. The *code* that talks to it is the AI's to generate.
+Don't try to be clever. Don't try to memorise commands. Don't apologise for asking the AI "stupid" questions. The AI doesn't get bored. It doesn't judge. Use it.
 
 ## Verification habits (build these from Build 0)
 
-- Always test endpoints with `curl` first, before asking the AI to wrap them in code.
-- Always read the AI's code before running it.
-- Always check the response in the Nuclia dashboard alongside the code output.
-- Always save the prompt that produced the working code.
-- Always record a 60-second video walkthrough of your final result.
+Three habits that separate partners who ship from partners who get stuck:
+
+- **Always test endpoints with `curl` (or Postman/Bruno) first**, before asking the AI to wrap them in code. If `curl` works but the AI's code doesn't, you know the AI's code is wrong (not your KB).
+- **Always read the AI's code** before running it. Three-check pattern above.
+- **Always save the prompt that produced working code.** We ask for `prompt-log.md` in each Build. It's your institutional knowledge. Two months later you'll need the same component and the prompt is what reproduces it.
+
+## What's not vibe-codeable
+
+A few things you do yourself, by hand. AI doesn't help:
+
+- **Provisioning a KB** in the Nuclia dashboard — that's a dashboard click, 5 minutes.
+- **Ingesting documents** — drag-and-drop in the dashboard.
+- **Configuring labelsets** — dashboard UI.
+- **Picking the BYO-LLM endpoint** — dashboard config.
+- **Authoring the words inside a JSON Schema** (the field names, the descriptions) — you write the schema; the AI implements the code that uses it.
+- **Authoring `callToAction` and `searchResultDisplay` copy** — the content team writes it (with AI assistance for ideation, but the brand voice is theirs).
+
+The distinction: **structure is yours; keystrokes are the AI's.**
 
 ## What about production code?
 
-The walkthroughs produce **demo-grade** code — enough to verify behaviour and submit for review. Production code (the capstone, customer engagements) requires additional concerns: auth proxying through your backend, observability, error handling, rate-limit-aware clients, BYO-LLM routing. All covered in Build 11 (Production Readiness).
+The walkthroughs produce **demo-grade** code — enough to verify behaviour and submit for the reviewer to sign off. Production code (the capstone, customer engagements) needs more: auth proxying through your backend, observability, error handling, rate-limit-aware clients, BYO-LLM routing. All covered in Build 11 (Production Readiness).
 
-Vibe-coded demo code can be *productionised* by asking the AI to "add error handling, retry logic, and structured logging." But don't put demo-grade code in front of a customer without that polish step.
+To productionise demo-grade code: ask the AI *"add error handling, retry logic with exponential backoff, structured logging, and a 15-second timeout to this code."* The AI knows how. You still verify it.
 
 ## TL;DR
 
-You are the architect. The AI is the engineer. Your job is judgment and verification; theirs is keystrokes. Stay in control.
+- You are the boss. The AI is the junior engineer.
+- Every Build follows: **brief → read → run → iterate**.
+- When stuck: **paste the error into your AI and ask**. There's no penalty for not knowing.
+- Catch the four AI failure modes (fake SDK, wrong header, wrong shape, missing `additionalProperties`).
+- Save your prompts.
 
 Now go to [Build 0](builds/build-0-hello-arag/).

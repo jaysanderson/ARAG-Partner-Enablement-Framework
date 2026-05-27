@@ -1,126 +1,392 @@
 # Build 4 — Walkthrough: Multilingual & Voice Switching
 
-> Estimated time: 1.5 hours focused. Read the [lesson](lesson.md) first.
+> Estimated time: 1.5–2 hours focused. Complete Build 3 and read the [lesson](lesson.md) first.
+>
+> **Layered on Build 3.** You're not starting from scratch — you're adding three controls to the chat you already built. If Build 3 works, Build 4 is mostly fast.
 
-## Goal
+## What you'll build
 
-Extend the Build 3 chat with three query-prefix levers: language, segment, resource scope. Demo each lever flipping the answer in real time.
+Three new controls **layered onto your Build 3 chat**:
 
-## 1. Open the Build 3 project (5 min)
+1. **Language dropdown** — same KB, same content, answer flips between English / French / Japanese / etc.
+2. **Segment radio buttons** — same query, different audience framing (beginner / expert / etc.).
+3. **Resource-scope text input** — name a document; the answer focuses on that resource.
+
+All three are implemented with **one technique**: a **query prefix** prepended to the user's question. No new endpoints, no new data, no model fine-tuning. **5–10 lines of code per lever.**
+
+This Build sells itself in customer demos. "Show us multilingual" and "show us audience targeting" are two questions you'll hear in every Tier-2 conversation.
+
+## What you'll need open
+
+- **Your Build 3 project folder** (`foundations-build-3`).
+- **Your terminal**.
+- **Your editor** (VS Code).
+- **Your AI assistant**.
+- **A modern browser**.
+
+If Build 3 isn't working, **fix that first**. Build 4 layers on top.
+
+---
+
+## Step 1 — Re-open the Build 3 project (5 min)
+
+In your terminal:
 
 ```bash
-cd build-3-chat
+cd ~/Desktop/foundations-build-3
 npm run dev
 ```
 
-Confirm the Build 3 chat still works. You'll layer onto it.
+**You should see:** the same Build 3 chat UI at `http://localhost:5173/`. Send a test query in each persona mode (Prospect, Member). Confirm both still work.
 
-## 2. Vibe-code the prefix builder (15 min)
+**If Build 3 is broken:** stop here. Fix Build 3 first (see Build 3's "Getting unstuck"). Build 4 needs it as a foundation.
 
-Open your AI assistant:
+Stop the dev server (`Ctrl+C`) before editing files.
 
-```
-In src/lib/buildPrefix.ts, export a function:
+---
 
-buildPrefix(opts: { language?: string; segment?: string; resourceTitle?: string }): string
+## Step 2 — Vibe-code the prefix builder (15 min)
 
-That returns:
-- "Respond in {language}: " if language is set and not "English"
-- "The user is a {segment}. Frame your answer accordingly. " if segment is set
-- 'Regarding the resource titled "{resourceTitle}": ' if resourceTitle is set
-- The three concatenated in order (empty strings dropped)
+This file is **tiny** — a single helper function that builds a query prefix from three inputs. We'll layer it into the chat in the next step.
 
-Return empty string if no opts set.
-```
+### 2a. Brief your AI
 
-Save the prompt as `prompt-log.md`.
-
-## 3. Add UI controls (30 min)
-
-Brief the AI:
+Paste **exactly**:
 
 ```
-Update MultiSurfaceChat.tsx to add three new UI controls above the chat input:
+In my Vite + React + TypeScript project, create src/lib/buildPrefix.ts.
 
-1. Language dropdown: ["English", "Spanish", "French", "German", "Japanese", "Mandarin"]
-   - State: useState<string>("English")
-2. Segment radio: 3 options chosen for my corpus (you pick reasonable defaults
-   for an outdoor-retail KB: "Weekend Adventurer", "Thru-Hiker", "Alpine Pro")
-   - State: useState<string>("Weekend Adventurer")
-3. Resource context: optional text input
-   - State: useState<string>("")
+Export a function:
 
-Layout: three controls in a horizontal row above the existing persona toggle.
+  buildPrefix(opts: {
+    language?: string;
+    segment?: string;
+    resourceTitle?: string;
+  }): string
 
-In the submit handler, build the prefix using buildPrefix({ language, segment, resourceTitle }),
-prepend it to the raw query, then call streamAsk(finalQuery, promptConfig).
+That returns a string built from three optional fragments:
+
+- If language is set AND not "English" (case-insensitive):
+    "Respond in {language}: "
+- If segment is set:
+    "The user is a {segment}. Frame your answer accordingly. "
+- If resourceTitle is set (non-empty):
+    'Regarding the resource titled "{resourceTitle}": '
+
+Concatenate the fragments in order (language → segment → resource).
+Skip empty/missing fragments cleanly (no extra spaces).
+
+Return an empty string "" if no opts result in a fragment.
+
+Pure TypeScript. No external dependencies. Include JSDoc comments
+showing example calls and outputs.
+```
+
+Send.
+
+### 2b. Save the AI's output
+
+- **Claude Code / Cursor:** *"Save this as src/lib/buildPrefix.ts."*
+- **Web chat:** in VS Code, create `src/lib/buildPrefix.ts` and paste.
+
+### 2c. Read the code
+
+Three checks:
+
+1. The function is exported with the right signature (`buildPrefix(opts) => string`).
+2. The fragments are joined cleanly (no double spaces, no leading/trailing whitespace).
+3. Returns `""` when nothing is set (not `undefined` or `null`).
+
+### 2d. Test it (optional but worth 2 minutes)
+
+In your terminal, in the project root:
+
+```bash
+node --experimental-strip-types -e "
+import { buildPrefix } from './src/lib/buildPrefix.ts';
+console.log('1:', JSON.stringify(buildPrefix({})));
+console.log('2:', JSON.stringify(buildPrefix({ language: 'Spanish' })));
+console.log('3:', JSON.stringify(buildPrefix({ language: 'English', segment: 'Expert' })));
+console.log('4:', JSON.stringify(buildPrefix({ language: 'French', segment: 'Beginner', resourceTitle: 'Onboarding Guide' })));
+"
+```
+
+(If `--experimental-strip-types` errors out — your Node version is older. Skip this manual check; the next step's UI test verifies correctness.)
+
+**Expected outputs:**
+- `1: ""`
+- `2: "Respond in Spanish: "`
+- `3: "The user is a Expert. Frame your answer accordingly. "`
+- `4: "Respond in French: The user is a Beginner. Frame your answer accordingly. Regarding the resource titled \"Onboarding Guide\": "`
+
+### 2e. Save your prompt
+
+Create or append to `prompt-log.md` in your project root. Add the Step 2 brief.
+
+---
+
+## Step 3 — Add the three UI controls (30 min)
+
+Now the visible work — add three controls to the chat, wire them through `buildPrefix`.
+
+### 3a. Brief your AI
+
+Paste **exactly**:
+
+```
+Update src/components/MultiSurfaceChat.tsx to add three new UI controls
+ABOVE the existing persona toggle:
+
+1. Language dropdown (HTML <select>):
+   - Options: ["English", "Spanish", "French", "German", "Japanese", "Mandarin"]
+   - State: const [language, setLanguage] = useState<string>("English")
+
+2. Segment radio buttons (3 options):
+   - Choose sensible defaults for a generic knowledge KB:
+     "Beginner", "Practitioner", "Expert"
+   - State: const [segment, setSegment] = useState<string>("Practitioner")
+
+3. Resource context text input (optional):
+   - Placeholder: "Optional: focus on a resource titled..."
+   - State: const [resourceTitle, setResourceTitle] = useState<string>("")
+
+Layout (Tailwind):
+- A horizontal flex row above the existing persona toggle.
+- Each control labelled clearly.
+- The whole row collapses to a vertical stack on narrow screens
+  (use flex-wrap or md: breakpoints).
+
+Wire it in:
+- Import buildPrefix from '../lib/buildPrefix'.
+- In the submit handler, BEFORE calling streamAsk:
+    const prefix = buildPrefix({ language, segment, resourceTitle });
+    const finalQuery = prefix + originalUserQuery;
+    streamAsk(finalQuery, promptConfig);
+- The chat history should still display the ORIGINAL user query
+  (without the prefix) — the prefix is an internal lever.
 
 Don't remove anything from the existing component. Just add.
 ```
 
-## 4. Test each lever in isolation (20 min)
+Send.
 
-Run the dev server. Test:
+### 3b. Save the AI's output
 
-**Language:**
-- Same query: "What should I buy?"
-- English: get the English answer.
-- French: get the French answer.
-- Japanese: get the Japanese answer.
+- **Claude Code / Cursor:** *"Apply this to src/components/MultiSurfaceChat.tsx."*
+- **Web chat:** copy the updated file, replace `MultiSurfaceChat.tsx` in your editor, save.
 
-**Segment:**
-- Same query, language = English.
-- Weekend Adventurer: friendly, beginner framing.
-- Alpine Pro: technical, expert framing.
+### 3c. Read the diff
 
-**Resource scope:**
-- Set Resource Context to the title of a specific document in your KB.
-- Ask "summarise this".
-- Confirm the model focuses on that resource (will reference paragraphs from it disproportionately).
+Three checks:
 
-**Combined:**
-- Set Language=Spanish, Segment=Alpine Pro, Resource=<doc title>.
-- Ask a question.
-- Answer should be in Spanish, framed for alpine pros, focused on the named resource.
+1. The three new controls are above the persona toggle.
+2. `buildPrefix` is imported and called in the submit handler.
+3. The chat history shows the **original** query (not the query-with-prefix).
 
-If any lever doesn't work, brief the AI: *"The {language|segment|scope} lever isn't affecting the answer. Verify the prefix is being passed to streamAsk and not just concatenated into the prompt config."*
+If the AI re-wrote the entire component and broke Build 3 features, tell it: *"You removed the [feature]. Re-add it without removing the new controls."*
 
-## 5. Wire the language list as a prop / config (10 min)
+### 3d. Run and visually check
 
-Brief the AI:
-
-```
-Make the language list configurable via a prop on MultiSurfaceChat. Default to the
-six-language list. The brand team should be able to add or remove languages without
-modifying component code.
+```bash
+npm run dev
 ```
 
-This is the customer-brand-team handoff pattern again — language list is config, not code.
+Open `http://localhost:5173/`.
 
-## 6. Demo recording (10 min)
+**You should see:**
+- A row of three controls at the top (language dropdown, segment radios, resource input).
+- The Build 3 persona toggle below.
+- The chat area below that.
 
-Record yourself:
+If the layout's broken, tell the AI: *"The new controls overlap with the persona toggle. Stack them vertically on small screens. Make sure each control is clearly labelled."*
 
-1. (30 sec) "Three query-prefix levers, three customer questions, no new infrastructure."
-2. (60 sec) Language flip — same query, English then French.
-3. (60 sec) Segment flip — same query, Weekend Adventurer then Alpine Pro.
-4. (45 sec) Resource scope — ask "summarise this" with a specific document title.
-5. (45 sec) Combined — Spanish + Alpine Pro + named resource. One answer, three prefixes.
-6. (15 sec) "Tier 2 closed. Cost: 15 lines of code, vibe-coded in 60 minutes."
+---
+
+## Step 4 — Test each lever in isolation (25 min)
+
+This is where the magic shows. Keep `language="English"`, `segment="Practitioner"`, `resourceTitle=""` for the baseline.
+
+### 4a. Test the language lever
+
+1. Type a question your corpus can answer: *"What should I focus on?"* (or whatever fits)
+2. Press Enter. Note the English answer.
+3. Change language to **French**. Same question. Press Enter.
+4. Change language to **Japanese**. Same question. Press Enter.
+
+**You should see:** the answer appears in French, then Japanese. Same content, different language.
+
+**If the language doesn't change:**
+- Open DevTools → Network tab → click the `/ask` request → look at the request body. The `query` field should start with `Respond in French:` (or whichever language).
+- If not, the prefix isn't being prepended. Tell AI: *"The language prefix isn't being added to the query. Check the submit handler in MultiSurfaceChat.tsx — the prefix concat is missing."*
+
+### 4b. Test the segment lever
+
+Language back to English.
+
+1. Segment = **Beginner**. Ask *"How does this work?"* Note the answer's tone — should be simple, accessible.
+2. Segment = **Expert**. Same question. The answer should be more technical, terse, jargon-friendly.
+
+**You should see:** the *same content*, framed differently. Beginner answers explain more; Expert answers assume context.
+
+### 4c. Test the resource-scope lever
+
+1. Pick a document title from your KB (open the Nuclia dashboard → list of resources → copy any title verbatim).
+2. Paste it into the **Resource Context** input.
+3. Ask: *"Summarise this."*
+
+**You should see:** the answer disproportionately references that resource (e.g., quotes paragraphs from it, or names it explicitly). Without the prefix, *"summarise this"* would be ambiguous; with the prefix, the model knows which "this".
+
+### 4d. Test all three combined
+
+1. Language = **Spanish**.
+2. Segment = **Expert**.
+3. Resource Context = some document title.
+4. Ask any question.
+
+**You should see:** answer is in Spanish, framed for an expert audience, focused on the named resource. **Three levers, one query, one answer.** Demonstration over.
+
+---
+
+## Step 5 — Make the language list configurable (10 min)
+
+This is the **brand-team handoff pattern**. The customer's content/brand team should be able to swap the language list without editing component code.
+
+### 5a. Brief your AI
+
+Paste:
+
+```
+Refactor MultiSurfaceChat.tsx so the language list is a PROP, not hardcoded.
+
+- Add a prop: languages?: string[]
+- Default value: ["English", "Spanish", "French", "German", "Japanese", "Mandarin"]
+- The dropdown should render from this prop.
+- The default value of the `language` state should be the first item in the prop.
+
+In App.tsx, demonstrate by passing a custom list:
+  <MultiSurfaceChat languages={["English", "Welsh", "Irish Gaelic"]} />
+
+That way the brand team can configure supported languages without
+touching component code.
+```
+
+Send. Apply the changes.
+
+### 5b. Test
+
+Reload the page. **You should see** the three custom languages in the dropdown.
+
+Restore the original six-language default for the final demo. (Or keep the custom list if you want — your call.)
+
+---
+
+## Step 6 — Write a 2-minute demo script (10 min)
+
+Open your AI:
+
+```
+Write me a 2-minute demo script for a sales rep showing the
+"Multi-Surface Chat Demo" page with the three new levers. Story:
+
+0:00–0:20 — Hook:
+  "Three customer questions you'll hear in every Tier-2 conversation:
+   'can it speak our customers' languages?', 'can it talk to beginners
+   AND experts?', 'can it focus on a specific document?' Watch."
+
+0:20–0:50 — Language lever:
+  Same query, English then French then Japanese. Narrate:
+  "Same KB. Same model. One dropdown."
+
+0:50–1:30 — Segment lever:
+  Same query, Beginner then Expert. Narrate:
+  "One KB. Two voices. Marketing sells the Beginner experience to
+   their CX team; sales sells the Expert experience to their R&D team."
+
+1:30–1:50 — Resource scope:
+  Paste a document title. Ask 'summarise this'. Narrate:
+  "Pre-sales engineer asked 'how does this specific document apply
+   to my customer?' — answered in one prefix."
+
+1:50–2:00 — Close:
+  "Three Tier-2 customer questions. Fifteen lines of code.
+   This is what 'platform' looks like."
+
+Format: plain markdown with timing headings. Include specific
+narration lines, not just feature descriptions.
+```
+
+Save as `demo-script.md` in the project folder.
+
+---
+
+## Step 7 — Update your prompt log (5 min)
+
+Make sure `prompt-log.md` includes:
+
+1. Step 2 brief (buildPrefix).
+2. Step 3 brief (UI controls).
+3. Step 5 brief (configurable language prop).
+4. Step 6 brief (demo script).
+5. Any debugging prompts.
+
+---
+
+## Step 8 — Record a 2-minute walkthrough (15 min)
+
+Record yourself walking the demo script:
+
+1. **(20 sec)** Hook — three customer questions.
+2. **(30 sec)** Language flip — English → French → Japanese.
+3. **(40 sec)** Segment flip — Beginner → Expert.
+4. **(20 sec)** Resource scope — focused summary.
+5. **(10 sec)** Close — "Fifteen lines of code."
 
 Upload to `#build-clinic-submissions`.
 
+---
+
 ## Verification checklist
 
-- [ ] `buildPrefix.ts` working.
+- [ ] `src/lib/buildPrefix.ts` working — returns the right strings for the example inputs in Step 2d.
 - [ ] Language dropdown switches answer language in 3+ languages.
-- [ ] Segment radio changes answer framing.
+- [ ] Segment radio changes answer framing (visible difference between Beginner and Expert).
 - [ ] Resource scope biases the model toward the named resource.
 - [ ] All three combine cleanly when set together.
-- [ ] Language list is config, not hardcoded.
-- [ ] `prompt-log.md` saved.
-- [ ] Recording submitted.
+- [ ] Language list is a configurable prop, not hardcoded.
+- [ ] `demo-script.md` saved.
+- [ ] `prompt-log.md` saved with all briefs.
+- [ ] 2-minute Loom recording submitted.
+
+Then take the [Build 4 quiz](quiz.md). Pass → start [Build 5](../build-5-structured-outputs/).
+
+---
+
+## Getting unstuck
+
+**Prefix doesn't appear in the request body.**
+- DevTools → Network → click the `/ask` request → check the `query` field. Should start with the prefix.
+- If not, the submit handler isn't calling `buildPrefix`. Tell AI: *"The query field in the request body doesn't include the prefix. The handler isn't prepending it."*
+
+**Answer language doesn't change.**
+- Make sure you typed the language name exactly as in the dropdown (case-sensitive). Some models are picky.
+- If the prefix is in the request but the answer is still English, try setting `rephrase: false` temporarily — `rephrase` can occasionally rewrite the query into English first. (This is a model quirk; usually not an issue.)
+
+**Segment doesn't change the tone.**
+- The system prompt from Build 3 may be overriding. Try a much more distinct segment label, e.g., "10-year-old child" vs "PhD researcher" — that forces the difference visible.
+
+**Resource scope doesn't focus the answer.**
+- The resource title must match a real document in your KB. Copy/paste from the dashboard exactly.
+- Ambiguous queries like "summarise this" depend on the resource scope landing. Try a more leading query: *"What does the resource say about X?"*
+
+**Component re-renders on every keystroke and feels laggy.**
+- Probably a `useEffect` watching the input states. Tell AI: *"The chat re-renders on every keystroke in the language/segment/resource controls. Fix the unnecessary re-renders."*
+
+**Anything else.**
+- Copy the symptom + the file/code in question into your AI.
+- Apply the fix. Re-test.
+
+---
 
 ## Next
 
-[Build 5 — Structured Outputs](../build-5-structured-outputs/) — the most important Build in the course. `answer_json_schema` and the moat-building tier.
+[Build 5 — Structured Outputs](../build-5-structured-outputs/) — the **most important Build in the course**. `answer_json_schema` is the Tier-3 unlock: workflows, structured extraction, schema-validated generation. Plan 4–5 hours.
