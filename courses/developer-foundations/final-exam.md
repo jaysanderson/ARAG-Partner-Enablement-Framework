@@ -169,7 +169,7 @@ D. `[context]` and `[question]`
 
 ---
 
-### 18. The multilingual answer pattern in the Sample ARAG App is implemented by:
+### 18. The multilingual answer pattern in  is implemented by:
 
 A. Switching to a language-specific KB
 B. Calling a separate `/translate` endpoint
@@ -187,7 +187,7 @@ D. `mode: "structured"`
 
 ---
 
-### 20. The Sample ARAG App's `askForJson` wrapper falls back through three response shapes. They are, in order:
+### 20. `askForJson` wrapper falls back through three response shapes. They are, in order:
 
 A. Stream → sync → error
 B. **`data.answer_json` → `data.item.object` → text response with regex JSON extraction**
@@ -357,7 +357,7 @@ D. $1M
 
 A. Run sandbox demos
 B. **Reach Authorized tier with the partner organisation (and therefore cannot access MDF or premier margin)**
-C. Use the Sample ARAG App
+C. Use 
 D. Receive customer leads
 
 ---

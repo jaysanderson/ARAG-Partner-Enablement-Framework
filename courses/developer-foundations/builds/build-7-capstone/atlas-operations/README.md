@@ -14,9 +14,9 @@ The Partner Enablement Framework names two top-priority assets: the Agent Worksh
 
 1. **Capstone.** It's the final certification artefact for every track. An individual at Solution-4 or Deliver-4 must have shipped and demoed a capstone example against a real customer's corpus.
 2. **Sales-room closer.** It's the one thing a partner walks into a Fortune 500 CTO's office with that *cannot be reproduced* by a competitor's free trial. Atlas Operations is the proof that ARAG is a platform, not a chatbot.
-3. **Re-skin chassis.** Every partner customer demo starts with a fork of Atlas Operations. Partners customise the corpus, the entity schema, the branding, and the workflows — but the chassis ships in working condition. This is how the programme scales without every partner SE re-inventing the same demo from the Sample ARAG App.
+3. **Re-skin chassis.** Every partner customer demo starts with a fork of Atlas Operations. Partners customise the corpus, the entity schema, the branding, and the workflows — but the chassis ships in working condition. This is how the programme scales without every partner SE re-inventing the same demo from one capstone to the next.
 
-The Sample ARAG App proves what ARAG *can do* across 30+ patterns. Atlas Operations proves what an *enterprise platform built on ARAG* looks like in production, in one coherent product, against a recognisable enterprise corpus, with at least one custom data-augmentation agent live.
+Foundations Builds 0–6 prove what ARAG *can do* across the individual patterns. Atlas Operations proves what an *enterprise platform built on ARAG* looks like in production, in one coherent product, against a recognisable enterprise corpus, with at least one custom data-augmentation agent live.
 
 ---
 
@@ -45,7 +45,7 @@ Atlas is chosen because:
 
 ### Single KB, multiple content domains via labelsets
 
-Atlas Operations runs on **one ARAG knowledge base** (`kb-atlas-operations`) containing all corpus documents tagged with three labelsets. ARAG's labelset-driven filter composition (see Sample ARAG App `src/lib/ragApi.ts:1285-1340`) gives the demo every cross-domain capability of a multi-KB setup with a fraction of the operational complexity. Partners stand up one KB, not five — and customers can do the same in their POC.
+Atlas Operations runs on **one ARAG knowledge base** (`kb-atlas-operations`) containing all corpus documents tagged with three labelsets. ARAG's labelset-driven filter composition (see) gives the demo every cross-domain capability of a multi-KB setup with a fraction of the operational complexity. Partners stand up one KB, not five — and customers can do the same in their POC.
 
 | Labelset | Values | Volume target |
 |---|---|---|
@@ -82,7 +82,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 - One Tier 4 composite RAG flow live (the "incident root cause" workflow).
 - BYO-LLM toggle in the UI: switch between three named LLM endpoints during the demo to show parity (Azure OpenAI / Google Vertex / AWS Bedrock).
 - Rate-limit-aware client (documented; doesn't need stress-testing in the demo).
-- Sample ARAG App is the technical baseline — fork it, don't rebuild from zero. The repo is at `https://github.com/jaysanderson/Sample-ARAG-App`.
+-  is the technical baseline — fork it, don't rebuild from zero. The repo is at ``.
 - Re-skin playbook (Section 10) shipped alongside the build.
 - 25-minute demo script (Section 9) rehearsed and recorded by the build owner.
 
@@ -137,14 +137,14 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 ### 5.2 Frontend stack
 
-- **Framework:** Next.js 14 (App Router) or Vite + React 18 — choose whichever the build owner is fastest in. The Sample ARAG App is Vite; staying consistent reduces fork cost.
-- **Styling:** Tailwind CSS with a Atlas-Operations-specific palette (dark control-room aesthetic — slate-950 base, electric-blue and amber accents). Avoid the ARAKS teal/navy palette so the two repos are visually distinct.
-- **Routing:** React Router v7 (matches Sample ARAG App). Five top-level routes plus the landing page.
+- **Framework:** Next.js 14 (App Router) or Vite + React 18 — choose whichever the build owner is fastest in. The  is Vite; staying consistent reduces fork cost.
+- **Styling:** Tailwind CSS with a Atlas-Operations-specific palette (dark control-room aesthetic — slate-950 base, electric-blue and amber accents). Avoid the demo teal/navy palette so the two repos are visually distinct.
+- **Routing:** React Router v7 (matches ). Five top-level routes plus the landing page.
 - **State:** React Context for the BYO-LLM toggle, the active KB, and the demo "presenter mode" hotkeys. No Redux, no Zustand — keep dependencies thin.
 
 ### 5.3 Backend stack
 
-- **ARAG only.** No custom backend. Atlas Operations talks directly to ARAG endpoints exactly the way the Sample ARAG App does. This is itself a demo point — *there is no middleware to maintain*.
+- **ARAG only.** No custom backend. Atlas Operations talks directly to ARAG endpoints exactly the way  does. This is itself a demo point — *there is no middleware to maintain*.
 - **BYO-LLM toggle:** Implemented as a KB-level ARAG configuration. Customer's "imagine this is your Azure tenant" question is answered by flipping the toggle live during the demo.
 
 ### 5.4 Data-augmentation agent — the typed graph
@@ -247,14 +247,14 @@ Total target: **8 weeks of focused work**, or **4 weeks at 2 FTE**. Phases can r
 - Run the agent against the Atlas KB. Verify graph queries return clean results (no GUID noise, no default-NER pollution).
 - **Exit criteria:** `POST /v1/kb/{id}/graph` with `{prop:'generated', by:'data-augmentation'}` returns a typed graph the build owner is willing to demo on camera.
 
-### Phase 3 — Sample-ARAG-App fork + Atlas Operations reskin (Weeks 3–4)
+### Phase 3 — Build the chassis + Atlas Operations branding (Weeks 3–4)
 
-- Fork `Sample-ARAG-App` into a new private repo `Capstone-Atlas-Operations`.
-- Strip ARAKS branding. Replace with Atlas Operations design system (dark slate base, electric-blue and amber accents).
-- Replace `ContentPage`-style static markdown rendering with the Atlas-themed landing copy.
-- Wire BYO-LLM toggle as a UI element backed by ARAG configuration.
-- Replace `kb-site-content` and `kb-member-knowledge` env vars with the single `kb-atlas-operations` KB ID. Where the Sample ARAG App routes between two KBs based on membership state, route by labelset filter on the single Atlas KB instead.
-- **Exit criteria:** All five demo routes loading against real Atlas content with no ARAKS leakage.
+- Stand up a fresh Vite + React app in a private repo named `Capstone-Atlas-Operations`. Apply the Atlas design system (dark slate base, electric-blue and amber accents).
+- Wire the ARAG client wrapper (from Foundations Builds 0–6) into the chassis. Single env var: `NUCLIA_KB_ID=kb-atlas-operations`. All demo surfaces route through this one KB.
+- Build the static landing copy in the Atlas voice.
+- Add the BYO-LLM toggle in the header (it's a presentation element backed by the KB's configured LLM endpoint).
+- Where the application would route between two KBs based on user state (e.g., employee vs executive), route by **labelset filter** on the single Atlas KB instead.
+- **Exit criteria:** All five demo routes loading against the Atlas KB with no placeholder content remaining.
 
 ### Phase 4 — The three Tier 3 workflows + composite-RAG flow (Weeks 4–6)
 
@@ -478,7 +478,7 @@ Atlas Operations ships when *all* of the following are true:
 | Atlas anchor details | Jay Sanderson | TODO — Phase 1 prerequisite |
 | Corpus generation (one KB + labelset tagging) | Progress SE + `progress-kb-use-case-generator` skill | TODO |
 | Graph agent | Progress SE + `arag-graph-agent` skill | TODO |
-| Sample-ARAG-App fork | Build owner | TODO |
+| Capstone chassis (Phase 3) | Build owner | TODO |
 | Three Tier 3 workflows | Build owner | TODO |
 | Composite-RAG flow | Build owner | TODO |
 | Production-readiness layer | Build owner | TODO |

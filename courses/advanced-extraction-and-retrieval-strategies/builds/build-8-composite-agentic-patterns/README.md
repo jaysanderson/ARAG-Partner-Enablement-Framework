@@ -37,9 +37,8 @@ Agentic-patterns cookbook + composite-flow observability template.
 
 ## Reference reading
 
-- Sample ARAG App `src/components/certification/ExamStudyPanel.tsx:35-115` — the cleanest live example of retry-on-low-citations.
 - [Aurora Concierge capstone](../../../developer-foundations/builds/build-7-capstone/aurora-concierge/) §5.5 — the multi-pass synthesis blueprint in the abandoned-cart pipeline.
-- ARAKS RP-007 (Agentic RAG Patterns — multi-step reasoning, tool-use, failure-mode taxonomy).
+-
 
 ---
 

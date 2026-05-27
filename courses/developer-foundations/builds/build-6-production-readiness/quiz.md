@@ -49,10 +49,10 @@ D. Switch to a different LLM endpoint mid-retry
 
 ---
 
-### 6. Why is exposing `VITE_*` service-account JWTs to the browser appropriate for the Sample ARAG App but NOT for a customer's production deployment?
+### 6. Why is exposing `VITE_*` service-account JWTs to the browser appropriate for  but NOT for a customer's production deployment?
 
 A. Production keys are different formats from sandbox keys
-B. **The Sample ARAG App is a *demo*; production deployments must proxy ARAG calls through the partner's backend so the service-account JWT never reaches client-side code**
+B. **The  is a *demo*; production deployments must proxy ARAG calls through the partner's backend so the service-account JWT never reaches client-side code**
 C. The browser-side keys hit rate limits faster
 D. Browser-side keys don't support BYO-LLM
 

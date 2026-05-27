@@ -40,7 +40,6 @@ Designs and ships three `askForJson` workflows against the partner's own KB: a f
 
 **The Agent Workshop notebook** — a reusable Jupyter / TypeScript template with five worked schema examples.
 
-**Reference:** `Sample-ARAG-App/src/pages/ExamPage.tsx` (six distinct generation patterns in one file — the canonical Tier 3 reference) and `src/context/CertificationContext.tsx`.
 
 ---
 

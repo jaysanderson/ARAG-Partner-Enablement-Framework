@@ -29,8 +29,6 @@ Labelset design template + classifier training guide.
 
 ## Reference reading
 
-- Sample ARAG App `src/lib/ragApi.ts:1285-1340` (label-driven filter composition).
-- Sample ARAG App `src/lib/ragApi.ts:1625-1660` (`fetchTopicLabels` — dynamic labelset resolution pattern).
 
 ---
 

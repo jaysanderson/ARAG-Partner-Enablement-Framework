@@ -37,7 +37,6 @@ Implements "generate → evaluate citations → if low confidence, fire `/find` 
 
 A composite-RAG cookbook with three recipes — retry-on-low-citations, multi-pass synthesis, retrieve-then-rerank.
 
-**Reference:** `Sample-ARAG-App/src/components/certification/ExamStudyPanel.tsx` (the cleanest live example).
 
 > The [Advanced Extraction & Retrieval Strategies course](../../../advanced-extraction-and-retrieval-strategies/README.md) goes much deeper on these patterns in its [Build 8](../../../advanced-extraction-and-retrieval-strategies/builds/build-8-composite-agentic-patterns/) with cost analysis, failure-mode taxonomy, and observability.
 

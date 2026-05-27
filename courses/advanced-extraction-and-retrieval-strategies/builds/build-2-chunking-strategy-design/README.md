@@ -19,7 +19,7 @@ Designs and deploys per-content-type chunking strategies. Compares fixed-size, s
 1. Chunking spec doc for 3 distinct content types (e.g. PDF, markdown, video transcript).
 2. A/B comparisons with measured retrieval lift from the Build 1 harness.
 3. Decision tree: when to recommend each chunking strategy.
-4. Recorded explanation tying chunking choices to RP-004's findings.
+4. Recorded explanation
 
 ## Asset delivered
 
@@ -27,7 +27,7 @@ Chunking spec template + per-content-type decision tree.
 
 ## Reference reading
 
-- ARAKS RP-004 (Chunking Strategies for Optimal Retrieval — systematic evaluation of 12 approaches, 34% precision improvement). Lives at `Sample-ARAG-App/knowledge-base/kb-member-knowledge/research/rp-004-chunking-strategies.md`.
+- Lives at.
 
 ---
 

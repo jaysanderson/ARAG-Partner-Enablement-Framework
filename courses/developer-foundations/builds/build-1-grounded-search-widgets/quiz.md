@@ -73,7 +73,7 @@ D. The widgets aren't supported on iframe contexts by Nuclia
 
 A. "No — you'll need a Tier 3 platform engagement to wire the API."
 B. **"Yes. Drop two `<script>` and `<nuclia-chat>` tags into your WordPress template, paste your KB UUID + API key + zone, ship today."**
-C. "Yes, but you'll need to fork Sample-ARAG-App first."
+C. "Yes, but you'll need to fork chassis first."
 D. "You'll need to wait until we deploy a custom React app."
 
 ---

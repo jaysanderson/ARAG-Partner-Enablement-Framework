@@ -22,10 +22,10 @@ The queries that fail those checks are your 5 hard queries. Save them in `hard-q
 
 ## 2. Build the composite wrapper
 
-Create `src/components/build-4/CompositeRagClient.ts`:
+Create :
 
 ```typescript
-import { siteContentClient, searchResources, type KnowledgeResource } from '../../lib/ragApi';
+import { ragClient, searchResources, type KnowledgeResource } from './ragClient';
 
 const CONFIDENCE_THRESHOLD = 0.7;
 const MIN_CITATIONS = 3;
@@ -41,7 +41,7 @@ export async function compositeAsk(query: string): Promise<CompositeResult> {
   const t0 = Date.now();
 
   // Step 1: single-shot /ask
-  const initial = await siteContentClient.ask(query);
+  const initial = await ragClient.ask(query);
   steps.push({
     step: 'initial-ask',
     durationMs: Date.now() - t0,
@@ -80,7 +80,7 @@ export async function compositeAsk(query: string): Promise<CompositeResult> {
   const augmentedPrompt = {
     user: `The initial answer was thin. Additional context:\n\n${contextBlock}\n\nRe-answer the question: {question}`,
   };
-  const augmented = await siteContentClient.ask(query, augmentedPrompt);
+  const augmented = await ragClient.ask(query, augmentedPrompt);
   steps.push({
     step: 're-ask',
     durationMs: Date.now() - t2,
@@ -122,11 +122,11 @@ Cap retries at 1 (the wrapper above does this implicitly). Cap total latency wit
 
 ## 3. Build the side-by-side comparison page
 
-Create `src/components/build-4/CompositeComparison.tsx`:
+Create :
 
 ```tsx
 import { useState } from 'react';
-import { siteContentClient } from '../../lib/ragApi';
+import { ragClient } from './ragClient';
 import { compositeAsk } from './CompositeRagClient';
 
 export function CompositeComparison() {
@@ -141,7 +141,7 @@ export function CompositeComparison() {
     setComposite(null);
 
     const [s, c] = await Promise.all([
-      siteContentClient.ask(query),
+      ragClient.ask(query),
       compositeAsk(query),
     ]);
 

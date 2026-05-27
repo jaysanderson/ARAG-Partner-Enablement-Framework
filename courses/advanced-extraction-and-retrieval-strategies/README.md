@@ -37,7 +37,7 @@ That last bullet is the commercial point. **The AE&RS Specialist cert exists to 
 
 Each Build is a hands-on exercise against a real ARAG sandbox. Each ships a specific artefact. Each carries a pass/fail rubric. Builds 1–8 are competencies; Build 9 is the capstone — a written tuning engagement against an existing capstone deployment.
 
-Several Builds reference ARAKS research papers (RP-001 through RP-010) which live in the Sample ARAG App's member knowledge base (`Sample-ARAG-App/knowledge-base/kb-member-knowledge/research/`). These are recommended pre-reading for the relevant Builds; the citations below name them explicitly.
+Each Build cites widely-published RAG research where useful — partners can find current literature on arxiv.org / Google Scholar under "retrieval-augmented generation," "evaluation methods," "chunking strategies," etc.
 
 ### Build 1 — Retrieval Quality Baselines & Metrics
 
@@ -48,7 +48,7 @@ Several Builds reference ARAKS research papers (RP-001 through RP-010) which liv
 | **What the partner does** | Builds a retrieval-quality measurement harness for the partner's KB. Computes precision@k, recall@k, MRR (mean reciprocal rank), nDCG, hit-rate, and end-to-end citation-rate. Designs a 30–60-query golden set against the KB with difficulty tagging (easy/medium/hard) and known-good resource IDs. Where the KB spans multiple content domains (via labelsets), the golden set must sample queries that exercise at least 3 content types or labelset values. Captures a baseline before any tuning happens. |
 | **Pass rubric** | (1) Harness runnable on demand against the KB. (2) Golden set of 30+ queries committed with expected resource IDs and difficulty tags. (3) At least 3 content-type or labelset value sub-baselines computed (to spot retrieval gaps that hide in cross-domain averages). (4) Both retrieval-only (`/find`) and end-to-end (`/ask`) metrics captured. (5) Noise threshold defined (how much lift counts as real). |
 | **Asset delivered** | Eval-harness template (TypeScript or Python) + golden-set markdown template + scoreboard layout. This becomes the harness every subsequent Build runs against. |
-| **Reference reading** | ARAKS RP-002 (RAG Evaluation Methods, ARAKS RAGAS-compatible scoring framework). |
+| **Reference reading** | |
 
 ### Build 2 — Chunking Strategy Design
 
@@ -57,9 +57,9 @@ Several Builds reference ARAKS research papers (RP-001 through RP-010) which liv
 | **Owning track(s)** | Solution (Should), Deliver (Must) |
 | **Why it matters** | Chunking is invisible but decisive. Default chunking ships as "fine"; tuned chunking lifts recall 20–40% on structured content. |
 | **What the partner does** | Designs and deploys per-content-type chunking strategies. Compares fixed-size, semantic, structure-aware (markdown header-based, PDF section-based, transcript speaker-turn-based), and sliding-window approaches. A/B tests against the Build 1 baseline. Documents a chunking decision tree. |
-| **Pass rubric** | (1) Chunking spec doc for 3 distinct content types (e.g. PDF, markdown, video transcript). (2) A/B comparisons with measured retrieval lift from the Build 1 harness. (3) Decision tree: when to recommend each chunking strategy. (4) Recorded explanation tying chunking choices to RP-004's findings. |
+| **Pass rubric** | (1) Chunking spec doc for 3 distinct content types (e.g. PDF, markdown, video transcript). (2) A/B comparisons with measured retrieval lift from the Build 1 harness. (3) Decision tree: when to recommend each chunking strategy. (4) Recorded explanation |
 | **Asset delivered** | Chunking spec template + per-content-type decision tree. |
-| **Reference reading** | ARAKS RP-004 (Chunking Strategies for Optimal Retrieval — systematic evaluation of 12 approaches, 34% precision improvement identified). |
+| **Reference reading** | |
 
 ### Build 3 — Hybrid Retrieval Tuning
 
@@ -70,7 +70,7 @@ Several Builds reference ARAKS research papers (RP-001 through RP-010) which liv
 | **What the partner does** | A/B tests dense-only vs keyword-only vs `features:['keyword','semantic']` hybrid against the Build 1 golden set. Builds a decision matrix mapping query archetypes (named-entity / conceptual / mixed / quantitative / temporal) to recommended retrieval mode. Wires hybrid into at least one production code path. Practises filter composition: stacking content-type filters (`/icon/video`, `/icon/application/pdf`), label classification filters (`/classification.labels/{labelset}/{label}`), and free filters. |
 | **Pass rubric** | (1) A/B comparison for 3+ query archetypes with measured outcomes. (2) Decision matrix documented and tested. (3) At least one production code path migrated to hybrid with measured lift. (4) Filter composition working with 3+ stacked filters. (5) Score normalisation strategy documented (how to compare keyword scores to semantic scores). (6) Recorded demo explaining when to recommend hybrid (and when single-mode is enough). |
 | **Asset delivered** | Hybrid-retrieval decision matrix template + A/B test runner extending Build 1's harness. |
-| **Reference reading** | ARAKS RP-003 (Hybrid Retrieval Strategies — comparative analysis of dense, sparse, and hybrid). The Sample ARAG App's `searchRelatedResources` in `src/lib/graphApi.ts:179-237` is the only place in the entire reference app that explicitly sets hybrid mode — partners must internalise this as the deliberate lever it is. |
+| **Reference reading** | `searchRelatedResources` in  is the only place in the entire reference app that explicitly sets hybrid mode — partners must internalise this as the deliberate lever it is. |
 
 ### Build 4 — Custom Labelsets & Classifiers
 
@@ -81,7 +81,7 @@ Several Builds reference ARAKS research papers (RP-001 through RP-010) which liv
 | **What the partner does** | Designs and deploys three labelsets against the partner's corpus. Each labelset has 5–9 labels (cognitive limit), maps to user intent rather than internal taxonomy, and avoids overlap. Trains classifiers (rule-based, model-based, or hybrid) to populate the labels. Wires filter composition into a production search surface using the `/classification.labels/{labelset}/{label}` filter path. Implements dynamic labelset resolution to handle multi-KB scenarios where labelset names vary. |
 | **Pass rubric** | (1) 3 labelsets designed and documented with rationale. (2) Classifiers trained and labels populated against the corpus. (3) Filter UI wired into at least one production surface. (4) Measured UX improvement (session length, click-through) vs unlabelled baseline. (5) Multi-label AND query working. (6) Per-paragraph labels demonstrated (paragraphs can carry their own classifications independent of the parent resource). |
 | **Asset delivered** | Labelset design template + classifier training guide. |
-| **Reference reading** | Sample ARAG App `src/lib/ragApi.ts:1285-1340` (label-driven filter composition) and `:1625-1660` (`fetchTopicLabels` — dynamic labelset resolution pattern). |
+| **Reference reading** | (label-driven filter composition) and `:1625-1660` (`fetchTopicLabels` — dynamic labelset resolution pattern). |
 
 ### Build 5 — Custom Field Engineering
 
@@ -89,10 +89,10 @@ Several Builds reference ARAKS research papers (RP-001 through RP-010) which liv
 |---|---|
 | **Owning track(s)** | Solution (Must), Deliver (Must) |
 | **Commercial note** | This is the **highest-leverage recurring-revenue lever** in the entire framework. Field engineering is content authoring, not engineering. Partners sell it as an ongoing service to customers. A typical retainer is $5–15K / month per customer to maintain and tune field-engineered surfaces. |
-| **What the partner does** | Designs and deploys three custom JSON-encoded text fields per resource type, following the Sample ARAG App's pattern: `callToAction` (one-sentence branded CTA copy), `searchResultDisplay` (title + description optimised for AI-answer rendering, distinct from the raw resource title), `videoInfo` (structured speakers + topics + key points + call-to-action for video resources). Manually populates 30+ hero resources. Wires the front-end to render the fields. Trains the partner's customer's content team to author and maintain the fields. Sets up A/B testing (with-fields vs without-fields baseline). |
+| **What the partner does** | Designs and deploys three custom JSON-encoded text fields per resource type, following pattern: `callToAction` (one-sentence branded CTA copy), `searchResultDisplay` (title + description optimised for AI-answer rendering, distinct from the raw resource title), `videoInfo` (structured speakers + topics + key points + call-to-action for video resources). Manually populates 30+ hero resources. Wires the front-end to render the fields. Trains the partner's customer's content team to author and maintain the fields. Sets up A/B testing (with-fields vs without-fields baseline). |
 | **Pass rubric** | (1) 3 distinct field designs documented with purpose, schema, and author guidelines. (2) 30+ resources populated. (3) Front-end consumes the fields in search and chat surfaces. (4) Author training script + style guide shipped. (5) A/B test designed with first results documented. (6) Recorded explanation of how to sell this as a content-engineering retainer to the partner's customer. |
 | **Asset delivered** | Field-engineering playbook + author training script + A/B test scaffolding. |
-| **Reference reading** | Sample ARAG App `src/lib/ragApi.ts:1212-1263` for the canonical field-extraction logic. `src/components/chat/FloatingChat.tsx:22-45` for the front-end post-processing that converts model-emitted `[label](href)` markdown into branded CTA pills. |
+| **Reference reading** | for the canonical field-extraction logic.  for the front-end post-processing that converts model-emitted `[label](href)` markdown into branded CTA pills. |
 
 ### Build 6 — Data-Augmentation Agents at Depth
 
@@ -103,7 +103,7 @@ Several Builds reference ARAKS research papers (RP-001 through RP-010) which liv
 | **What the partner does** | Designs a typed entity/relation schema for a partner-chosen vertical (or partner-supplied customer corpus). 8–15 entity types per schema; 8–15 relation types. Configures and deploys the data-augmentation agent. Runs extraction against a real corpus. Hand-labels a 100-example sample and measures the agent's precision per entity type and overall coverage rate. Iterates the schema and the extraction prompts. Documents a schema-evolution plan (how to add a new entity type without re-extracting everything). |
 | **Pass rubric** | (1) Schema documented (entity types with definitions, relation types with semantics, edge cases). (2) Agent deployed and running against the corpus. (3) Entity coverage > 80% on the hand-labelled sample. (4) False-positive rate < 10%. (5) Observability dashboard showing per-type metrics. (6) Schema-evolution plan documented. (7) Recorded demo answering a customer question that *cannot* be answered by single-shot retrieval. |
 | **Asset delivered** | Agent design template + 10 worked vertical schemas (legal, pharma, financial services, healthcare, public sector, retail, media, manufacturing, education, energy). |
-| **Reference reading** | Sample ARAG App `src/lib/graphApi.ts` and `src/lib/graphConstants.ts`. The Atlas Operations capstone brief (`../developer-foundations/builds/build-7-capstone/atlas-operations/README.md` §5.4) and Aurora Concierge capstone brief (`../developer-foundations/builds/build-7-capstone/aurora-concierge/README.md` §5.4) have two worked vertical schemas already. ARAKS RP-008 (Knowledge Graph RAG — 41% factual error reduction vs dense retrieval in structured-domain applications). |
+| **Reference reading** | and . The Atlas Operations capstone brief (`../developer-foundations/builds/build-7-capstone/atlas-operations/README.md` §5.4) and Aurora Concierge capstone brief (`../developer-foundations/builds/build-7-capstone/aurora-concierge/README.md` §5.4) have two worked vertical schemas already. |
 
 ### Build 7 — Multimodal Extraction
 
@@ -114,7 +114,7 @@ Several Builds reference ARAKS research papers (RP-001 through RP-010) which liv
 | **What the partner does** | Ingests a video corpus (10+ videos) and a scanned-PDF corpus (10+ documents). Verifies utterance extraction with timestamp anchoring (`data.files.*.extracted.metadata.paragraphs[]` with `start_seconds[0]` and `end_seconds[0]`). Wires transcript-sync UI (click transcript → seek video; video timeupdate → highlight active paragraph). Builds a search experience that returns video-timestamp deep links. Documents audio diarization (speaker boundaries, where supported). Confirms OCR pipeline handles scanned PDFs. Verifies image classification (per-paragraph labels). Demonstrates DASH MPD streaming with the auth-injecting `RequestModifier` pattern. |
 | **Pass rubric** | (1) Video utterance extraction working with timestamps verifiable in `/find` responses. (2) Scanned PDF retrieval working (OCR layer demonstrated). (3) Transcript ↔ video sync working end-to-end. (4) Audio diarization documented. (5) Hit rate > 70% on a 20-query golden set of timestamp queries ("find the moment X is mentioned"). (6) Recorded demo deep-linking to a specific second of a video resource. |
 | **Asset delivered** | Multimodal extraction recipe book (per-content-type playbook covering ingest, verification, retrieval, and deep-link UX). |
-| **Reference reading** | Sample ARAG App `src/lib/ragApi.ts:1058-1137` (`extractUtterancesFromExtractedData`), `:1188-1207` (DASH manifest detection), and `src/components/knowledge/VideoPlayer.tsx:50-169` (DASH player with `RequestModifier` auth injection). ARAKS RP-006 (Multimodal RAG). |
+| **Reference reading** | (`extractUtterancesFromExtractedData`), `:1188-1207` (DASH manifest detection), and  (DASH player with `RequestModifier` auth injection). |
 
 ### Build 8 — Composite & Agentic Retrieval Patterns
 
@@ -125,7 +125,7 @@ Several Builds reference ARAKS research papers (RP-001 through RP-010) which liv
 | **What the partner does** | Implements three composite-RAG recipes in a single test harness: (1) Retry-on-low-citations — `/ask` first; if citation count or confidence below threshold, fire `/find` for more context, then re-ask. (2) Multi-pass synthesis — initial `/ask`, extract entities/topics from the answer, traverse the graph for related concepts, re-ask with augmented context. This is the Aurora Concierge abandoned-cart pattern. (3) Retrieve-then-rerank — `/find` returns N candidates; a smaller LLM or scoring function reranks; pass top-K back to `/ask`. A/B against single-shot for 20 hard queries selected from the Build 1 low-scoring tail. Documents failure modes (timeout cascades, infinite loops, citation drift) and the guards for each. Documents cost analysis (composite RAG is 2–4× the LLM token cost of single-shot; quantify when the lift justifies it). |
 | **Pass rubric** | (1) All three recipes deployed and runnable. (2) A/B against single-shot on 20 hard queries with measured lift on at least 2 of 3 recipes. (3) Failure-mode handling documented and tested. (4) Cost analysis per recipe (LLM tokens, end-user latency, retrieval call volume). (5) Recorded explanation of when each recipe is appropriate vs when single-shot is enough. (6) Where the boundary sits between "augmenting retrieval" and "running a true agent" defined clearly. |
 | **Asset delivered** | Agentic-patterns cookbook + composite-flow observability template. |
-| **Reference reading** | Sample ARAG App `src/components/certification/ExamStudyPanel.tsx:35-115` (the cleanest live example of retry-on-low-citations). The Aurora Concierge capstone's `/abandoned-cart` pipeline (`../developer-foundations/builds/build-7-capstone/aurora-concierge/README.md` §5.5) is the multi-pass synthesis blueprint. ARAKS RP-007 (Agentic RAG Patterns — multi-step reasoning, tool-use, failure-mode taxonomy). |
+| **Reference reading** | The Aurora Concierge capstone's `/abandoned-cart` pipeline (`../developer-foundations/builds/build-7-capstone/aurora-concierge/README.md` §5.5) is the multi-pass synthesis blueprint. |
 
 ### Build 9 — Capstone: Production-Grade Tuning Engagement
 
@@ -136,7 +136,7 @@ Several Builds reference ARAKS research papers (RP-001 through RP-010) which liv
 | **What the partner does** | Picks one of the two existing capstone deployments from Developer Foundations Build 7 (Atlas Operations or Aurora Concierge — whichever the partner shipped). Instruments it with the Build 1 eval harness against a 30-query golden set. Identifies the three biggest retrieval-quality gaps (with metric citations from Build 1). Proposes three improvements drawn from Builds 2–8: at minimum, one extraction-side change (Build 2 chunking or Build 7 multimodal), one retrieval-quality change (Build 3 hybrid or Build 4 labelsets), and one generation-quality change (Build 5 field engineering or Build 8 composite RAG). Deploys all three changes against the capstone. Re-measures. Writes a 5–10-page tuning report covering: baseline, identified gaps, proposed changes with rationale, deployment notes, measured lift vs Build 1's noise threshold, residual gaps, and a recommendation for ongoing tuning cadence. |
 | **Pass rubric** | (1) Capstone instrumented with Build 1 harness, baseline captured. (2) Three improvements proposed with clear rationale tied to measured gaps. (3) All three deployed against the capstone. (4) Measurable lift on at least 2 of 3 changes (lift > Build 1's noise threshold). (5) Tuning report submitted (5–10 pages) and passes Progress-led review board. (6) The report names a quarterly tuning cadence the partner can sell to customers. |
 | **Asset delivered** | Tuning-report template — used by every AE&RS Specialist thereafter when scoping a paid tuning engagement with a customer. This is the commercial deliverable of the cert. |
-| **Reference reading** | All prior Builds. Both capstone briefs. ARAKS RP-010 (Production RAG Ops). |
+| **Reference reading** | All prior Builds. Both capstone briefs. |
 
 ---
 
@@ -221,22 +221,22 @@ Required pre-reading (before Build 1):
 
 1. Umbrella framework `../../README.md` — Parts I, II, IV.
 2. `../developer-foundations/README.md` — the prerequisite course in full.
-3. Sample ARAG App `README.md` and `src/lib/ragApi.ts` (revisit, not first-read).
-4. ARAKS RP-002 (Evaluation Methods) — sets up Build 1.
+3.  `README.md` and  (revisit, not first-read).
+4.  (Evaluation Methods) — sets up Build 1.
 
-Per-Build pre-reading (each lives in `Sample-ARAG-App/knowledge-base/kb-member-knowledge/research/`):
+Per-Build pre-reading (each lives in):
 
 | Build | Required reading |
 |---|---|
-| 1 | RP-002 Evaluation Methods |
-| 2 | RP-004 Chunking Strategies |
-| 3 | RP-003 Hybrid Retrieval Strategies |
-| 4 | Sample ARAG App `ragApi.ts:1285-1340` and `:1625-1660` |
-| 5 | Sample ARAG App `ragApi.ts:1212-1263` and `FloatingChat.tsx:22-45` |
-| 6 | RP-008 Knowledge Graph RAG + both capstone briefs §5.4 |
-| 7 | RP-006 Multimodal RAG + Sample ARAG App `ragApi.ts:1058-1137`, `VideoPlayer.tsx:50-169` |
-| 8 | RP-007 Agentic RAG Patterns + Aurora Concierge capstone brief §5.5 |
-| 9 | RP-010 Production RAG Ops + the partner's own Build 7 capstone deployment |
+| 1 | Retrieval evaluation methods (precision@k, recall@k, MRR, RAGAS) |
+| 2 | Chunking strategy survey papers |
+| 3 | Hybrid retrieval (keyword + semantic) literature |
+| 4 |   and `:1625-1660` |
+| 5 |   and  |
+| 6 | Knowledge-graph RAG literature + both capstone briefs §5.4 |
+| 7 | Multimodal retrieval / extraction literature +  ,  |
+| 8 | Agentic RAG / tool-use patterns literature + Aurora Concierge capstone brief §5.5 |
+| 9 | Production RAG operations literature + the partner's own Build 7 capstone deployment |
 
 ---
 

@@ -63,10 +63,10 @@ After switching, run 5–10 queries through `/assistant`. Confirm the answers st
 
 ## 3. Implement the rate-limit-aware client
 
-In your Sample ARAG App fork (or a fresh TypeScript project), create `src/lib/rateLimitedRagClient.ts`:
+In your  fork (or a fresh TypeScript project), create :
 
 ```typescript
-import { siteContentClient } from './ragApi';
+import { ragClient } from './ragClient';
 
 const MAX_RETRIES = 4;
 const BASE_BACKOFF_MS = 1000;
@@ -92,7 +92,7 @@ class RateLimitedRagClient {
     const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
     try {
-      return await siteContentClient.ask(query, prompt);
+      return await ragClient.ask(query, prompt);
     } catch (err: any) {
       clearTimeout(timeout);
       if (err.status === 429 && attempt < MAX_RETRIES) {

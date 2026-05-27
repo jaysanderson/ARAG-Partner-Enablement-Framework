@@ -28,7 +28,7 @@ Web Components. Standard ones. They work in any HTML page — React, Vue, Angula
 
 Two custom elements, four attributes, zero JavaScript. That's a working search experience.
 
-The Sample ARAG App's `src/pages/widgets/WidgetShowcasePage.tsx` is the canonical reference — it shows the four widgets, the branded variants, and how the same KB credentials power all of them. Read it.
+ is the canonical reference — it shows the four widgets, the branded variants, and how the same KB credentials power all of them. Read it.
 
 ## Branded theming — two layers
 
@@ -65,7 +65,7 @@ For deeper customisation (per-element overrides, animations, custom hover states
 ></nuclia-chat>
 ```
 
-The Sample ARAG App's `snippetData.ts` shows the base64-encoding pattern. The CSS file gets injected into the widget's Shadow DOM at mount.
+`snippetData.ts` shows the base64-encoding pattern. The CSS file gets injected into the widget's Shadow DOM at mount.
 
 **Why this matters commercially:** the customer's brand team wants pixel-perfect control. With `csspath` you give them that without your team touching code on every theming request. That's a small but real differentiator vs. competitors whose widgets ship as React components requiring rebuilds.
 
@@ -99,7 +99,7 @@ Filters stack. To search videos OR PDFs:
 }
 ```
 
-The Sample ARAG App's `buildIconFilters` helper at `src/lib/ragApi.ts:1583-1594` is the canonical implementation — copy it.
+`buildIconFilters` helper at  is the canonical implementation — copy it.
 
 ## Label filters (preview)
 
@@ -111,13 +111,13 @@ Build 1 doesn't ask you to design labelsets yet — that's an Advanced topic. Bu
 
 ## Deep-link UX
 
-Every search and every chat conversation should be a shareable URL. ARAG widgets — and the Sample ARAG App — implement this with `?q=` query parameters:
+Every search and every chat conversation should be a shareable URL. ARAG widgets — and  — implement this with `?q=` query parameters:
 
 ```
 https://your-site.example/assistant?q=what+is+ARAG
 ```
 
-The Sample ARAG App's `src/pages/AssistantPage.tsx:101-109` has the canonical pattern: read the `?q=` param on mount, fire the query exactly once via an `autoSubmittedRef`, then `navigate('/assistant', { replace: true })` to strip the URL.
+ has the canonical pattern: read the `?q=` param on mount, fire the query exactly once via an `autoSubmittedRef`, then `navigate('/assistant', { replace: true })` to strip the URL.
 
 Why strip it? Because if you don't, every page refresh re-fires the query and the user thinks they're going crazy. Strip after the first fire.
 

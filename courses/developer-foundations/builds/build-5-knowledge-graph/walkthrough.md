@@ -106,10 +106,10 @@ If you see generic NER results (`DATE`, `ORG`, etc.) leaking through, your `by: 
 
 ## 6. Build the graph viewer page
 
-Fork the Sample ARAG App's `KnowledgeGraphPage`:
+Fork `KnowledgeGraphPage`:
 
 ```bash
-cp Sample-ARAG-App/src/pages/KnowledgeGraphPage.tsx Sample-ARAG-App/src/pages/Build5GraphPage.tsx
+cp  
 ```
 
 Open the new file and modify:
@@ -127,13 +127,13 @@ Add a route. Open the page. Verify:
 
 ## 7. Wire hybrid entity-to-resources lookup
 
-Copy the `searchRelatedResources` function from `Sample-ARAG-App/src/lib/graphApi.ts:179-237`. Ensure it uses `features: ['keyword', 'semantic']`.
+Copy the `searchRelatedResources` function from. Ensure it uses `features: ['keyword', 'semantic']`.
 
 Wire it: when the user clicks an entity, fire `searchRelatedResources(entityValue)` and render the results in a side panel. Each result is a clickable card linking to the source document.
 
 ## 8. Apply client-side filtering
 
-Add the `isExcludedNode` filter from `Sample-ARAG-App/src/lib/graphApi.ts:82-100` to your code. Make sure every graph response passes through it before rendering.
+Add the `isExcludedNode` filter from to your code. Make sure every graph response passes through it before rendering.
 
 Test: search for "20" or "Q1" or another generic NER-shaped term. Confirm those entities don't appear in your graph view (the filter should drop them).
 

@@ -32,10 +32,9 @@ Agent design template + 10 worked vertical schemas (legal, pharma, financial ser
 
 ## Reference reading
 
-- Sample ARAG App `src/lib/graphApi.ts` and `src/lib/graphConstants.ts`.
 - [Atlas Operations capstone](../../../developer-foundations/builds/build-7-capstone/atlas-operations/) §5.4 — worked schema for industrial enterprise.
 - [Aurora Concierge capstone](../../../developer-foundations/builds/build-7-capstone/aurora-concierge/) §5.4 — worked schema for D2C retail.
-- ARAKS RP-008 (Knowledge Graph RAG — 41% factual error reduction).
+-
 
 ---
 

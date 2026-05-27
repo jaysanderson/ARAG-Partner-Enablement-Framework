@@ -12,7 +12,7 @@
 
 ## Pick your variant
 
-Build 7 ships with two worked examples. Partners pick the one that matches their book of business; the second is built later if both customer segments are in play. Both share the same chassis (forked from the Sample ARAG App), the same eight-week build plan, and the same re-skin playbook structure — they differ in corpus, graph schema, workflows, and demo buyer.
+Build 7 ships with two worked examples. Partners pick the one that matches their book of business; the second is built later if both customer segments are in play. Both share the same chassis, the same eight-week build plan, and the same re-skin playbook structure — they differ in corpus, graph schema, workflows, and demo buyer.
 
 | Variant | Buyer | Persona corpus | Killer moment | Brief |
 |---|---|---|---|---|
@@ -43,7 +43,7 @@ Builds one variant of the capstone: a single application that exercises every pr
 
 The capstone reference build — the flagship asset of the entire programme. It is both the curriculum capstone and the sales-room closer.
 
-**Reference:** composes patterns from every file in `Sample-ARAG-App/src/pages/` and `src/components/`.
+**Reference:** composes patterns from every file in and .
 
 ---
 

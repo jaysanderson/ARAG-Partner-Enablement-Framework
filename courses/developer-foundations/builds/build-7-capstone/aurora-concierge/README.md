@@ -16,7 +16,7 @@ This variant does three jobs:
 
 1. **Customer-experience capstone.** Build 7 certification artefact for partners whose customers buy AI to grow revenue rather than to compress IT cost.
 2. **CMO-room closer.** Twenty-five minutes that converts a "we already tried personalization" room into a Tier 3 platform conversation.
-3. **Field-engineered content as recurring revenue.** The CX variant exposes the `callToAction` / `searchResultDisplay` / `videoInfo` field-engineering patterns from the Sample ARAG App at the centre of the demo — because those are the patterns partners can monetise as ongoing content services.
+3. **Field-engineered content as recurring revenue.** The CX variant exposes the `callToAction` / `searchResultDisplay` / `videoInfo` field-engineering patterns from  at the centre of the demo — because those are the patterns partners can monetise as ongoing content services.
 
 The Enterprise variant proves ARAG is a *control room*. The CX variant proves ARAG is a *customer experience platform*. Same KB engine; the difference is what you build with it.
 
@@ -47,7 +47,7 @@ Partners re-skinning the variant into a banking, hospitality, education, media, 
 
 ### Single KB, multiple content domains via labelsets
 
-Aurora Concierge runs on **one ARAG knowledge base** (`kb-aurora-concierge`) containing all corpus documents tagged with three labelsets. ARAG's labelset-driven filter composition (Sample ARAG App `src/lib/ragApi.ts:1285-1340`) gives the demo every content-routing capability of a multi-KB setup with a fraction of the operational complexity. Partners stand up one KB, not five — and customers can do the same in their POC.
+Aurora Concierge runs on **one ARAG knowledge base** (`kb-aurora-concierge`) containing all corpus documents tagged with three labelsets. ARAG's labelset-driven filter composition gives the demo every content-routing capability of a multi-KB setup with a fraction of the operational complexity. Partners stand up one KB, not five — and customers can do the same in their POC.
 
 | Labelset | Values | Volume target |
 |---|---|---|
@@ -87,7 +87,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 - Field-engineered CTAs front and centre — the demo presenter must point at where each call-to-action came from in the source content, because that's the content-engineering recurring-revenue pitch.
 - Multilingual switch on the concierge surface — D2C buyers ask this in the first ten minutes.
 - Floating chat with prospect vs Trail Club member voice — the conversion mechanic.
-- Sample ARAG App fork as the technical baseline.
+-  fork as the technical baseline.
 - Re-skin playbook shipped alongside the build.
 - 25-minute demo script (Section 9) rehearsed and recorded.
 
@@ -141,7 +141,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 ### 5.2 Frontend stack
 
-- **Framework:** Vite + React 18 (matches Sample ARAG App).
+- **Framework:** Vite + React 18 (matches ).
 - **Styling:** Tailwind CSS. Aurora-themed palette — warm sandstone base, alpine-blue and rust accents, generous whitespace, photography-led hero. Designed to look like a real D2C site, not a SaaS dashboard.
 - **Routing:** React Router v7.
 - **State:** React Context for the active customer persona (Sara the prospect vs Mara the Trail Club Pro member), the floating-chat mode, and presenter-mode hotkeys.
@@ -253,14 +253,14 @@ Same overall shape as the Enterprise variant. Effort estimates are nearly identi
 - Run extraction. Verify `recommended_for`, `pairs_with`, `worn_by`, `featured_in` relations populate — these are the four relations the demo leans on hardest.
 - **Exit criteria:** Graph queries return clean typed nodes. The "click TerraTrek 7 → see Mara Chen → see her trail-guide content → see featured products" traversal works end-to-end.
 
-### Phase 3 — Sample-ARAG-App fork + Aurora re-skin (Weeks 3–4)
+### Phase 3 — Build the chassis + Aurora re-skin (Weeks 3–4)
 
-- Fork `Sample-ARAG-App` into `Capstone-Aurora-Concierge`.
-- Strip ARAKS branding. Replace with Aurora — sandstone + alpine-blue palette, generous whitespace, photography-led hero.
-- Replace the static markdown content pages with Aurora landing copy.
-- Configure the floating chat with two voices — Shopper (prospect) and Trail Club Member. The Shopper voice prompt should match the Sample ARAG App's prospect-mode floating chat almost verbatim (the CTA-only rules); the Member voice should match the research-assistant style.
-- Wire the customer-persona switcher (Sara vs Mara) at the top of every page.
-- **Exit criteria:** All six demo routes loading against real Aurora content with no ARAKS leakage.
+- Stand up a fresh Vite + React app in a private repo named `Capstone-Aurora-Concierge`. Apply the Aurora design system (sandstone + alpine-blue palette, generous whitespace, photography-led hero).
+- Wire the ARAG client wrapper (from Foundations Builds 0–6) into the chassis. Single env var: `NUCLIA_KB_ID=kb-aurora-concierge`. All demo surfaces route through this one KB.
+- Build the static landing copy in Aurora's voice (outdoor-adventure, technically credible, sustainability-forward).
+- Configure the floating chat with two voices — Shopper (prospect) and Trail Club Member — using the prompt configurations from Foundations Build 2. Shopper voice: concise + one CTA from the corpus, then STOP. Member voice: detailed expert answer, multi-source citations.
+- Wire the customer-persona switcher (Sara vs Mara) at the top of every page. Persona toggles which prompt config the floating chat uses.
+- **Exit criteria:** All six demo routes loading against the Aurora KB with no placeholder content remaining.
 
 ### Phase 4 — The three workflows + composite-RAG flow (Weeks 4–6)
 
@@ -529,7 +529,7 @@ Aurora Concierge ships when *all* of the following are true:
 | Corpus generation (one KB + labelset tagging) | Progress SE + `progress-kb-use-case-generator` | TODO |
 | Field engineering (CTAs, searchResultDisplay) | Aurora brand copywriter persona — handled by build owner | TODO |
 | Journey graph agent | Progress SE + `arag-graph-agent` | TODO |
-| Sample-ARAG-App fork + Aurora reskin | Build owner | TODO |
+| Capstone chassis (Phase 3) + Aurora reskin | Build owner | TODO |
 | Three Tier 3 workflows | Build owner | TODO |
 | Abandoned-cart composite RAG flow | Build owner | TODO |
 | Multilingual + production polish | Build owner | TODO |

@@ -37,12 +37,12 @@ return initial;
 
 That's it. The whole "composite RAG" concept is *retry with more retrieval when the first answer is shaky.* Everything else — multi-pass synthesis, retrieve-then-rerank, graph-traversal-augmentation — is variations on that theme.
 
-## Where the Sample ARAG App does this
+## Where  does this
 
-The cleanest live example is `src/components/certification/ExamStudyPanel.tsx:35-115`. The pattern:
+The cleanest live example is . The pattern:
 
 1. The user just failed an exam.
-2. Stream a personalized study guide via `memberKnowledgeClient.stream(studyQuery)`.
+2. Stream a personalized study guide via `ragClient.stream(studyQuery)`.
 3. **If the stream completes with zero citations**, fall back: call `searchResources(searchQuery, 0, 5)` to find related material directly, then synthesise pseudo-citations from the `KnowledgeResource` objects.
 
 Read the file end-to-end. That's the canonical retry-on-low-citations recipe.

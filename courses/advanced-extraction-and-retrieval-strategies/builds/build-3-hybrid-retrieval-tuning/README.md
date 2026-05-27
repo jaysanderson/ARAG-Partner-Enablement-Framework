@@ -29,8 +29,7 @@ Hybrid-retrieval decision matrix template + A/B test runner extending Build 1's 
 
 ## Reference reading
 
-- ARAKS RP-003 (Hybrid Retrieval Strategies — comparative analysis of dense, sparse, and hybrid).
-- Sample ARAG App `src/lib/graphApi.ts:179-237` — `searchRelatedResources` is the only place in the entire reference app that explicitly sets hybrid mode. Partners must internalise this as the deliberate lever it is.
+-
 
 ---
 

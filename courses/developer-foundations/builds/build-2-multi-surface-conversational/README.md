@@ -38,7 +38,6 @@ Builds a floating chat with two distinct prompt modes — *prospect* (concise + 
 
 A "Three voices, one KB" demo script with the partner's own copy.
 
-**Reference:** `Sample-ARAG-App/src/components/chat/FloatingChat.tsx` (the canonical Tier 2 example), `ResourceChatTab.tsx`, `ResearchAssistantPage.tsx`.
 
 ---
 

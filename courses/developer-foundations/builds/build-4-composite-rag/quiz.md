@@ -13,12 +13,12 @@ D. Index, query, render
 
 ---
 
-### 2. The cleanest composite-RAG example in the Sample ARAG App is:
+### 2. The cleanest composite-RAG example in  is:
 
-A. `pages/AssistantPage.tsx`
-B. **`components/certification/ExamStudyPanel.tsx` (retry-on-low-citations)**
-C. `pages/SearchResultsPage.tsx`
-D. `components/chat/FloatingChat.tsx`
+A. 
+B. ** (retry-on-low-citations)**
+C. 
+D. 
 
 ---
 

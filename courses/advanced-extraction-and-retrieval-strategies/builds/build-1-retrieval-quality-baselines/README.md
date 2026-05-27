@@ -30,7 +30,7 @@ Eval-harness template (TypeScript or Python) + golden-set markdown template + sc
 
 ## Reference reading
 
-- ARAKS RP-002 (RAG Evaluation Methods, ARAKS RAGAS-compatible scoring framework). Lives at `Sample-ARAG-App/knowledge-base/kb-member-knowledge/research/rp-002-evaluation-methods.md`.
+- Lives at.
 
 ---
 

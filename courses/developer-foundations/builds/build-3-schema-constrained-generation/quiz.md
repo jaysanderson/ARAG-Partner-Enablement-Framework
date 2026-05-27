@@ -22,7 +22,7 @@ D. `$schema: "draft-2020-12"`
 
 ---
 
-### 3. The Sample ARAG App's `askForJson` wrapper falls back through three response shapes. The first shape it checks is:
+### 3. `askForJson` wrapper falls back through three response shapes. The first shape it checks is:
 
 A. `data.item.object`
 B. **`data.answer_json`**

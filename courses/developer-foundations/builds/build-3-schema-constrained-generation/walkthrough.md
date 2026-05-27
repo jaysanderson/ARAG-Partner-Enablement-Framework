@@ -6,18 +6,18 @@
 
 - Builds 0–2 complete and signed off.
 - Comfortable with TypeScript + async generators.
-- The Sample ARAG App running locally with your sandbox KB credentials in `.env`.
+- The  running locally with your sandbox KB credentials in `.env`.
 
 ## 1. Port the `askForJson` wrapper
 
-If you haven't already copied it from the Sample ARAG App, do it now. The wrapper is at `src/lib/ragApi.ts:751-875`. Save it to your Build 3 working folder:
+If you haven't already copied it from , do it now. The wrapper is at . Save it to your Build 3 working folder:
 
 ```bash
-cd Sample-ARAG-App
+cd chassis
 mkdir -p src/components/build-3
 ```
 
-Open `src/lib/ragApi.ts` and read lines 751–875. Understand each section before you use it:
+Open  and read lines 751–875. Understand each section before you use it:
 
 - Lines 758–776: the `addAdditionalPropertiesFalse` recursive injector.
 - Lines 778–797: request construction with `answer_json_schema`.
@@ -28,11 +28,11 @@ The wrapper is intentionally defensive. Every conditional handles a real edge ca
 
 ## 2. Workflow 1 — Follow-up question generator
 
-Create `src/components/build-3/FollowUpQuestions.tsx`:
+Create :
 
 ```tsx
 import { useState } from 'react';
-import { askForJson } from '../../lib/ragApi';
+import { askForJson } from './ragClient';
 
 const FOLLOW_UP_SCHEMA = {
   name: 'follow_up_questions',
@@ -84,7 +84,7 @@ If you ever get a string back instead of an object, the schema is missing `addit
 
 ## 3. Workflow 2 — Dynamic FAQ generator
 
-Create `src/components/build-3/DynamicFaqs.tsx`. Schema:
+Create . Schema:
 
 ```typescript
 const FAQ_SCHEMA = {
@@ -118,7 +118,7 @@ Test with 3 topics that exist in your corpus. Verify the `source_resource_title`
 
 ## 4. Workflow 3 — Domain taxonomy generator
 
-Create `src/components/build-3/DomainTaxonomy.tsx`. This is the "let the KB tell us its own taxonomy" pattern.
+Create . This is the "let the KB tell us its own taxonomy" pattern.
 
 ```typescript
 const TAXONOMY_SCHEMA = {
@@ -159,7 +159,7 @@ To verify your wrapper handles all three response shapes, run each workflow:
 
 ## 6. Mixed-shape exam schema (advanced)
 
-For a stretch deliverable, implement the mixed-shape exam pattern from `ExamPage.tsx:69-146`. Schema fragment:
+For a stretch deliverable, implement the mixed-shape exam pattern from . Schema fragment:
 
 ```typescript
 const EXAM_SCHEMA = {

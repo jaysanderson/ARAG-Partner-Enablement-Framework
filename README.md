@@ -2,7 +2,7 @@
 
 > **Position:** ARAG is a *platform*, not a chatbot.
 > **Thesis:** Partner competency, not partner enthusiasm, predicts ARR.
-> **Evidence base:** Every technical pattern in this document is wired live in the Sample ARAG App (`Sample-ARAG-App/src/`). Every commercial claim is grounded in the Progress KB (data residency, BYO-LLM, rate limits).
+> **Evidence base:** Every technical pattern in this document is wired live in  (``). Every commercial claim is grounded in the Progress KB (data residency, BYO-LLM, rate limits).
 > **Audience:** Channel program owners, partner managers, partner SEs, and the partner orgs themselves.
 > **Owner:** Jay Sanderson — Vested Technology / Progress GTM
 > **Last updated:** 2026-05-27
@@ -31,7 +31,7 @@ A partner's measured competency drives the org's tier, the tier drives the comme
 
 | Mode | Share | What it looks like |
 |---|---|---|
-| Experiential (70%) | Sandbox builds, hands-on code, customer POCs co-delivered with Progress SEs | Sample ARAG App as the starter codebase, Builds 0–7 as the curriculum, real KB credentials provisioned per partner |
+| Experiential (70%) | Sandbox builds, hands-on code, customer POCs co-delivered with Progress SEs |  as the starter codebase, Builds 0–7 as the curriculum, real KB credentials provisioned per partner |
 | Social (20%) | Office hours, partner Slack, recorded demo reviews, peer-graded build submissions | Weekly build clinics, monthly partner roundtables, recorded-demo certification gates |
 | Formal (10%) | Decks, talk tracks, written guides, this framework | The capability ladder in Part III, battle cards, the asset library in Part VI |
 
@@ -77,7 +77,7 @@ This is the spine of certification. The matrix below shows the bar each track mu
 | **Pricing & commercial structure** | Must | Should | Aware |
 | **Discovery & qualification** | Must | Should | Aware |
 | **Win/loss debrief & competitive response** | Must | Should | Aware |
-| **Sample ARAG App walkthrough** | Should | Must | Must |
+| ** walkthrough** | Should | Must | Must |
 | **Build 7 capstone** | Should | Must | Must |
 
 A partner organisation reaches a given tier only when at least one named individual meets every Must in every relevant track. No exceptions.
@@ -178,7 +178,7 @@ A partner's journey from first contact to advocate runs through five stages. Eac
 | Stage | Target TTV | Exit gate | Owner |
 |---|---|---|---|
 | **Recruit** | 30 days from first contact | Mutual fit confirmed; partnership agreement signed; named individuals across three tracks identified | Channel Manager |
-| **Onboard** | 30 days from agreement | Build 0 complete for at least one named individual per track (Sell, Solution, Deliver). Sandbox provisioned. Sample ARAG App running locally. | Partner Manager + Partner SE |
+| **Onboard** | 30 days from agreement | Build 0 complete for at least one named individual per track (Sell, Solution, Deliver). Sandbox provisioned.  running locally. | Partner Manager + Partner SE |
 | **Activate** | 60 days from onboard exit | First Developer Foundations Build 3 (schema-constrained generation) submitted and passed. First customer demo recorded. Authorized tier reached. | Partner SE + Partner |
 | **Scale** | 6 months from activate exit | At least one customer in production at Tier 2 or Tier 3. Premier tier reached. Quarterly QBR cadence established. | Partner Manager + Partner GM |
 | **Advocate** | Continuous | Public reference. Joint marketing event. At least one capstone walkthrough delivered to a customer. Elite tier reached. | Channel GM |
@@ -193,7 +193,7 @@ The programme runs on five infrastructure pieces. Each is owned, versioned, and 
 
 ### 6.1 Sandbox environments
 
-- **Public demo KB** — read-only, pre-seeded with the ARAKS dataset from the Sample ARAG App. Every partner has access on day one. No provisioning required.
+- **Public demo KB** — read-only, pre-seeded with the demo dataset from . Every partner has access on day one. No provisioning required.
 - **Per-partner sandbox KB** — provisioned at onboard, 10GB / 1M token-write quota, full read-write, separate from production. Lives in the EU or USA region per partner preference (data residency is grounded — partners ask about this in every CTO meeting).
 - **Per-partner production KB** — provisioned at first customer signature, separate billing line, full SLA.
 
@@ -203,7 +203,7 @@ Every asset has a name, an owner, a version, and a corresponding build. No orpha
 
 | Asset | Course / Build | Owner | Status |
 |---|---|---|---|
-| Sample ARAG App reference repo | Cross-course | GTM | **Shipped** |
+|  reference repo | Cross-course | GTM | **Shipped** |
 | Umbrella framework (this doc) | All courses | GTM | **Shipped** |
 | Developer Foundations course doc | Foundations | GTM | **Shipped** (`courses/developer-foundations/README.md`) |
 | Advanced Extraction & Retrieval Strategies course doc | Advanced | GTM | **Shipped** (`courses/advanced-extraction-and-retrieval-strategies/README.md`) |
@@ -328,7 +328,7 @@ This programme is too heavy to launch all at once. The first 90 days deliver the
 - Ship Developer Foundations Builds 0–2 fully (Hello ARAG, Widgets, Multi-surface chat). Recorded-demo gates working.
 - Lock the partner agreement template, tier definitions, and commercial terms.
 - Stand up sandbox provisioning automation.
-- Ship the asset library v0 (battle cards, Sample ARAG App reference, Discovery checklist, Foundations Builds 0–2 rubrics, both course docs).
+- Ship the asset library v0 (battle cards,  reference, Discovery checklist, Foundations Builds 0–2 rubrics, both course docs).
 - Recruit the first three pilot partners.
 - **Decision point at day 30:** are pilot partners on track to pass Developer Foundations Build 0 by day 45? If no, fix onboarding before scaling.
 
@@ -354,44 +354,44 @@ This programme is too heavy to launch all at once. The first 90 days deliver the
 
 ## Appendix A — Capability Inventory (one-page reference)
 
-Compact cross-reference for the 30+ live ARAG patterns in the Sample ARAG App. Use during build clinics and partner workshops.
+Compact catalogue of the patterns partners will compose in customer engagements. Use during build clinics and partner workshops.
 
-| # | Pattern | Endpoint(s) | KB | Tier | Sample-app file |
-|---|---|---|---|---|---|
-| A1 | Streaming chat w/ citations | `/ask` stream | site or member | 1–2 | `pages/AssistantPage.tsx` |
-| A2 | Research mode (prefixed) | `/ask` stream | member | 2 | `pages/ResearchAssistantPage.tsx` |
-| A3 | Floating chat (2 modes) | `/ask` stream | site or member | 2 | `components/chat/FloatingChat.tsx` |
-| A4 | Resource-scoped chat | `/ask` stream | member | 2 | `components/knowledge/ResourceChatTab.tsx` |
-| A5 | Topic study explainer | `/ask` stream | member | 2 | `components/learning/StudyPanel.tsx` |
-| A6 | Study coach chat | `/ask` stream | member | 2 | `components/certification/StudyAssistantChat.tsx` |
-| A7 | Personalised exam study guide w/ retrieval fallback | `/ask` + `/find` | member | 4 | `components/certification/ExamStudyPanel.tsx` |
-| B1a | Sync AI answer | `/ask` sync | either | 1 | `pages/SearchResultsPage.tsx` |
-| B1b | Schema follow-ups (PAA) | `askForJson` | member | 3 | `pages/SearchResultsPage.tsx` |
-| B1c | Member find w/ filters | `/find` | member | 1 | `pages/SearchResultsPage.tsx` |
-| B1d | Site find | `/find` | site | 1 | `pages/SearchResultsPage.tsx` |
-| C1 | Dashboard suggestions | `askForJson` | member | 3 | `pages/DashboardPage.tsx` |
-| C2 | Certification program | `askForJson` | member | 3 | `context/CertificationContext.tsx` |
-| C3 | Domain taxonomy | `askForJson` | member | 3 | `context/CertificationContext.tsx` |
-| C4 | Learning modules | `askForJson` | member | 3 | `context/CertificationContext.tsx` |
-| C5 | Sub-topics | `askForJson` | member | 3 | `pages/CertificationPage.tsx` |
-| C6 | Mixed-type exam | `askForJson` | member | 3 | `pages/ExamPage.tsx` |
-| C7 | Per-question FT grader | `/ask` stream + regex JSON | member | 3 | `pages/ExamPage.tsx` |
-| C8 | Composite grading narrative | `/ask` stream | member | 3 | `pages/ExamPage.tsx` |
-| D1 | Catalog w/ filters | `/catalog` | member | 1 | `pages/KnowledgeExplorerPage.tsx` |
-| D2 | Topic-row dashboard | `/catalog` (filtered) | member | 1 | `components/dashboard/CategoryRow.tsx` |
-| D3 | Full resource | `/resource/{id}` | member | 1 | `pages/KnowledgeDetailPage.tsx` |
-| D4 | Labelsets | `/labelsets` | member | 1 | `lib/ragApi.ts` |
-| E1 | Authenticated image | `/resource/.../download/field` | member | 1 | `components/knowledge/AuthImage.tsx` |
-| E2 | DASH MPD + auth RequestModifier | `/resource/.../file/.mpd` | member | 4 | `components/knowledge/VideoPlayer.tsx` |
-| E3 | PDF blob | `/resource/.../download/field` | member | 1 | `components/knowledge/PdfViewer.tsx` |
-| E4 | Direct video blob | `/resource/{id}` + `/file/{key}/download` | member | 1 | `lib/ragApi.ts` |
-| F1 | Initial graph (data-aug filter) | `/graph` | member | 4 | `pages/KnowledgeGraphPage.tsx` |
-| F2 | Nodes by group | `/graph/nodes` | member | 4 | `components/graph/EntitySidebar.tsx` |
-| F3 | Fuzzy node search | `/graph/nodes` (fuzzy) | member | 4 | `components/graph/EntitySidebar.tsx` |
-| F4 | Paths from node | `/graph` (path) | member | 4 | `components/graph/EntityDetail.tsx` |
-| F5 | Entity → resources (hybrid) | `/find` (`keyword+semantic`) | member | 4 | `lib/graphApi.ts` |
-| F6 | Incremental graph merge | (uses F4) | member | 4 | `pages/KnowledgeGraphPage.tsx` |
-| I  | Drop-in web components | (Nuclia widget CDN) | site (or any) | 1 | `pages/widgets/WidgetShowcasePage.tsx` |
+| # | Pattern | Endpoint(s) | Tier |
+|---|---|---|---|
+| A1 | Streaming chat with citations | `/ask` stream | 1–2 |
+| A2 | Research mode (query-prefixed for verbosity) | `/ask` stream | 2 |
+| A3 | Floating chat with two prompt modes (prospect / member) | `/ask` stream | 2 |
+| A4 | Resource-scoped chat (query-prefix pseudo-scope) | `/ask` stream | 2 |
+| A5 | Topic study explainer | `/ask` stream | 2 |
+| A6 | Study coach with multilingual prefix | `/ask` stream | 2 |
+| A7 | Composite study guide with retrieval fallback | `/ask` + `/find` | 4 |
+| B1a | Sync AI answer card | `/ask` sync | 1 |
+| B1b | Schema-driven follow-up questions ("People Also Ask") | `askForJson` | 3 |
+| B1c | Filtered semantic find | `/find` | 1 |
+| B1d | Cross-content-type find | `/find` | 1 |
+| C1 | Dashboard suggestion chips | `askForJson` | 3 |
+| C2 | Certification program metadata generator | `askForJson` | 3 |
+| C3 | Domain taxonomy generator | `askForJson` | 3 |
+| C4 | Learning module structure generator | `askForJson` | 3 |
+| C5 | Sub-topic / drill-down generator | `askForJson` | 3 |
+| C6 | Mixed-shape exam (MC + free-text in one schema) | `askForJson` | 3 |
+| C7 | Per-item structured grader (streaming + regex JSON) | `/ask` stream + regex | 3 |
+| C8 | Composite grading narrative | `/ask` stream | 3 |
+| D1 | Paginated catalog with filters | `/catalog` | 1 |
+| D2 | Topic-row "Netflix-style" dashboard | `/catalog` (filtered) | 1 |
+| D3 | Full resource fetch with bundles | `/resource/{id}` | 1 |
+| D4 | Labelset enumeration | `/labelsets` | 1 |
+| E1 | Authenticated image / thumbnail | `/resource/.../download/field` | 1 |
+| E2 | DASH MPD streaming with auth-injecting RequestModifier | `/resource/.../file/.mpd` | 4 |
+| E3 | PDF blob with auth | `/resource/.../download/field` | 1 |
+| E4 | Direct video blob with field-key discovery | `/resource/{id}` + `/file/{key}/download` | 1 |
+| F1 | Initial graph load with data-augmentation filter | `/graph` | 4 |
+| F2 | Nodes by entity group | `/graph/nodes` | 4 |
+| F3 | Fuzzy entity search | `/graph/nodes` (fuzzy) | 4 |
+| F4 | Paths from source node (undirected) | `/graph` (path) | 4 |
+| F5 | Entity → resources lookup (hybrid retrieval) | `/find` with `features:['keyword','semantic']` | 4 |
+| F6 | Incremental client-side graph merge | (uses F4 + dedupe) | 4 |
+| I  | Drop-in web components (search-bar, chat, popup, results) | Nuclia widget CDN | 1 |
 
 ---
 
@@ -401,7 +401,7 @@ These apply at every tier and every build past Build 2. Every certified Solution
 
 ### B.1 Gating & monetisation patterns
 
-The Sample ARAG App implements seven distinct gating patterns, all driven by a single `useMember()` boolean: page-level gates, answer-content gates (first 3 sentences clear + blur + CTA), citation gates, search-result gates (2 clear + 3 blurred), source-card gates, teaser injection (every Nth assistant message), and frontmatter-based content gates. The gating engine is front-end logic — same KB, same API, gated or not. Freemium-to-premium funnels without re-architecting the AI layer.
+ARAG-backed applications can implement seven distinct gating patterns, all driven by a single `useMember()` boolean: page-level gates, answer-content gates (first 3 sentences clear + blur + CTA), citation gates, search-result gates (2 clear + 3 blurred), source-card gates, teaser injection (every Nth assistant message), and frontmatter-based content gates. The gating engine is front-end logic — same KB, same API, gated or not. Freemium-to-premium funnels without re-architecting the AI layer.
 
 ### B.2 Deep-link & shareability
 
@@ -434,7 +434,7 @@ Every claim partners make about commercial fitness must be grounded. The followi
 
 ## Appendix D — What to demo when
 
-A single map from "what the customer asked for" to "what to show in the Sample ARAG App."
+A single map from "what the customer asked for" to "what to show in ."
 
 | Customer ask | Show this in the sample app | Tier signal | Build to assign |
 |---|---|---|---|
@@ -450,7 +450,7 @@ A single map from "what the customer asked for" to "what to show in the Sample A
 | "Can it understand our taxonomy?" | `/certification` (domain cards auto-generated) | Tier 3 | Build 3 |
 | "Can it auto-generate FAQs/summaries/comparisons?" | `/search` (PAA panel as analogue) | Tier 3 | Build 3 |
 | "Can we connect concepts to documents?" | `/graph` (click any entity) | Tier 4 | Build 5 |
-| "We want our own taxonomy." | `/graph` (10 entity types specific to ARAKS) | Tier 4 | Build 5 |
+| "We want our own taxonomy." | `/graph` (10 entity types specific to the demo) | Tier 4 | Build 5 |
 | "We need video search that jumps to the moment." | `/search` for a topic, click a video result, transcript syncs | Tier 4 | Build 5 |
 | "We want this to evolve as our knowledge grows." | `fetchTopicLabels` + `searchRelatedResources` widening | Tier 4 | Build 5 |
 | "How do we know it's enterprise-grade?" | Walk through Build 6 — residency, BYO-LLM, rate limits | Tier 4 | Build 6 |
@@ -458,17 +458,17 @@ A single map from "what the customer asked for" to "what to show in the Sample A
 
 ---
 
-## Appendix E — The Sample ARAG App as teaching artefact
+## Appendix E — The  as teaching artefact
 
 Partners should be told:
 
-- **Read `src/lib/ragApi.ts` first.** Every API endpoint the platform exposes is wrapped here in plain TypeScript. The whole client surface is 1,661 lines — readable in one sitting.
-- **Read `src/lib/graphApi.ts` next.** Graph queries, filtering tricks, hybrid retrieval — 243 lines.
-- **Use `src/pages/ExamPage.tsx` as the canonical Tier 3 reference.** Six distinct generation patterns in one file.
-- **Use `src/components/chat/FloatingChat.tsx` as the canonical Tier 2 reference.** Prospect vs member prompts, CTA post-processing, link interception, teaser injection, blur-gate.
-- **Use `src/pages/KnowledgeDetailPage.tsx` as the canonical Tier 4 reference.** Video + transcript + resource chat + deep link + utterance highlight — all wired through a single `getResource()` call.
+- **Read  first.** Every API endpoint the platform exposes is wrapped here in plain TypeScript. The whole client surface is 1,661 lines — readable in one sitting.
+- **Read  next.** Graph queries, filtering tricks, hybrid retrieval — 243 lines.
+- **Use  as the canonical Tier 3 reference.** Six distinct generation patterns in one file.
+- **Use  as the canonical Tier 2 reference.** Prospect vs member prompts, CTA post-processing, link interception, teaser injection, blur-gate.
+- **Canonical Tier 4 pattern:** Video + transcript + resource chat + deep link + utterance highlight — all wired through a single `getResource()` call.
 
-The repo is private at https://github.com/jaysanderson/Sample-ARAG-App. When you give a partner access, give them this framework with it.
+The repo is private at . When you give a partner access, give them this framework with it.
 
 ---
 

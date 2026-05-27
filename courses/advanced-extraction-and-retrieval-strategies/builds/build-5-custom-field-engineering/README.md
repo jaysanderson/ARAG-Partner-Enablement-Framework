@@ -14,7 +14,7 @@
 
 ## What the partner does
 
-Designs and deploys three custom JSON-encoded text fields per resource type, following the Sample ARAG App's pattern: `callToAction` (one-sentence branded CTA copy), `searchResultDisplay` (title + description optimised for AI-answer rendering, distinct from the raw resource title), `videoInfo` (structured speakers + topics + key points + call-to-action for video resources). Manually populates 30+ hero resources. Wires the front-end to render the fields. Trains the partner's customer's content team to author and maintain the fields. Sets up A/B testing (with-fields vs without-fields baseline).
+Designs and deploys three custom JSON-encoded text fields per resource type, following pattern: `callToAction` (one-sentence branded CTA copy), `searchResultDisplay` (title + description optimised for AI-answer rendering, distinct from the raw resource title), `videoInfo` (structured speakers + topics + key points + call-to-action for video resources). Manually populates 30+ hero resources. Wires the front-end to render the fields. Trains the partner's customer's content team to author and maintain the fields. Sets up A/B testing (with-fields vs without-fields baseline).
 
 ## Pass rubric
 
@@ -31,8 +31,6 @@ Field-engineering playbook + author training script + A/B test scaffolding.
 
 ## Reference reading
 
-- Sample ARAG App `src/lib/ragApi.ts:1212-1263` — the canonical field-extraction logic.
-- Sample ARAG App `src/components/chat/FloatingChat.tsx:22-45` — the front-end post-processing that converts model-emitted `[label](href)` markdown into branded CTA pills.
 
 ---
 

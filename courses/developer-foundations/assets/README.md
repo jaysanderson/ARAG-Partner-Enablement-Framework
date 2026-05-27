@@ -9,7 +9,7 @@ This folder is the home for course-wide assets that aren't tied to a single Buil
 | Asset | Type | Status | Lives in |
 |---|---|---|---|
 | Course README | Doc | **Shipped** | `../README.md` |
-| Sample ARAG App | External repo | **Shipped** | https://github.com/jaysanderson/Sample-ARAG-App |
+|  | External repo | **Shipped** |  |
 | ARAG primitives slide deck | Slide deck | TODO | this folder (TBD) |
 | Course-wide rubric checklist | Doc | TODO | this folder |
 | Course slide-master template | Slide deck | TODO | this folder |

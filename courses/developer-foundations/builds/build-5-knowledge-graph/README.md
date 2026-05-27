@@ -38,7 +38,6 @@ Designs a bespoke entity/relation schema for the partner's domain (e.g., LEGAL: 
 
 A graph schema design template (12 worked vertical examples — legal, pharma, financial services, film production, compliance, etc.).
 
-**Reference:** `Sample-ARAG-App/src/lib/graphApi.ts`, `graphConstants.ts`, and `pages/KnowledgeGraphPage.tsx`.
 
 > The [Advanced Extraction & Retrieval Strategies course](../../../advanced-extraction-and-retrieval-strategies/README.md) goes much deeper on agent design at its [Build 6](../../../advanced-extraction-and-retrieval-strategies/builds/build-6-data-augmentation-agents/) — covering precision/coverage measurement, schema evolution, and per-vertical observability.
 

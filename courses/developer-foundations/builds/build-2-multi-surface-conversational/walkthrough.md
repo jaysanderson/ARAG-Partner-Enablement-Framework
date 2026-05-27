@@ -5,20 +5,28 @@
 ## Prerequisites
 
 - Build 0 + Build 1 complete and signed off.
-- The Sample ARAG App cloned locally and running against your sandbox KB.
-- Comfortable reading TypeScript / React (the Sample app is your reference).
+- Build 0's `ask.mjs` working — you'll port its NDJSON streaming logic into a React component.
+- Comfortable reading TypeScript / React.
 
-## 1. Fork the FloatingChat component
-
-The Sample ARAG App's `src/components/chat/FloatingChat.tsx` is the canonical Tier 2 reference. You'll port the patterns into your own component.
+## 1. Scaffold a Vite + React app
 
 ```bash
-cd Sample-ARAG-App
-mkdir -p src/components/chat/build-2
-cp src/components/chat/FloatingChat.tsx src/components/chat/build-2/MultiSurfaceChat.tsx
+npm create vite@latest build-2-chat -- --template react-ts
+cd build-2-chat
+npm install react-router-dom
+mkdir -p src/components/chat src/lib
+touch src/components/chat/MultiSurfaceChat.tsx src/lib/ragClient.ts
 ```
 
-Open the new file in your editor. You'll modify it through the walkthrough.
+Copy your Build 0 `.env` values into a fresh `.env` here (prefixed with `VITE_` so Vite exposes them):
+
+```bash
+VITE_NUCLIA_API_URL=https://aws-eu-1.rag.progress.cloud/api/v1
+VITE_NUCLIA_KB_ID=<your-kb-id>
+VITE_NUCLIA_API_KEY=<your-service-account-jwt>
+```
+
+You'll build `MultiSurfaceChat.tsx` and `ragClient.ts` through the walkthrough. (Note: for Build 2 demo purposes we expose the service-account JWT to the client; production deployments proxy through your backend — covered in Build 6.)
 
 ## 2. Set up two prompt configurations
 
@@ -63,7 +71,7 @@ When calling the streaming endpoint, pass the active prompt:
 const stream = ragClient.stream(query, activePrompt);
 ```
 
-If your `ragClient.stream()` doesn't accept a prompt parameter yet, copy the signature from `Sample-ARAG-App/src/lib/ragApi.ts:598-732`. The streaming function takes `(query, config, isMemberMode, customPrompt)`. The `customPrompt` becomes the `prompt` field in the request body.
+If your `ragClient.stream()` doesn't accept a prompt parameter yet, copy the signature from. The streaming function takes `(query, config, isMemberMode, customPrompt)`. The `customPrompt` becomes the `prompt` field in the request body.
 
 ## 4. Add the persona switcher
 
@@ -112,10 +120,48 @@ Verify: ask "what should I buy?" with `language='French'`. The answer should be 
 
 ## 6. Wire the field-engineered CTA renderer
 
-Copy the `formatAssistantHtml` function from `FloatingChat.tsx:22-45`. It does two things:
+Write a `formatAssistantHtml` helper that does two things:
 
-1. Converts `[label](url)` markdown into a pill-style `<a>` element.
-2. Truncates everything written after the first CTA pill.
+1. Converts the first `[label](url)` markdown link in the assistant message into a pill-style `<a>` element.
+2. Truncates everything written after the first CTA pill (because the LLM sometimes ignores the "STOP after the link" rule in the system prompt).
+
+```typescript
+// src/components/chat/formatAssistantHtml.ts
+export function formatAssistantHtml(markdown: string): string {
+  // Find the first [label](href) link
+  const linkMatch = markdown.match(/\[([^\]]+)\]\(([^)]+)\)/);
+  if (!linkMatch) {
+    // No CTA — render as plain markdown (use your preferred markdown lib)
+    return markdownToHtml(markdown);
+  }
+
+  const before = markdown.slice(0, linkMatch.index);
+  const [, label, href] = linkMatch;
+  // Anything after the link is dropped — the LLM was told to STOP.
+
+  const beforeHtml = markdownToHtml(before);
+  const ctaHtml = `
+    <div class="my-3">
+      <a href="${href}" class="inline-block px-4 py-2 bg-primary text-white rounded-full font-medium hover:bg-primary-dark transition">
+        ${label} →
+      </a>
+    </div>
+  `;
+  return beforeHtml + ctaHtml;
+}
+
+function markdownToHtml(md: string): string {
+  // Bring in `marked`, `react-markdown`, or any markdown renderer you prefer
+  // For Build 2 a minimal implementation is fine
+  return md
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .split('\n\n')
+    .map(p => `<p>${p}</p>`)
+    .join('');
+}
+```
 
 Apply it to the assistant's rendered message:
 
@@ -163,7 +209,7 @@ Test: load your local URL with `?q=what+is+ARAG`. The query should auto-fire onc
 
 ## 9. Wire the component into a real page
 
-In a page (e.g. `src/pages/Build2DemoPage.tsx`), import and render:
+In a page (e.g. ), import and render:
 
 ```tsx
 import { MultiSurfaceChat } from '../components/chat/build-2/MultiSurfaceChat';

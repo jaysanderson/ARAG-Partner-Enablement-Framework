@@ -9,7 +9,7 @@ Every partner programme that fails at ARAG fails because the partner pitched ARA
 Build 0 has three concrete outcomes:
 
 1. A sandbox knowledge base provisioned, with the partner's own content ingested.
-2. The Sample ARAG App running locally against that KB.
+2. The  running locally against that KB.
 3. A 30-minute recording of a working Q&A flow against the partner's content. This is the first thing you show in a customer meeting.
 
 That last item is the commercial point. **By the end of Build 0 you have something to demo.** You won't have closed any customers yet, but you will have a demo, and a demo with the customer's own (or your own) content gets the next meeting booked.
@@ -90,7 +90,7 @@ Three things to notice:
 
 1. **Paragraph-level matching.** ARAG returns the paragraph that matched, not just the resource. Use this to show "the line in the document that answers the question," not "the whole document that might contain the answer."
 2. **Scores per paragraph.** Every match has a score. Build 1's eval harness in the Advanced course depends entirely on these.
-3. **`position.start_seconds` for video/audio.** If the source was a video or audio file, the matching paragraph carries its timestamp. This is the foundation of deep-link-to-the-moment UX (see the Sample ARAG App's `KnowledgeDetailPage`).
+3. **`position.start_seconds` for video/audio.** If the source was a video or audio file, the matching paragraph carries its timestamp. This is the foundation of deep-link-to-the-moment UX (see ).
 
 ### `/ask` streaming response (default)
 
@@ -105,7 +105,7 @@ The streaming response is NDJSON — newline-delimited JSON. Each line is a JSON
 
 You accumulate the `answer` text chunks as they arrive (for streaming UI), capture the `retrieval` block for citations, and watch for `status` to know when the call completes.
 
-The Sample ARAG App's NDJSON parser is at `Sample-ARAG-App/src/lib/ragApi.ts:469-559`. Read that code before the walkthrough — it's 90 lines and it handles every edge case (escape sequences, partial chunks, malformed JSON). You will not write this yourself; you will copy this pattern.
+NDJSON parser is at. Read that code before the walkthrough — it's 90 lines and it handles every edge case (escape sequences, partial chunks, malformed JSON). You will not write this yourself; you will copy this pattern.
 
 ### Sync mode (`x-synchronous: true`)
 
@@ -123,9 +123,9 @@ A KB is the unit of corpus + configuration. It owns:
 - The residency region (EU or USA).
 - The LLM endpoint configuration (BYO-LLM in Build 6).
 
-One application typically uses **one KB**. Multi-KB architectures exist (the Sample ARAG App's site-content + member-knowledge split is one example) but the default is single-KB, and you should design that way unless there's a clear gating or residency reason to split.
+One application typically uses **one KB**. Multi-KB architectures exist (site-content + member-knowledge split is one example) but the default is single-KB, and you should design that way unless there's a clear gating or residency reason to split.
 
-> **Where the Sample ARAG App lives.** Public repo at https://github.com/jaysanderson/Sample-ARAG-App. Clone it before the walkthrough.
+> **Where  lives.** Public repo at . Clone it before the walkthrough.
 
 ## Common pitfalls in Build 0
 
@@ -133,7 +133,7 @@ One application typically uses **one KB**. Multi-KB architectures exist (the Sam
 2. **Forgetting `prefer_markdown: true`.** Without this in the `/ask` body, you get unformatted text. Always set it for any answer that might contain lists, tables, or code.
 3. **Not setting `rephrase: true`.** ARAG's query rephrasing is a free quality lift. The LLM rewrites the user query before retrieval. Costs you nothing; helps recall.
 4. **Trying to use OAuth or session cookies for API auth.** Stop. Use the service-account JWT in the `X-NUCLIA-SERVICEACCOUNT` header. That's the only auth path for the API.
-5. **Pulling down the Sample ARAG App and pointing it at your KB without reading `src/lib/ragApi.ts` first.** The wrapper has every pattern you'll need for the next six Builds. Read it before you run it.
+5. **Pulling down  and pointing it at your KB without reading  first.** The wrapper has every pattern you'll need for the next six Builds. Read it before you run it.
 
 ## What you'll build in the walkthrough
 
@@ -143,7 +143,7 @@ A 30-minute exercise:
 2. Ingest 10 documents of your own content (or use the sample corpus we provide).
 3. Make a `/find` call from `curl` and inspect the response.
 4. Make a streaming `/ask` call from `curl` and watch the NDJSON stream.
-5. Clone the Sample ARAG App, point it at your KB via `.env`, run `npm run dev`, and open `/assistant`.
+5. Clone , point it at your KB via `.env`, run `npm run dev`, and open `/assistant`.
 6. Record yourself asking three questions in `/assistant`. Three answers, with citations. That recording is the asset you deliver.
 
 When you submit the recording for review, the reviewer is checking that you understand what you saw — not that the AI gave a perfect answer. (It won't, against 10 random documents.) Understanding is the goal.
@@ -152,4 +152,4 @@ When you submit the recording for review, the reviewer is checking that you unde
 
 When you've finished the walkthrough and passed the [quiz](quiz.md), move to [Build 1 — Grounded search & drop-in widgets](../build-1-grounded-search-widgets/lesson.md).
 
-Each subsequent Build deepens one of the five primitives, layers in one more pattern from the Sample ARAG App, and adds one more tool to the demo you walk into customer meetings with. By Build 6 you're production-ready. Build 7 is the capstone — a full-stack ARAG application demo that takes 25 minutes end-to-end and converts strategic-account CTOs.
+Each subsequent Build deepens one of the five primitives, layers in one more pattern from , and adds one more tool to the demo you walk into customer meetings with. By Build 6 you're production-ready. Build 7 is the capstone — a full-stack ARAG application demo that takes 25 minutes end-to-end and converts strategic-account CTOs.

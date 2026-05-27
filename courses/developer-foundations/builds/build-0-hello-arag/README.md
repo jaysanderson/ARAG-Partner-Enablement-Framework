@@ -25,13 +25,13 @@ The rest of this README is a quick-reference summary. The full content lives in 
 
 ## What the partner does
 
-Provisions a sandbox KB. Ingests 10 documents from their own corpus. Makes their first `/ask` call from `curl`. Runs `/find` for a semantic search. Opens the [Sample ARAG App](https://github.com/jaysanderson/Sample-ARAG-App) and points it at their KB.
+Provisions a sandbox KB. Ingests 10 documents from their own corpus. Makes their first `/ask` call from `curl`. Runs `/find` for a semantic search. Opens the []() and points it at their KB.
 
 ## Pass rubric
 
 1. Sandbox KB provisioned and reachable.
 2. Three successful streamed answers against the partner's own content with citations rendered.
-3. Sample ARAG App `/assistant` page running locally against the partner's KB.
+3.  `/assistant` page running locally against the partner's KB.
 4. Reviewer signs off.
 
 ## Asset delivered

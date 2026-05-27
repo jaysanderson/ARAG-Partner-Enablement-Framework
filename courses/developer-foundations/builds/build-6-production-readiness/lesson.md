@@ -41,7 +41,7 @@ Configuration is per-KB. The customer points the KB at *their* tenant's endpoint
 
 **The killer demo move:** during the capstone, flip the BYO-LLM toggle from Azure to Vertex to Bedrock mid-demo. Customer sees that the application doesn't change. Same KB. Same prompt. Different model. *Their choice.* That moment kills the lock-in objection cold.
 
-The Sample ARAG App's `KnowledgeDetailPage` doesn't surface this toggle (it predates the capstone), but the Atlas Operations and Aurora Concierge capstones both put a BYO-LLM badge in the header for exactly this purpose.
+ doesn't surface this toggle (it predates the capstone), but the Atlas Operations and Aurora Concierge capstones both put a BYO-LLM badge in the header for exactly this purpose.
 
 ## Rate limits
 
@@ -57,7 +57,7 @@ What counts as a request:
 
 **How to design for it:**
 
-1. **Request coalescing.** If your front-end fires three identical `/find` calls in 200ms (a common bug), deduplicate them client-side. The Sample ARAG App's `autoSubmittedRef` pattern is one example of preventing duplicate firings.
+1. **Request coalescing.** If your front-end fires three identical `/find` calls in 200ms (a common bug), deduplicate them client-side. `autoSubmittedRef` pattern is one example of preventing duplicate firings.
 2. **Backoff on 429.** When ARAG returns 429 Too Many Requests, back off (exponentially) and retry. Most HTTP client libraries support this; configure it.
 3. **Batching.** For background jobs (e.g., regenerating embeddings, running batch generation), throttle to under 40 req/sec (2400 / 60).
 4. **Connection pooling.** Don't open a new HTTPS connection per request. Re-use connections.
@@ -137,7 +137,7 @@ That's the foundation. Add: request timeouts (don't let a 30-second hang block t
 
 ## Common pitfalls in Build 6
 
-1. **Exposing the service-account JWT in client-side code in production.** The Sample ARAG App does this *for demo purposes* — `VITE_*` env vars get baked into the client bundle. **In production, never.** Proxy through your backend.
+1. **Exposing the service-account JWT in client-side code in production.** The  does this *for demo purposes* — `VITE_*` env vars get baked into the client bundle. **In production, never.** Proxy through your backend.
 2. **No request coalescing.** A React component that fires `/find` on every keystroke without debouncing hits 2400 req/min in 30 seconds.
 3. **No backoff on 429.** Hammering ARAG when it's already over-rate slows your retries even more.
 4. **No observability.** "It worked in dev" is not a customer answer. Wire metrics from day one of production.

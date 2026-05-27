@@ -31,7 +31,7 @@ D. Two ARAG accounts, federated at query time
 
 ---
 
-### 4. The Sample ARAG App's prospect-mode system prompt ends with "STOP after the link." Why is this rule alone insufficient?
+### 4. prospect-mode system prompt ends with "STOP after the link." Why is this rule alone insufficient?
 
 A. The LLM doesn't read system prompts past 200 tokens
 B. **The model sometimes ignores the rule, so the front-end must also truncate output after the first CTA**
@@ -58,7 +58,7 @@ D. To bypass the rephrase step
 
 ---
 
-### 7. "Resource-scoped chat" in the Sample ARAG App is implemented by:
+### 7. "Resource-scoped chat" in  is implemented by:
 
 A. A `filters` array restricting the search to one resource id
 B. A separate `/find` call that only returns the resource, followed by `/ask` against its text

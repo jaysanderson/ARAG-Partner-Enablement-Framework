@@ -40,7 +40,7 @@ Why? Because ARAG also extracts a **default NER (named-entity recognition)** lay
 
 Forget this filter and your graph is full of "2024", "Marketing Team", "Q4" garbage entities. Include it and you get clean domain results.
 
-The Sample ARAG App's `src/lib/graphApi.ts:140-158` is the canonical reference.
+ is the canonical reference.
 
 ## The three graph endpoints
 
@@ -93,13 +93,13 @@ When you click on an entity in the UI and want to show "documents discussing thi
 }
 ```
 
-The `features: ['keyword', 'semantic']` array is the only place in the Sample ARAG App where hybrid retrieval is explicitly invoked (`src/lib/graphApi.ts:179-237`). Use it whenever you're bridging a graph entity to its supporting documents — the entity name itself becomes the query string.
+The `features: ['keyword', 'semantic']` array is the only place in  where hybrid retrieval is explicitly invoked (). Use it whenever you're bridging a graph entity to its supporting documents — the entity name itself becomes the query string.
 
 ## Designing your entity + relation schemas
 
 A good ARAG knowledge graph has 8–15 entity types and 8–15 relation types. Less than 8 doesn't capture enough domain structure; more than 15 confuses the extraction agent.
 
-Two examples from the Sample ARAG App's `src/lib/graphConstants.ts`:
+Two examples from :
 
 - SPEAKER, ORGANIZATION, DEVROOM, TECHNOLOGY, PROGRAMMING_LANGUAGE, PROJECT, TALK, STANDARD, CONCEPT, VENUE.
 - Relations: works_for, organizes, implements, held_in, covers_project, presents, secures, part_of, covers_topic, promotes, compared_with, targets.
@@ -116,7 +116,7 @@ Relations: tested_in, targets, sponsored_by, approved_by, contraindicated_with, 
 
 ## Client-side filtering (belt and braces)
 
-Even with `by: 'data-augmentation'` filtering, occasional garbage entities slip through — GUID-shaped strings, entities classified as default NER groups that the agent didn't mean to emit. The Sample ARAG App's `src/lib/graphApi.ts:82-100` does client-side filtering:
+Even with `by: 'data-augmentation'` filtering, occasional garbage entities slip through — GUID-shaped strings, entities classified as default NER groups that the agent didn't mean to emit.  does client-side filtering:
 
 ```typescript
 const GUID_PATTERN = /^[0-9a-f]{20,}$/i;
@@ -135,7 +135,7 @@ Copy this. Apply it to every graph response.
 
 The UX pattern: the user clicks an entity, you fetch its paths, you *merge* the new nodes/edges into the existing graph (deduped by `source::label::dest`). The graph grows organically as the user explores.
 
-The Sample ARAG App's `src/pages/KnowledgeGraphPage.tsx:116-139` is the canonical implementation. Cache aggressively — once you've fetched the paths for an entity, don't refetch.
+ is the canonical implementation. Cache aggressively — once you've fetched the paths for an entity, don't refetch.
 
 ## Foundations vs Advanced
 
@@ -162,7 +162,7 @@ Advanced Build 6 teaches you to **design** sophisticated extraction agents — p
 A single-vertical graph navigation experience against your sandbox KB:
 
 - A data-augmentation agent configured with a custom schema (you'll pick a vertical — legal, pharma, retail, manufacturing, etc.).
-- A graph viewer page (forkable from `Sample-ARAG-App/src/pages/KnowledgeGraphPage.tsx`) that:
+- A graph viewer page (forkable from) that:
   - Loads an initial graph filtered to `by: 'data-augmentation'`.
   - Supports fuzzy entity search.
   - Supports click-to-expand on any entity.

@@ -54,8 +54,8 @@ Builds are the spine. Each is a hands-on exercise against a real ARAG sandbox, s
 |---|---|
 | **Owning track(s)** | Sell, Solution, Deliver — all three start here |
 | **Tier mapped to** | Tier 1 prep |
-| **What the partner does** | Provisions a sandbox KB, ingests 10 documents from their own corpus, makes their first `/ask` call from `curl`, runs `/find` for a semantic search, opens the Sample ARAG App and points it at their KB |
-| **Pass rubric** | (1) Sandbox KB provisioned and reachable. (2) Three successful streamed answers against their content with citations rendered. (3) Sample ARAG App `/assistant` page running locally against their KB. Reviewer signs off. |
+| **What the partner does** | Provisions a sandbox KB, ingests 10 documents from their own corpus, makes their first `/ask` call from `curl`, runs `/find` for a semantic search, opens  and points it at their KB |
+| **Pass rubric** | (1) Sandbox KB provisioned and reachable. (2) Three successful streamed answers against their content with citations rendered. (3)  `/assistant` page running locally against their KB. Reviewer signs off. |
 | **Asset delivered** | A 30-minute recorded run-through of the partner's own corpus answering three of their customer's most common questions. This is the first thing they show in a customer meeting. |
 
 ### Build 1 — Grounded search & drop-in widgets
@@ -66,7 +66,7 @@ Builds are the spine. Each is a hands-on exercise against a real ARAG sandbox, s
 | **Tier mapped to** | Tier 1 |
 | **What the partner does** | Embeds `<nuclia-search-bar>`, `<nuclia-chat>`, `<nuclia-popup>` on a real partner website with branded theming (`--nuclia-color-primary`, base64'd CSS via `csspath`). Configures content-type filters and label filters. Ships a `?q=` deep-link experience. |
 | **Pass rubric** | (1) Widgets live on a public URL. (2) Branded styling matches the partner brand. (3) Search results return content-type-filtered and topic-filtered. (4) Demo-ready in under five minutes. |
-| **Asset delivered** | A "Demo a chatbot in 30 minutes" playbook with the partner's branded widget HTML snippet and a slide describing how the same KB powers both the search bar and the chat. Reference: `Sample-ARAG-App/src/pages/widgets/WidgetShowcasePage.tsx` and `snippetData.ts`. |
+| **Asset delivered** | A "Demo a chatbot in 30 minutes" playbook with the partner's branded widget HTML snippet and a slide describing how the same KB powers both the search bar and the chat. Reference: and `snippetData.ts`. |
 
 ### Build 2 — Multi-surface conversational intelligence
 
@@ -76,7 +76,7 @@ Builds are the spine. Each is a hands-on exercise against a real ARAG sandbox, s
 | **Tier mapped to** | Tier 2 |
 | **What the partner does** | Builds a floating chat with two distinct prompt modes — *prospect* (concise + one CTA from the corpus) and *member* (detailed + multi-source citations). Both modes route to the same KB; the only difference is the prompt and the post-processing. Implements `{context}`/`{question}` placeholders, query-prefix language switching, and resource-scoped chat. |
 | **Pass rubric** | (1) Two prompt modes demonstrably differ in voice, length, and CTA behaviour. (2) A `Respond in {language}: ` prefix produces a working multilingual answer. (3) Resource-scoped chat correctly focuses the model on a single document. (4) Deep-link share URLs auto-fire once and strip themselves cleanly. |
-| **Asset delivered** | A "Three voices, one KB" demo script with the partner's own copy. Reference: `Sample-ARAG-App/src/components/chat/FloatingChat.tsx` (the canonical Tier 2 example), `ResourceChatTab.tsx`, `ResearchAssistantPage.tsx`. |
+| **Asset delivered** | A "Three voices, one KB" demo script with the partner's own copy. Reference: (the canonical Tier 2 example), |
 
 ### Build 3 — Schema-constrained generation (the agent workshop)
 
@@ -86,7 +86,7 @@ Builds are the spine. Each is a hands-on exercise against a real ARAG sandbox, s
 | **Tier mapped to** | Tier 3 |
 | **What the partner does** | Designs and ships three `askForJson` workflows against the partner's own KB: a follow-up question generator, a dynamic FAQ generator, and a domain taxonomy generator. Learns to handle the strict-mode `additionalProperties:false` requirement, the three response-shape fallbacks, and the "schema permissive, code strict" pattern (mixed-type schemas with client-side validation). |
 | **Pass rubric** | (1) Three schemas committed to the partner's repo. (2) Each schema validated against at least 20 production inputs. (3) Mixed-shape schema (MC + free-text) generated correctly. (4) Recorded demo explaining the difference between `askForJson` and the manual-JSON-via-prompt-with-regex pattern, and when to use each. |
-| **Asset delivered** | The Agent Workshop notebook — a reusable Jupyter / TypeScript template with five worked schema examples. Reference: `Sample-ARAG-App/src/pages/ExamPage.tsx` (six distinct generation patterns in one file — the canonical Tier 3 reference) and `src/context/CertificationContext.tsx`. **Flagged as one of the two highest-priority assets to build first in the umbrella framework's 90-day rollout.** |
+| **Asset delivered** | The Agent Workshop notebook — a reusable Jupyter / TypeScript template with five worked schema examples. Reference: (six distinct generation patterns in one file — the canonical Tier 3 reference) and . **Flagged as one of the two highest-priority assets to build first in the umbrella framework's 90-day rollout.** |
 
 ### Build 4 — Composite RAG (the on-ramp to agentic)
 
@@ -96,7 +96,7 @@ Builds are the spine. Each is a hands-on exercise against a real ARAG sandbox, s
 | **Tier mapped to** | Tier 3 → Tier 4 bridge |
 | **What the partner does** | Implements "generate → evaluate citations → if low confidence, fire `/find` → synthesise augmented context → re-ask" in a real workflow. Builds at least one production pattern: study-guide-with-fallback, low-confidence-answer-retry, or multi-step research synthesis. |
 | **Pass rubric** | (1) Working composite flow with measurable improvement over single-shot `/ask`. (2) Latency budget documented and within target. (3) Recorded explanation of where the boundary sits between "augmenting retrieval" and "running a true agent." |
-| **Asset delivered** | A composite-RAG cookbook with three recipes — retry-on-low-citations, multi-pass synthesis, retrieve-then-rerank. Reference: `Sample-ARAG-App/src/components/certification/ExamStudyPanel.tsx` (the cleanest live example). The Advanced Extraction & Retrieval Strategies course goes deeper on this in Build 8. |
+| **Asset delivered** | A composite-RAG cookbook with three recipes — retry-on-low-citations, multi-pass synthesis, retrieve-then-rerank. Reference: (the cleanest live example). The Advanced Extraction & Retrieval Strategies course goes deeper on this in Build 8. |
 
 ### Build 5 — Typed knowledge graph & data augmentation agents
 
@@ -106,7 +106,7 @@ Builds are the spine. Each is a hands-on exercise against a real ARAG sandbox, s
 | **Tier mapped to** | Tier 4 |
 | **What the partner does** | Designs a bespoke entity/relation schema for the partner's domain (e.g., LEGAL: PARTY/MATTER/JURISDICTION/STATUTE/JUDGE; or PHARMA: COMPOUND/TARGET/TRIAL/PI). Configures a data-augmentation agent to extract that schema. Ships a graph navigation UI that filters to `{prop:'generated', by:'data-augmentation'}`, supports fuzzy entity search, undirected path traversal, and incremental in-place graph expansion. Wires entity-to-resources lookup using hybrid `features:['keyword','semantic']`. |
 | **Pass rubric** | (1) A typed schema of at least 8 entity types and 8 relation types committed and documented. (2) Graph queries return clean results (no NER noise, no GUID-shaped values). (3) Click-to-expand graph traversal working end-to-end. (4) Recorded demo answering a customer question that *cannot* be answered by single-shot retrieval — only by traversing the graph. |
-| **Asset delivered** | A graph schema design template (12 worked vertical examples — legal, pharma, financial services, film production, compliance, etc.). Reference: `Sample-ARAG-App/src/lib/graphApi.ts`, `graphConstants.ts`, and `pages/KnowledgeGraphPage.tsx`. The Advanced course goes much deeper on agent design in its Build 6. |
+| **Asset delivered** | A graph schema design template (12 worked vertical examples — legal, pharma, financial services, film production, compliance, etc.). Reference:, `graphConstants.ts`, and . The Advanced course goes much deeper on agent design in its Build 6. |
 
 ### Build 6 — Production readiness
 
@@ -120,7 +120,7 @@ Builds are the spine. Each is a hands-on exercise against a real ARAG sandbox, s
 
 ### Build 7 — The Capstone (pick your wow build)
 
-The capstone ships with two worked examples. The partner picks the one that matches their book of business; the second is built later if both customer segments are in play. Both share the same chassis (forked from the Sample ARAG App), the same eight-week build plan, and the same re-skin playbook structure — they differ in corpus, graph schema, workflows, and demo buyer.
+The capstone ships with two worked examples. The partner picks the one that matches their book of business; the second is built later if both customer segments are in play. Both share the same chassis, the same eight-week build plan, and the same re-skin playbook structure — they differ in corpus, graph schema, workflows, and demo buyer.
 
 | Variant | Buyer | Persona corpus | Killer moment | Brief |
 |---|---|---|---|---|
@@ -133,7 +133,7 @@ The capstone ships with two worked examples. The partner picks the one that matc
 | **Tier mapped to** | Capstone — combines Tiers 1–4 |
 | **What the partner does** | Builds one variant of the capstone: a single application that exercises every primitive and every tier in one branded surface. Grounded search + multi-surface chat + schema-constrained workflows + typed knowledge graph + multimodal media + custom field enrichment + production-grade ops. The capstone is what a partner walks into a Fortune 500 buyer's office with. |
 | **Pass rubric** | (1) The capstone deployed at the partner's domain. (2) End-to-end demo runs in 25 minutes covering all four tiers without code edits. (3) At least one customer-specific data-augmentation agent in production. (4) Org-level recorded demo passes a Progress-led review board. |
-| **Asset delivered** | The capstone reference build — the flagship asset of the entire programme. **Flagged as the second of two highest-priority assets to build first.** It is both the curriculum capstone and the sales-room closer. Reference: composes patterns from every file in `Sample-ARAG-App/src/pages/` and `src/components/`. |
+| **Asset delivered** | The capstone reference build — the flagship asset of the entire programme. **Flagged as the second of two highest-priority assets to build first.** It is both the curriculum capstone and the sales-room closer. Reference: composes patterns from every file in and . |
 
 ---
 
@@ -210,13 +210,13 @@ A partner organisation cannot reach Authorized tier without at least one Develop
 In order:
 
 1. Umbrella framework — `../../README.md` — Parts I, II, IV, VI especially.
-2. `Sample-ARAG-App/README.md` — the technical reference application.
-3. `Sample-ARAG-App/src/lib/ragApi.ts` (1,661 lines) — the canonical ARAG client wrapper.
-4. `Sample-ARAG-App/src/lib/graphApi.ts` (243 lines) — the graph client surface.
+2. — the technical reference application.
+3. (1,661 lines) — the canonical ARAG client wrapper.
+4. (243 lines) — the graph client surface.
 5. `builds/build-7-capstone/atlas-operations/README.md` *or* `builds/build-7-capstone/aurora-concierge/README.md` — depending on which Build 7 variant the partner picks.
-6. `Sample-ARAG-App/src/pages/ExamPage.tsx` — six distinct generation patterns in one file. Canonical Tier 3 reference.
-7. `Sample-ARAG-App/src/components/chat/FloatingChat.tsx` — canonical Tier 2 reference.
-8. `Sample-ARAG-App/src/pages/KnowledgeDetailPage.tsx` — canonical Tier 4 reference.
+6. — six distinct generation patterns in one file. Canonical Tier 3 reference.
+7. — canonical Tier 2 reference.
+8. — canonical Tier 4 reference.
 
 ---
 

@@ -61,7 +61,7 @@ That's it. The model generated, ARAG validated against the schema, you got typed
 
 ## The strict-mode requirement: `additionalProperties: false`
 
-Every `object` schema you pass must include `additionalProperties: false`. Every nested object too. The Sample ARAG App's `askForJson` wrapper at `src/lib/ragApi.ts:758-776` walks the schema tree and injects this property recursively:
+Every `object` schema you pass must include `additionalProperties: false`. Every nested object too. `askForJson` wrapper at  walks the schema tree and injects this property recursively:
 
 ```typescript
 function addAdditionalPropertiesFalse(obj: Record<string, unknown>) {
@@ -88,7 +88,7 @@ function addAdditionalPropertiesFalse(obj: Record<string, unknown>) {
 
 ## Three response shapes the wrapper falls back through
 
-ARAG returns one of three shapes depending on streaming mode and content-type negotiation. The Sample ARAG App's `askForJson` at `src/lib/ragApi.ts:751-875` handles all three:
+ARAG returns one of three shapes depending on streaming mode and content-type negotiation. `askForJson` at  handles all three:
 
 1. **`data.answer_json`** — sync mode, content-type `application/json`. The cleanest case. Just `return data.answer_json`.
 2. **`data.item.object`** — streamed NDJSON where the final answer_json arrived as an `item` event with type `"answer_json"` and an `object` payload. Common when streaming an `askForJson` call.
@@ -98,7 +98,7 @@ Most partners write the happy-path handler and ship to production, then break tw
 
 ## Mixed-shape schemas: schema permissive, code strict
 
-A common Tier 3 use case is "generate items of mixed type" — e.g., an exam containing both multiple-choice and free-text questions. The Sample ARAG App's `ExamPage.tsx:69-146` is the canonical example:
+A common Tier 3 use case is "generate items of mixed type" — e.g., an exam containing both multiple-choice and free-text questions.  is the canonical example:
 
 ```typescript
 const schema = {
@@ -151,7 +151,7 @@ There are two ways to get structured output. Both work. The choice matters.
 
 ### Manual JSON via prompt + regex (the streaming path)
 
-The Sample ARAG App's `ExamPage.tsx:174-225` grades each free-text question with a *streaming* response that's also JSON. The pattern:
+ grades each free-text question with a *streaming* response that's also JSON. The pattern:
 
 1. System prompt: `"You are an exam grader. Respond ONLY with valid JSON in this exact format: {...}. No markdown, no explanation outside JSON."`
 2. Stream the response token-by-token (so the UI can show progress).
@@ -172,9 +172,9 @@ const result = JSON.parse(match[0]);
 
 **Default to `askForJson` unless you specifically need streaming + structure.** Partners default to the wrong pattern all the time. Don't.
 
-## Eight live use cases in the Sample ARAG App
+## Eight live use cases in 
 
-These eight `askForJson` patterns are all in the Sample ARAG App. Study them; you'll re-implement variants of all eight in customer engagements.
+These eight `askForJson` patterns are all in . Study them; you'll re-implement variants of all eight in customer engagements.
 
 | Pattern | File | What it generates |
 |---|---|---|
@@ -183,9 +183,9 @@ These eight `askForJson` patterns are all in the Sample ARAG App. Study them; yo
 | Domain taxonomy | `context/CertificationContext.tsx:120-170` | 6–8 knowledge domains from the corpus |
 | Learning module structure | `context/CertificationContext.tsx:172-225` | 3 modules × 5 topics each, non-overlapping |
 | Per-domain sub-topics | `pages/CertificationPage.tsx:84-116` | 6–8 sub-topics per parent domain |
-| Mixed-type exam | `pages/ExamPage.tsx:69-146` | MC + FT questions in one schema |
+| Mixed-type exam | domain-specific exam generator | MC + FT questions in one schema |
 | People Also Ask | `pages/SearchResultsPage.tsx:33-44` | 4 follow-up questions in parallel with search |
-| Free-text grading | `pages/ExamPage.tsx:174-225` | Per-question score + feedback + key-points-hit/missed |
+| Free-text grading | domain-specific exam generator | Per-question score + feedback + key-points-hit/missed |
 
 All eight use the same primitive. The schema is the variable.
 

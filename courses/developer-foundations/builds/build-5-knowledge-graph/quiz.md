@@ -49,7 +49,7 @@ D. A `/catalog` query filtered by the entity name
 
 ---
 
-### 6. Why does the Sample ARAG App still apply client-side `isExcludedNode` filtering *in addition to* the `by: 'data-augmentation'` server-side filter?
+### 6. Why does  still apply client-side `isExcludedNode` filtering *in addition to* the `by: 'data-augmentation'` server-side filter?
 
 A. The server-side filter doesn't work in EU region
 B. **Belt and braces — occasional default-NER nodes and GUID-shaped values slip through; client-side filtering catches the residual**

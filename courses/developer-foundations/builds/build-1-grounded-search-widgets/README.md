@@ -38,7 +38,6 @@ Embeds `<nuclia-search-bar>`, `<nuclia-chat>`, `<nuclia-popup>` on a real partne
 
 A "Demo a chatbot in 30 minutes" playbook with the partner's branded widget HTML snippet and a slide describing how the same KB powers both the search bar and the chat.
 
-**Reference:** `Sample-ARAG-App/src/pages/widgets/WidgetShowcasePage.tsx` and `snippetData.ts`.
 
 ---
 

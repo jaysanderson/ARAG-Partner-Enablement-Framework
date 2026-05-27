@@ -34,7 +34,7 @@ Picks one of the two existing capstone deployments from Developer Foundations Bu
 
 - All prior Builds in this course (1–8).
 - Both [Atlas Operations](../../../developer-foundations/builds/build-7-capstone/atlas-operations/) and [Aurora Concierge](../../../developer-foundations/builds/build-7-capstone/aurora-concierge/) capstones.
-- ARAKS RP-010 (Production RAG Ops).
+-
 
 ---
 

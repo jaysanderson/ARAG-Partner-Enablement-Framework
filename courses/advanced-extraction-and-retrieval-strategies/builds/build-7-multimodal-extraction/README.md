@@ -31,10 +31,7 @@ Multimodal extraction recipe book (per-content-type playbook covering ingest, ve
 
 ## Reference reading
 
-- Sample ARAG App `src/lib/ragApi.ts:1058-1137` (`extractUtterancesFromExtractedData`).
-- Sample ARAG App `src/lib/ragApi.ts:1188-1207` (DASH manifest detection).
-- Sample ARAG App `src/components/knowledge/VideoPlayer.tsx:50-169` (DASH player with `RequestModifier` auth injection).
-- ARAKS RP-006 (Multimodal RAG).
+-
 
 ---
 
@@ -45,7 +42,7 @@ This folder is the working space for everything supporting Build 7. Drop materia
 - `walkthrough.md` — per-modality (video / audio / scanned PDF / image) walkthrough
 - `recipe-book.md` — multimodal extraction recipe book deliverable
 - `golden-set-timestamps.md` — timestamp-query golden set
-- `dash-player/` — DASH player reference implementation with auth injection
+- `dash-player/` — DASH player  with auth injection
 - `slides/` — slide deck
 - `verification.md` — reviewer checklist
 
