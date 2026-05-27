@@ -45,19 +45,21 @@ Aurora is chosen because:
 
 Partners re-skinning the variant into a banking, hospitality, education, media, or telco context will find the chassis maps cleanly — just swap the corpus, swap the entity schema, swap the workflow inputs.
 
-### Five KBs across Aurora
+### Single KB, multiple content domains via labelsets
 
-| KB | Content type | Volume target | Demo role |
-|---|---|---|---|
-| **kb-aurora-product** | Product pages, fit guides, materials, care instructions, technical specs | 80–100 docs | Tier 1 / Tier 2 (storefront search + concierge) |
-| **kb-aurora-support** | FAQs, returns, shipping, sizing help, warranty, account guidance | 50–70 docs | Tier 1 / Tier 2 (support deflection) |
-| **kb-aurora-content** | Trail guides, gear reviews, ambassador videos, podcasts, blog | 80–100 docs | Tier 2 / Tier 4 (content-led discovery) |
-| **kb-aurora-loyalty** | Trail Club benefits, member exclusives, points programs, partner offers, event calendar | 40–60 docs | Tier 3 (loyalty personalization) |
-| **kb-aurora-brand** | Brand story, sustainability commitments, ethical sourcing, ambassador bios, manifesto | 30–50 docs | All tiers (voice + values grounding) |
+Aurora Concierge runs on **one ARAG knowledge base** (`kb-aurora-concierge`) containing all corpus documents tagged with three labelsets. ARAG's labelset-driven filter composition (Sample ARAG App `src/lib/ragApi.ts:1285-1340`) gives the demo every content-routing capability of a multi-KB setup with a fraction of the operational complexity. Partners stand up one KB, not five — and customers can do the same in their POC.
 
-**Corpus build tool:** Same as the Enterprise variant — use the `progress-kb-use-case-generator` skill to generate each KB, five runs, anchor details locked in advance so cross-KB references resolve. Aurora's voice (outdoor-adventure, technically credible, sustainability-forward, ambassador-led) is part of the input spec.
+| Labelset | Values | Volume target |
+|---|---|---|
+| `content_type` | `product`, `support`, `trail_guide`, `gear_review`, `ambassador_video`, `podcast`, `blog`, `loyalty_benefit`, `brand_story`, `sustainability` | Distributed roughly: Product 80–100, Support 50–70, Content (guides/reviews/video/podcast/blog) 80–100, Loyalty 40–60, Brand 30–50 |
+| `audience` | `shopper`, `trail_club_standard`, `trail_club_plus`, `trail_club_pro`, `internal` | Most content tagged `shopper`; member-exclusive tagged accordingly; brand content typically `shopper` |
+| `region` | `noram`, `emea`, `apac`, `anz` | Where the content applies / pricing region |
 
-### Cross-KB anchor details (lock at corpus design time)
+The Shopper-mode floating chat filters to `audience:shopper` (excluding member-exclusive content). The Trail Club Member mode drops the filter (or expands it to include the member's tier). The storefront's content-type filter dropdown maps directly to the `content_type` labelset values. Same KB, same API, same auth token.
+
+**Corpus build tool:** Same as the Enterprise variant — use the `progress-kb-use-case-generator` skill to generate documents across all five content domains; run it five times — once per content domain — with the Aurora anchor details locked in advance so cross-content-type references resolve. Aurora's voice (outdoor-adventure, technically credible, sustainability-forward, ambassador-led) is part of the input spec. Then ingest all 280+ documents into the single KB, tagging each during ingest.
+
+### Cross-content-type anchor details (lock at corpus design time)
 
 Every document references the same fictional entities. This is what makes the loyalty workflows and the journey graph land.
 
@@ -76,8 +78,8 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 ### In scope (must ship)
 
-- All five KBs ingested into separate ARAG knowledge boxes with EU region for the demo (USA failover documented).
-- One bespoke data-augmentation agent extracting a customer-journey graph across the product, content, and loyalty KBs.
+- One ARAG knowledge base (`kb-aurora-concierge`) provisioned in EU region (USA failover documented) with all corpus documents ingested and labelset-tagged.
+- One bespoke data-augmentation agent extracting a customer-journey graph spanning product, content, and loyalty content (filtered at query time when relevant).
 - Six branded demo surfaces (one per tier of the capability ladder, plus the landing page and the abandoned-cart flow).
 - Three custom Tier 3 workflows oriented to digital-experience operations.
 - One Tier 4 composite RAG flow — Abandoned-Cart Win-Back (the revenue-recovery showpiece).
@@ -115,9 +117,11 @@ These anchors get embedded into every document the corpus generator produces. Th
 ┌─────────────────────────────────────────────────────────────┐
 │  Progress Agentic RAG (EU region)                            │
 │                                                              │
-│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐            │
-│  │ aurora-prod │ │ aurora-supp │ │ aurora-cont │  ...        │
-│  └─────────────┘ └─────────────┘ └─────────────┘            │
+│  ┌────────────────────────────────────────────────┐         │
+│  │  kb-aurora-concierge  (single KB)              │         │
+│  │  Labelsets: content_type, audience, region     │         │
+│  │  280+ documents tagged at ingest               │         │
+│  └────────────────────────────────────────────────┘         │
 │                                                              │
 │  ┌──────────────────────────────────────────────┐           │
 │  │ Customer-Journey Graph Agent                  │           │
@@ -184,7 +188,7 @@ The graph in the CX variant is *not* the operational graph of the Enterprise var
 
 **Why this graph matters:** Every D2C personalization vendor sells "you may also like" widgets. None of them can answer "*why* this product, and what does the customer's preferred ambassador say about it?" in one query. The Aurora journey graph turns recommendation into a *grounded, citable, explainable* answer.
 
-**Agent tool:** Same as Enterprise variant — `arag-graph-agent` skill for design, then hand-tune the schema, then run extraction across all five KBs.
+**Agent tool:** Same as Enterprise variant — `arag-graph-agent` skill for design, then hand-tune the schema, then run extraction against the single Aurora KB.
 
 ### 5.5 The six demo surfaces
 
@@ -238,9 +242,9 @@ Same overall shape as the Enterprise variant. Effort estimates are nearly identi
 
 - Lock the Aurora anchor details (6 products, 4 ambassadors, 5 destinations, 3 segments, 3 loyalty tiers, 4 brand pillars).
 - Run `progress-kb-use-case-generator` five times with Aurora's brand voice as input.
-- Provision five ARAG KBs in EU region. Configure labelsets — `activity`, `destination`, `season`, `audience`, `loyalty_tier`, `brand_pillar`.
-- **Critical Phase 1 work specific to CX variant:** populate the field-engineered surfaces. Every product page in `kb-aurora-product` gets a `callToAction` field (one short, branded sentence). Key product pages get a `searchResultDisplay` field with title + description copy designed for AI-answer rendering. Every video in `kb-aurora-content` gets a structured `videoInfo` JSON with speakers, topics, key points, and a call-to-action.
-- **Exit criteria:** All five KBs ingested. The field-engineered surfaces visible in `/find` responses.
+- Provision one ARAG KB (`kb-aurora-concierge`) in EU region. Configure six labelsets — `content_type`, `audience`, `region`, `activity`, `destination`, `season` (plus `loyalty_tier` and `brand_pillar` as facet tags) — before ingest. Ingest all 280+ documents tagging each with appropriate values during ingest.
+- **Critical Phase 1 work specific to CX variant:** populate the field-engineered surfaces. Every product-content document gets a `callToAction` field (one short, branded sentence). Key product pages get a `searchResultDisplay` field with title + description copy designed for AI-answer rendering. Every video content document gets a structured `videoInfo` JSON with speakers, topics, key points, and a call-to-action.
+- **Exit criteria:** Aurora KB ingested and labelset-tagged. Field-engineered surfaces visible in `/find` responses.
 
 ### Phase 2 — Customer-journey graph agent (Weeks 2–3)
 
@@ -264,7 +268,7 @@ Same overall shape as the Enterprise variant. Effort estimates are nearly identi
 - Build the abandoned-cart composite-RAG flow on `/abandoned-cart`. Four steps visualised:
   1. Pull Sara's session history (hand-crafted fixture data) and current cart.
   2. Initial `/ask` against the product + content KBs: "Sara is a Weekend Adventurer based in NA, she added TerraTrek 7 size 8 to cart, what's the best winback message?"
-  3. Citation evaluation; if low confidence, `/find` across content + loyalty KBs for similar-segment behavior patterns.
+  3. Citation evaluation; if low confidence, `/find` against the Aurora KB filtered to `content_type:trail_guide OR content_type:loyalty_benefit OR content_type:gear_review` for similar-segment behavior patterns.
   4. Graph traversal: TerraTrek 7 → `pairs_with` → Skyline 45L; TerraTrek 7 → `featured_in` → Mara Chen's trail guide.
   5. Re-ask with augmented context. Generate structured output: `{ subject_line, body, cta_url, cta_label, cross_sell_products: [...], ambassador_quote: {...}, send_window: "..." }`.
 - Each workflow ships with a presenter-mode hotkey for "go straight to the answer" if the LLM is slow.
@@ -399,9 +403,9 @@ The talk track for the CMO room.
 
 > "Step one: standard retrieval-augmented query. The model has the boot details and Sara's profile. Two citations came back below confidence — the model knows it doesn't know enough yet."
 
-*[Step 2 visualisation: `/find` across content + loyalty KBs for similar-segment behavior patterns.]*
+*[Step 2 visualisation: `/find` against the Aurora KB with a content-type filter spanning trail-guide + loyalty + gear-review for similar-segment behavior.]*
 
-> "Step two: when confidence is low, fall back to hybrid find across content and loyalty. Five more candidates — including a Weekend Adventurer trail-guide and a Trail Club Standard onboarding asset."
+> "Step two: when confidence is low, fall back to hybrid find across the KB with a content-type filter spanning trail-guide, loyalty, and gear-review. Five more candidates — including a Weekend Adventurer trail-guide and a Trail Club Standard onboarding asset."
 
 *[Step 3 visualisation: Graph traversal — TerraTrek 7 → `pairs_with` → Skyline 45L; TerraTrek 7 → `featured_in` → Mara's Tasmania guide.]*
 
@@ -430,7 +434,7 @@ The talk track for the CMO room.
 
 *[Return to landing page.]*
 
-> "What you've seen is one application built on five knowledge bases, one extraction agent, three custom workflows, and one composite-RAG pipeline. Every output is grounded, citable, explainable, and editable by your content team without a code deployment.
+> "What you've seen is one application built on one knowledge base, three labelsets, one extraction agent, three custom workflows, and one composite-RAG pipeline. Every output is grounded, citable, explainable, and editable by your content team without a code deployment.
 >
 > Three things you have right now that none of your personalization vendors offer:
 >
@@ -462,7 +466,7 @@ A partner takes Aurora Concierge and re-points it at their customer's brand. The
 
 | Asset | Effort | Tool |
 |---|---|---|
-| Corpus (5 KBs of customer content + field-engineered CTAs) | 1.5–2.5 weeks | Customer-supplied or `progress-kb-use-case-generator`; field engineering is manual |
+| Corpus (one KB with content-type labelsets + field-engineered CTAs) | 1.5–2.5 weeks | Customer-supplied or `progress-kb-use-case-generator`; field engineering is manual |
 | Anchor entities (products, ambassadors/spokespeople, destinations/use-cases, segments) | 1 week | Manual + corpus skill |
 | Customer-journey graph schema | 4–5 days | `arag-graph-agent` with hand-tuning |
 | Three workflow schemas (replace adventure-plan / loyalty / cross-sell with customer-relevant equivalents) | 1 week | Hand-design against customer's stated needs |
@@ -504,7 +508,7 @@ A partner whose book of business skews enterprise-IT builds the Enterprise varia
 Aurora Concierge ships when *all* of the following are true:
 
 1. The full 25-minute demo runs end-to-end without code edits in front of two reviewers, no keyboard touches outside the documented hotkeys.
-2. The Aurora customer-journey graph returns at least 150 typed-entity nodes and 400 typed relations across the product, content, and loyalty KBs.
+2. The Aurora customer-journey graph returns at least 150 typed-entity nodes and 400 typed relations across the Aurora KB.
 3. Field-engineered CTAs are visible in every search result and every AI answer on the storefront surface, and the presenter can point at the source field for every one.
 4. The two-voice floating chat (Shopper vs Trail Club Member) is demonstrably different in voice, length, and CTA behaviour for the same query.
 5. The abandoned-cart composite-RAG flow produces a winback message demonstrably better — on at least three reviewer-judged criteria — than a single-shot `/ask` for the same input.
@@ -522,7 +526,7 @@ Aurora Concierge ships when *all* of the following are true:
 |---|---|---|
 | Brief (this doc) | Jay Sanderson | **Shipped — this commit** |
 | Aurora anchor details | Jay Sanderson | TODO — Phase 1 prerequisite |
-| Corpus generation (5 KBs) | Progress SE + `progress-kb-use-case-generator` | TODO |
+| Corpus generation (one KB + labelset tagging) | Progress SE + `progress-kb-use-case-generator` | TODO |
 | Field engineering (CTAs, searchResultDisplay) | Aurora brand copywriter persona — handled by build owner | TODO |
 | Journey graph agent | Progress SE + `arag-graph-agent` | TODO |
 | Sample-ARAG-App fork + Aurora reskin | Build owner | TODO |

@@ -43,21 +43,23 @@ Atlas is chosen because:
 - Its content surface area is broad enough to demonstrate every tier of the capability ladder without feeling contrived.
 - It's *recognisable but generic*. The buyer in the room recognises their own org. There's no risk of demoing against a real Fortune 500's content and losing trust.
 
-### Five KBs across Atlas
+### Single KB, multiple content domains via labelsets
 
-| KB | Content type | Volume target | Demo role |
-|---|---|---|---|
-| **kb-atlas-hr** | Policies, benefits, onboarding paths, role descriptions, performance frameworks | 60–80 docs | Tier 1 / Tier 3 (onboarding paths generator) |
-| **kb-atlas-engineering** | Product specs, design docs, runbooks, incident postmortems, RFCs | 80–100 docs | Tier 2 / Tier 4 (graph + composite RAG) |
-| **kb-atlas-sales** | Battle cards, proposals, deal-loss debriefs, regional pricing, case studies | 60–80 docs | Tier 2 / Tier 3 (battle-card generator) |
-| **kb-atlas-customer-success** | Deployment guides, escalation tickets, customer-success-plans, churn analyses | 60–80 docs | Tier 4 (CSM-graph reasoning) |
-| **kb-atlas-compliance** | Internal policies, external regulations, audit findings, remediation logs | 50–70 docs | Tier 4 (regulatory-trace graph) |
+Atlas Operations runs on **one ARAG knowledge base** (`kb-atlas-operations`) containing all corpus documents tagged with three labelsets. ARAG's labelset-driven filter composition (see Sample ARAG App `src/lib/ragApi.ts:1285-1340`) gives the demo every cross-domain capability of a multi-KB setup with a fraction of the operational complexity. Partners stand up one KB, not five — and customers can do the same in their POC.
 
-**Corpus build tool:** Use the `progress-kb-use-case-generator` skill from `anthropic-skills` to generate each KB. The skill produces 56–63 realistic workplace documents per persona folder, complete with anchor details (employee names, product names, customer names, incident IDs) that stay consistent across the corpus. Run it five times — once per KB — with the Atlas anchor details locked in advance so cross-KB references resolve cleanly.
+| Labelset | Values | Volume target |
+|---|---|---|
+| `business_unit` | `hr`, `engineering`, `sales`, `customer_success`, `compliance` | Documents distributed roughly: HR 60–80, Engineering 80–100, Sales 60–80, CS 60–80, Compliance 50–70 |
+| `content_type` | `policy`, `runbook`, `incident`, `case_study`, `audit_finding`, `proposal`, `deployment_guide`, `escalation`, `pricing`, `design_doc`, `rfc` | Each business unit owns a subset of these |
+| `region` | `noram`, `emea`, `apac`, `latam` | Where the content originates / applies |
 
-### Cross-KB anchor details (lock at corpus design time)
+A query for "incident root cause" filtered to `business_unit:engineering` returns engineering incidents. A query for "policy" filtered to `region:emea AND business_unit:compliance` returns EU compliance policies. Cross-domain queries simply skip the filter. Same KB, same API, same auth token.
 
-Every document across all five KBs references the same fictional entities. This is what makes the graph navigation in the Tier 4 demo land.
+**Corpus build tool:** Use the `progress-kb-use-case-generator` skill from `anthropic-skills` to generate documents covering all five business units. The skill produces 56–63 realistic workplace documents per persona; run it five times — once per business unit — with the Atlas anchor details locked in advance so cross-business-unit references resolve cleanly. Then ingest all 300+ documents into the single KB, tagging each with its `business_unit`, `content_type`, and `region` values during ingest.
+
+### Cross-business-unit anchor details (lock at corpus design time)
+
+Every document across all five business units references the same fictional entities. This is what makes the graph navigation in the Tier 4 demo land.
 
 - **5 customers:** Norvale Energy (utilities), Halcyon Logistics (3PL), Meridian Bank (financial services), Cresta Health Network (hospital group), Talos Steelworks (heavy industry).
 - **8 products / SKUs:** Atlas E-220 turbine, Atlas Logix routing engine, Atlas BuildingHub controller, Atlas FieldOps mobile, etc.
@@ -73,8 +75,8 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 ### In scope (must ship)
 
-- All five KBs ingested into separate ARAG knowledge boxes with EU region for the demo (USA region failover documented but not deployed).
-- One bespoke data-augmentation agent extracting a typed graph across the engineering and customer-success KBs.
+- One ARAG knowledge base (`kb-atlas-operations`) provisioned in EU region (USA region failover documented but not deployed) with all corpus documents ingested and labelset-tagged.
+- One bespoke data-augmentation agent extracting a typed graph spanning all business units (filtered at query time to specific business units when relevant).
 - Five branded demo surfaces (one per tier of the capability ladder, plus the Atlas Operations landing page).
 - Three custom Tier 3 workflows (schema-constrained generation) live and demo-ready.
 - One Tier 4 composite RAG flow live (the "incident root cause" workflow).
@@ -109,9 +111,11 @@ These anchors get embedded into every document the corpus generator produces. Th
 ┌─────────────────────────────────────────────────────────────┐
 │  Progress Agentic RAG (EU region)                            │
 │                                                              │
-│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐            │
-│  │ kb-atlas-hr │ │ kb-atlas-eng│ │ kb-atlas-cs │  ...        │
-│  └─────────────┘ └─────────────┘ └─────────────┘            │
+│  ┌────────────────────────────────────────────────┐         │
+│  │  kb-atlas-operations  (single KB)              │         │
+│  │  Labelsets: business_unit, content_type, region│         │
+│  │  300+ documents tagged at ingest               │         │
+│  └────────────────────────────────────────────────┘         │
 │                                                              │
 │  ┌──────────────────────────────────────────────┐           │
 │  │ Data-Augmentation Agent (custom graph extract)│           │
@@ -141,7 +145,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 ### 5.3 Backend stack
 
 - **ARAG only.** No custom backend. Atlas Operations talks directly to ARAG endpoints exactly the way the Sample ARAG App does. This is itself a demo point — *there is no middleware to maintain*.
-- **BYO-LLM toggle:** Implemented as a per-KB ARAG configuration. Customer's "imagine this is your Azure tenant" question is answered by flipping the toggle live during the demo.
+- **BYO-LLM toggle:** Implemented as a KB-level ARAG configuration. Customer's "imagine this is your Azure tenant" question is answered by flipping the toggle live during the demo.
 
 ### 5.4 Data-augmentation agent — the typed graph
 
@@ -177,7 +181,7 @@ The graph is the *single most differentiated* piece of Atlas Operations. It's wh
 | `mentions` | (any field text) → (any entity) | Generated automatically |
 | `learned_from` | RUNBOOK → INCIDENT | RB v2 learned from earlier incident |
 
-**Agent tool:** Use the `arag-graph-agent` skill from `anthropic-skills` to design and generate the extraction agent. The skill samples the KB, analyses the domain, designs the schema (which can be hand-tuned against the table above), and produces a ready-to-run Python script. Run the agent against all five KBs. Persist results to the member-knowledge graph endpoint.
+**Agent tool:** Use the `arag-graph-agent` skill from `anthropic-skills` to design and generate the extraction agent. The skill samples the KB, analyses the domain, designs the schema (which can be hand-tuned against the table above), and produces a ready-to-run Python script. Run the agent against the single Atlas KB.
 
 **Why this matters:** The buyer in the room has never seen a graph generated from their own content. Every other AI vendor demos retrieval; only ARAG demos *structured reasoning over relationships*. Atlas Operations is the proof.
 
@@ -188,7 +192,7 @@ These are the routes a presenter walks through. Each maps to one or more tiers i
 | Route | Tier(s) | Purpose |
 |---|---|---|
 | `/` (landing) | — | Hero. Shows the BYO-LLM toggle and the residency badge. 90 seconds. |
-| `/search` | Tier 1 + Tier 2 | The "everyone needs better search" demo. Hybrid search across all five KBs with content-type filters, AI Answer, citation deep-links. |
+| `/search` | Tier 1 + Tier 2 | The "everyone needs better search" demo. Hybrid search across the Atlas KB with business-unit + content-type filters, AI Answer, citation deep-links. |
 | `/concierge` | Tier 2 | Two prompt voices over the same KB — *Employee* mode (concise + 1 CTA) and *Architect* mode (detailed + multi-source citations). Voice swap on a UI toggle. |
 | `/workflows` | Tier 3 | The three live structured-generation workflows (Section 6). |
 | `/graph` | Tier 4 | The Atlas knowledge graph. Click any entity, traverse paths, see related resources via hybrid retrieval. |
@@ -233,14 +237,14 @@ Total target: **8 weeks of focused work**, or **4 weeks at 2 FTE**. Phases can r
 
 - Lock the Atlas anchor details (5 customers, 8 products, 6 employees, 4 incidents, 5 regulations).
 - Run `progress-kb-use-case-generator` five times — once per KB — with anchor details supplied as inputs. Hand-edit for cross-KB consistency.
-- Provision five ARAG KBs in EU region. Ingest each KB's content. Configure labelsets (`business_unit`, `region`, `content_type`, `audience`).
-- **Exit criteria:** All five KBs ingested. `/find` and `/ask` against each returns sensible results.
+- Provision one ARAG KB (`kb-atlas-operations`) in EU region. Configure four labelsets (`business_unit`, `region`, `content_type`, `audience`) before ingest. Ingest all 300+ documents and tag each with appropriate labelset values during ingest.
+- **Exit criteria:** Atlas KB ingested and labelset-tagged. `/find` and `/ask` filtered by `business_unit:engineering` (and other values) return correctly scoped results.
 
 ### Phase 2 — Data-augmentation agent design + deployment (Weeks 2–3)
 
 - Use `arag-graph-agent` skill to draft the extraction agent from a sample of the engineering and customer-success KBs.
 - Hand-tune the entity schema and relation schema against the tables in Section 5.4.
-- Run the agent against all five KBs. Verify graph queries return clean results (no GUID noise, no default-NER pollution).
+- Run the agent against the Atlas KB. Verify graph queries return clean results (no GUID noise, no default-NER pollution).
 - **Exit criteria:** `POST /v1/kb/{id}/graph` with `{prop:'generated', by:'data-augmentation'}` returns a typed graph the build owner is willing to demo on camera.
 
 ### Phase 3 — Sample-ARAG-App fork + Atlas Operations reskin (Weeks 3–4)
@@ -249,7 +253,7 @@ Total target: **8 weeks of focused work**, or **4 weeks at 2 FTE**. Phases can r
 - Strip ARAKS branding. Replace with Atlas Operations design system (dark slate base, electric-blue and amber accents).
 - Replace `ContentPage`-style static markdown rendering with the Atlas-themed landing copy.
 - Wire BYO-LLM toggle as a UI element backed by ARAG configuration.
-- Replace `kb-site-content` and `kb-member-knowledge` env vars with the five Atlas KBs.
+- Replace `kb-site-content` and `kb-member-knowledge` env vars with the single `kb-atlas-operations` KB ID. Where the Sample ARAG App routes between two KBs based on membership state, route by labelset filter on the single Atlas KB instead.
 - **Exit criteria:** All five demo routes loading against real Atlas content with no ARAKS leakage.
 
 ### Phase 4 — The three Tier 3 workflows + composite-RAG flow (Weeks 4–6)
@@ -257,7 +261,7 @@ Total target: **8 weeks of focused work**, or **4 weeks at 2 FTE**. Phases can r
 - Build the three schema-constrained workflows on `/workflows`. Each is a button that fires `askForJson` against a locked schema.
 - Build the composite-RAG flow on `/incident-root-cause`. Three steps visualised in the UI:
   1. Initial `/ask` against engineering KB.
-  2. Citation evaluation; if low confidence, `/find` across all KBs.
+  2. Citation evaluation; if low confidence, `/find` against the Atlas KB without labelset filters (so the search spans all business units).
   3. Graph traversal for related incidents on the same product.
   4. Re-ask with augmented context including the graph results.
 - Each workflow ships with a presenter-mode hotkey for "go straight to the answer" if the LLM is slow.
@@ -305,7 +309,7 @@ This is the script the build owner rehearses to certification. Times are cumulat
 >
 > Atlas Operations is a single application built on Progress Agentic RAG. It's an enterprise control room for unstructured knowledge — search, chat, structured generation, knowledge-graph reasoning, multimodal retrieval, and production operations, all behind one API key.
 >
-> The corpus I'm demoing against is a fictional company called Atlas Global Industries. Fifty thousand employees, four regions, five business units. Five separate knowledge bases — HR, Engineering, Sales, Customer Success, Compliance.
+> The corpus I'm demoing against is a fictional company called Atlas Global Industries. Fifty thousand employees, four regions, five business units. One knowledge base. Three labelsets — business unit, content type, region — covering HR, Engineering, Sales, Customer Success, Compliance. Every filter in this demo is a labelset query, not a separate KB. That matters when we talk about how your team would deploy this against your own corpus.
 >
 > Two things to notice before we start. Top-right: this is running in the EU region — you can flip to USA in one click. Top-right also: the BYO-LLM toggle — Atlas Operations is using Azure OpenAI right now; I can swap to Google Vertex or AWS Bedrock without restarting anything. Watch."
 
@@ -387,9 +391,9 @@ This is the script the build owner rehearses to certification. Times are cumulat
 
 > "Step one: standard retrieval-augmented query. Two citations came back, both below our confidence threshold. The model isn't confident — and crucially, it *knows* it isn't confident."
 
-*[Step 2 visualisation: `/find` fires across all five KBs.]*
+*[Step 2 visualisation: `/find` fires across the Atlas KB without business-unit filter — spanning all content domains.]*
 
-> "Step two: when confidence is low, the pipeline falls back to a hybrid find across every KB. Five more candidate documents pulled in."
+> "Step two: when confidence is low, the pipeline falls back to a hybrid find across the whole KB — dropping the business-unit filter so every domain is in scope. Five more candidate documents pulled in."
 
 *[Step 3 visualisation: Graph traversal. The graph view fires for INC-2028-0019 → affected PRODUCT → similar past INCIDENTS on same product.]*
 
@@ -405,7 +409,7 @@ This is the script the build owner rehearses to certification. Times are cumulat
 
 *[Return to landing page.]*
 
-> "What you've seen is one application built on five knowledge bases, one extraction agent, one BYO-LLM router. Twenty-five minutes ago you couldn't have built this in five years. Today it's a fork of an open reference app and an extraction agent your team configures.
+> "What you've seen is one application built on one knowledge base, five business-unit labelsets, one extraction agent, one BYO-LLM router. Twenty-five minutes ago you couldn't have built this in five years. Today it's a fork of an open reference app, one labelset config, and an extraction agent your team configures.
 >
 > Three things you have right now that none of your other AI vendors offer:
 >
@@ -438,7 +442,7 @@ A partner takes Atlas Operations and re-points it at their customer's domain. Th
 
 | Asset | Effort | Tool |
 |---|---|---|
-| Corpus (5 KBs of customer content) | 1–2 weeks | Customer-supplied or `progress-kb-use-case-generator` if synthetic |
+| Corpus (one KB with labelsets across customer content) | 1–2 weeks | Customer-supplied or `progress-kb-use-case-generator` if synthetic |
 | Anchor entities (customers, products, employees, incidents, regs) | 1 week | Manual + corpus skill |
 | Entity / relation schema | 3–5 days | `arag-graph-agent` with hand-tuning |
 | Three workflow schemas | 1 week | Hand-design against customer's stated needs |
@@ -457,7 +461,7 @@ Partners offer "Atlas Co-Engineering" as a fixed-scope, fixed-price engagement: 
 Atlas Operations ships when *all* of the following are true:
 
 1. The full 25-minute demo runs end-to-end without code edits, in front of two reviewers, without the build owner touching the keyboard outside of the documented hotkeys.
-2. The Atlas knowledge graph returns at least 200 typed-entity nodes and 500 typed relations across all five KBs.
+2. The Atlas knowledge graph returns at least 200 typed-entity nodes and 500 typed relations across the Atlas KB.
 3. The composite-RAG flow demonstrably outperforms a single-shot `/ask` for the four named incidents — measured by citation count and reviewer-judged answer quality.
 4. The BYO-LLM toggle works for at least two of three named endpoints. The third is acceptable as a UI stub if budget binds.
 5. The recorded demo is uploaded and shared internally before the wider partner programme opens.
@@ -472,7 +476,7 @@ Atlas Operations ships when *all* of the following are true:
 |---|---|---|
 | Brief (this doc) | Jay Sanderson | **Shipped — this commit** |
 | Atlas anchor details | Jay Sanderson | TODO — Phase 1 prerequisite |
-| Corpus generation (5 KBs) | Progress SE + `progress-kb-use-case-generator` skill | TODO |
+| Corpus generation (one KB + labelset tagging) | Progress SE + `progress-kb-use-case-generator` skill | TODO |
 | Graph agent | Progress SE + `arag-graph-agent` skill | TODO |
 | Sample-ARAG-App fork | Build owner | TODO |
 | Three Tier 3 workflows | Build owner | TODO |

@@ -45,8 +45,8 @@ Several Builds reference ARAKS research papers (RP-001 through RP-010) which liv
 |---|---|
 | **Owning track(s)** | Solution (Must), Deliver (Must) |
 | **Why it's first** | Every subsequent Build's rubric depends on measurable lift. No baseline, no Build 2. |
-| **What the partner does** | Builds a retrieval-quality measurement harness for the partner's own KB. Computes precision@k, recall@k, MRR (mean reciprocal rank), nDCG, hit-rate, and end-to-end citation-rate. Designs a 20–50-query golden set per KB with difficulty tagging (easy/medium/hard) and known-good resource IDs. Captures a baseline for each KB before any tuning happens. |
-| **Pass rubric** | (1) Harness runnable on demand against any KB. (2) Golden sets of 20+ queries committed for at least 3 KBs, with expected resource IDs. (3) Baselines captured and visible as a per-KB scoreboard. (4) Both retrieval-only (`/find`) and end-to-end (`/ask`) metrics computed. (5) Noise threshold defined (how much lift counts as real). |
+| **What the partner does** | Builds a retrieval-quality measurement harness for the partner's KB. Computes precision@k, recall@k, MRR (mean reciprocal rank), nDCG, hit-rate, and end-to-end citation-rate. Designs a 30–60-query golden set against the KB with difficulty tagging (easy/medium/hard) and known-good resource IDs. Where the KB spans multiple content domains (via labelsets), the golden set must sample queries that exercise at least 3 content types or labelset values. Captures a baseline before any tuning happens. |
+| **Pass rubric** | (1) Harness runnable on demand against the KB. (2) Golden set of 30+ queries committed with expected resource IDs and difficulty tags. (3) At least 3 content-type or labelset value sub-baselines computed (to spot retrieval gaps that hide in cross-domain averages). (4) Both retrieval-only (`/find`) and end-to-end (`/ask`) metrics captured. (5) Noise threshold defined (how much lift counts as real). |
 | **Asset delivered** | Eval-harness template (TypeScript or Python) + golden-set markdown template + scoreboard layout. This becomes the harness every subsequent Build runs against. |
 | **Reference reading** | ARAKS RP-002 (RAG Evaluation Methods, ARAKS RAGAS-compatible scoring framework). |
 
@@ -168,7 +168,7 @@ Every production ARAG deployment a Specialist signs off on must surface:
 - p50 / p95 / p99 retrieval latency
 - p50 / p95 / p99 `/ask` end-to-end latency
 - Citation rate (proportion of `/ask` calls returning non-empty citations)
-- Per-KB query volume + per-KB error rate
+- Per-labelset query volume + per-labelset error rate (which content domains are getting hit, where do errors concentrate)
 - Per-LLM-endpoint volume (for BYO-LLM observability) and cost per endpoint
 
 ---
