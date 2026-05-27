@@ -4,6 +4,12 @@
 >
 > **This is one of the two top-priority assets** flagged in the framework's 90-day rollout (alongside Build 3). It is both the curriculum capstone and the sales-room closer.
 
+> ## 🚦 Prerequisite gate: pass the [final exam](../../final-exam.md) first
+>
+> Build 7 is the capstone. You may only submit it for review-board defence *after* passing the Developer Foundations final exam (40 MC + 5 short answer, pass = 32/40 + 3/5 short answer).
+>
+> If you haven't passed the exam yet, do not start Build 7. Return to the lessons + walkthroughs for any Build whose quick quiz you didn't pass, then sit the final exam.
+
 ## Pick your variant
 
 Build 7 ships with two worked examples. Partners pick the one that matches their book of business; the second is built later if both customer segments are in play. Both share the same chassis (forked from the Sample ARAG App), the same eight-week build plan, and the same re-skin playbook structure — they differ in corpus, graph schema, workflows, and demo buyer.

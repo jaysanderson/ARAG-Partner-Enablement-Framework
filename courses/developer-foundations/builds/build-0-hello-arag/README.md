@@ -11,6 +11,18 @@
 | **Prerequisite** | None — this is the on-ramp |
 | **Estimated effort** | 4–6 hours focused, including reading |
 
+## Start here
+
+Work through the three course-material files for this Build in order:
+
+1. **[lesson.md](lesson.md)** — concepts, ARAG patterns, why this Build matters. Read first.
+2. **[walkthrough.md](walkthrough.md)** — step-by-step build instructions with code and verification checklist.
+3. **[quiz.md](quiz.md)** — 8 MC + 1 short answer; pass = 7/8 + credible short answer.
+
+The rest of this README is a quick-reference summary. The full content lives in the three files above.
+
+---
+
 ## What the partner does
 
 Provisions a sandbox KB. Ingests 10 documents from their own corpus. Makes their first `/ask` call from `curl`. Runs `/find` for a semantic search. Opens the [Sample ARAG App](https://github.com/jaysanderson/Sample-ARAG-App) and points it at their KB.

@@ -11,6 +11,18 @@
 | **Prerequisite** | [Build 1 — Grounded search & widgets](../build-1-grounded-search-widgets/) |
 | **Estimated effort** | 8–12 hours focused |
 
+## Start here
+
+Work through the three course-material files for this Build in order:
+
+1. **[lesson.md](lesson.md)** — concepts, ARAG patterns, why this Build matters. Read first.
+2. **[walkthrough.md](walkthrough.md)** — step-by-step build instructions with code and verification checklist.
+3. **[quiz.md](quiz.md)** — 8 MC + 1 short answer; pass = 7/8 + credible short answer.
+
+The rest of this README is a quick-reference summary. The full content lives in the three files above.
+
+---
+
 ## What the partner does
 
 Builds a floating chat with two distinct prompt modes — *prospect* (concise + one CTA from the corpus) and *member* (detailed + multi-source citations). Both modes route to the same KB; the only difference is the prompt and the post-processing. Implements `{context}`/`{question}` placeholders, query-prefix language switching, and resource-scoped chat.

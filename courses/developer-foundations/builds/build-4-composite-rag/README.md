@@ -11,6 +11,18 @@
 | **Prerequisite** | [Build 3 — Schema-constrained generation](../build-3-schema-constrained-generation/) |
 | **Estimated effort** | 8–10 hours focused |
 
+## Start here
+
+Work through the three course-material files for this Build in order:
+
+1. **[lesson.md](lesson.md)** — concepts, ARAG patterns, why this Build matters. Read first.
+2. **[walkthrough.md](walkthrough.md)** — step-by-step build instructions with code and verification checklist.
+3. **[quiz.md](quiz.md)** — 8 MC + 1 short answer; pass = 7/8 + credible short answer.
+
+The rest of this README is a quick-reference summary. The full content lives in the three files above.
+
+---
+
 ## What the partner does
 
 Implements "generate → evaluate citations → if low confidence, fire `/find` → synthesise augmented context → re-ask" in a real workflow. Builds at least one production pattern: study-guide-with-fallback, low-confidence-answer-retry, or multi-step research synthesis.

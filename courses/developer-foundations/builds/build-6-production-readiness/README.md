@@ -11,6 +11,18 @@
 | **Prerequisite** | [Build 5 — Knowledge graph & data augmentation agents](../build-5-knowledge-graph/) |
 | **Estimated effort** | 8–12 hours focused |
 
+## Start here
+
+Work through the three course-material files for this Build in order:
+
+1. **[lesson.md](lesson.md)** — concepts, ARAG patterns, why this Build matters. Read first.
+2. **[walkthrough.md](walkthrough.md)** — step-by-step build instructions with code and verification checklist.
+3. **[quiz.md](quiz.md)** — 8 MC + 1 short answer; pass = 7/8 + credible short answer.
+
+The rest of this README is a quick-reference summary. The full content lives in the three files above.
+
+---
+
 ## What the partner does
 
 Configures data residency (EU or USA), wires BYO-LLM routing across Azure OpenAI / Google Vertex / AWS Bedrock, observes the default 2400 req/min rate limit and designs around it, hardens authentication, instruments observability, and stress-tests the workload.

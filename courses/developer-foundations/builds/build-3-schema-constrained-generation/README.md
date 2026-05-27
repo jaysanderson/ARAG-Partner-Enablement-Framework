@@ -13,6 +13,18 @@
 | **Prerequisite** | [Build 2 — Multi-surface conversational](../build-2-multi-surface-conversational/) |
 | **Estimated effort** | 10–14 hours focused |
 
+## Start here
+
+Work through the three course-material files for this Build in order:
+
+1. **[lesson.md](lesson.md)** — concepts, ARAG patterns, why this Build matters. Read first.
+2. **[walkthrough.md](walkthrough.md)** — step-by-step build instructions with code and verification checklist.
+3. **[quiz.md](quiz.md)** — 8 MC + 1 short answer; pass = 7/8 + credible short answer.
+
+The rest of this README is a quick-reference summary. The full content lives in the three files above.
+
+---
+
 ## What the partner does
 
 Designs and ships three `askForJson` workflows against the partner's own KB: a follow-up question generator, a dynamic FAQ generator, and a domain taxonomy generator. Learns to handle the strict-mode `additionalProperties:false` requirement, the three response-shape fallbacks, and the "schema permissive, code strict" pattern (mixed-type schemas with client-side validation).

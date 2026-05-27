@@ -153,9 +153,35 @@ Teach partners to start with system-only, escalate to user-template when retriev
 
 ---
 
-## 5. Course-level certification
+## 5. Course progression and content
 
-Pass all seven Builds (0–6) + a Build 7 capstone deployment and recorded demo to earn **Developer Foundations Practitioner**.
+Each Build (0–6) ships with three files inside its folder:
+
+| File | Purpose |
+|---|---|
+| `lesson.md` | Educational content — concepts, ARAG-specific patterns, common pitfalls, what you'll build. Read first. |
+| `walkthrough.md` | Step-by-step build instructions with code snippets, commands, verification checklist. Execute second. |
+| `quiz.md` | 8 multiple-choice + 1 short-answer quiz. Take after the walkthrough. Pass = 7/8 + credible short answer. |
+
+After all seven Build quizzes are passed, sit the **[final exam](final-exam.md)** — 40 multiple-choice + 5 short-answer, open-book, pass = 32/40 MC + 3/5 short answer. The final exam is the gate before the Build 7 capstone.
+
+| Stage | Materials | Required |
+|---|---|---|
+| Build 0 — Hello ARAG | [lesson](builds/build-0-hello-arag/lesson.md) · [walkthrough](builds/build-0-hello-arag/walkthrough.md) · [quiz](builds/build-0-hello-arag/quiz.md) | ✓ |
+| Build 1 — Grounded search & widgets | [lesson](builds/build-1-grounded-search-widgets/lesson.md) · [walkthrough](builds/build-1-grounded-search-widgets/walkthrough.md) · [quiz](builds/build-1-grounded-search-widgets/quiz.md) | ✓ |
+| Build 2 — Multi-surface conversational | [lesson](builds/build-2-multi-surface-conversational/lesson.md) · [walkthrough](builds/build-2-multi-surface-conversational/walkthrough.md) · [quiz](builds/build-2-multi-surface-conversational/quiz.md) | ✓ |
+| Build 3 — Schema-constrained generation | [lesson](builds/build-3-schema-constrained-generation/lesson.md) · [walkthrough](builds/build-3-schema-constrained-generation/walkthrough.md) · [quiz](builds/build-3-schema-constrained-generation/quiz.md) | ✓ |
+| Build 4 — Composite RAG | [lesson](builds/build-4-composite-rag/lesson.md) · [walkthrough](builds/build-4-composite-rag/walkthrough.md) · [quiz](builds/build-4-composite-rag/quiz.md) | ✓ |
+| Build 5 — Knowledge graph | [lesson](builds/build-5-knowledge-graph/lesson.md) · [walkthrough](builds/build-5-knowledge-graph/walkthrough.md) · [quiz](builds/build-5-knowledge-graph/quiz.md) | ✓ |
+| Build 6 — Production readiness | [lesson](builds/build-6-production-readiness/lesson.md) · [walkthrough](builds/build-6-production-readiness/walkthrough.md) · [quiz](builds/build-6-production-readiness/quiz.md) | ✓ |
+| **Final exam** | [final-exam.md](final-exam.md) | **✓ — gate before Build 7** |
+| Build 7 — Capstone | [Atlas Operations](builds/build-7-capstone/atlas-operations/) or [Aurora Concierge](builds/build-7-capstone/aurora-concierge/) | ✓ |
+
+---
+
+## 6. Course-level certification
+
+Pass all seven Builds (0–6) + the final exam + a Build 7 capstone deployment and recorded demo to earn **Developer Foundations Practitioner**.
 
 The cert is awarded per individual, valid 12 months, and is the prerequisite for the Advanced Extraction & Retrieval Strategies course. Two of the three track-specific cert stacks defined in the umbrella framework's Part IV depend on this cert as their foundation:
 
@@ -167,18 +193,19 @@ A partner organisation cannot reach Authorized tier without at least one Develop
 
 ---
 
-## 6. Assessment gates
+## 7. Assessment gates
 
 | Gate | Format | Reviewer |
 |---|---|---|
-| Written assessment | Open-book, 60 questions drawn from the Aware/Should/Must matrix in umbrella framework Part II | Auto-graded |
-| Build pass | Per-Build rubric — recorded demo or live workshop submission | Progress Solution lead |
+| Per-Build quiz | 8 MC + 1 short answer per Build. Pass = 7/8 + credible short answer | Auto-graded MC + Progress Solution lead grades short answer |
+| Per-Build walkthrough deliverable | The asset the Build's walkthrough specifies (recording, playbook, demo, dashboard, etc.) | Progress Solution lead |
+| **Final exam** | **40 MC + 5 short answer, open-book. Pass = 32/40 MC (80%) + 3/5 short answer. Must pass before Build 7.** | **Progress Solution lead** |
 | Capstone | 25-minute end-to-end recorded demo of Build 7 against the partner's own re-skin | Progress-led review board |
 | Honesty | Submitted demos shown to have been built by Progress SEs or subcontractors void the cert and bar the individual for 90 days | Programme integrity reviewer |
 
 ---
 
-## 7. Reading list
+## 8. Reading list
 
 In order:
 
@@ -193,7 +220,7 @@ In order:
 
 ---
 
-## 8. What comes next
+## 9. What comes next
 
 After Developer Foundations Practitioner, the natural next course is **Advanced Extraction & Retrieval Strategies** (`../advanced-extraction-and-retrieval-strategies/README.md`). The Advanced course goes deeper on retrieval quality, chunking, hybrid retrieval tuning, custom labelsets, custom field engineering, data-augmentation agent design at depth, multimodal extraction, and production-grade tuning. It's prerequisite for the Solution-Specialist and Deliver-Specialist cert tiers.
 
