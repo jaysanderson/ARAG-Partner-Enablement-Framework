@@ -6,7 +6,7 @@
 > **Prerequisites:** Developer Foundations Practitioner (current cert)
 > **Duration:** 6–8 weeks part-time per individual; 4 weeks at full focus
 > **Status:** Shipped (curriculum + rubrics). Some named assets still on the asset library backlog — see §5.
-> **Companion docs:** `../README.md` (umbrella), `Developer-Foundations.md` (prerequisite course)
+> **Companion docs:** `../../README.md` (umbrella), `../developer-foundations/README.md` (prerequisite course)
 
 ---
 
@@ -103,7 +103,7 @@ Several Builds reference ARAKS research papers (RP-001 through RP-010) which liv
 | **What the partner does** | Designs a typed entity/relation schema for a partner-chosen vertical (or partner-supplied customer corpus). 8–15 entity types per schema; 8–15 relation types. Configures and deploys the data-augmentation agent. Runs extraction against a real corpus. Hand-labels a 100-example sample and measures the agent's precision per entity type and overall coverage rate. Iterates the schema and the extraction prompts. Documents a schema-evolution plan (how to add a new entity type without re-extracting everything). |
 | **Pass rubric** | (1) Schema documented (entity types with definitions, relation types with semantics, edge cases). (2) Agent deployed and running against the corpus. (3) Entity coverage > 80% on the hand-labelled sample. (4) False-positive rate < 10%. (5) Observability dashboard showing per-type metrics. (6) Schema-evolution plan documented. (7) Recorded demo answering a customer question that *cannot* be answered by single-shot retrieval. |
 | **Asset delivered** | Agent design template + 10 worked vertical schemas (legal, pharma, financial services, healthcare, public sector, retail, media, manufacturing, education, energy). |
-| **Reference reading** | Sample ARAG App `src/lib/graphApi.ts` and `src/lib/graphConstants.ts`. The Atlas Operations capstone brief (`../Capstone-Example-Atlas-Operations.md` §5.4) and Aurora Concierge capstone brief (`../Capstone-Example-Aurora-Concierge.md` §5.4) have two worked vertical schemas already. ARAKS RP-008 (Knowledge Graph RAG — 41% factual error reduction vs dense retrieval in structured-domain applications). |
+| **Reference reading** | Sample ARAG App `src/lib/graphApi.ts` and `src/lib/graphConstants.ts`. The Atlas Operations capstone brief (`../developer-foundations/builds/build-7-capstone/atlas-operations/README.md` §5.4) and Aurora Concierge capstone brief (`../developer-foundations/builds/build-7-capstone/aurora-concierge/README.md` §5.4) have two worked vertical schemas already. ARAKS RP-008 (Knowledge Graph RAG — 41% factual error reduction vs dense retrieval in structured-domain applications). |
 
 ### Build 7 — Multimodal Extraction
 
@@ -125,7 +125,7 @@ Several Builds reference ARAKS research papers (RP-001 through RP-010) which liv
 | **What the partner does** | Implements three composite-RAG recipes in a single test harness: (1) Retry-on-low-citations — `/ask` first; if citation count or confidence below threshold, fire `/find` for more context, then re-ask. (2) Multi-pass synthesis — initial `/ask`, extract entities/topics from the answer, traverse the graph for related concepts, re-ask with augmented context. This is the Aurora Concierge abandoned-cart pattern. (3) Retrieve-then-rerank — `/find` returns N candidates; a smaller LLM or scoring function reranks; pass top-K back to `/ask`. A/B against single-shot for 20 hard queries selected from the Build 1 low-scoring tail. Documents failure modes (timeout cascades, infinite loops, citation drift) and the guards for each. Documents cost analysis (composite RAG is 2–4× the LLM token cost of single-shot; quantify when the lift justifies it). |
 | **Pass rubric** | (1) All three recipes deployed and runnable. (2) A/B against single-shot on 20 hard queries with measured lift on at least 2 of 3 recipes. (3) Failure-mode handling documented and tested. (4) Cost analysis per recipe (LLM tokens, end-user latency, retrieval call volume). (5) Recorded explanation of when each recipe is appropriate vs when single-shot is enough. (6) Where the boundary sits between "augmenting retrieval" and "running a true agent" defined clearly. |
 | **Asset delivered** | Agentic-patterns cookbook + composite-flow observability template. |
-| **Reference reading** | Sample ARAG App `src/components/certification/ExamStudyPanel.tsx:35-115` (the cleanest live example of retry-on-low-citations). The Aurora Concierge capstone's `/abandoned-cart` pipeline (`../Capstone-Example-Aurora-Concierge.md` §5.5) is the multi-pass synthesis blueprint. ARAKS RP-007 (Agentic RAG Patterns — multi-step reasoning, tool-use, failure-mode taxonomy). |
+| **Reference reading** | Sample ARAG App `src/components/certification/ExamStudyPanel.tsx:35-115` (the cleanest live example of retry-on-low-citations). The Aurora Concierge capstone's `/abandoned-cart` pipeline (`../developer-foundations/builds/build-7-capstone/aurora-concierge/README.md` §5.5) is the multi-pass synthesis blueprint. ARAKS RP-007 (Agentic RAG Patterns — multi-step reasoning, tool-use, failure-mode taxonomy). |
 
 ### Build 9 — Capstone: Production-Grade Tuning Engagement
 
@@ -219,8 +219,8 @@ The Build 9 review-board defence is non-trivial. Plan for it as a half-day commi
 
 Required pre-reading (before Build 1):
 
-1. Umbrella framework `../README.md` — Parts I, II, IV.
-2. `Developer-Foundations.md` — the prerequisite course in full.
+1. Umbrella framework `../../README.md` — Parts I, II, IV.
+2. `../developer-foundations/README.md` — the prerequisite course in full.
 3. Sample ARAG App `README.md` and `src/lib/ragApi.ts` (revisit, not first-read).
 4. ARAKS RP-002 (Evaluation Methods) — sets up Build 1.
 

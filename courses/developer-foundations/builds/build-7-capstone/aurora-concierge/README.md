@@ -1,7 +1,7 @@
 # Capstone Example — Aurora Concierge (Customer Experience)
 
 > **Status:** Brief. Build not started.
-> **Role in the programme:** Build 7 capstone, **Variant B** of two. The other variant — `Capstone-Example-Atlas-Operations.md` — is the Enterprise / Internal Operations variant. Partners pick one based on their book of business and ship the second only when they've expanded into the other segment.
+> **Role in the programme:** Build 7 capstone, **Variant B** of two. The other variant — `../atlas-operations/README.md` — is the Enterprise / Internal Operations variant. Partners pick one based on their book of business and ship the second only when they've expanded into the other segment.
 > **Owner:** Jay Sanderson (programme); Progress Solution lead (build).
 > **Target ship:** End of 90-day rollout window (Day 90), in parallel with the Enterprise variant where partner bandwidth allows.
 > **When to pick this variant:** When the partner's customers are CMOs, Heads of Digital, Chief Customer Officers, retail/D2C/B2C operators, content businesses, or anyone whose AI budget sits inside the customer-facing P&L rather than IT.

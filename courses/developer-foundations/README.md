@@ -6,7 +6,7 @@
 > **Prerequisites:** None. This is the entry point.
 > **Duration:** 6–8 weeks part-time per individual; 4 weeks at full focus
 > **Status:** Shipped (curriculum + rubrics). Some named assets still on the asset library backlog — see §4.
-> **Companion docs:** `../README.md` (umbrella framework), `../Capstone-Example-Atlas-Operations.md`, `../Capstone-Example-Aurora-Concierge.md`
+> **Companion docs:** `../../README.md` (umbrella framework), `builds/build-7-capstone/atlas-operations/README.md`, `builds/build-7-capstone/aurora-concierge/README.md`
 
 ---
 
@@ -124,8 +124,8 @@ The capstone ships with two worked examples. The partner picks the one that matc
 
 | Variant | Buyer | Persona corpus | Killer moment | Brief |
 |---|---|---|---|---|
-| **Enterprise / Operations** | CTO, CIO, Chief Data Officer | Atlas Global Industries (industrial manufacturer, 5 internal KBs) | Composite-RAG incident root cause + cross-functional typed graph | `../Capstone-Example-Atlas-Operations.md` |
-| **Customer Experience** | CMO, Head of Digital, Chief Customer Officer | Aurora Outfitters (D2C outdoor retailer, 5 customer-facing KBs) | Two-voice floating chat + content-engineered CTAs + abandoned-cart composite RAG | `../Capstone-Example-Aurora-Concierge.md` |
+| **Enterprise / Operations** | CTO, CIO, Chief Data Officer | Atlas Global Industries (industrial manufacturer, single KB + business-unit labelsets) | Composite-RAG incident root cause + cross-functional typed graph | `builds/build-7-capstone/atlas-operations/README.md` |
+| **Customer Experience** | CMO, Head of Digital, Chief Customer Officer | Aurora Outfitters (D2C outdoor retailer, single KB + content-type labelsets) | Two-voice floating chat + content-engineered CTAs + abandoned-cart composite RAG | `builds/build-7-capstone/aurora-concierge/README.md` |
 
 | Field | Value (applies to both variants) |
 |---|---|
@@ -182,11 +182,11 @@ A partner organisation cannot reach Authorized tier without at least one Develop
 
 In order:
 
-1. Umbrella framework — `../README.md` — Parts I, II, IV, VI especially.
+1. Umbrella framework — `../../README.md` — Parts I, II, IV, VI especially.
 2. `Sample-ARAG-App/README.md` — the technical reference application.
 3. `Sample-ARAG-App/src/lib/ragApi.ts` (1,661 lines) — the canonical ARAG client wrapper.
 4. `Sample-ARAG-App/src/lib/graphApi.ts` (243 lines) — the graph client surface.
-5. `../Capstone-Example-Atlas-Operations.md` *or* `../Capstone-Example-Aurora-Concierge.md` — depending on which Build 7 variant the partner picks.
+5. `builds/build-7-capstone/atlas-operations/README.md` *or* `builds/build-7-capstone/aurora-concierge/README.md` — depending on which Build 7 variant the partner picks.
 6. `Sample-ARAG-App/src/pages/ExamPage.tsx` — six distinct generation patterns in one file. Canonical Tier 3 reference.
 7. `Sample-ARAG-App/src/components/chat/FloatingChat.tsx` — canonical Tier 2 reference.
 8. `Sample-ARAG-App/src/pages/KnowledgeDetailPage.tsx` — canonical Tier 4 reference.
@@ -195,6 +195,6 @@ In order:
 
 ## 8. What comes next
 
-After Developer Foundations Practitioner, the natural next course is **Advanced Extraction & Retrieval Strategies** (`Advanced-Extraction-and-Retrieval-Strategies.md`). The Advanced course goes deeper on retrieval quality, chunking, hybrid retrieval tuning, custom labelsets, custom field engineering, data-augmentation agent design at depth, multimodal extraction, and production-grade tuning. It's prerequisite for the Solution-Specialist and Deliver-Specialist cert tiers.
+After Developer Foundations Practitioner, the natural next course is **Advanced Extraction & Retrieval Strategies** (`../advanced-extraction-and-retrieval-strategies/README.md`). The Advanced course goes deeper on retrieval quality, chunking, hybrid retrieval tuning, custom labelsets, custom field engineering, data-augmentation agent design at depth, multimodal extraction, and production-grade tuning. It's prerequisite for the Solution-Specialist and Deliver-Specialist cert tiers.
 
 Other planned courses (Sales Foundations, Solution Architecture Mastery, Production Operations & SLOs) extend the partner's competency along sales, architecture, and operations dimensions respectively.

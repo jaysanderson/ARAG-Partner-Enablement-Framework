@@ -68,7 +68,7 @@ This is the spine of certification. The matrix below shows the bar each track mu
 | **Tier 2 — multi-surface conversational intelligence** | Should | Must | Must |
 | **Tier 3 — structured AI workflows (askForJson)** | Aware | Must | Must |
 | **Tier 4 — agentic & knowledge-graph platform** | Aware | Must | Must |
-| **Prompt engineering patterns** (`courses/Developer-Foundations.md` §4) | Aware | Must | Must |
+| **Prompt engineering patterns** (`courses/developer-foundations/README.md` §4) | Aware | Must | Must |
 | **Gating & monetisation patterns** | Should | Must | Should |
 | **Field engineering as a service** | Aware | Must | Must |
 | **Composite RAG / agentic patterns** | Aware | Must | Must |
@@ -104,8 +104,8 @@ The framework's competency ladder is delivered through courses. Each course bund
 
 | Course | Status | Awarded cert | Doc |
 |---|---|---|---|
-| **Developer Foundations** | Shipped | Developer Foundations Practitioner | `courses/Developer-Foundations.md` |
-| **Advanced Extraction & Retrieval Strategies** | Shipped | AE&RS Specialist | `courses/Advanced-Extraction-and-Retrieval-Strategies.md` |
+| **Developer Foundations** | Shipped | Developer Foundations Practitioner | `courses/developer-foundations/README.md` |
+| **Advanced Extraction & Retrieval Strategies** | Shipped | AE&RS Specialist | `courses/advanced-extraction-and-retrieval-strategies/README.md` |
 | **Sales Foundations** | Planned (target Q3) | Sales Foundations Practitioner | TBD |
 | **Solution Architecture Mastery** | Planned (target Q4) | Solution Architect Specialist | TBD |
 | **Production Operations & SLOs** | Planned (target Q4) | Operations Specialist | TBD |
@@ -205,8 +205,8 @@ Every asset has a name, an owner, a version, and a corresponding build. No orpha
 |---|---|---|---|
 | Sample ARAG App reference repo | Cross-course | GTM | **Shipped** |
 | Umbrella framework (this doc) | All courses | GTM | **Shipped** |
-| Developer Foundations course doc | Foundations | GTM | **Shipped** (`courses/Developer-Foundations.md`) |
-| Advanced Extraction & Retrieval Strategies course doc | Advanced | GTM | **Shipped** (`courses/Advanced-Extraction-and-Retrieval-Strategies.md`) |
+| Developer Foundations course doc | Foundations | GTM | **Shipped** (`courses/developer-foundations/README.md`) |
+| Advanced Extraction & Retrieval Strategies course doc | Advanced | GTM | **Shipped** (`courses/advanced-extraction-and-retrieval-strategies/README.md`) |
 | ARAG primitives slide deck | Foundations Build 0 | GTM | TODO |
 | Widget showcase + branded snippets | Foundations Build 1 | Solution | Stub |
 | "Three voices, one KB" demo script | Foundations Build 2 | GTM | TODO |
@@ -214,8 +214,8 @@ Every asset has a name, an owner, a version, and a corresponding build. No orpha
 | Composite-RAG cookbook | Foundations Build 4 | Solution | TODO |
 | Graph schema design template (12 verticals) | Foundations Build 5 / Advanced Build 6 | Solution | TODO |
 | Production-readiness checklist + IaC snippets | Foundations Build 6 | Solution | TODO |
-| Capstone example — Atlas Operations (Enterprise) | Foundations Build 7 | GTM | **Shipped** (`Capstone-Example-Atlas-Operations.md`) |
-| Capstone example — Aurora Concierge (CX) | Foundations Build 7 | GTM | **Shipped** (`Capstone-Example-Aurora-Concierge.md`) |
+| Capstone example — Atlas Operations (Enterprise) | Foundations Build 7 | GTM | **Shipped** (`courses/developer-foundations/builds/build-7-capstone/atlas-operations/README.md`) |
+| Capstone example — Aurora Concierge (CX) | Foundations Build 7 | GTM | **Shipped** (`courses/developer-foundations/builds/build-7-capstone/aurora-concierge/README.md`) |
 | Capstone reference build (one example first) | Foundations Build 7 | GTM + Solution | **Top-priority** |
 | Eval-harness template + golden-set template | Advanced Build 1 | Solution | TODO |
 | Chunking spec template + decision tree | Advanced Build 2 | Solution | TODO |

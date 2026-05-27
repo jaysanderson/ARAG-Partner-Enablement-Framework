@@ -4,7 +4,7 @@
 > **Role in the programme:** Build 7 capstone + flagship reference + strategic-account sales-room closer.
 > **Owner:** Jay Sanderson (programme); Progress Solution lead (build).
 > **Target ship:** End of 90-day rollout window (Day 90).
-> **Companion docs:** `README.md` in this repo is the enablement framework; this brief is the actionable scope for the build.
+> **Companion docs:** [`../../../../../README.md`](../../../../../README.md) (umbrella framework), [`../README.md`](../README.md) (Build 7 overview + variant chooser), [`../aurora-concierge/README.md`](../aurora-concierge/README.md) (the other variant).
 
 ---
 
