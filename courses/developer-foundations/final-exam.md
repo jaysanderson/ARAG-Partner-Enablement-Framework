@@ -2,7 +2,7 @@
 
 > **Format.** 40 multiple-choice + 5 short answer. Open-book. Pass = **32/40 MC (80%) plus 3/5 short answer**.
 >
-> **Gate.** This exam must be passed *before* you may submit your Build 11 (Capstone Prep) plan for review-board sign-off, and before you may start the Build 12 capstone. Each Build's quick quiz was practice; this is the real assessment.
+> **Gate.** This exam must be passed *before* you may submit your Build 12 (Capstone Prep) plan for review-board sign-off, and before you may start the Build 13 capstone. Each Build's quick quiz was practice; this is the real assessment.
 >
 > **Time.** Plan ~90 minutes of focused work. No time limit — accuracy over speed.
 >
@@ -55,7 +55,7 @@ D. Production-grade agentic platforms.
 A. Build 2 (Drop-in Widgets).
 B. Build 3 (Conversational Surfaces).
 C. **Build 5 (Structured Outputs / `answer_json_schema`).**
-D. Build 7 (Knowledge Graph 101).
+D. Build 8 (Knowledge Graph 101).
 
 ---
 
@@ -68,20 +68,20 @@ D. **Tier 4 (Agentic & Knowledge-Graph Platform).**
 
 ---
 
-### 7. The capstone (Build 12) builds against:
+### 7. The capstone (Build 13) builds against:
 
 A. A starter template Progress provides.
-B. **8 master prompts the partner writes in Build 11, executed in sequence against an AI coding assistant.**
+B. **8 master prompts the partner writes in Build 12, executed in sequence against an AI coding assistant.**
 C. A fixed React component library Progress maintains.
 D. A new ARAG SDK Progress releases for the capstone.
 
 ---
 
-### 8. Before starting the Build 12 capstone, the gate is:
+### 8. Before starting the Build 13 capstone, the gate is:
 
 A. Approval from the customer's CTO.
 B. Six months of partner tenure.
-C. **Passing this final exam + a review-board sign-off on the Build 11 plan (variant + master prompts + demo arc).**
+C. **Passing this final exam + a review-board sign-off on the Build 12 plan (variant + master prompts + demo arc).**
 D. A Tier 1 customer signed.
 
 ---
@@ -437,8 +437,8 @@ Each answer must be 3–5 sentences. Pass = 3 of 5 with credible reasoning.
 ## What happens when you pass
 
 1. The Progress Solution lead countersigns your exam result.
-2. You submit your Build 11 plan (variant choice + master prompts + demo arc) to the review board.
-3. Review board signs off → you start [Build 12 — The Capstone](builds/build-12-capstone/).
+2. You submit your Build 12 plan (variant choice + master prompts + demo arc) to the review board.
+3. Review board signs off → you start [Build 13 — The Capstone](builds/build-13-capstone/).
 4. Your 12-month cert clock starts; **Developer Foundations Practitioner** is awarded on capstone delivery + review-board defence pass.
 5. Your partner organisation becomes eligible for Authorized tier.
 

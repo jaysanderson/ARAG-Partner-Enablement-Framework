@@ -25,12 +25,6 @@ Designs and deploys per-content-type chunking strategies. Compares fixed-size, s
 
 Chunking spec template + per-content-type decision tree.
 
-## Reference reading
-
-- Lives at.
-
----
-
 ## Workspace
 
 This folder is the working space for everything supporting Build 2. Drop materials here as they are built:

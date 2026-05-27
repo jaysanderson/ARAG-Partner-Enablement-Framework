@@ -32,9 +32,8 @@ Agent design template + 10 worked vertical schemas (legal, pharma, financial ser
 
 ## Reference reading
 
-- [Atlas Operations capstone](../../../developer-foundations/builds/build-7-capstone/atlas-operations/) §5.4 — worked schema for industrial enterprise.
-- [Aurora Concierge capstone](../../../developer-foundations/builds/build-7-capstone/aurora-concierge/) §5.4 — worked schema for D2C retail.
--
+- [Atlas Operations capstone](../../../developer-foundations/builds/build-13-capstone/atlas-operations/) §5.4 — worked schema for industrial enterprise.
+- [Aurora Concierge capstone](../../../developer-foundations/builds/build-13-capstone/aurora-concierge/) §5.4 — worked schema for D2C retail.
 
 ---
 

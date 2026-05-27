@@ -29,12 +29,6 @@ Ingests a video corpus (10+ videos) and a scanned-PDF corpus (10+ documents). Ve
 
 Multimodal extraction recipe book (per-content-type playbook covering ingest, verification, retrieval, and deep-link UX).
 
-## Reference reading
-
--
-
----
-
 ## Workspace
 
 This folder is the working space for everything supporting Build 7. Drop materials here as they are built:

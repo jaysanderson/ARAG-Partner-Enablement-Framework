@@ -5,7 +5,7 @@
 > **Tracks served:** Solution (primary), Deliver (primary), Sell (secondary — Builds 0–5 only)
 > **Prerequisites:** None. This is the on-ramp.
 > **Total time:** 25–40 hours per individual, spread over 4–8 weeks
-> **Format:** 12 short Builds covering the platform's full breadth + 1 capstone
+> **Format:** 13 short Builds covering the platform's full breadth + 1 capstone
 > **Status:** Shipped (curriculum, rubrics, video scripts). Per-build assets still on the backlog — see `assets/README.md`.
 
 ---
@@ -18,7 +18,7 @@ Developer Foundations is the **panoramic tour** of Progress Agentic RAG. By the 
 - Recognise which primitive solves which customer problem.
 - Direct an AI coding assistant ("vibe code") to build any of the patterns you've seen.
 - Verify the output is correct and tier the customer engagement appropriately.
-- Plan and ship the Build 12 capstone — a multi-tier ARAG application that closes Fortune 500 deals.
+- Plan and ship the Build 13 capstone — a multi-tier ARAG application that closes Fortune 500 deals.
 
 This course is intentionally **breadth-first, not depth-first**. Each Build introduces one capability area, gives you the API surface, shows you what to ask an AI for, and walks you through verifying the output. The Advanced course (`../advanced-extraction-and-retrieval-strategies/`) is where partners go deep on retrieval quality, evaluation, and tuning.
 
@@ -55,16 +55,17 @@ The video version of each lesson is the canonical learning surface — most part
 | **3** | [Conversational Surfaces](builds/build-3-conversational-surfaces/) | Vibe-coded chat UI with two prompt modes (prospect / member) | 3 hrs | Tier 2 | 12 min |
 | **4** | [Multilingual & Voice Switching](builds/build-4-multilingual-and-voice/) | Query prefixes for language, persona, resource scoping | 1.5 hrs | Tier 2 | 8 min |
 | **5** | [Structured Outputs](builds/build-5-structured-outputs/) | `answer_json_schema` workflows: FAQ, taxonomy, comparison | 3 hrs | Tier 3 | 12 min |
-| **6** | [Smart Filters & Labelsets](builds/build-6-smart-filters/) | Content-type + label-based filtering UI | 2 hrs | Tier 1–2 | 8 min |
-| **7** | [Knowledge Graph 101](builds/build-7-knowledge-graph/) | Typed graph navigation; recognising graph-shaped problems | 3 hrs | Tier 4 | 12 min |
-| **8** | [Field Engineering](builds/build-8-field-engineering/) | Custom fields (`callToAction`, `searchResultDisplay`) drive AI behaviour | 2 hrs | Tier 2–3 | 10 min |
-| **9** | [Composite RAG](builds/build-9-composite-rag/) | Chain calls; retry-on-low-confidence flow | 2.5 hrs | Tier 3–4 | 10 min |
-| **10** | [Production Readiness](builds/build-10-production-readiness/) | Residency, BYO-LLM, rate limits, observability — CTO conversations | 2 hrs | Tier 4 | 10 min |
-| **11** | [Capstone Prep](builds/build-11-capstone-prep/) | Plan and prompt the capstone vibe-code session | 2 hrs | All | 15 min |
+| **6** | [Data-Augmentation Agents](builds/build-6-data-augmentation-agents/) | Generator, Labeller, Graph agents — the three ingest-time enrichment patterns | 2 hrs | Tier 4 prep | 10 min |
+| **7** | [Smart Filters & Labelsets](builds/build-7-smart-filters/) | Content-type + label-based filtering UI (powered by Build 6's labeller) | 2 hrs | Tier 1–2 | 8 min |
+| **8** | [Knowledge Graph 101](builds/build-8-knowledge-graph/) | Typed graph navigation (powered by Build 6's graph agent) | 3 hrs | Tier 4 | 12 min |
+| **9** | [Field Engineering](builds/build-9-field-engineering/) | Custom fields (`callToAction`, `searchResultDisplay`) drive AI behaviour | 2 hrs | Tier 2–3 | 10 min |
+| **10** | [Composite RAG](builds/build-10-composite-rag/) | Chain calls; retry-on-low-confidence flow | 2.5 hrs | Tier 3–4 | 10 min |
+| **11** | [Production Readiness](builds/build-11-production-readiness/) | Residency, BYO-LLM, rate limits, observability — CTO conversations | 2 hrs | Tier 4 | 10 min |
+| **12** | [Capstone Prep](builds/build-12-capstone-prep/) | Plan and prompt the capstone vibe-code session | 2 hrs | All | 15 min |
 | **— Final exam —** | [final-exam.md](final-exam.md) | 40 MC + 5 SA, open-book, pass = 32/40 + 3/5 | 1.5 hrs | — | — |
-| **12** | [The Capstone](builds/build-12-capstone/) | Ship a wow build: [Atlas Operations](builds/build-12-capstone/atlas-operations/) (Enterprise) or [Aurora Concierge](builds/build-12-capstone/aurora-concierge/) (CX) | 4–8 wks | All | — |
+| **13** | [The Capstone](builds/build-13-capstone/) | Ship a wow build: [Atlas Operations](builds/build-13-capstone/atlas-operations/) (Enterprise) or [Aurora Concierge](builds/build-13-capstone/aurora-concierge/) (CX) | 4–8 wks | All | — |
 
-Total course effort: ~25–40 hours of focused work for Builds 0–11, plus the 4–8 week capstone.
+Total course effort: ~27–42 hours of focused work for Builds 0–12, plus the 4–8 week capstone.
 
 ## 4. Learning outcomes
 
@@ -83,10 +84,10 @@ A Developer Foundations Practitioner can, without supervision:
 
 | Stage | Format | Pass criterion |
 |---|---|---|
-| Per-Build quiz (×12) | 5–7 MC + 1 SA | 5/7 MC + credible SA |
-| Walkthrough deliverable (×12) | Recording, prompt log, working code | Reviewer sign-off |
+| Per-Build quiz (×13) | 5–7 MC + 1 SA | 5/7 MC + credible SA |
+| Walkthrough deliverable (×13) | Recording, prompt log, working code | Reviewer sign-off |
 | Final exam | 40 MC + 5 SA | 32/40 MC + 3/5 SA |
-| Capstone (Build 12) | 25-minute end-to-end demo | Progress-led review board |
+| Capstone (Build 13) | 25-minute end-to-end demo | Progress-led review board |
 | Honesty | All deliverables must be the partner's own work | Audit on demand |
 
 Pass everything → **Developer Foundations Practitioner** cert (12-month validity).
@@ -95,7 +96,7 @@ Pass everything → **Developer Foundations Practitioner** cert (12-month validi
 
 - **Solution-Foundations** = Developer Foundations Practitioner. Required for the Solution-1+ cert tier in the umbrella framework.
 - **Deliver-Foundations** = Developer Foundations Practitioner.
-- **Sell-Foundations** = Builds 0–5 walkthroughs + the Sales Foundations course (planned). Builds 6–11 are Aware-level for Sell.
+- **Sell-Foundations** = Builds 0–5 walkthroughs + the Sales Foundations course (planned). Builds 6–12 are Aware-level for Sell.
 
 A partner organisation cannot reach Authorized tier without at least one Developer Foundations Practitioner on staff.
 

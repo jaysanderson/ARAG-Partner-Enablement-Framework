@@ -27,12 +27,6 @@ A/B tests dense-only vs keyword-only vs `features:['keyword','semantic']` hybrid
 
 Hybrid-retrieval decision matrix template + A/B test runner extending Build 1's harness.
 
-## Reference reading
-
--
-
----
-
 ## Workspace
 
 This folder is the working space for everything supporting Build 3. Drop materials here as they are built:

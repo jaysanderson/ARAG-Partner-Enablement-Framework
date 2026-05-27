@@ -37,8 +37,7 @@ Agentic-patterns cookbook + composite-flow observability template.
 
 ## Reference reading
 
-- [Aurora Concierge capstone](../../../developer-foundations/builds/build-7-capstone/aurora-concierge/) §5.5 — the multi-pass synthesis blueprint in the abandoned-cart pipeline.
--
+- [Aurora Concierge capstone](../../../developer-foundations/builds/build-13-capstone/aurora-concierge/) §5.5 — the multi-pass synthesis blueprint in the abandoned-cart pipeline.
 
 ---
 

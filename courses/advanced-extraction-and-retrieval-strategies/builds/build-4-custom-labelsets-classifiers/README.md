@@ -27,11 +27,6 @@ Designs and deploys three labelsets against the partner's corpus. Each labelset 
 
 Labelset design template + classifier training guide.
 
-## Reference reading
-
-
----
-
 ## Workspace
 
 This folder is the working space for everything supporting Build 4. Drop materials here as they are built:

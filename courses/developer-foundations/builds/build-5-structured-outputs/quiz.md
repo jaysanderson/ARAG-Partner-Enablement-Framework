@@ -70,7 +70,7 @@ D. "Yes, but only for English content."
 
 1. B • 2. B • 3. B • 4. B • 5. A • 6. C
 
-5+ correct → pass. Move to [Build 6](../build-6-smart-filters/).
+5+ correct → pass. Move to [Build 6](../build-7-smart-filters/).
 
 ## Why these questions matter
 

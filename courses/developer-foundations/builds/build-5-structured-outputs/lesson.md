@@ -194,4 +194,4 @@ Plus the `additionalProperties: false` injector helper + the three-shape fallbac
 
 ## What's next
 
-[Build 6 — Smart Filters & Labelsets](../build-6-smart-filters/) — content-type + label-based filtering for search UIs. Cheap precision lever.
+[Build 6 — Data-Augmentation Agents](../build-6-data-augmentation-agents/) — content-type + label-based filtering for search UIs. Cheap precision lever.

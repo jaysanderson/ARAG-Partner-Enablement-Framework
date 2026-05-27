@@ -9,7 +9,8 @@ This folder is the home for course-wide assets that aren't tied to a single Buil
 | Asset | Type | Status | Lives in |
 |---|---|---|---|
 | Course README | Doc | **Shipped** | `../README.md` |
-|  | External repo | **Shipped** |  |
+| Vibe-coding guide | Doc | **Shipped** | `../vibe-coding-guide.md` |
+| Final exam | Doc | **Shipped** | `../final-exam.md` |
 | ARAG primitives slide deck | Slide deck | TODO | this folder (TBD) |
 | Course-wide rubric checklist | Doc | TODO | this folder |
 | Course slide-master template | Slide deck | TODO | this folder |
@@ -21,14 +22,20 @@ This folder is the home for course-wide assets that aren't tied to a single Buil
 
 Per-build assets are tracked inside each Build folder. Quick links:
 
-- [Build 0 — Hello ARAG](../builds/build-0-hello-arag/) — recording template, sandbox setup
-- [Build 1 — Widgets](../builds/build-1-grounded-search-widgets/) — branded snippet pack, 30-minute playbook
-- [Build 2 — Multi-surface chat](../builds/build-2-multi-surface-conversational/) — "Three voices, one KB" demo script
-- [Build 3 — Schema-constrained generation](../builds/build-3-schema-constrained-generation/) — Agent Workshop notebook **(top-priority)**
-- [Build 4 — Composite RAG](../builds/build-4-composite-rag/) — composite-RAG cookbook
-- [Build 5 — Knowledge graph](../builds/build-5-knowledge-graph/) — graph schema design template (12 verticals)
-- [Build 6 — Production readiness](../builds/build-6-production-readiness/) — checklist + IaC snippets
-- [Build 7 — Capstone](../builds/build-7-capstone/) — Atlas Operations + Aurora Concierge variants **(top-priority)**
+- [Build 0 — Hello ARAG](../builds/build-0-hello-arag/) — sandbox setup, first calls, vibe-coding workflow
+- [Build 1 — The Five Primitives](../builds/build-1-five-primitives/) — Postman collection + primitives-demo CLI
+- [Build 2 — Drop-in Widgets](../builds/build-2-drop-in-widgets/) — branded HTML snippet + 30-minute playbook
+- [Build 3 — Conversational Surfaces](../builds/build-3-conversational-surfaces/) — two-voice chat component + demo script
+- [Build 4 — Multilingual & Voice](../builds/build-4-multilingual-and-voice/) — `buildPrefix.ts` + language switcher
+- [Build 5 — Structured Outputs](../builds/build-5-structured-outputs/) — `askForJson.ts` + 3 workflow generators **(top-priority — Tier 3 unlock)**
+- [Build 6 — Data-Augmentation Agents](../builds/build-6-data-augmentation-agents/) — generator + labeller + graph configs
+- [Build 7 — Smart Filters & Labelsets](../builds/build-7-smart-filters/) — labelset design + filter UI
+- [Build 8 — Knowledge Graph 101](../builds/build-8-knowledge-graph/) — graph viewer + 12-vertical schema templates
+- [Build 9 — Field Engineering](../builds/build-9-field-engineering/) — field-engineering playbook + author training
+- [Build 10 — Composite RAG](../builds/build-10-composite-rag/) — composite-RAG cookbook + comparison page
+- [Build 11 — Production Readiness](../builds/build-11-production-readiness/) — residency statement + rate-limited client + dashboard spec
+- [Build 12 — Capstone Prep](../builds/build-12-capstone-prep/) — variant choice + master prompts + demo arc
+- [Build 13 — Capstone](../builds/build-13-capstone/) — Atlas Operations or Aurora Concierge variants **(top-priority — the wow build)**
 
 ## See also
 

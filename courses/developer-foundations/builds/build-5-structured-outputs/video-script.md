@@ -93,7 +93,7 @@
 
 ## Wrap (11:30 – 12:00)
 
-**ON SCREEN:** End card. *"Build 6 — Smart Filters & Labelsets. Next."*
+**ON SCREEN:** End card. *"Build 6 — Data-Augmentation Agents. Next."*
 
 **VOICEOVER:**
 > Build 5 was the most important Build. Build 6 is the cheapest precision lever — content-type and label-based filtering for any search UI. Eight minutes. See you there.

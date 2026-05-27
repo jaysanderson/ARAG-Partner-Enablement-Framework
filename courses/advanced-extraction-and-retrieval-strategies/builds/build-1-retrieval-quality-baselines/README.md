@@ -28,12 +28,6 @@ Builds a retrieval-quality measurement harness for the partner's KB. Computes pr
 
 Eval-harness template (TypeScript or Python) + golden-set markdown template + scoreboard layout.
 
-## Reference reading
-
-- Lives at.
-
----
-
 ## Workspace
 
 This folder is the working space for everything supporting Build 1. Drop materials here as they are built:

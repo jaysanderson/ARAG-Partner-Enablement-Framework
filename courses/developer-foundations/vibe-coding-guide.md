@@ -126,7 +126,7 @@ The distinction matters: the *structure* of ARAG is yours to design. The *code* 
 
 ## What about production code?
 
-The walkthroughs produce **demo-grade** code — enough to verify behaviour and submit for review. Production code (the capstone, customer engagements) requires additional concerns: auth proxying through your backend, observability, error handling, rate-limit-aware clients, BYO-LLM routing. All covered in Build 10 (Production Readiness).
+The walkthroughs produce **demo-grade** code — enough to verify behaviour and submit for review. Production code (the capstone, customer engagements) requires additional concerns: auth proxying through your backend, observability, error handling, rate-limit-aware clients, BYO-LLM routing. All covered in Build 11 (Production Readiness).
 
 Vibe-coded demo code can be *productionised* by asking the AI to "add error handling, retry logic, and structured logging." But don't put demo-grade code in front of a customer without that polish step.
 

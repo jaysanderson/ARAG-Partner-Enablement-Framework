@@ -144,4 +144,4 @@ Upload to `#build-clinic-submissions`.
 
 ## Next
 
-[Build 6 — Smart Filters & Labelsets](../build-6-smart-filters/) — content-type and label-based filtering. The cheapest precision lever.
+[Build 6 — Data-Augmentation Agents](../build-6-data-augmentation-agents/) — content-type and label-based filtering. The cheapest precision lever.

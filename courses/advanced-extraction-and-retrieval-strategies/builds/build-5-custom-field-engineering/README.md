@@ -29,11 +29,6 @@ Designs and deploys three custom JSON-encoded text fields per resource type, fol
 
 Field-engineering playbook + author training script + A/B test scaffolding.
 
-## Reference reading
-
-
----
-
 ## Workspace
 
 This folder is the working space for everything supporting Build 5. Drop materials here as they are built:

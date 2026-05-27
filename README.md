@@ -214,8 +214,8 @@ Every asset has a name, an owner, a version, and a corresponding build. No orpha
 | Composite-RAG cookbook | Foundations Build 4 | Solution | TODO |
 | Graph schema design template (12 verticals) | Foundations Build 5 / Advanced Build 6 | Solution | TODO |
 | Production-readiness checklist + IaC snippets | Foundations Build 6 | Solution | TODO |
-| Capstone example — Atlas Operations (Enterprise) | Foundations Build 7 | GTM | **Shipped** (`courses/developer-foundations/builds/build-7-capstone/atlas-operations/README.md`) |
-| Capstone example — Aurora Concierge (CX) | Foundations Build 7 | GTM | **Shipped** (`courses/developer-foundations/builds/build-7-capstone/aurora-concierge/README.md`) |
+| Capstone example — Atlas Operations (Enterprise) | Foundations Build 7 | GTM | **Shipped** (`courses/developer-foundations/builds/build-13-capstone/atlas-operations/README.md`) |
+| Capstone example — Aurora Concierge (CX) | Foundations Build 7 | GTM | **Shipped** (`courses/developer-foundations/builds/build-13-capstone/aurora-concierge/README.md`) |
 | Capstone reference build (one example first) | Foundations Build 7 | GTM + Solution | **Top-priority** |
 | Eval-harness template + golden-set template | Advanced Build 1 | Solution | TODO |
 | Chunking spec template + decision tree | Advanced Build 2 | Solution | TODO |

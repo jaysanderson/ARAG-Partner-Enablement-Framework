@@ -10,12 +10,12 @@
 |---|---|
 | **Owning track(s)** | Solution (Must), Deliver (Must) |
 | **Format** | Written tuning report (5–10 pages) + recorded review-board defence |
-| **Prerequisite** | All prior Builds (1–8) of this course + a deployed [Developer Foundations Build 7 capstone](../../../developer-foundations/builds/build-7-capstone/) |
+| **Prerequisite** | All prior Builds (1–8) of this course + a deployed [Developer Foundations Build 7 capstone](../../../developer-foundations/builds/build-13-capstone/) |
 | **Estimated effort** | 20–30 hours focused, plus a half-day review-board defence |
 
 ## What the partner does
 
-Picks one of the two existing capstone deployments from Developer Foundations Build 7 ([Atlas Operations](../../../developer-foundations/builds/build-7-capstone/atlas-operations/) or [Aurora Concierge](../../../developer-foundations/builds/build-7-capstone/aurora-concierge/) — whichever the partner shipped). Instruments it with the Build 1 eval harness against a 30-query golden set. Identifies the three biggest retrieval-quality gaps (with metric citations from Build 1). Proposes three improvements drawn from Builds 2–8: at minimum, one extraction-side change (Build 2 chunking or Build 7 multimodal), one retrieval-quality change (Build 3 hybrid or Build 4 labelsets), and one generation-quality change (Build 5 field engineering or Build 8 composite RAG). Deploys all three changes against the capstone. Re-measures. Writes a 5–10-page tuning report covering: baseline, identified gaps, proposed changes with rationale, deployment notes, measured lift vs Build 1's noise threshold, residual gaps, and a recommendation for ongoing tuning cadence.
+Picks one of the two existing capstone deployments from Developer Foundations Build 7 ([Atlas Operations](../../../developer-foundations/builds/build-13-capstone/atlas-operations/) or [Aurora Concierge](../../../developer-foundations/builds/build-13-capstone/aurora-concierge/) — whichever the partner shipped). Instruments it with the Build 1 eval harness against a 30-query golden set. Identifies the three biggest retrieval-quality gaps (with metric citations from Build 1). Proposes three improvements drawn from Builds 2–8: at minimum, one extraction-side change (Build 2 chunking or Build 7 multimodal), one retrieval-quality change (Build 3 hybrid or Build 4 labelsets), and one generation-quality change (Build 5 field engineering or Build 8 composite RAG). Deploys all three changes against the capstone. Re-measures. Writes a 5–10-page tuning report covering: baseline, identified gaps, proposed changes with rationale, deployment notes, measured lift vs Build 1's noise threshold, residual gaps, and a recommendation for ongoing tuning cadence.
 
 ## Pass rubric
 
@@ -33,8 +33,7 @@ Picks one of the two existing capstone deployments from Developer Foundations Bu
 ## Reference reading
 
 - All prior Builds in this course (1–8).
-- Both [Atlas Operations](../../../developer-foundations/builds/build-7-capstone/atlas-operations/) and [Aurora Concierge](../../../developer-foundations/builds/build-7-capstone/aurora-concierge/) capstones.
--
+- Both [Atlas Operations](../../../developer-foundations/builds/build-13-capstone/atlas-operations/) and [Aurora Concierge](../../../developer-foundations/builds/build-13-capstone/aurora-concierge/) capstones.
 
 ---
 
@@ -54,4 +53,4 @@ This folder is the working space for everything supporting Build 9. Drop materia
 
 - Parent course: [Advanced Extraction & Retrieval Strategies](../../README.md)
 - Previous build: [Build 8 — Composite & agentic retrieval patterns](../build-8-composite-agentic-patterns/)
-- Capstones being tuned: [Atlas Operations](../../../developer-foundations/builds/build-7-capstone/atlas-operations/), [Aurora Concierge](../../../developer-foundations/builds/build-7-capstone/aurora-concierge/)
+- Capstones being tuned: [Atlas Operations](../../../developer-foundations/builds/build-13-capstone/atlas-operations/), [Aurora Concierge](../../../developer-foundations/builds/build-13-capstone/aurora-concierge/)
