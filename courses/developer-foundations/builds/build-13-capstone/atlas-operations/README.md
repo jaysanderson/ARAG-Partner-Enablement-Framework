@@ -1,10 +1,23 @@
 # Capstone Example — Atlas Operations (Enterprise)
 
-> **Status:** Brief. Build not started.
-> **Role in the programme:** Build 7 capstone + flagship reference + strategic-account sales-room closer.
+> **Status:** Brief shipped + reference implementation shipped.
+> **Role in the programme:** Build 13 capstone + flagship reference + strategic-account sales-room closer.
 > **Owner:** Jay Sanderson (programme); Progress Solution lead (build).
 > **Target ship:** End of 90-day rollout window (Day 90).
-> **Companion docs:** [`../../../../../README.md`](../../../../../README.md) (umbrella framework), [`../README.md`](../README.md) (Build 7 overview + variant chooser), [`../aurora-concierge/README.md`](../aurora-concierge/README.md) (the other variant).
+> **Companion docs:** [`../../../../../README.md`](../../../../../README.md) (umbrella framework), [`../README.md`](../README.md) (Build 13 overview + variant chooser), [`../aurora-concierge/README.md`](../aurora-concierge/README.md) (the other variant).
+
+## Reference implementation
+
+The complete reference app is at **[github.com/jaysanderson/Capstone-Atlas-Operations](https://github.com/jaysanderson/Capstone-Atlas-Operations)** — a Vite + React + TypeScript + Tailwind chassis that scores 100% against this brief once provisioned against a populated Nuclia KB. It includes:
+
+- All five demo surfaces + landing + an `/ops` mock observability page.
+- All three Tier-3 workflows (Onboarding-Path, Battle-Card, Compliance-Trace).
+- The Tier-4 composite-RAG flagship (Incident Root Cause).
+- Atlas corpus + anchor JSON + labelset config + graph-extraction-agent spec.
+- Seed and verification scripts.
+- Fly.io deploy config.
+
+See the repo's `README.md` for quick-start and `KB_SETUP.md` for the end-to-end ingest checklist.
 
 ---
 

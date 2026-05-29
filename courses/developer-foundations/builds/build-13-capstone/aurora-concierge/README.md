@@ -1,10 +1,25 @@
 # Capstone Example — Aurora Concierge (Customer Experience)
 
-> **Status:** Brief. Build not started.
-> **Role in the programme:** Build 7 capstone, **Variant B** of two. The other variant — `../atlas-operations/README.md` — is the Enterprise / Internal Operations variant. Partners pick one based on their book of business and ship the second only when they've expanded into the other segment.
+> **Status:** Brief shipped + reference implementation shipped.
+> **Role in the programme:** Build 13 capstone, **Variant B** of two. The other variant — `../atlas-operations/README.md` — is the Enterprise / Internal Operations variant. Partners pick one based on their book of business and ship the second only when they've expanded into the other segment.
 > **Owner:** Jay Sanderson (programme); Progress Solution lead (build).
 > **Target ship:** End of 90-day rollout window (Day 90), in parallel with the Enterprise variant where partner bandwidth allows.
 > **When to pick this variant:** When the partner's customers are CMOs, Heads of Digital, Chief Customer Officers, retail/D2C/B2C operators, content businesses, or anyone whose AI budget sits inside the customer-facing P&L rather than IT.
+
+## Reference implementation
+
+The complete reference app is at **[github.com/jaysanderson/Capstone-Aurora-Concierge](https://github.com/jaysanderson/Capstone-Aurora-Concierge)** — a Vite + React + TypeScript + Tailwind chassis that scores 100% against this brief once provisioned against a populated Nuclia KB. It includes:
+
+- All six demo surfaces with the always-present two-voice floating chat.
+- Multilingual language switcher in the global header.
+- Persona switcher (Sara / Mara) that drives the chat voice + segment prefix.
+- All three Tier-3 workflows (Adventure Plan, Loyalty Personalization, Cross-Sell & Compare).
+- The Tier-4 composite-RAG flagship (Abandoned-Cart Win-Back) with structured Klaviyo-ready output.
+- Aurora corpus + anchor JSON + labelset config + journey-graph-agent spec.
+- Field-engineering script that PATCHes `callToAction`, `searchResultDisplay`, and `videoInfo` onto the 6 hero products and 3 ambassador videos.
+- Fly.io deploy config.
+
+See the repo's `README.md` for quick-start and `KB_SETUP.md` for the end-to-end ingest + field-engineering checklist.
 
 ---
 
