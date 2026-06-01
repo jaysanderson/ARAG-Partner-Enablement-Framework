@@ -125,7 +125,7 @@ Each prompt is **200-500 words**. Don't shortchange this — the difference betw
 |---|---|---|
 | 1 | **Scaffold the app** | Vite + React + TypeScript + Tailwind + 6 routes + a shared design system (colors, typography, brand). |
 | 2 | **`ragClient.ts` wrapper** | Streaming `streamAsk`, sync `ask`, schema-constrained `askForJson`, composite `compositeAsk` — all in one client. |
-| 3 | **Header + landing page** | Brand hero, residency badge, BYO-LLM toggle widget (visual, not functional), navigation to the 6 routes. |
+| 3 | **Header + landing page** | Brand hero, residency badge, ingested-corpus stats (resources + paragraphs + graph node count from the live KB), navigation to the 6 routes. |
 | 4 | **`/search` route** | Filterable search with content-type chips + labelset facets + an AI summary at the top (uses /ask). |
 | 5 | **`/concierge` route** (or `/incidents` for Atlas) | Two-voice chat with multilingual lever + persona scope + CTA pills from custom fields. |
 | 6 | **`/workflows` route** | Three schema-constrained generators wired as UI (e.g., FAQ-gen, comparison-gen, taxonomy-gen for Aurora; or root-cause-gen, runbook-gen, incident-summary for Atlas). |
@@ -198,7 +198,7 @@ Use the AI to refine — but **you must be the editor**. The prompt is in your v
 Open `demo-script.md`. Lay out the 7-section talk track:
 
 ```
-0:00–2:00   Hero + BYO-LLM toggle
+0:00–2:00   Hero + residency badge + ingested-corpus stats (live numbers from your KB)
 2:00–6:00   Search demo (Aurora) / Incident dashboard (Atlas)
 6:00–10:00  Concierge / Conversational ops
 10:00–15:00 Structured workflows

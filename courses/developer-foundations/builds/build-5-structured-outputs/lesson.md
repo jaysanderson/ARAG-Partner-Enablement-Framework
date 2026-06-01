@@ -184,6 +184,48 @@ Three Tier 3 workflows:
 
 Plus the `additionalProperties: false` injector helper + the three-shape fallback in the wrapper.
 
+## Embedding citations inside an answer_json_schema
+
+Build 5 taught schema-constrained generation but didn't show how to make the structured output *traceable*. Without an in-schema citation field, the partner gets a beautiful JSON payload with no way to link any item back to its source — the antithesis of the "grounded" promise. A typed object that can't prove where it came from is just a confident hallucination with good formatting. The fix is a one-field addition + a system-prompt discipline line.
+
+API surface:
+
+- Add a string `citation_resource_id` field to every array-item schema you want traceable.
+- Mark it `required` alongside the rest of the row.
+- Pair it with a system-prompt rule that forces verbatim retrieved IDs — no invention.
+
+```ts
+const SCHEMA = {
+  type: 'object',
+  properties: {
+    picks: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          why: { type: 'string' },
+          citation_resource_id: { type: 'string' },  // <-- the trace link
+        },
+        required: ['name', 'why', 'citation_resource_id'],
+      },
+    },
+  },
+};
+
+// And on the system prompt:
+const SYSTEM =
+  'For every item, set citation_resource_id to a VERBATIM resource id ' +
+  'from the retrieved context. Do NOT invent ids, slugs, hostnames or ' +
+  'paths. If you cannot cite a real id, omit the item entirely.';
+```
+
+> **ID discipline in system prompts.** The "verbatim, do NOT invent" instruction is essential whenever your client builds deterministic click-throughs from a structured output. Without it, the model will helpfully fabricate plausible-looking ids like `aurora-helios-down-jacket` that 404 on click. The discipline is the difference between a CTA that works and a CTA that breaks in front of a CMO.
+
+Common failure mode: ship the schema field, forget the system-prompt line. The model returns invented IDs that look real, every click 404s, and the demo dies on stage. Always pair the field with the discipline rule — they are one feature, not two.
+
+**See it in the capstone:** `Capstone-Aurora-Concierge/src/lib/askForJson.ts` (additionalProperties injector + verbatim-id system prompt) and `Capstone-Aurora-Concierge/src/pages/Personalize.tsx` → `CitationLink` / `CitationInline` renderers.
+
 ## Common pitfalls
 
 - **Forgetting `additionalProperties: false`.** The model returns garbage shapes; your code crashes. Inject it automatically.

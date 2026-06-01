@@ -102,6 +102,44 @@ Plus a recorded demo flipping each lever and showing the answer change in real t
 - **Putting the prefix in `prompt.system`.** Wrong. The prefix is part of the *question*, not the *persona*.
 - **Hard-coding the language list and not updating it.** Make the list configurable so customer brand teams can add languages without partner code changes.
 
+## Three ways to enforce persona scope — prefix vs filter vs client-side
+
+The persona-prefix lever above is one of three patterns that all encode "this user only sees X". They look interchangeable in a demo and they are wildly different in production. Picking the wrong one either leaks member-only content to prospects, or burns tokens on a filter the server could enforce for free. Make this choice deliberately the first time a real customer asks "can it scope by audience?"
+
+The three patterns:
+
+| Pattern | Where it runs | Cost | Server-enforced? | Best for |
+|---|---|---|---|---|
+| Persona-prefix | Inside the query string | +tokens per call | No (model can ignore) | Voice / tone shaping, no security implications |
+| Labelset filter | Server-side via `/find` filters | Free | Yes | Audience gating, regulated content, security boundaries |
+| Client-side split | After retrieval, in JS | Free | No (data already returned) | Visualisation only — never security |
+
+Each one is ~20 lines of code; the difference is *where the boundary is enforced*:
+
+```ts
+// (a) Persona-prefix — voice shaping
+const q = buildPrefix({ segment: persona.segment }) + userQuery;
+
+// (b) Labelset filter — server-side gating
+const filters = persona.tier === 'Prospect'
+  ? ['/classification.labels/audience/shopper']
+  : [];
+
+// (c) Client-side split — visualisation
+const visible = paths.filter((p) =>
+  persona.tier === 'Prospect'
+    ? SHOPPER_GROUPS.has(p.destination.group)
+    : true,
+);
+```
+
+The decision rule: **never gate sensitive content with prefix-only** — a "The user is a Prospect, do not show member content" prefix is a suggestion the model can and will ignore on a bad day. Filter first (server enforces it), prefix second (model shapes voice), client-split only for visualisations where the user already has the right to the data and you're just collapsing it for the UI.
+
+**See it in the capstone:**
+- prefix → `Capstone-Aurora-Concierge/src/lib/buildPrefix.ts`
+- filter → `Capstone-Aurora-Concierge/src/pages/Storefront.tsx` → `audienceFilter`
+- client-side → `Capstone-Aurora-Concierge/src/pages/JourneyGraph.tsx` → `splitPathsByPersona`
+
 ## What's next
 
 [Build 5 — Structured Outputs](../build-5-structured-outputs/) — the most important single Build in the course. `answer_json_schema` is where ARAG stops being a chatbot and becomes a programmable backend. Tier 3 unlocks.

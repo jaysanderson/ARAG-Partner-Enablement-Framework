@@ -58,7 +58,7 @@ Atlas is chosen because:
 
 ### Single KB, multiple content domains via labelsets
 
-Atlas Operations runs on **one ARAG knowledge base** (`kb-atlas-operations`) containing all corpus documents tagged with three labelsets. ARAG's labelset-driven filter composition (see) gives the demo every cross-domain capability of a multi-KB setup with a fraction of the operational complexity. Partners stand up one KB, not five — and customers can do the same in their POC.
+Atlas Operations runs on **one ARAG Knowledge Box** (`kb-atlas-operations`) containing all corpus documents tagged with three labelsets. ARAG's labelset-driven filter composition (see) gives the demo every cross-domain capability of a multi-KB setup with a fraction of the operational complexity. Partners stand up one KB, not five — and customers can do the same in their POC.
 
 | Labelset | Values | Volume target |
 |---|---|---|
@@ -88,12 +88,11 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 ### In scope (must ship)
 
-- One ARAG knowledge base (`kb-atlas-operations`) provisioned in EU region (USA region failover documented but not deployed) with all corpus documents ingested and labelset-tagged.
+- One ARAG Knowledge Box (`kb-atlas-operations`) provisioned in EU region (USA region failover documented but not deployed) with all corpus documents ingested and labelset-tagged.
 - One bespoke data-augmentation agent extracting a typed graph spanning all business units (filtered at query time to specific business units when relevant).
 - Five branded demo surfaces (one per tier of the capability ladder, plus the Atlas Operations landing page).
 - Three custom Tier 3 workflows (schema-constrained generation) live and demo-ready.
 - One Tier 4 composite RAG flow live (the "incident root cause" workflow).
-- BYO-LLM toggle in the UI: switch between three named LLM endpoints during the demo to show parity (Azure OpenAI / Google Vertex / AWS Bedrock).
 - Rate-limit-aware client (documented; doesn't need stress-testing in the demo).
 -  is the technical baseline — fork it, don't rebuild from zero. The repo is at ``.
 - Re-skin playbook (Section 10) shipped alongside the build.
@@ -116,7 +115,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  Atlas Operations Frontend (Next.js or Vite + React)          │
-│  Branded shell • 5 demo surfaces • BYO-LLM toggle            │
+│  Branded shell • 5 demo surfaces • Residency badge          │
 └─────────────────────────────────────────────────────────────┘
                               │
                               │ HTTPS + X-NUCLIA-SERVICEACCOUNT
@@ -137,28 +136,23 @@ These anchors get embedded into every document the corpus generator produces. Th
 │  │ BUSINESS_UNIT, REGION                         │           │
 │  └──────────────────────────────────────────────┘           │
 │                                                              │
-│  BYO-LLM router → Azure OpenAI │ Vertex │ Bedrock           │
+│  Generation: KB-configured LLM endpoint (platform default)  │
 └─────────────────────────────────────────────────────────────┘
-                              │
-                              │ Generation only
-                              ▼
-                  ┌───────────────────────┐
-                  │ Customer's choice of  │
-                  │ LLM via BYO-LLM       │
-                  └───────────────────────┘
 ```
+
+> **Note on BYO-LLM.** BYO-LLM is a per-KB platform configuration (Azure OpenAI / Google Vertex / AWS Bedrock — see [Build 11 lesson](../../build-11-production-readiness/lesson.md#byo-llm-bring-your-own-llm)), not a UI lever in this capstone. Atlas Operations ships with the platform default generator and *no* in-app toggle. The "what about lock-in?" question is answered with the residency badge and the live KB stats in the hero — proof points the demo actually carries. The descoped pattern (no env vars, no UI surface, plus a graph-extraction blocklist so the model can't surface "BYO-LLM" as a product node) is documented in [*When BYO-LLM doesn't fit: clean descope*](../../build-11-production-readiness/lesson.md#when-byo-llm-doesnt-fit-clean-descope).
 
 ### 5.2 Frontend stack
 
 - **Framework:** Next.js 14 (App Router) or Vite + React 18 — choose whichever the build owner is fastest in. The  is Vite; staying consistent reduces fork cost.
 - **Styling:** Tailwind CSS with a Atlas-Operations-specific palette (dark control-room aesthetic — slate-950 base, electric-blue and amber accents). Avoid the demo teal/navy palette so the two repos are visually distinct.
 - **Routing:** React Router v7 (matches ). Five top-level routes plus the landing page.
-- **State:** React Context for the BYO-LLM toggle, the active KB, and the demo "presenter mode" hotkeys. No Redux, no Zustand — keep dependencies thin.
+- **State:** React Context for the active KB, the demo "presenter mode" hotkeys, and (optionally) the language selector for the Concierge surface. No Redux, no Zustand — keep dependencies thin.
 
 ### 5.3 Backend stack
 
 - **ARAG only.** No custom backend. Atlas Operations talks directly to ARAG endpoints exactly the way  does. This is itself a demo point — *there is no middleware to maintain*.
-- **BYO-LLM toggle:** Implemented as a KB-level ARAG configuration. Customer's "imagine this is your Azure tenant" question is answered by flipping the toggle live during the demo.
+- **Generation backend:** Configured at the KB level via the Nuclia dashboard. Not exposed in the demo UI (see Build 11 for when and how to surface BYO-LLM to a customer — descoped here so the demo only claims what it actually ships).
 
 ### 5.4 Data-augmentation agent — the typed graph
 
@@ -204,7 +198,7 @@ These are the routes a presenter walks through. Each maps to one or more tiers i
 
 | Route | Tier(s) | Purpose |
 |---|---|---|
-| `/` (landing) | — | Hero. Shows the BYO-LLM toggle and the residency badge. 90 seconds. |
+| `/` (landing) | — | Hero. Shows the residency badge and live ingested-corpus stats (resources, paragraphs, graph nodes — pulled from the KB at page load). 90 seconds. |
 | `/search` | Tier 1 + Tier 2 | The "everyone needs better search" demo. Hybrid search across the Atlas KB with business-unit + content-type filters, AI Answer, citation deep-links. |
 | `/concierge` | Tier 2 | Two prompt voices over the same KB — *Employee* mode (concise + 1 CTA) and *Architect* mode (detailed + multi-source citations). Voice swap on a UI toggle. |
 | `/workflows` | Tier 3 | The three live structured-generation workflows (Section 6). |
@@ -265,7 +259,7 @@ Total target: **8 weeks of focused work**, or **4 weeks at 2 FTE**. Phases can r
 - Stand up a fresh Vite + React app in a private repo named `Capstone-Atlas-Operations`. Apply the Atlas design system (dark slate base, electric-blue and amber accents).
 - Wire the ARAG client wrapper (from Foundations Builds 0–6) into the chassis. Single env var: `NUCLIA_KB_ID=kb-atlas-operations`. All demo surfaces route through this one KB.
 - Build the static landing copy in the Atlas voice.
-- Add the BYO-LLM toggle in the header (it's a presentation element backed by the KB's configured LLM endpoint).
+- Wire the residency badge + live KB stats (resources, paragraphs, graph nodes) into the hero — these are the proof points the demo carries instead of a BYO-LLM toggle. The stats are read at page load via `/v1/kb/{id}/counters` and `/v1/kb/{id}/graph/nodes`.
 - Where the application would route between two KBs based on user state (e.g., employee vs executive), route by **labelset filter** on the single Atlas KB instead.
 - **Exit criteria:** All five demo routes loading against the Atlas KB with no placeholder content remaining.
 
@@ -282,10 +276,10 @@ Total target: **8 weeks of focused work**, or **4 weeks at 2 FTE**. Phases can r
 
 ### Phase 5 — Production-readiness layer + observability (Week 6–7)
 
-- BYO-LLM toggle wired to three live endpoints (Azure OpenAI, Vertex, Bedrock). At minimum, two of the three need to actually work; the third can be UI-stubbed if budget is tight, with a note in the demo script.
 - Residency badge visible in the header — shows "EU" or "USA" based on the active KB region.
 - Rate-limit-aware client (backoff + request coalescing) implemented in the ARAG client wrapper.
-- Observability dashboard (Grafana or simple in-app panel) showing p50/p95 latency, citation rate, and BYO-LLM endpoint distribution. Visible from a `/ops` route.
+- Observability dashboard (Grafana or simple in-app panel) showing p50/p95 latency, citation rate, and per-endpoint request volume. Visible from a `/ops` route.
+- **No BYO-LLM toggle in the UI.** Generation backend is set once at the KB level via the Nuclia dashboard; the demo never claims a per-click switch it doesn't ship. See [Build 11 — *When BYO-LLM doesn't fit*](../../build-11-production-readiness/lesson.md#when-byo-llm-doesnt-fit-clean-descope) for the discipline.
 - **Exit criteria:** A live CTO question about residency, lock-in, or rate limits has a one-click visual answer from inside Atlas Operations.
 
 ### Phase 6 — Demo script + recording + re-skin playbook (Week 7–8)
@@ -304,9 +298,9 @@ Total target: **8 weeks of focused work**, or **4 weeks at 2 FTE**. Phases can r
 |---|---|---|
 | 1. Corpus + ingestion | 2 | Skill orchestration, anchor consistency editing, KB ingestion + labelset config |
 | 2. Graph agent | 1.5 | Agent design, schema tuning, full-corpus extraction run |
-| 3. Fork + reskin | 1 | Tailwind palette swap, landing page rewrite, BYO-LLM toggle wiring |
+| 3. Fork + reskin | 1 | Tailwind palette swap, landing page rewrite, residency badge + live KB stats in the hero |
 | 4. Workflows + composite RAG | 2 | Three schemas + UI for each, composite-RAG pipeline visualisation |
-| 5. Production readiness | 1 | BYO-LLM, residency badge, observability panel |
+| 5. Production readiness | 1 | Residency badge, observability panel, rate-limit-aware client |
 | 6. Demo + re-skin playbook | 0.5 | Script, rehearsal, recording, playbook |
 | **Total** | **8 weeks** | Single strong full-stack engineer with Progress SE on call for skill orchestration |
 
@@ -322,13 +316,11 @@ This is the script the build owner rehearses to certification. Times are cumulat
 >
 > Atlas Operations is a single application built on Progress Agentic RAG. It's an enterprise control room for unstructured knowledge — search, chat, structured generation, knowledge-graph reasoning, multimodal retrieval, and production operations, all behind one API key.
 >
-> The corpus I'm demoing against is a fictional company called Atlas Global Industries. Fifty thousand employees, four regions, five business units. One knowledge base. Three labelsets — business unit, content type, region — covering HR, Engineering, Sales, Customer Success, Compliance. Every filter in this demo is a labelset query, not a separate KB. That matters when we talk about how your team would deploy this against your own corpus.
+> The corpus I'm demoing against is a fictional company called Atlas Global Industries. Fifty thousand employees, four regions, five business units. One Knowledge Box. Three labelsets — business unit, content type, region — covering HR, Engineering, Sales, Customer Success, Compliance. Every filter in this demo is a labelset query, not a separate KB. That matters when we talk about how your team would deploy this against your own corpus.
 >
-> Two things to notice before we start. Top-right: this is running in the EU region — you can flip to USA in one click. Top-right also: the BYO-LLM toggle — Atlas Operations is using Azure OpenAI right now; I can swap to Google Vertex or AWS Bedrock without restarting anything. Watch."
+> Two things to notice before we start. Top-right: the residency badge — this KB is provisioned in the EU region, and that's verifiable in our Nuclia dashboard. And right beneath the hero: live ingested-corpus stats, pulled at page load — that's the actual count of resources, paragraphs, and graph nodes in this KB. Not a slide. Real numbers, real KB."
 
-*[Click BYO-LLM toggle from Azure to Vertex. Watch the badge change.]*
-
-> "Same KB, same prompt, different LLM. The retrieval and orchestration stay on ARAG. Your model choice is yours."
+> "The generation backend — which LLM produces the words — is configured at the KB level on the platform side, and we'll wire it into *your* Azure or Vertex or Bedrock tenant during the co-engineered POC. That's how BYO-LLM works in production. We're not faking it with a toggle in the demo UI today; what you'll see today is on the platform's default generator. The lock-in answer lives in the residency badge and the platform architecture, not in a click."
 
 ### 1:30 — 5:30 | Tier 1: Search (4 min)
 
@@ -422,11 +414,11 @@ This is the script the build owner rehearses to certification. Times are cumulat
 
 *[Return to landing page.]*
 
-> "What you've seen is one application built on one knowledge base, five business-unit labelsets, one extraction agent, one BYO-LLM router. Twenty-five minutes ago you couldn't have built this in five years. Today it's a fork of an open reference app, one labelset config, and an extraction agent your team configures.
+> "What you've seen is one application built on one Knowledge Box, five business-unit labelsets, one extraction agent, all running in a single platform-resident region you can verify in our dashboard. Twenty-five minutes ago you couldn't have built this in five years. Today it's a fork of an open reference app, one labelset config, and an extraction agent your team configures.
 >
 > Three things you have right now that none of your other AI vendors offer:
 >
-> 1. Residency you choose. EU or USA. Per knowledge base.
+> 1. Residency you choose. EU or USA. Per Knowledge Box.
 > 2. The LLM you already pay for. Azure, Vertex, Bedrock. ARAG orchestrates; you pick the model.
 > 3. A platform, not a feature. Every AI surface you'll ship in the next three years lives behind this API.
 >
@@ -445,8 +437,7 @@ A partner takes Atlas Operations and re-points it at their customer's domain. Th
 ### What stays
 
 - Five-surface route structure.
-- BYO-LLM toggle.
-- Residency badge.
+- Residency badge + live ingested-corpus stats in the hero.
 - Composite-RAG flow.
 - Schema-constrained workflow chassis.
 - All hotkeys and presenter-mode behaviour.
@@ -476,7 +467,7 @@ Atlas Operations ships when *all* of the following are true:
 1. The full 25-minute demo runs end-to-end without code edits, in front of two reviewers, without the build owner touching the keyboard outside of the documented hotkeys.
 2. The Atlas knowledge graph returns at least 200 typed-entity nodes and 500 typed relations across the Atlas KB.
 3. The composite-RAG flow demonstrably outperforms a single-shot `/ask` for the four named incidents — measured by citation count and reviewer-judged answer quality.
-4. The BYO-LLM toggle works for at least two of three named endpoints. The third is acceptable as a UI stub if budget binds.
+4. The hero shows live KB stats (resources, paragraphs, graph nodes) read from the active KB at page load — no hardcoded numbers, no slides.
 5. The recorded demo is uploaded and shared internally before the wider partner programme opens.
 6. The re-skin playbook is committed to this repo.
 7. The build owner has trained at least one other Progress SE to deliver the demo cold.

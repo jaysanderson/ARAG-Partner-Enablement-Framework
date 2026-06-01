@@ -11,21 +11,21 @@
 **ON SCREEN:** Title card. *"Developer Foundations · Build 0 · Hello ARAG"*. Fade to a split screen — left: Nuclia dashboard; right: a terminal.
 
 **VOICEOVER:**
-> Welcome to Build 0 of the Progress Agentic RAG Developer Foundations course. Twelve minutes from now, you'll have a working ARAG knowledge base, you'll have made three API calls against it, and you'll have watched an AI write your first ARAG client in 90 seconds. That last part — the AI writing the code — is the entire mental model of this course. I'll come back to it. Let's start.
+> Welcome to Build 0 of the Progress Agentic RAG Developer Foundations course. Twelve minutes from now, you'll have a working ARAG Knowledge Box, you'll have made three API calls against it, and you'll have watched an AI write your first ARAG client in 90 seconds. That last part — the AI writing the code — is the entire mental model of this course. I'll come back to it. Let's start.
 
 ## Section 1: What ARAG is and what a KB is (0:30 – 2:00)
 
 **ON SCREEN:** Diagram (simple): ARAG cloud → KB → documents. Annotations: "five primitives — find, ask, ask+schema, graph, resource". A list of "what a KB owns" appears next to the diagram.
 
 **VOICEOVER:**
-> ARAG is a platform. It exposes five primitives — Retrieve, Generate, Constrain, Reason over relations, and Stream media. Today we use two of them. The unit you'll provision is called a **knowledge base** — KB for short. A KB owns your ingested documents, your labelsets, your service-account credentials, your residency region, and your LLM endpoint. One application uses one KB. That's the default and that's what we'll do today.
+> ARAG is a platform. It exposes five primitives — Retrieve, Generate, Constrain, Reason over relations, and Stream media. Today we use two of them. The unit you'll provision is called a **Knowledge Box** — KB for short. A KB owns your ingested documents, your labelsets, your service-account credentials, your residency region, and your LLM endpoint. One application uses one KB. That's the default and that's what we'll do today.
 
 ## Section 2: Provision a KB (2:00 – 3:30)
 
-**ON SCREEN:** Switch to Nuclia dashboard. Click "New Knowledge Base". Name it `foundations-sandbox`. Region: EU. Click create. Wait for provisioning (cut to fast-forward if it takes >10 seconds). Open the settings panel, copy the API key + KB ID + endpoint URL.
+**ON SCREEN:** Switch to Nuclia dashboard. Click "New Knowledge Box". Name it `foundations-sandbox`. Region: pick the option closest to you (EU for Europe / EMEA, USA for the Americas). Click create. Wait for provisioning (cut to fast-forward if it takes >10 seconds). Open the settings panel, copy the API key + KB ID + endpoint URL.
 
 **VOICEOVER:**
-> In the dashboard, new KB, name it whatever you want — I'm going `foundations-sandbox`. EU region. Default model. Provision. Takes a few seconds.
+> In the dashboard, new Knowledge Box, name it whatever you want — I'm going `foundations-sandbox`. For region, pick whichever option is closest to you geographically — EU if you're in Europe, USA if you're in the Americas — and **then stick with that same region for every Knowledge Box you provision in this course**. Mixing regions across builds will create confusion you don't need today. Default model. Provision. Takes a few seconds.
 >
 > Once it's ready, three things you'll grab: the API endpoint URL, your KB ID, and your service-account JWT. Put them in a local `.env` file. Don't commit the file. We'll use these in every call going forward.
 

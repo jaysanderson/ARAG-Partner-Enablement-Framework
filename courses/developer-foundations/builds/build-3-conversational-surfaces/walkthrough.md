@@ -370,7 +370,112 @@ You just demoed two completely different chat experiences against **the same KB,
 
 ---
 
-## Step 8 — Test edge cases (15 min)
+## Step 8 — Handle the streaming citations event (15 min)
+
+Your `streamAsk` already yields `{ type: 'citations', citations: [...] }` once per turn — but `MultiSurfaceChat` consumes the stream with a `switch` inside a `for await`, which can drift when a partner copies the pattern without thinking. This step locks in the **explicit** for-await pattern so the streaming-vs-sync citation envelope difference (covered in the lesson) is muscle memory.
+
+### 8a. Open the consumer
+
+Open `src/components/MultiSurfaceChat.tsx`. Find the loop that consumes `streamAsk`. It should look something like:
+
+```tsx
+for await (const evt of streamAsk(userMessage, promptConfig)) {
+  if (evt.type === 'answer-chunk') {
+    // append evt.text to the latest assistant message
+  } else if (evt.type === 'citations') {
+    // set citations on the latest assistant message
+  }
+}
+```
+
+If the AI wrote it with a `switch` on `evt.type`, that's fine — same shape. The point is: **two distinct branches**, and the `citations` branch runs **once** per turn.
+
+### 8b. Add a one-time-assignment guard
+
+Just before the citations assignment, log an explicit marker:
+
+```tsx
+else if (evt.type === 'citations') {
+  console.log('[citations] arrived', evt.citations.length, 'sources');
+  // existing assignment
+}
+```
+
+### 8c. Verify the event fires exactly once
+
+`npm run dev`. Open DevTools Console. Submit any question that returns sources (Member mode is easiest — it always cites).
+
+**You should see:** the answer streams in token-by-token, then **exactly one** `[citations] arrived N sources` log line appears after the answer finishes, then the citations list renders under the assistant bubble. If you see the log line fire multiple times, your parser is yielding partial citation events — re-read the lesson's "Common failure mode" callout and fix in `src/lib/ragClient.ts`: only yield `{ type: 'citations' }` when you see a complete `{ item: { type: 'retrieval', results: ... } }` object.
+
+Remove the `console.log` once verified.
+
+---
+
+## Step 9 — Build a minimal hand-rolled FloatingChat (45 min)
+
+`MultiSurfaceChat` is a panel that lives on one page. The graduation pattern from the lesson is a **floating** chat: a FAB in the corner, a slide-out panel, and a `CustomEvent` bus so any route in the app can deep-link a question into it. This step builds that.
+
+### 9a. Brief your AI
+
+Same chat session:
+
+```
+Create src/components/FloatingChat.tsx. It's a React component that:
+
+1. Renders a fixed-position FAB (floating action button) in the
+   bottom-right corner. Tailwind: fixed bottom-6 right-6, rounded-full,
+   bg-blue-600, text-white, p-4, shadow-lg, z-50.
+2. Clicking the FAB toggles an open/closed state. When open, render a
+   panel above the FAB (fixed bottom-24 right-6, w-96, h-[32rem],
+   bg-white, shadow-xl, rounded-lg, flex flex-col, z-50).
+3. The panel contains: header with "Concierge" + close button;
+   scrollable history of turns; text input + submit at the bottom.
+4. State: open (boolean), turns (array of
+   { question: string; answer: string; citations: Array<{id, title}> }).
+5. A useRef<boolean> 'streaming' guard prevents re-entering runQuery
+   while a previous stream is in-flight.
+6. async runQuery(q): push a new turn with empty answer/citations;
+   for await on streamAsk(q, PROMPTS.member); on 'answer-chunk' append
+   to turn.answer; on 'citations' replace turn.citations; setTurns after
+   each event so the UI re-renders.
+7. useEffect: addEventListener on window for a custom event named
+   'aurora.concierge.prefill'. On fire, read e.detail.question, set
+   open=true, call runQuery(question). Remove listener on unmount.
+8. Reuse the PROMPTS constant and streamAsk import from the existing
+   MultiSurfaceChat / ragClient code.
+
+Use TypeScript, Tailwind, native fetch. No new dependencies.
+```
+
+Save as `src/components/FloatingChat.tsx`.
+
+### 9b. Mount it globally
+
+Open `src/App.tsx`. Import `FloatingChat` and render it once at the bottom of the layout, **outside** the centered container so it floats over everything:
+
+```tsx
+import { FloatingChat } from './components/FloatingChat';
+// ... existing layout ...
+<FloatingChat />
+```
+
+### 9c. Verify with a console dispatch
+
+`npm run dev`. Open the app. You should see the FAB in the bottom-right corner. Open DevTools Console and paste:
+
+```js
+window.dispatchEvent(new CustomEvent('aurora.concierge.prefill', { detail: { question: 'What do you have for beginners?' } }));
+```
+
+**You should see the chat panel open and the answer stream in within ~1 second of dispatching the event.** Citations should appear under the answer once the stream completes. If the panel opens but no stream starts, the listener fired but `runQuery` didn't — check the `streaming` ref isn't stuck on `true` from a prior run.
+
+### 9d. Update prompt-log.md
+
+Append the Step 9 brief to your `prompt-log.md`.
+
+---
+
+## Step 10 — Test edge cases (15 min)
 
 Push the chat to find bugs:
 
@@ -383,7 +488,7 @@ Fix any bug you find by talking to the AI.
 
 ---
 
-## Step 9 — Write a 3-minute demo script (15 min)
+## Step 11 — Write a 3-minute demo script (15 min)
 
 In your project folder, create `demo-script.md`. Open your AI:
 
@@ -417,19 +522,20 @@ Save the result as `demo-script.md`.
 
 ---
 
-## Step 10 — Save your prompts (5 min)
+## Step 12 — Save your prompts (5 min)
 
-Make sure `prompt-log.md` has all four briefs:
+Make sure `prompt-log.md` has all five briefs:
 
 1. The `ragClient.ts` brief (Step 4).
 2. The `MultiSurfaceChat.tsx` brief (Step 5).
 3. The `App.tsx` brief (Step 6).
-4. The demo script brief (Step 9).
-5. Any debugging prompts you used.
+4. The `FloatingChat.tsx` brief (Step 9).
+5. The demo script brief (Step 11).
+6. Any debugging prompts you used.
 
 ---
 
-## Step 11 — Record a 3-minute walkthrough (15 min)
+## Step 13 — Record a 3-minute walkthrough (15 min)
 
 Record yourself (Loom / QuickTime / OBS) walking through your `demo-script.md`:
 
@@ -451,6 +557,9 @@ Upload to `#build-clinic-submissions`.
 - [ ] **Member mode** produces longer answer with citations listed underneath.
 - [ ] `formatAssistantHtml` truncates Prospect-mode text after the first CTA link.
 - [ ] Streaming is token-by-token, not all-at-once.
+- [ ] The `citations` event fires **exactly once** per turn (verified via Console log).
+- [ ] `src/components/FloatingChat.tsx` — FAB + slide-out panel + `streamAsk` loop + `aurora.concierge.prefill` `CustomEvent` listener.
+- [ ] Dispatching `aurora.concierge.prefill` from the browser console opens the chat and streams the answer within ~1 second.
 - [ ] `demo-script.md` saved.
 - [ ] `prompt-log.md` saved with all briefs.
 - [ ] 3-minute Loom recording submitted.

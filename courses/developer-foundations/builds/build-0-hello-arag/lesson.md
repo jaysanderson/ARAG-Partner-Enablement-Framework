@@ -6,7 +6,7 @@
 
 Every customer engagement past this Build assumes you understand three things:
 
-1. **What an ARAG knowledge base is** (a unit of corpus + configuration).
+1. **What an ARAG Knowledge Box is** (a unit of corpus + configuration).
 2. **How you authenticate to it** (one header, one JWT).
 3. **What the two foundational endpoints return** (`/find` and `/ask`).
 
@@ -23,9 +23,9 @@ For Build 0, you only need two of them:
 
 That last point is the platform's competitive position. ARAG doesn't make you wire retrieval to generation yourself. The `/ask` endpoint does retrieval + generation + citation extraction in one call. Every "we built RAG ourselves" competitor has glue code maintaining that integration. You don't.
 
-## What a Knowledge Base is
+## What a Knowledge Box is
 
-A KB owns:
+A Knowledge Box — **KB** for short — owns:
 
 - The documents you've ingested.
 - The labelsets you've defined (Builds 6 and onwards).
@@ -132,7 +132,7 @@ The Build 0 walkthrough has you do both: provision a KB (platform) and ask an AI
 
 ## What you'll do in the walkthrough
 
-1. Provision a sandbox KB in EU region.
+1. Provision a sandbox Knowledge Box in the region closest to you (then stick with that same region for every Knowledge Box you provision in this course).
 2. Drag 10 documents into the dashboard.
 3. Make a `/find` call from `curl`. Read the response.
 4. Make a streaming `/ask` call from `curl`. Watch the NDJSON stream.
@@ -147,6 +147,42 @@ The Build 0 walkthrough has you do both: provision a KB (platform) and ask an AI
 - **Forgetting `prefer_markdown: true`.** Without it, your answers come back as wall-of-text, no formatting.
 - **Asking the AI to write code before testing `curl` manually.** Always verify the endpoint behaviour with `curl` first. Then ask the AI to wrap it.
 - **Letting the AI hallucinate an SDK.** There's no first-party `nuclia` npm package. Tell the AI to use `fetch`.
+
+## Citations — extracting, de-duping, and resolving
+
+Every `/ask` answer ships a `retrieval_results` block with two things: a `best_matches` array (paragraph references, ranked) and a `resources` map keyed by resource id. The first wall every partner hits is naively rendering `best_matches` as if its entries were resource ids. They're not — they're paragraph refs shaped `"<rid>/t/body/<start>-<end>"`, so `resources[bestMatchString]` always misses. You have to split the string and look up the resource by the leading `<rid>` segment.
+
+API surface, concise:
+
+- `/ask` response → `retrieval_results.best_matches: string[]` — ranked paragraph refs, one per cited paragraph.
+- `/ask` response → `retrieval_results.resources: Record<rid, ResourceShape>` — full metadata for each cited resource (title, summary, origin).
+- The contract: `rid = best_matches[i].split('/')[0]`. That `rid` is the key you use against `resources`.
+
+Worked example. A ~12-line resolver: split each paragraph ref, de-dup by `rid` while preserving rank order, then look the resource up:
+
+```ts
+function extractCitations(retrieval) {
+  const resources = retrieval?.resources ?? {};
+  const seen = new Set<string>();
+  const ordered = [];
+  for (const ref of retrieval?.best_matches ?? []) {
+    const rid = String(ref).split('/')[0];
+    if (!rid || seen.has(rid)) continue;
+    seen.add(rid);
+    const r = resources[rid];
+    if (!r) continue;
+    const title = (r.title ?? '').replace(/^#+\s*/, '').trim() || rid.slice(0, 8);
+    ordered.push({ id: rid, title });
+  }
+  return ordered;
+}
+```
+
+Two details worth noticing. First, the de-dup: a single resource can contribute three or four paragraphs to one answer, so naive iteration shows the same source four times. Second, the title cleanup: ARAG sometimes prefixes titles with markdown heading syntax (`# Title`) — strip it before rendering, or your UI gets ugly hashes.
+
+Common failure mode: the model occasionally returns plain markdown links **inside the answer body** (`[label](https://example.com/doc)`) instead of populating `retrieval_results`. When `best_matches` is empty but the answer renders, fall back to a one-paragraph HTML scan that mines `<a href="...">label</a>` from the rendered output and treats each unique URL as a citation. It's a belt-and-braces second source — never the primary path, but it stops the citation row from collapsing to zero on the rare run where the structured block goes missing.
+
+**See it in the capstone:** `Capstone-Aurora-Concierge/src/lib/ragClient.ts` → `extractCitations`, and `src/components/FloatingChat.tsx` → `deriveCitationsFromHtml`.
 
 ## What's next
 

@@ -345,6 +345,49 @@ Upload to `#build-clinic-submissions`.
 
 ---
 
+## Step 9 — Move audience scope from prefix to filter (20 min)
+
+The prefix lever you wired in Step 3 shapes voice beautifully. It is **not** a security boundary. This step proves that with a deliberate failure, then replaces the prefix-only scope with a server-enforced labelset filter — the pattern you'll reach for whenever a customer says "prospects must never see member-only content".
+
+### 9a. Reproduce the prefix-only leak
+
+In your chat, set:
+- Segment = `Prospect`
+- Language = `English`
+
+Ask a query that straddles the prospect/member boundary in your KB. For a generic content KB, try: *"What advanced workflows do you recommend?"* (or substitute any topic where you have both public-tier and member-only paragraphs in the KB).
+
+Run the same query 5–10 times. Inspect each answer.
+
+**You should see:** the answer occasionally cites or paraphrases a member-only document despite the `The user is a Prospect.` prefix. The model is treating the prefix as a *hint*, not a *constraint*. If you don't get a leak in 10 runs, lower the prefix's authority by rewording it (`The user identifies as a Prospect.`) — the point is that *prefix-only* gating is non-deterministic by design.
+
+### 9b. Replace the prefix scope with a `/find` filter
+
+Brief your AI:
+
+```
+In src/components/MultiSurfaceChat.tsx, when segment === "Prospect",
+add a server-side filter to the /find (or /ask retrieval) request:
+
+  filters: ["/classification.labels/audience/shopper"]
+
+Keep the persona-prefix for voice shaping, but rely on the filter
+for audience scoping. The filter must go in the request body, not
+the query string.
+
+If you're using streamAsk against /ask, the filter goes under
+features.retrieval (or the equivalent retrieval config object —
+check the request your client is currently building).
+```
+
+Apply the change. (Your KB needs an `audience` labelset with at least a `shopper` label for this to bind to real content — if you don't have one yet, add a label to 2–3 resources in the Nuclia dashboard first, then re-index.)
+
+Re-run the same query from 9a 5–10 times.
+
+**You should see:** member-only results disappear from the result set, not just from the model's reply. Inspect the `/ask` (or `/find`) response in DevTools → Network — the `resources` / `paragraphs` array should no longer contain member-only documents at all. The model can't leak what the retriever never returned.
+
+---
+
 ## Verification checklist
 
 - [ ] `src/lib/buildPrefix.ts` working — returns the right strings for the example inputs in Step 2d.

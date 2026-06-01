@@ -27,13 +27,13 @@ You also need a folder of **~10 documents** to upload. Anything works — PDFs o
 
 ---
 
-## Step 1 — Create your Knowledge Base (5 min)
+## Step 1 — Create your Knowledge Box (5 min)
 
 Open the Nuclia dashboard.
 
-1. Click **"New Knowledge Base"** (or "Create KB" — wording varies).
+1. Click **"New Knowledge Box"** (or "Create KB" — wording varies).
 2. **Name:** `<your-initials>-foundations` (e.g., `jay-foundations`).
-3. **Region:** **EU**. We'll cover residency in Build 11; for now EU is fine.
+3. **Region:** **pick the option geographically closest to you** — EU if you're in Europe / EMEA, USA if you're in the Americas. **Then stick with that same region for every Knowledge Box you provision in this course.** Knowledge Boxes in different regions can't share data, and switching mid-course adds confusion. Residency is covered in Build 11.
 4. **Generative model:** leave on **"Default Nuclia model."** We'll cover BYO-LLM in Build 11.
 5. Click **Create**.
 
@@ -76,23 +76,13 @@ cd foundations-build-0
 
 You're now "inside" the folder. Anything you create from here lands inside.
 
-Now create a file called `.env` (the dot at the front is important). The easiest way:
+Now create a file called `.env` (the dot at the front is important) using your text editor — not the terminal. Open VS Code, then **File → New File**. Save it (Cmd/Ctrl + S) into the `foundations-build-0` folder you just created. Name it exactly `.env` — including the leading dot, with no extension after it. VS Code may warn that filenames starting with a dot are hidden — that's normal, accept it.
 
-```bash
-touch .env
-```
+> **Why a text editor and not `touch .env` in the terminal?** Two reasons. First, you're going to paste secrets into this file in a moment — opening it in the editor where you'll work on it is one fewer step and one fewer place where the credentials could end up. Second, the terminal has its own gotchas around hidden filenames (the file looks like it doesn't exist when you `ls`, and `cat .env` shows nothing helpful), and Build 0 isn't the right time to fight that. The text editor shows you the file plainly.
 
-**What that did:** created an empty file named `.env`.
+If your editor isn't VS Code, the same flow works: New File → Save As → name it `.env` → save into the `foundations-build-0` folder. If `.env` looks hidden in the editor's file tree, press `Cmd+Shift+.` on macOS (or enable "Show hidden files" in your editor's settings).
 
-Open the file in your editor. The fastest way:
-
-```bash
-code .env
-```
-
-(That's the command-line shortcut to open in VS Code. If you don't have `code` set up, just open VS Code, then File → Open → navigate to your `foundations-build-0` folder → open `.env`. If `.env` looks hidden, press `Cmd+Shift+.` on macOS to show hidden files.)
-
-Paste this into the file, **replacing the placeholder values with the three credentials from Step 2**:
+With the empty `.env` file open in front of you, paste this in, **replacing the placeholder values with the three credentials from Step 2**:
 
 ```bash
 NUCLIA_API_URL=https://aws-eu-1.rag.progress.cloud/api/v1
@@ -290,30 +280,59 @@ npm install dotenv
 
 Open your AI coding assistant (Claude Code, Cursor, ChatGPT, Claude.ai — whichever you picked in the vibe-coding guide).
 
-Copy this brief and paste it in. **Don't edit it.** It's specific on purpose:
+Copy this brief and paste it in. **Don't edit it.** It's specific on purpose — and it includes a "verify the API before coding" instruction up front so the AI can't guess the response shape:
 
 ```
-Write me a Node.js script called ask.mjs (using ES modules / import syntax).
+Write me a Node.js script called ask.mjs (ES modules / import syntax).
 
-It should:
-1. Use the dotenv package to read NUCLIA_API_URL, NUCLIA_KB_ID, and NUCLIA_API_KEY
-   from a .env file in the same folder.
-2. Take a query string as a command-line argument: `node ask.mjs "what is X?"`
+IMPORTANT — verify the API before coding:
+This hits the Progress Agentic RAG (ARAG / Nuclia) /ask streaming endpoint.
+Do NOT trust my description of the response schema below — I may have it wrong.
+Before writing code, confirm the current schema against the Nuclia/Progress ARAG
+docs (the AskResponse and FindResults interfaces in particular):
+  - the exact set of streaming item.type values emitted
+  - the shape of every field you read — especially whether best_matches is
+    string[] (paragraph-id strings) or object[]
+State the verified assumptions in a header comment.
+
+Requirements:
+1. Use dotenv to read NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY from a .env
+   file in the same folder. Exit with a clear error if any are missing.
+2. Take a query string as a CLI argument: `node ask.mjs "what is X?"`.
+   Exit with a usage message if absent.
 3. POST to {NUCLIA_API_URL}/kb/{NUCLIA_KB_ID}/ask with:
    - Header: X-NUCLIA-SERVICEACCOUNT: Bearer {NUCLIA_API_KEY}
    - Header: Content-Type: application/json
    - Body: { query, prefer_markdown: true, rephrase: true, max_tokens: 500 }
-4. The response is NDJSON — each line is a JSON object shaped:
-   { "item": { "type": "answer" | "retrieval" | "status", ... } }
-5. As {item:{type:"answer", text}} arrives, print the text to stdout immediately
-   (don't buffer the whole thing).
-6. When {item:{type:"retrieval", results}} arrives, capture results.best_matches.
-7. After the stream ends, print "---" then list the citation resource IDs.
-8. Handle the case where one JSON object straddles two stream chunks (use
-   balanced-brace counting to find complete objects in the buffer).
+   I want source attribution in the output, so also request it explicitly:
+   add `citations: true` to the body (or `citations: "llm_footnotes"` if you
+   determine that better suits inline footnotes — tell me which you chose and why).
+4. The response is NDJSON: each object is shaped { "item": { "type": ..., ... } }.
+   Treat the type list as open — handle the ones you need and ignore the rest;
+   do not assume my list is complete or correct.
+5. As answer items arrive, print their text to stdout immediately (stream it,
+   don't buffer the whole answer).
+6. Collect the sources that backed the answer. Be precise about the distinction:
+   - "retrieval" items carry the PARAGRAPHS retrieved (best_matches).
+   - "citations" items (only present because of step 3) carry the mapping of
+     answer spans back to source paragraphs.
+   Derive the resource id from each paragraph id correctly per the shape you
+   verified — do not assume it's a property on an object.
+7. After the stream ends, print "---" then the citations: prefer the answer-span
+   -> source mapping if present, otherwise the deduped list of source resource IDs.
+8. Handle a JSON object that straddles two stream chunks (balanced-brace counting
+   to extract complete objects from the buffer; keep the partial remainder).
+
+Robustness — fail loud, not silent:
+- On non-2xx HTTP, print status + body and exit non-zero.
+- If a field you read is empty or an unexpected type (e.g. best_matches is not
+  what you expected, or zero sources came back), warn to stderr rather than
+  silently producing "(no citations)". I need to see when extraction breaks.
 
 Use plain fetch. No SDK. No external HTTP library beyond what's built into Node.
 ```
+
+> **Why the "verify the API before coding" preamble matters.** The single most common AI failure mode in this course is the AI confidently writing code against an *imagined* response shape. The opening paragraph forces the assistant to ground its work in the actual current docs — the same discipline you'll teach customer engineers in a real engagement. Notice also the explicit `citations: true` body field: without it, the streaming response gives you `retrieval` items (paragraphs that *could* have backed the answer) but no "citations" item (the LLM's actual attribution of each claim to a source). For a real customer demo you want the second — inline source attribution that survives copy-paste.
 
 Click send. Wait for the AI to produce the file.
 
@@ -407,11 +426,74 @@ Upload to `#build-clinic-submissions` in the partner Slack.
 
 ---
 
+## Step 11 — Render the citations for your first `/ask` answer (15 min)
+
+You've watched the citations stream past in step 7 and you've printed the bare resource IDs at the end of `ask.mjs` in step 9. This step closes the loop: turn those IDs into a clean, de-duped, human-readable citation list. The lesson covers *why* the naive approach fails ([Citations — extracting, de-duping, and resolving](lesson.md#citations--extracting-de-duping-and-resolving)) — here you do it hands-on.
+
+### 11a. Inspect `best_matches` in the raw response
+
+Run your sync `/ask` call from step 6 again, but this time pipe it through `jq` to isolate just the `best_matches` array:
+
+```bash
+curl -s -X POST \
+  -H "X-NUCLIA-SERVICEACCOUNT: Bearer YOUR_JWT_HERE" \
+  -H "Content-Type: application/json" \
+  -H "x-synchronous: true" \
+  -d '{"query":"YOUR QUESTION HERE","prefer_markdown":true,"rephrase":true,"max_tokens":500}' \
+  "YOUR_API_URL/kb/YOUR_KB_ID/ask" \
+  | jq '.retrieval_results.best_matches'
+```
+
+(If you don't have `jq`, scroll the raw output and find the `"best_matches"` key by eye.)
+
+**You should see:** an array of strings shaped like `"a1b2c3d4-...-1234567890ab/t/body/12-340"`. Notice that the same resource id (the leading UUID) often repeats — one resource contributes several matching paragraphs.
+
+### 11b. Implement the splitter
+
+Open `ask.mjs` in your editor. Find the spot where you currently print the resource IDs (the `---` separator section from step 9). Add the splitter the lesson showed — for plain JS it looks like this:
+
+```js
+const seen = new Set();
+const uniqueRids = [];
+for (const ref of bestMatches ?? []) {
+  const rid = String(ref).split('/')[0];
+  if (!rid || seen.has(rid)) continue;
+  seen.add(rid);
+  uniqueRids.push(rid);
+}
+console.log('Unique resource IDs:', uniqueRids);
+```
+
+Run the script again: `node ask.mjs "your question"`.
+
+**You should see:** a much shorter list than `best_matches.length` — typically 1–5 unique IDs even if `best_matches` had 10–20 entries. That's the de-dup working.
+
+### 11c. Look up each rid in `resources` and print the title
+
+Now resolve those IDs against the `resources` map. In the same `retrieval` block you already capture, there's a `results.resources` (or `retrieval_results.resources` in sync mode) object. Extend the loop:
+
+```js
+const resources = retrievalResults?.resources ?? {};
+for (const rid of uniqueRids) {
+  const r = resources[rid];
+  const title = (r?.title ?? '').replace(/^#+\s*/, '').trim() || rid.slice(0, 8);
+  console.log(`- ${title}  (${rid})`);
+}
+```
+
+Run the script one more time.
+
+**You should see:** one row per cited resource — N rows where N === unique rids in `best_matches`. Each row shows the cleaned-up document title followed by the resource id. This is what a real citation chip in a chat UI is built on top of.
+
+If a title comes back as `undefined` or empty, the fallback to `rid.slice(0, 8)` keeps the row from looking broken. If *all* titles are empty, your KB documents were ingested without titles — open one in the Nuclia dashboard and check the "basic" metadata panel.
+
+---
+
 ## Verification checklist
 
 Before moving to Build 1, confirm:
 
-- [ ] KB provisioned in EU region with 10 indexed documents.
+- [ ] Knowledge Box provisioned in your chosen region (closest to you) with 10 indexed documents.
 - [ ] `.env` file with three credentials saved (and **not** committed to git).
 - [ ] `curl /find` call returns at least one paragraph with `score > 0.6`.
 - [ ] `curl /ask` (sync mode, with `x-synchronous: true`) returns an `answer` plus citations.

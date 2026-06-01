@@ -331,7 +331,122 @@ The sidebar's "Related resources" section uses **hybrid retrieval** (the `search
 
 ---
 
-## Step 6 — Answer a graph-only question (25 min)
+## Step 6 — Handle leaf nodes with queryPathsAround (20 min)
+
+Step 3 gave you `queryPaths` — an outbound-only `/graph` query. It works for hubs. It silently returns empty for **leaf nodes** (competitor products, sparse destinations, anything with zero outbound edges). You'll only notice when the canvas stays blank on a live customer call.
+
+Fix it by firing inbound and outbound in parallel and merging.
+
+### 6a. Add `queryPathsTo` to graphClient
+
+In `src/lib/graphClient.ts`, add a near-clone of `queryPaths` that swaps `source` for `destination`:
+
+```ts
+export async function queryPathsTo(node: { value: string; group: string }) {
+  const body = {
+    query: {
+      and: [
+        { prop: 'path', destination: node, undirected: true },
+        { prop: 'generated', by: 'data-augmentation' }
+      ]
+    },
+    top_k: 100
+  };
+  // ...same fetch + same client-side filter as queryPaths
+}
+```
+
+### 6b. Add the merge helper
+
+Still in `graphClient.ts`:
+
+```ts
+export async function queryPathsAround(node: { value: string; group: string }) {
+  const [out, inb] = await Promise.all([
+    queryPaths(node),
+    queryPathsTo(node),
+  ]);
+  const seen = new Set<string>();
+  const merged = [];
+  for (const p of [...out, ...inb]) {
+    const k = `${p.source.value}|${p.relation.label}|${p.destination.value}`;
+    if (seen.has(k)) continue;
+    seen.add(k);
+    merged.push(p);
+  }
+  return merged;
+}
+```
+
+### 6c. Swap GraphPage to call `queryPathsAround`
+
+Open `src/pages/GraphPage.tsx`. Find every call to `queryPaths(selected)` and replace with `queryPathsAround(selected)`. There should be one (in the selection effect) — possibly two if the AI used it on initial mount.
+
+### 6d. Verify
+
+```bash
+npm run dev
+```
+
+Pick a leaf-shaped entity from your corpus — something you know is *referenced by* other things but rarely originates relations (a competitor product name, a regulation cited by many documents, a venue mentioned in event records). Click it.
+
+**You should see:** Clicking a leaf node should now populate the canvas — not stay empty. Sidebar shows paths where your entity is the destination, not just the source.
+
+If you still see an empty canvas, your entity genuinely has zero edges in either direction — try a different one. If you see edges in the sidebar list but not on the canvas, the GraphPage's `mergeIntoGraphData` doesn't handle the new path objects — tell the AI: *"queryPathsAround returns paths but the graph viz doesn't show the inbound ones. Make sure the merge handles paths where the selected node is the destination, not the source."*
+
+---
+
+## Step 7 — Add the entity-to-resources back-link panel (25 min)
+
+The sidebar's "Related resources" section from Step 4 is the seed. This step upgrades it from a flat list into a **persona-split commerce surface** — Prospects see products and guides, Members see ambassador content and endorsements too. That split is what turns the graph from a pretty diagram into a pipeline driver.
+
+### 7a. Confirm `searchRelatedResources` iterates the resources map
+
+Open `src/lib/graphClient.ts` → `searchRelatedResources`. Confirm it does:
+
+```ts
+return Object.entries(raw.resources ?? {}).slice(0, 8).map(([id, r]) => ({
+  id,
+  title: (r.title ?? '').replace(/^#+\s*/, '').trim() || id.slice(0, 8),
+}));
+```
+
+If the AI instead pulled ids from `best_matches[i]`, fix it now. Those are *paragraph* references, not resource ids. Tell the AI: *"searchRelatedResources is using best_matches to derive ids. Those are paragraph references. Iterate the `resources` map directly — keys are resource ids."*
+
+### 7b. Add a persona-split renderer in the sidebar
+
+In `src/pages/GraphPage.tsx`, add a persona toggle at the top of the page (a simple `<select>` with `Prospect` / `Member`) and a `splitPathsByPersona`-style filter for the related-resources list:
+
+```tsx
+const [persona, setPersona] = useState<{ tier: 'Prospect' | 'Member' }>({ tier: 'Prospect' });
+
+const visible = persona.tier === 'Prospect'
+  ? related.filter(r => isProductOrGuide(r))
+  : related;
+```
+
+`isProductOrGuide` is a simple title/group check against your corpus — adapt to whatever resource types your KB uses. The point isn't the exact rule, it's that the panel **responds** to the persona toggle.
+
+### 7c. Render two visually distinct sections in the sidebar
+
+Above the existing "Paths" section, render a "Related resources" block with:
+- The persona toggle.
+- The filtered list, each item a clickable card with title.
+- A subtle group/type badge so the user can tell a product from a guide from an endorsement.
+
+### 7d. Verify
+
+Pick an ambassador-style entity from your corpus — someone or something that authored content AND endorsed/field-tested products. In the Aurora-Concierge capstone this is **Mara Chen**; in your own corpus, find the equivalent.
+
+Select that entity. Toggle the persona from Prospect to Member.
+
+**You should see:** Selecting Mara Chen (or your ambassador equivalent) should show her authored content and the products she field-tested in the side panel. Flipping to Prospect narrows the list to products and guides; flipping back to Member restores the full set including her authored content and endorsements.
+
+If the list doesn't change when you flip persona, the filter isn't wired to the toggle state — tell the AI: *"The related-resources list doesn't change when I flip persona. The visible filter isn't reading from the persona state. Fix."*
+
+---
+
+## Step 8 — Answer a graph-only question (25 min)
 
 This is the demo moment. Find or construct a question against your KB that **single-shot retrieval cannot answer** — only graph traversal can.
 
@@ -375,7 +490,7 @@ graph-only demo punchline.)
 
 ---
 
-## Step 7 — Write a demo script (15 min)
+## Step 9 — Write a demo script (15 min)
 
 Open your AI:
 
@@ -412,7 +527,7 @@ Save as `demo-script.md`.
 
 ---
 
-## Step 8 — Record a 4-minute walkthrough (15 min)
+## Step 10 — Record a 4-minute walkthrough (15 min)
 
 Record yourself walking the demo script.
 

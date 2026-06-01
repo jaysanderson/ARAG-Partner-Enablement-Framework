@@ -6,22 +6,20 @@
 
 ## What you'll build
 
-Four production-readiness artefacts:
+Three production-readiness artefacts:
 
 1. **A residency statement** — the 4-sentence paragraph you read to the CTO.
-2. **A BYO-LLM configuration** — your sandbox running on a customer-owned LLM tenant (Azure / Vertex / Bedrock).
-3. **A rate-limit-aware client** — code that handles 429s, retries with backoff, coalesces duplicate requests.
-4. **An observability dashboard spec** — the widgets, the alarms, the targets.
+2. **A rate-limit-aware client** — code that handles 429s, retries with backoff, coalesces duplicate requests.
+3. **An observability dashboard spec** — the widgets, the alarms, the targets.
 
 Plus a `production-checklist.md` and a 3-minute "platform-grade" pitch video.
+
+> BYO-LLM is **taught** in this Build's [`lesson.md`](lesson.md#byo-llm-bring-your-own-llm) and reviewed by quiz, but it is **not a walkthrough deliverable** — you don't ship a `byo-llm-config.md` or a toggle here. See Step 3 below + the lesson's [*When BYO-LLM doesn't fit: clean descope*](lesson.md#when-byo-llm-doesnt-fit-clean-descope) section for why.
 
 ## What you'll need open
 
 - **Your Nuclia dashboard** with your Build 0 KB.
-- **Access to one BYO-LLM provider**: Azure OpenAI, Google Vertex AI, or AWS Bedrock. If you have none, you can **skip Step 3** and document the plan instead — note that in your verification.
 - **Your terminal, editor, AI assistant**.
-
-You'll need credentials for whichever BYO-LLM you pick. If your partner org doesn't have these, ask your manager for a shared sandbox or skip that step and use the default Nuclia model with a written "we'd configure BYO-LLM at customer engagement time" note.
 
 ---
 
@@ -62,9 +60,9 @@ Open the Nuclia dashboard. For your KB, capture:
 Create `residency-statement.md`. Use this template, replace the placeholders, then **read it aloud** to make sure the cadence is professional:
 
 ```markdown
-# Knowledge Base Residency — <KB Name>
+# Knowledge Box Residency — <KB Name>
 
-The <KB name> knowledge base is provisioned in the <REGION> region
+The <KB name> Knowledge Box is provisioned in the <REGION> region
 (zone <zone-id>). All ingested content, derived embeddings, the
 knowledge graph, and extracted metadata reside within <jurisdiction>
 jurisdiction.
@@ -96,91 +94,13 @@ Save the file.
 
 ---
 
-## Step 3 — Configure BYO-LLM (45 min)
+## Step 3 — BYO-LLM: concept-only in this Build (5 min)
 
-Pick **one** provider. If you have none, skip to Step 3d.
+BYO-LLM is covered in detail in this Build's [`lesson.md`](lesson.md#byo-llm-bring-your-own-llm) — concept, architecture, the three named provider patterns (Azure OpenAI, Google Vertex, AWS Bedrock), and the customer objections it neutralises.
 
-> **Why BYO-LLM matters:** the customer's CTO doesn't want Nuclia (or anyone) holding their cleartext data inside an LLM provider's logs. With BYO-LLM, every generation call goes from Nuclia → the customer's own LLM tenant in the customer's own cloud account. Data residency, audit, billing — all stay with the customer.
+**It is not a walkthrough deliverable.** Most partners running this Build do not have a customer Azure/Vertex/Bedrock tenant to point a KB at — and shipping a non-functional toggle in a real customer build is worse than shipping no toggle (see [*When BYO-LLM doesn't fit: clean descope*](lesson.md#when-byo-llm-doesnt-fit-clean-descope) in the lesson). Configuring BYO-LLM is a per-tenant platform task you run **during the co-engineered POC with the customer**, not a Foundations exercise.
 
-### 3a. Azure OpenAI
-
-1. **In Azure portal** → search "Azure OpenAI" → create a resource if you don't have one.
-2. **Deploy a model** — GPT-4 or GPT-4o. Note the **deployment name**.
-3. **Capture four values:**
-   - Endpoint URL (e.g., `https://my-aoai.openai.azure.com/`)
-   - Deployment name (e.g., `gpt-4`)
-   - API version (e.g., `2024-02-15-preview`)
-   - API key (from "Keys and Endpoint" in the portal)
-4. **In Nuclia dashboard:** open KB → Settings → Generative model → switch to **Custom Azure OpenAI**.
-5. Paste the four values. Save.
-
-### 3b. Google Vertex AI
-
-1. **In GCP console** → enable the **Vertex AI API** for your project.
-2. **Create a service account** with `Vertex AI User` role.
-3. **Download the JSON credentials**.
-4. **Nuclia dashboard:** Settings → Generative model → **Custom Vertex**.
-5. Paste the JSON contents. Save.
-
-### 3c. AWS Bedrock
-
-1. **In Bedrock console** → request access to a model (e.g., Claude 3.5 Sonnet, or any available).
-2. **Capture AWS access key + secret + region**.
-3. **Nuclia dashboard:** Settings → Generative model → **Custom Bedrock**.
-4. Paste credentials + model ID. Save.
-
-### 3d. Test the BYO-LLM
-
-After saving, run 5-10 `/ask` queries against your KB. Use the same `curl` pattern from Build 0:
-
-```bash
-export NUCLIA_API_URL="<url>"
-export NUCLIA_KB_ID="<kb-id>"
-export NUCLIA_API_KEY="<jwt>"
-
-curl -s -X POST \
-  -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
-  -H "Content-Type: application/json" \
-  -H "x-synchronous: true" \
-  -d '{"query":"<a question your corpus can answer>","prefer_markdown":true,"rephrase":true,"max_tokens":300}' \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" | jq '.answer'
-```
-
-**You should see:** an answer comes back as before. The retrieval is unchanged; only the generator is different. The **voice** may sound subtly different (a Claude answer reads differently from a GPT-4 answer).
-
-**If you get an LLM error**, the credentials are wrong. Re-check in the dashboard. Common gotchas:
-- Azure: the deployment name (not the model name).
-- Vertex: the service account needs `Vertex AI User` role.
-- Bedrock: model access must be approved in the Bedrock console.
-
-### 3e. Document the configuration
-
-Create `byo-llm-config.md`:
-
-```markdown
-# BYO-LLM Configuration
-
-Provider: <Azure OpenAI | Google Vertex | AWS Bedrock>
-Model: <e.g., gpt-4o, gemini-1.5-pro, claude-3-5-sonnet>
-Region: <where the LLM is hosted>
-Billing tenant: <customer's tenant>
-
-## Validation
-- 5 /ask queries tested post-switch — all returned grounded answers with citations.
-- Voice change observed (subtly different phrasing from default).
-- No errors after 10 minutes of testing.
-
-## Customer engagement notes
-At customer onboarding, we'd:
-1. Provision a fresh LLM endpoint in the customer's own tenant.
-2. Co-locate the LLM region with the KB region (EU/EU or US/US).
-3. Hand over the LLM API key only via the customer's secret manager.
-4. Set up cost-anomaly alerts on the customer's tenant.
-```
-
-### 3f. If you skipped Step 3 (no BYO-LLM access)
-
-Write `byo-llm-config.md` describing **what you would do** at a customer engagement. The reviewer accepts a plan in lieu of a live config, as long as it's specific and not generic.
+What you owe this Build's reviewer on BYO-LLM is **fluent talk-track**, not a config file. Read the lesson's two H2 sections, then in your residency statement (Step 2) be ready to answer the follow-up question — *"is the LLM EU-resident too?"* — in one sentence, without hand-waving. That's the bar.
 
 ---
 
@@ -414,7 +334,7 @@ Record yourself walking through the **artefacts**, not code:
 
 1. **(45 sec)** Hook: *"Three things the customer's CTO cares about — residency, BYO-LLM, observability. Watch."*
 2. **(30 sec)** Read your `residency-statement.md` aloud. Don't paraphrase — read it. The CTO needs to hear the cadence.
-3. **(30 sec)** Show the Nuclia dashboard with the BYO-LLM toggle. Switch between providers (or describe verbally if you can't switch live). Narrate: *"Every generation call leaves Nuclia and lands in the customer's own cloud account."*
+3. **(30 sec)** **BYO-LLM verbal beat** — narrate the architecture, do not demo a toggle. Say: *"BYO-LLM is configured at the KB level on the Nuclia platform — Azure OpenAI, Google Vertex, or AWS Bedrock against the customer's own tenant. Every generation call leaves Nuclia and lands in the customer's own cloud account. We don't ship a per-click toggle in customer builds — we wire it once during the co-engineered POC."* (This is the talk-track the [Build 11 lesson](lesson.md#when-byo-llm-doesnt-fit-clean-descope) covers.)
 4. **(45 sec)** Open `dashboard-spec.md`. Walk the citation-rate widget. Narrate: *"This is your retrieval-quality alarm. When this drops, something broke upstream — somebody added bad documents, or the labeller misclassified, or content moved."*
 5. **(30 sec)** Close: *"Platform-grade. Not demo-grade. Sign here."*
 
@@ -422,15 +342,40 @@ Upload to `#build-clinic-submissions`.
 
 ---
 
+## Step 8 — Ship an explainability surface for the regulated-buyer conversation (25 min)
+
+Observability points your operators at platform health. Explainability points the *customer's security reviewer* at retrieval honesty. Same primitives, opposite audience. Tier-3+ buyers in finance, healthcare, and government ask for this in the SOC 2 / vendor-risk pass. Build it once; reuse on every retrieval surface.
+
+### 8a. Build the WhyAmISeeingThis component that narrates the persona inputs driving retrieval
+
+In `src/components/WhyAmISeeingThis.tsx` (or your app's equivalent), write a small aside that turns the persona inputs feeding retrieval into one or two plain-English sentences. The shopper sees: *"Because you're a Gold member in EU, and member-only perks are unlocked."* No JSON. No filter syntax. The CMO can read it on a Tuesday and ship it on a Wednesday.
+
+### 8b. Add the dev toggle that pretty-prints the literal /find request body per section
+
+Underneath the narration, add a `Show the AI's actual /find queries` button. When toggled on, render one `<pre>` per retrieval section containing the literal `{ query, filters, page_size }` object that was sent to ARAG — same source of truth as your `/find` call, no separate code path. Toggle stays **collapsed by default**; opt-in only.
+
+### 8c. Verify the surface answers a 3-question security review
+
+Sit down with the rendered page and walk it as if you were a vendor-risk analyst. Confirm the surface answers, in order:
+- (a) What data is the AI seeing? — the narration names the persona attributes.
+- (b) What is the AI doing with it? — the narration explains the gating logic in English.
+- (c) Can an admin see the actual request? — the dev toggle reveals the literal `/find` body.
+
+If any of those three questions takes more than a click to answer, tighten the surface until it doesn't.
+
+**You should see:** an admin should be able to open the dev disclosure on any retrieval surface and read the exact `/find` body the AI sent to the platform. The shopper-facing narration stays visible at all times; the JSON stays hidden until requested.
+
+---
+
 ## Verification checklist
 
 - [ ] `residency-statement.md` written and read-aloud-ready.
-- [ ] BYO-LLM configured against Azure / Vertex / Bedrock (or plan documented if no access).
-- [ ] `byo-llm-config.md` saved.
+- [ ] BYO-LLM lesson read; residency-statement follow-up ("is the LLM EU-resident?") answerable in one sentence without hand-waving.
 - [ ] `src/lib/rateLimitedRagClient.mjs` runs the demo block and shows ~49/50 coalescing.
 - [ ] `dashboard-spec.md` saved with widget definitions + alarm thresholds.
 - [ ] `production-checklist.md` saved.
 - [ ] `prompt-log.md` saved.
+- [ ] `WhyAmISeeingThis` component shipped with the dev-query toggle wired to the live `/find` payload.
 - [ ] 3-minute Loom pitch submitted.
 
 Then take the [Build 11 quiz](quiz.md). Pass → start [Build 12](../build-12-capstone-prep/).
@@ -439,8 +384,8 @@ Then take the [Build 11 quiz](quiz.md). Pass → start [Build 12](../build-12-ca
 
 ## Getting unstuck
 
-**BYO-LLM switch breaks `/ask`.**
-- Most common: wrong credentials or wrong region. Re-check in the dashboard. The error message in `data.answer` (or in the dashboard's recent-runs log) usually identifies the provider error.
+**Residency statement reads generic.**
+- Re-read it aloud and time it. If you can't say it in 30–40 seconds with conviction, the placeholders aren't filled in with *your* values. Replace every `<placeholder>` with a concrete answer your CTO audience could verify in the Nuclia dashboard.
 
 **Coalescing demo: only 1-2 calls coalesce instead of ~49.**
 - Cache key isn't deterministic. The AI may be including a timestamp or random ID. Tell AI: *"My cache key includes [X]; remove it so identical queries produce identical keys."*

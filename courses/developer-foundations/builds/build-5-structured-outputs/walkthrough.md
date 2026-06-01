@@ -443,15 +443,76 @@ If the model hallucinates cells, tighten the prompt: *"For any attribute you can
 
 ---
 
-## Step 6 — Verify the three response shapes (20 min)
+## Step 6 — Add traceable citations to your structured output (25 min)
+
+The three workflows now return clean JSON. But none of those rows can be clicked back to a source — the answers are grounded, but the *output payload* is not traceable. Tier-3 buyers care about that. Add a `citation_resource_id` field to one workflow, lock it down with a system-prompt rule, and render it as a click-through.
+
+### 6a. Add `citation_resource_id` to one schema
+
+Pick `faq-generator.mjs`. Edit the schema so each FAQ item has a third required field:
+
+```js
+items: {
+  type: "object",
+  properties: {
+    question: { type: "string" },
+    answer: { type: "string" },
+    source_resource_title: { type: "string" },
+    citation_resource_id: { type: "string" }
+  },
+  required: ["question", "answer", "source_resource_title", "citation_resource_id"]
+}
+```
+
+**You should see:** the wrapper still accepts the schema and the response now carries a `citation_resource_id` on every row.
+
+### 6b. Add the "verbatim id" line to the system prompt
+
+In the same file, extend the query string (or add a system-style preamble — your `askForJson` wrapper currently only takes a `query`, so prepend it to the query):
+
+```js
+const query =
+  "For every FAQ item, set citation_resource_id to a VERBATIM resource id " +
+  "from the retrieved context. Do NOT invent ids, slugs, hostnames or paths. " +
+  "If you cannot cite a real id, omit the item entirely.\n\n" +
+  `Based on content related to '${topic}', generate 5 FAQ entries ...`;
+```
+
+**You should see:** the IDs in the printed output now match real resource IDs from your KB (open the Nuclia dashboard, spot-check 2-3). If you see invented-looking slugs, the discipline line isn't biting — tighten it.
+
+### 6c. Render each row as a click-through
+
+Update the pretty-printer in `faq-generator.mjs` to emit a clickable line per item:
+
+```js
+for (const [i, f] of result.faqs.entries()) {
+  console.log(`${i + 1}. Q: ${f.question}`);
+  console.log(`   A: ${f.answer}`);
+  console.log(`   Source: ${f.source_resource_title}`);
+  console.log(`   Link: https://your-app.example.com/p/${f.citation_resource_id}`);
+  console.log("");
+}
+```
+
+(Swap `https://your-app.example.com` for whatever your downstream renderer is. In a real React app this becomes a `<CitationLink resourceId={f.citation_resource_id} />` — see the capstone reference below.)
+
+**Verification:** Every item in your structured output should have a working click-through to the cited resource page — zero invented ids.
+
+**See it in the capstone:** `Capstone-Aurora-Concierge/src/lib/askForJson.ts` (verbatim-id system prompt) and `Capstone-Aurora-Concierge/src/pages/Personalize.tsx` → `CitationLink` / `CitationInline` renderers.
+
+### 6d. Append to prompt log
+
+---
+
+## Step 7 — Verify the three response shapes (20 min)
 
 The `askForJson` wrapper handles three different response shapes from ARAG. You should **prove all three work** — that's how you know the wrapper is robust enough for customer engagements.
 
-### 6a. Shape A: sync mode (the happy path — already working)
+### 7a. Shape A: sync mode (the happy path — already working)
 
 This is what you've been using. Confirms `data.answer_json` is parsed.
 
-### 6b. Shape B: streaming mode
+### 7b. Shape B: streaming mode
 
 Temporarily edit `src/lib/askForJson.mjs` and **remove** the `"x-synchronous": "true"` header from the request. Save.
 
@@ -467,7 +528,7 @@ node faq-generator.mjs "anything"
 
 Put the header back when you're done.
 
-### 6c. Shape C: text fallback
+### 7c. Shape C: text fallback
 
 Temporarily edit one of your workflow scripts. After the schema, add the following line to the query:
 
@@ -479,19 +540,19 @@ Re-run. The model will now return prose with embedded JSON instead of a clean `a
 
 Put the prompt back when done.
 
-### 6d. The point of this drill
+### 7d. The point of this drill
 
 When you sit in a customer engagement and `/ask` returns Shape C unexpectedly (it happens — model behaviour drifts), **your code keeps working**. That resilience is what separates a Tier-3 partner from a partner who delivers something fragile.
 
 ---
 
-## Step 7 — Update prompt-log.md (5 min)
+## Step 8 — Update prompt-log.md (5 min)
 
-Make sure `prompt-log.md` has all five briefs (Step 2 wrapper, Step 3 FAQ, Step 4 taxonomy, Step 5 comparison, plus the response-shape verification narrative from Step 6).
+Make sure `prompt-log.md` has all five briefs (Step 2 wrapper, Step 3 FAQ, Step 4 taxonomy, Step 5 comparison, plus the citation-discipline edits from Step 6 and the response-shape verification narrative from Step 7).
 
 ---
 
-## Step 8 — Record a 4-minute walkthrough (20 min)
+## Step 9 — Record a 4-minute walkthrough (20 min)
 
 Record yourself:
 
@@ -512,7 +573,8 @@ Upload to `#build-clinic-submissions`.
 - [ ] FAQ generator returns 4-5 grounded entries with **real** source resource titles.
 - [ ] Taxonomy generator returns 6-8 sensible domains for your corpus.
 - [ ] Comparison-table generator returns a structured table with same-length value arrays.
-- [ ] All three response shapes verified (Step 6a, 6b, 6c).
+- [ ] FAQ rows carry `citation_resource_id` values that match real KB resource IDs (Step 6) and render as working click-throughs.
+- [ ] All three response shapes verified (Step 7a, 7b, 7c).
 - [ ] `prompt-log.md` saved with all briefs.
 - [ ] 4-minute Loom recording submitted.
 

@@ -44,7 +44,7 @@ The Enterprise variant proves ARAG is a *control room*. The CX variant proves AR
 - **What they're sceptical of:** Black-box recommendation engines. "Personalization" that can't explain itself. Vendors who promise multilingual "next quarter." Long integration projects that the IT team owns.
 - **What they leave with:** A demoable vision of how their product catalog, brand content, and customer data become *one reasoning surface* that powers every customer touchpoint — from search box to abandoned-cart email — with the same single API key.
 
-Where the Enterprise variant earns trust with the CTO by showing residency, BYO-LLM, and a graph extracted from their data, the CX variant earns trust with the CMO by showing the *content-engineering loop*: every AI improvement is a field edit, not a code deployment, and the front-end shows them exactly where the model picked its CTAs and citations from.
+Where the Enterprise variant earns trust with the CTO by showing residency, the ambassador signal, and a graph extracted from their data, the CX variant earns trust with the CMO by showing the *content-engineering loop*: every AI improvement is a field edit, not a code deployment, and the front-end shows them exactly where the model picked its CTAs and citations from.
 
 ---
 
@@ -62,7 +62,7 @@ Partners re-skinning the variant into a banking, hospitality, education, media, 
 
 ### Single KB, multiple content domains via labelsets
 
-Aurora Concierge runs on **one ARAG knowledge base** (`kb-aurora-concierge`) containing all corpus documents tagged with three labelsets. ARAG's labelset-driven filter composition gives the demo every content-routing capability of a multi-KB setup with a fraction of the operational complexity. Partners stand up one KB, not five — and customers can do the same in their POC.
+Aurora Concierge runs on **one ARAG Knowledge Box** (`kb-aurora-concierge`) containing all corpus documents tagged with three labelsets. ARAG's labelset-driven filter composition gives the demo every content-routing capability of a multi-KB setup with a fraction of the operational complexity. Partners stand up one KB, not five — and customers can do the same in their POC.
 
 | Labelset | Values | Volume target |
 |---|---|---|
@@ -93,12 +93,11 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 ### In scope (must ship)
 
-- One ARAG knowledge base (`kb-aurora-concierge`) provisioned in EU region (USA failover documented) with all corpus documents ingested and labelset-tagged.
+- One ARAG Knowledge Box (`kb-aurora-concierge`) provisioned in EU region (USA failover documented) with all corpus documents ingested and labelset-tagged.
 - One bespoke data-augmentation agent extracting a customer-journey graph spanning product, content, and loyalty content (filtered at query time when relevant).
 - Six branded demo surfaces (one per tier of the capability ladder, plus the landing page and the abandoned-cart flow).
 - Three custom Tier 3 workflows oriented to digital-experience operations.
 - One Tier 4 composite RAG flow — Abandoned-Cart Win-Back (the revenue-recovery showpiece).
-- BYO-LLM toggle visible but de-emphasised vs the Enterprise variant — the CMO doesn't care which LLM is wired in, but a one-click answer to "wait, what about Azure?" still matters when the CIO joins the second meeting.
 - Field-engineered CTAs front and centre — the demo presenter must point at where each call-to-action came from in the source content, because that's the content-engineering recurring-revenue pitch.
 - Multilingual switch on the concierge surface — D2C buyers ask this in the first ten minutes.
 - Floating chat with prospect vs Trail Club member voice — the conversion mechanic.
@@ -150,9 +149,11 @@ These anchors get embedded into every document the corpus generator produces. Th
 │  • searchResultDisplay (per resource)                        │
 │  • videoInfo (per video — speakers, topics, key points)      │
 │                                                              │
-│  BYO-LLM router → Azure │ Vertex │ Bedrock                  │
+│  Generation: KB-configured LLM endpoint (platform default)  │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+> **Note on BYO-LLM.** BYO-LLM is a per-KB platform configuration (Azure OpenAI / Google Vertex / AWS Bedrock — see [Build 11 lesson](../../build-11-production-readiness/lesson.md#byo-llm-bring-your-own-llm)), not a UI lever in this capstone. Aurora Concierge ships with the platform default generator and *no* in-app toggle. When the CIO joins the second meeting and asks "what about Azure?" the answer is the Build 11 lesson talk-track: BYO-LLM is wired at the platform level during the co-engineered POC against the customer's own tenant — it's not a click in the demo. See [*When BYO-LLM doesn't fit: clean descope*](../../build-11-production-readiness/lesson.md#when-byo-llm-doesnt-fit-clean-descope).
 
 ### 5.2 Frontend stack
 
@@ -164,6 +165,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 ### 5.3 Backend stack
 
 - **ARAG only.** Same architecture point as the Enterprise variant: there is no middleware to maintain. The CMO appreciates this differently from the CTO — no integration project to extract them from on day one.
+- **Generation backend:** Configured at the KB level via the Nuclia dashboard. Not exposed in the demo UI (see Build 11 for when and how to surface BYO-LLM to a customer — descoped here so the demo only claims what it actually ships).
 
 ### 5.4 Data-augmentation agent — the customer-journey graph
 
@@ -209,7 +211,7 @@ The graph in the CX variant is *not* the operational graph of the Enterprise var
 
 | Route | Tier(s) | Purpose |
 |---|---|---|
-| `/` (landing) | — | Hero. Aurora brand, residency + BYO-LLM badges. 90 sec. |
+| `/` (landing) | — | Hero. Aurora brand, residency badge, live ingested-corpus stats (resources + paragraphs + graph nodes from the active KB). 90 sec. |
 | `/storefront` | Tier 1 + 2 | Conversational product discovery. Hybrid search across product + content + support. AI Answer with side-by-side cross-sell. People Also Ask. Content-type filters (products / guides / videos). |
 | `/concierge` | Tier 2 | The two-voice concierge — *Shopper mode* (3 sentences + cross-sell CTA, no login required) and *Trail Club Member mode* (detailed gear advice, loyalty-perk citations, member-exclusive recommendations). Multilingual switch front and centre. |
 | `/personalize` | Tier 3 | The three structured-generation workflows (Section 6). |
@@ -292,10 +294,11 @@ Same overall shape as the Enterprise variant. Effort estimates are nearly identi
 ### Phase 5 — Multilingual + production-readiness polish (Week 6–7)
 
 - Multilingual concierge: hard-coded language dropdown (English, Spanish, French, German, Japanese, Mandarin) with the `Respond in {language}:` query prefix pattern. The CMO in the room asks for this in the first ten minutes.
-- BYO-LLM toggle wired to at least two of three named endpoints. UI-stub the third if budget binds.
 - Residency badge visible in the header.
+- Live ingested-corpus stats wired into the hero (resources, paragraphs, graph nodes) — read from the active KB at page load, no hardcoded values.
 - Rate-limit-aware client in the wrapper.
 - Lightweight observability panel — call volume per surface, average response time per workflow.
+- **No BYO-LLM toggle in the UI.** Generation backend is set at the KB level via the Nuclia dashboard; when the CIO joins, the talk-track is the Build 11 lesson (BYO-LLM wired at platform during co-engineered POC), not a click in the demo.
 - **Exit criteria:** Live "what about Japanese-speaking customers" question has a one-click answer.
 
 ### Phase 6 — Demo script + recording + re-skin playbook (Week 7–8)
@@ -316,7 +319,7 @@ Same overall shape as the Enterprise variant. Effort estimates are nearly identi
 | 2. Journey graph agent | 1.5 | Schema design, tuning, extraction across product + content + loyalty |
 | 3. Fork + reskin + floating chat | 1 | Palette swap, photography-led hero, two-voice chat wiring, persona switcher |
 | 4. Workflows + composite RAG | 2 | Three schemas, abandoned-cart pipeline visualisation, fixture data for Sara |
-| 5. Multilingual + production polish | 1 | Language switch, BYO-LLM toggle, observability panel |
+| 5. Multilingual + production polish | 1 | Language switch, residency badge + live KB stats, observability panel |
 | 6. Demo + re-skin playbook | 0.5 | Script, rehearsal, recording, playbook |
 | **Total** | **8 weeks** | Single strong full-stack engineer with Progress SE on call |
 
@@ -334,9 +337,9 @@ The talk track for the CMO room.
 >
 > The brand I'm demoing against is Aurora Outfitters. Fictional D2C outdoor retailer — six hero products, four ambassadors, five destinations, three customer segments. The corpus is everything Aurora's content and merchandising teams already produce: product pages, fit guides, trail guides, ambassador videos, loyalty content, brand pillars. Nothing custom. Just their existing content, with five custom fields per asset that drive the AI behaviour."
 
-*[Indicate top-right: residency badge "EU", BYO-LLM badge "Azure", language switcher "English".]*
+*[Indicate top-right: residency badge "EU", language switcher "English". Below the hero: live ingested-corpus stats card with resource, paragraph, and graph-node counts read from the active KB.]*
 
-> "Three things you'll see throughout: EU residency you choose, the LLM you already pay for, and language switching that's a query prefix away. None of those require code changes once you're live."
+> "Two things you'll see throughout, both proof points the demo is real not slideware: EU residency you can verify in the Nuclia dashboard, and live KB stats — those numbers update every time the corpus is re-indexed. Language switching is a query-prefix pattern that's three lines of code; you'll see it on the Concierge surface. The LLM that produces the words is wired at the platform level when we co-engineer the POC against your tenant — that's BYO-LLM, but it's not a button in the demo."
 
 ### 1:30 — 5:30 | Tier 1 + 2: Storefront + Floating Chat (4 min)
 
@@ -449,7 +452,7 @@ The talk track for the CMO room.
 
 *[Return to landing page.]*
 
-> "What you've seen is one application built on one knowledge base, three labelsets, one extraction agent, three custom workflows, and one composite-RAG pipeline. Every output is grounded, citable, explainable, and editable by your content team without a code deployment.
+> "What you've seen is one application built on one Knowledge Box, three labelsets, one extraction agent, three custom workflows, and one composite-RAG pipeline. Every output is grounded, citable, explainable, and editable by your content team without a code deployment.
 >
 > Three things you have right now that none of your personalization vendors offer:
 >
@@ -507,7 +510,7 @@ For partners deciding which Aurora Concierge to build first.
 | **Headline pitch** | Control room for unstructured knowledge | Digital-experience platform for content + commerce |
 | **Corpus** | Atlas Global Industries (industrial) | Aurora Outfitters (D2C retail) |
 | **Killer demo moment** | Composite-RAG incident root cause + the graph showing cross-functional reasoning | Two-voice floating chat + content-engineered CTAs + abandoned-cart pipeline |
-| **Why ARAG vs competitors** | BYO-LLM kills lock-in; residency kills compliance objection; typed graph kills "we already have RAG" | Explainable personalization kills "we already use Algolia/Bloomreach/Klevu"; content-engineering loop kills "AI is an IT project" |
+| **Why ARAG vs competitors** | Residency + platform-level BYO-LLM kill lock-in; typed graph kills "we already have RAG" | Explainable personalization kills "we already use Algolia/Bloomreach/Klevu"; content-engineering loop kills "AI is an IT project" |
 | **Recurring revenue hook** | Agent maintenance + graph curation + production hardening | Content engineering retainer + workflow expansion + new-channel rollout |
 | **Average partner deal size** | $250–500K | $150–350K |
 | **Typical sales cycle** | 6–12 months | 3–6 months |
@@ -528,7 +531,7 @@ Aurora Concierge ships when *all* of the following are true:
 4. The two-voice floating chat (Shopper vs Trail Club Member) is demonstrably different in voice, length, and CTA behaviour for the same query.
 5. The abandoned-cart composite-RAG flow produces a winback message demonstrably better — on at least three reviewer-judged criteria — than a single-shot `/ask` for the same input.
 6. The multilingual switch works for at least three of the six listed languages.
-7. The BYO-LLM toggle works for at least two of three named endpoints.
+7. The hero shows live KB stats (resources, paragraphs, graph nodes) read from the active KB at page load — no hardcoded numbers, no slides.
 8. Recorded demo uploaded and shared internally before the wider partner programme opens.
 9. CX re-skin playbook committed to this repo.
 10. Build owner has trained at least one other Progress SE to deliver the demo cold.
