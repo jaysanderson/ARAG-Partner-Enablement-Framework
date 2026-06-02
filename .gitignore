@@ -1,0 +1,15 @@
+# macOS Finder metadata — never useful in a repo
+.DS_Store
+**/.DS_Store
+
+# Local environment files (Build 0 students create these with live credentials)
+.env
+**/.env
+scratch.sh
+
+# Editor + OS noise
+.vscode/
+.idea/
+*.swp
+*~
+Thumbs.db
