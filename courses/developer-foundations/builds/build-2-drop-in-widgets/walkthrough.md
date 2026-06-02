@@ -1,395 +1,259 @@
 # Build 2 — Walkthrough: Drop-in Widgets
 
-> Estimated time: 1.5–2 hours focused. Read the [lesson](lesson.md) first.
+> Estimated time: 1 to 1.5 hours focused. Read the [lesson](lesson.md) first.
 >
-> **No backend. No React. No build step.** This Build is one HTML file you can edit in any text editor. If your previous experience with "the web" is "I've made things bold in WordPress" — you can do this.
+> **The learning is in the dashboard, not the editor.** Build 2 is the one walkthrough where the Nuclia platform does almost all the work — your job is to *see* the full spread of widget options the configurator exposes, pick a configuration that fits a demo, and watch it render locally. Code is one snippet you paste; no vibe-coding required (until the playbook at the end).
 
 ## What you'll build
 
-A single HTML page, branded to your partner palette, with:
+A local `index.html` file on your Desktop running a Nuclia widget set you configured entirely through the dashboard's Widget configurator. By the end you'll know:
 
-- A working **search bar** (instant search against your KB).
-- A floating **chat bubble** (streaming Q&A with citations).
-- A **content-type filter** to scope to PDFs only.
-- A **deep-link query** (`?q=...`) that auto-fires the search on page load.
+- **Every widget type** the platform ships (search bar, search results, chat, popup) and when to pick each one.
+- **Every display + behaviour option** the configurator exposes (placeholder text, theme, citations style, autocomplete, language, default filters).
+- **The brand panel** in the configurator — how a non-developer customises colours and typography without ever touching CSS.
+- **The product filter** — a one-line filter expression that narrows results to a subset of the corpus.
+- The shape of the **embed code** the configurator generates, and where it goes in a static HTML file.
 
-Deployed to a public URL anyone can open in a browser. **This is the fastest "we have a chatbot" demo in the course** — 30 minutes from blank file to working page.
+**No hosting, no deploy, no public URL.** The file lives on your Desktop and opens in your browser like any other local file. The goal is platform fluency — you should be able to walk a customer through the configurator from memory after this Build.
 
 ## What you'll need open
 
-- **Your Nuclia dashboard** (KB still ingested from Build 0).
-- **Your `.env` file** — or just have the three credentials handy.
-- **Your code editor** (VS Code recommended).
-- **Your AI assistant**.
+- **Your Nuclia dashboard** (Knowledge Box still ingested from Build 0).
+- **Your code editor** (VS Code recommended) — you'll paste one snippet, that's it.
 - **A modern web browser** (Chrome / Edge / Firefox / Safari — any current version).
-
-You also need a free account on **one of these deploy targets** (we'll cover this in Step 7):
-
-- **Netlify Drop** ([app.netlify.com/drop](https://app.netlify.com/drop)) — easiest, drag-and-drop, no login required.
-- **Vercel** ([vercel.com](https://vercel.com)) — free tier, GitHub login.
-- **GitHub Pages** — if you already have a GitHub account.
-
-Pick whichever is least intimidating. **Netlify Drop** wins for "I just want to ship one file."
+- **Your AI assistant** — only used in Step 9 (the demo playbook). Skip it until then.
 
 ---
 
-## Step 1 — Set up your project folder (5 min)
+## Step 1 — Create your local file (5 min)
 
-Open your terminal:
-
-```bash
-cd ~/Desktop
-mkdir foundations-build-2
-cd foundations-build-2
-```
-
-**What that did:** created a fresh folder for this Build's work and moved into it.
-
-Open the folder in VS Code (or your editor):
-
-```bash
-code .
-```
-
-(`code .` opens VS Code in the current folder. If `code` isn't set up, open VS Code manually then File → Open Folder.)
-
-You'll only edit **one file** in this Build: `index.html`. We'll create it next.
-
----
-
-## Step 2 — Find the widget snippet in your Nuclia dashboard (5 min)
-
-ARAG ships pre-built widgets — drop-in HTML components that handle search and chat UI for you. You don't write the JavaScript; you just paste the snippet.
-
-1. Open your Nuclia dashboard.
-2. Open your KB.
-3. Look for a tab called **Widget**, **Embed**, or **Integration** (wording varies by tenant).
-4. You'll see a generated HTML snippet. Copy it into a scratchpad — we'll reference its shape.
-
-**The snippet looks roughly like this** (yours will have your actual KB ID, zone, and API key filled in):
+Open VS Code (or any text editor). **File → New File**. Save it into `~/Desktop/foundations-build-2/` (create the folder if it doesn't exist) as `index.html`. Paste this minimal skeleton in and save:
 
 ```html
-<script src="https://cdn.rag.progress.cloud/nuclia-widget.umd.js"></script>
-
-<nuclia-search-bar
-  knowledgebox="YOUR_KB_ID"
-  zone="aws-eu-1"
-  apikey="YOUR_API_KEY"
-  placeholder="Ask anything…">
-</nuclia-search-bar>
-
-<nuclia-search-results></nuclia-search-results>
-
-<nuclia-chat
-  knowledgebox="YOUR_KB_ID"
-  zone="aws-eu-1"
-  apikey="YOUR_API_KEY"
-  mode="light">
-</nuclia-chat>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>My ARAG widget</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; }
+    .hero { max-width: 960px; margin: 0 auto; padding: 48px 24px; }
+    h1 { font-size: 28px; margin: 0 0 24px; }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1>My ARAG widget</h1>
+    <!-- The Nuclia widget embed code will be pasted here in Step 7. -->
+  </div>
+</body>
+</html>
 ```
 
-**What each piece does:**
-- `<script src="...">` loads the widget library.
-- `<nuclia-search-bar>` is the input field. The user types here.
-- `<nuclia-search-results>` is where matched documents render.
-- `<nuclia-chat>` is the floating chat bubble (bottom-right by default).
-
-You have **three credentials** to paste:
-- `knowledgebox` — your KB UUID (same as `NUCLIA_KB_ID` from Build 0).
-- `zone` — the region prefix from your API URL (`aws-eu-1` for EU, `aws-us-2` for US).
-- `apikey` — your service-account JWT.
-
-**Important:** the API key in widget mode goes into client-side HTML. **This is fine for a demo**. For production, you'd proxy through your backend — Build 11 covers that. For now, we're embracing the "ship in 30 minutes" promise.
+That's the entire HTML you'll write in this Build. Everything else comes from the dashboard.
 
 ---
 
-## Step 3 — Vibe-code the page (15 min)
+## Step 2 — Open the widget configurator in your dashboard (5 min)
 
-### 3a. Brief your AI
+This is where Build 2 happens. The Nuclia dashboard exposes a **widget configurator** — a no-code UI that builds the embed snippet for you. Spend 5 minutes orienting before configuring anything.
 
-Open your AI assistant. Paste this brief:
+1. Open your Nuclia dashboard and select your Knowledge Box.
+2. Look for a tab called **Widget**, **Widgets**, or **Embed** in the left-hand nav (wording varies by tenant).
+3. You'll see three panes:
+   - A **configuration panel** on the left (tabs / sections covering the widget options).
+   - A **live preview** in the middle that updates as you change options.
+   - A **code panel** on the right showing the generated embed snippet.
+4. Don't change anything yet. Take a minute to scroll through the configuration panel sections — read the option labels. There are usually 5-8 sections (Widget type, Display, Search behaviour, Generation, Branding, Filters, Language, Advanced). The exact wording differs by version.
 
-```
-Build me a single static HTML file index.html that:
-
-1. Loads the Nuclia widget library from
-   https://cdn.rag.progress.cloud/nuclia-widget.umd.js
-2. Renders a hero header with the title "Acme Knowledge Hub"
-   (I'll replace "Acme" with my partner name later).
-3. Renders a <nuclia-search-bar> with placeholder "Ask anything…"
-   and attributes: knowledgebox, zone, apikey (use placeholder
-   values like "YOUR_KB_ID" — I'll fill them in).
-4. Renders <nuclia-search-results> below the bar.
-5. Renders <nuclia-chat> with mode="light" — floating chat
-   bottom right.
-6. Includes a <style> block that uses these CSS custom properties:
-   --nuclia-color-primary, --nuclia-color-secondary,
-   --nuclia-color-background, --nuclia-color-text,
-   --nuclia-color-border, --nuclia-font-family.
-   Set them to placeholder values (e.g., #006FFF for primary)
-   that I'll customize later.
-7. Centers content in a max-width 960px container with comfortable
-   padding.
-8. Add a small footer line "Powered by Progress Agentic RAG."
-
-No build step. No React. Just HTML + CSS + the widget script tag.
-Make it look like something a designer would be okay with —
-clean spacing, sensible font weights, no clutter.
-```
-
-Send. Wait for the file.
-
-### 3b. Save the AI's output
-
-- **Claude Code / Cursor:** *"Save this as index.html in my current folder."*
-- **Web chat (ChatGPT / Claude.ai):** copy the code, create `index.html` in your editor in the `foundations-build-2` folder, paste, save.
-
-### 3c. Read the code before running it
-
-Open `index.html`. Three checks:
-
-1. The `<script>` tag loads from `cdn.rag.progress.cloud` (the widget CDN).
-2. The custom elements (`<nuclia-search-bar>` etc.) have `knowledgebox`, `zone`, `apikey` attributes.
-3. The `<style>` block defines the `--nuclia-color-*` variables.
-
-If anything looks off, tell the AI to fix it.
-
-### 3d. Plug in your credentials
-
-In `index.html`, find every placeholder and replace:
-
-| Placeholder | Replace with |
-|---|---|
-| `YOUR_KB_ID` | your KB UUID |
-| `YOUR_API_KEY` | your service-account JWT |
-| `YOUR_ZONE` or `aws-eu-1` placeholder | your zone (likely `aws-eu-1`) |
-| `Acme Knowledge Hub` | your partner name + "Knowledge Hub" |
-
-Save the file.
+**The takeaway:** every option a partner might want to change in a customer engagement is in this panel. You're going to walk through each one.
 
 ---
 
-## Step 4 — Serve the page locally (5 min)
+## Step 3 — Tour the widget types (10 min)
 
-Open your terminal in the `foundations-build-2` folder. Run:
+The first section of the configurator lets you pick **which widgets** to render. The four options:
 
-```bash
-npx serve .
+| Widget | Visual | Right when |
+|---|---|---|
+| **Search bar** + **Search results** | Input + scrollable result list, inline on the page | Knowledge-base / docs sites where users already know roughly what they're looking for |
+| **Chat (floating)** | Bottom-right bubble that opens a conversational panel | Support sites, marketing pages, Intercom-style overlays — "ask anything" affordance without rebuilding the page |
+| **Chat (inline / anchored)** | Anchored in the page flow rather than floating | Conversational landing pages where chat IS the page |
+| **Popup** | Modal that opens when a result card is clicked, renders the full resource inline | Media-heavy corpora — video, audio, scanned PDFs — where you want preview without leaving context |
+
+**Try each one.** Toggle the search bar on; uncheck the chat. Then flip — chat on, search off. Then both on. Watch the preview pane update each time.
+
+**For Build 2, configure both the search-bar widget AND the floating chat.** That's the most common Tier 1 demo configuration — "I want a search box at the top AND a chat bubble in the corner of every customer page."
+
+---
+
+## Step 4 — Tour the display + behaviour options (15 min)
+
+This is the long step. For each widget you've enabled, the configurator exposes a stack of options. Walk through each one, change it, see how the preview reacts, and read the result against what a customer would want.
+
+### 4a. Search-bar widget options
+
+Common options on the search-bar configurator (exact wording varies):
+
+- **Placeholder text** — what shows in the empty input. Default is usually `"Ask anything…"`. Try `"Search the product catalogue"` or your partner's brand voice.
+- **Layout style** — compact (fits in a header), hero (large with surrounding margin), full-width (spans the container). Pick hero for now to see it dominate the page.
+- **Autocomplete / suggestions** — whether the bar suggests queries as you type. Toggle on.
+- **Show keyboard shortcut** — display `⌘ K` to open the bar with a hotkey.
+- **Search trigger** — search-as-you-type vs. press-Enter-to-search. Try both; press-Enter feels less noisy for most corpora.
+
+### 4b. Search-results widget options
+
+- **Layout** — list view vs. card view vs. compact. Each has a different vibe.
+- **Show source type** — display the document icon next to the title.
+- **Show excerpts** — render a snippet of the matching text under the title (recommended; without it the results read as filenames).
+- **Show citations** — surface citation chips when the answer references a source.
+- **Result count** — page size for the result list (default 10).
+
+### 4c. Chat widget options
+
+- **Mode** — `light` (default), `dark`, `auto` (follows system theme).
+- **Position** — bottom-right (default) vs. bottom-left vs. anchored inline.
+- **Open by default** — auto-open the chat panel on page load (rarely a good idea outside a chat-led page).
+- **Citations style** — inline footnotes vs. trailing citation list vs. hidden. Inline is the most explainable.
+- **Streaming** — toggle whether answers stream token-by-token or arrive complete. Streaming is more impressive in demos.
+- **Sources before answer** — show the retrieved documents before the answer is generated. Sometimes useful for trust-building.
+- **Allow follow-up** — multi-turn conversation memory within a session.
+
+### 4d. Language
+
+- **Response language** — the configurator can pin every answer to a specific language (Spanish, French, German, Japanese, Mandarin, etc.) regardless of the query language. Default is the language of the query.
+
+### 4e. Knowledge box scope
+
+For most Build 2 demos you'll point at one Knowledge Box. The configurator also lets you point at multiple Knowledge Boxes if your account has them — but multi-KB routing is a Build 11 (production-readiness) conversation, not a Build 2 demo move.
+
+**Spend at least 10 minutes** clicking through these options. Watch the preview update. When something visibly changes the experience, note which option it was — you're building the vocabulary you'll use in customer demos.
+
+---
+
+## Step 5 — Set the brand palette in the configurator (10 min)
+
+Most modern widget configurators expose a **branding panel** that does the work of CSS variables for you — colour pickers, font-family field, optional logo upload. No CSS required.
+
+In the branding panel, set:
+
+- **Primary colour** — the brand colour used for buttons, focused states, the chat bubble fill.
+- **Secondary / accent colour** — highlight tone (focused link colour, mention pills).
+- **Background colour** — the widget's surface fill.
+- **Text colour** — body text.
+- **Border colour** — dividers, card borders.
+- **Font family** — pick a system font (`Inter`, `system-ui`, or your partner brand's chosen font if you can load it via Google Fonts).
+
+The preview updates live. Pick a palette that's clearly *not* the default blue Nuclia ships with — you want to be able to look at your local HTML page in Step 7 and instantly tell *"yes, my colours are applying."*
+
+> **Going beyond the configurator.** If your partner's brand needs more than what the configurator exposes — bespoke hover animations, custom result-card layouts, an off-brand chat avatar — every widget accepts a `csspath` attribute that points at a base64-encoded CSS file. That's the partner-developer's escape hatch when the no-code configurator runs out. Build 2 doesn't practice this; the configurator covers 95% of real customer demos.
+
+---
+
+## Step 6 — Add the product filter (5 min)
+
+The configurator's **filters panel** exposes a free-text filter expression input. This is the same string you'd manually add as a `filters='[...]'` attribute if you were writing the HTML by hand — but the configurator embeds it for you.
+
+In the filter input, add:
+
+```
+/n/s/-product-
 ```
 
-**What that did:**
-- `npx` runs a Node.js tool without installing it permanently.
-- `serve` is a tiny local web server.
-- `.` means "serve files from the current folder."
+This is Nuclia's **slug-path filter** matching any resource whose slug contains the substring `-product-`. The Build 0 sample corpus slugs its product documents that way (e.g. `aurora-terratrek-7-product`, `aurora-skyline-45l-product`). With the filter applied, the widget returns only product resources; trail guides, ambassador posts, and brand stories disappear.
 
-**You should see:** the terminal prints a URL, usually `http://localhost:3000`.
+Watch the live preview run a query — confirm the result list snaps to products only.
 
-Open that URL in your browser.
+**If the preview shows zero results:** open one of your product documents in the dashboard's resource browser and check the actual slug. If your corpus uses a different pattern, adjust the filter substring to match (`/n/s/product-` for prefix, or `/icon/application/pdf` if you'd rather filter to PDFs as a first try). The configurator accepts any valid Nuclia filter path.
 
-**Expected page:**
-- A header with your title.
-- A search bar accepting input.
-- A floating chat bubble bottom-right.
+This is the first taste of filtering. Build 7 (Smart Filters) wires this into a much richer faceted UI driven by labelsets.
 
-### Test the search
+---
 
-Type a query that you know matches your corpus (the same kind of question you used in Build 0). Press Enter.
+## Step 7 — Copy the embed code and paste it into your local file (5 min)
 
-**You should see:** within ~1 second, a list of result cards appears below the bar. Each card shows a title, an excerpt, and a relevance hint.
+Now ship it locally.
 
-### Test the chat
+1. In the configurator's **code panel** (the right-hand pane), click the **copy button**. The full embed snippet — script tag, configured widget elements with your credentials and options baked in — lands on your clipboard.
+2. Switch to VS Code and open the `index.html` you created in Step 1.
+3. Find the comment line `<!-- The Nuclia widget embed code will be pasted here in Step 7. -->`.
+4. Replace that comment with the snippet from your clipboard. Save.
+5. Open Finder, navigate to `~/Desktop/foundations-build-2/`, and **double-click `index.html`**. Your default browser opens the file.
 
-Click the floating chat bubble. A panel opens. Type the same question. Hit Enter.
+**You should see:**
 
-**You should see:** an answer that streams in word-by-word, followed by 1–5 citation links.
+- Your "My ARAG widget" hero header.
+- The search bar configured the way you set it (hero / compact, your placeholder text, your brand colour).
+- The chat bubble in the position and theme you picked.
 
-### If nothing renders
+**Test it:**
 
-Open your browser **DevTools** (right-click → Inspect, or `Cmd+Option+I` / `F12`). Click the **Console** tab.
+- Type a query into the search bar and press Enter. Results render below — only product resources (the filter is working).
+- Click the chat bubble. Type the same query. The answer streams in (or arrives complete, depending on your Step 4c choice).
+
+**If nothing renders:** open the browser's DevTools (right-click → Inspect → Console tab). Look for red errors.
 
 | Error | Likely cause | Fix |
 |---|---|---|
-| 401 / 403 in Network tab | Wrong API key | Re-copy JWT from dashboard |
-| 404 from CDN | Widget URL wrong | Re-copy the snippet URL from the dashboard |
-| "Failed to fetch" CORS | Wrong zone | Check zone matches your API URL region |
-| Page loads but search does nothing | Typo in `knowledgebox` | Re-copy the KB UUID |
-| Nothing on the page at all | HTML is malformed | Paste the page source into your AI: "this doesn't render — what's wrong?" |
+| 401 / 403 in Network tab | Wrong API key in the snippet (regenerate from the configurator) | Re-copy the snippet — the configurator may have rotated the key |
+| 404 from CDN | Widget URL wrong (very rare) | Re-copy the snippet |
+| "Failed to fetch" CORS | Wrong zone in the snippet | Re-confirm your Knowledge Box region in the dashboard, regenerate |
+| Page loads but nothing happens | The snippet wasn't pasted between the `<body>` tags | Re-check Step 7 step 3 |
+| Filter returns zero results | Slug pattern doesn't match your corpus | See Step 6's "If the preview shows zero results" note |
 
 ---
 
-## Step 5 — Brand the page (15 min)
+## Step 8 — Generate a second configuration and compare (10 min) — optional but recommended
 
-The whole point of the widgets is **white-labelling without forking code**. You change CSS variables; the widget repaints.
+Go back to the configurator. Change three to five options — for example:
 
-### 5a. Pick a palette
+- Flip the theme from light to dark.
+- Change the placeholder text.
+- Remove the floating chat; add the popup widget instead.
+- Drop the product filter so all content shows.
+- Switch the response language to Spanish.
 
-Grab your partner's brand colours (or use a friendly placeholder palette like the one below):
+Copy the new embed code. In VS Code, **File → New File**, save as `index-v2.html` in the same folder. Paste your Step 1 skeleton, then paste the new snippet between the body tags. Save. Double-click to open.
 
-| Variable | What it controls | Example |
-|---|---|---|
-| `--nuclia-color-primary` | Primary brand colour (buttons, focused states) | `#0066CC` |
-| `--nuclia-color-secondary` | Secondary highlights | `#FF6B35` |
-| `--nuclia-color-background` | Background fill | `#FAFAFA` |
-| `--nuclia-color-text` | Body text colour | `#1A1A1A` |
-| `--nuclia-color-border` | Borders, dividers | `#E5E5E5` |
-| `--nuclia-font-family` | Typeface | `'Inter', sans-serif` |
+**Open both files side-by-side** in two browser windows. Same Knowledge Box, same corpus, two configurations — same query in each returns different visual treatments, different result scopes, different languages.
 
-### 5b. Apply the palette
-
-Find the `<style>` block in `index.html`. Edit the variables under `:root` or `body` (or wherever the AI put them):
-
-```css
-:root {
-  --nuclia-color-primary: #0066CC;
-  --nuclia-color-secondary: #FF6B35;
-  --nuclia-color-background: #FAFAFA;
-  --nuclia-color-text: #1A1A1A;
-  --nuclia-color-border: #E5E5E5;
-  --nuclia-font-family: 'Inter', sans-serif;
-}
-```
-
-Save the file. Reload the page in your browser.
-
-**You should see:** the search bar's border colour, the chat bubble fill, and the result-card highlights all change to your primary colour. The font changes to your chosen typeface.
-
-**If the colours don't apply:** the widget version may use slightly different variable names. Open DevTools → Elements → click on the search bar → look at the Styles panel. The widget exposes its CSS variables — match the names you see.
+**This is the demo move for a Tier 1 customer.** A sales rep can change the look-and-feel of the entire experience in 60 seconds without ever calling for a developer. That's the pitch of widgets — and it's what makes them the right starter for any customer who hasn't committed to a custom build yet.
 
 ---
 
-## Step 6 — Add a content-type filter (10 min)
-
-Customers love filters. Show how easy it is.
-
-### 6a. Filter to PDFs only
-
-In `index.html`, find your `<nuclia-search-bar>` tag. Add the `filters` attribute:
-
-```html
-<nuclia-search-bar
-  knowledgebox="YOUR_KB_ID"
-  zone="aws-eu-1"
-  apikey="YOUR_API_KEY"
-  filters='["/icon/application/pdf"]'
-  placeholder="Ask anything…">
-</nuclia-search-bar>
-```
-
-**What that did:** told the search bar to only return resources whose mimetype starts with `application/pdf`. The `/icon/` prefix is how Nuclia represents content-type filters.
-
-Reload. Run a query. **You should see** only PDF resources in the results. Other content types (markdown, text, video) disappear.
-
-### 6b. (Optional) Add a second bar for videos
-
-If your corpus has any video resources, duplicate the search-bar block under the first one, with `filters='["/icon/video"]'`. Reload.
-
-**You should see** two search bars on the page, each scoped to a different content type. The same query in each returns different results.
-
-This is the foundation of Build 7 (Smart Filters), where you'll wire labelset filter chips into a much richer UI.
-
----
-
-## Step 7 — Add the `?q=` deep-link (15 min)
-
-Customers love **shareable URLs**. "Send your customer a link with the question pre-filled." Easy win.
-
-### 7a. Test if the widget supports it natively
-
-Some widget versions auto-detect `?q=` in the URL and fire the search. Try it:
-
-Open `http://localhost:3000?q=onboarding` (replace `onboarding` with a query that has matches in your corpus).
-
-**If the search auto-fires on page load:** great, native support. Skip to Step 8.
-
-**If nothing happens:** continue to 7b — vibe-code a small helper.
-
-### 7b. Vibe-code the deep-link helper
-
-Open your AI. Paste:
-
-```
-In my index.html, add a small <script> at the bottom (just before </body>) that:
-
-1. On page load, reads ?q= from window.location.search.
-2. If ?q is present and non-empty:
-   - Wait 200ms for the widget to mount (use setTimeout).
-   - Find the <nuclia-search-bar> element.
-   - Set its value attribute to the query.
-   - Programmatically trigger the search (dispatch a "search" event,
-     or call the widget's search() method if one's exposed,
-     or simulate Enter being pressed in the input).
-   - Then use history.replaceState to remove ?q= from the URL,
-     so reload doesn't re-fire it.
-
-3. If ?q is not present, do nothing.
-
-Show me the script block only — I'll paste it into my existing index.html.
-```
-
-Send. Apply the snippet.
-
-### 7c. Test
-
-Reload `http://localhost:3000?q=onboarding`. **You should see** the search bar auto-populate and the results render — without you clicking anything. Then reload `http://localhost:3000` (no `?q`) and confirm the widget still works normally.
-
-If the auto-fire flickers or fires twice, paste the symptom into your AI: *"The search fires twice when I open ?q=foo. Fix the script so it only fires once."*
-
----
-
-## Step 8 — Deploy to a public URL (15 min)
-
-Three options. **Pick one. We recommend Netlify Drop** because there's no account required and no CLI.
-
-### Option A — Netlify Drop (easiest)
-
-1. Open [app.netlify.com/drop](https://app.netlify.com/drop) in your browser.
-2. Drag your **`foundations-build-2` folder** (the whole folder, not the file) onto the drop zone.
-3. Wait ~10 seconds. Netlify deploys it.
-4. Copy the public URL (looks like `https://random-words-12345.netlify.app`).
-
-**Done.** You can rename the site if you sign up; without an account the random URL is fine.
-
-### Option B — Vercel
-
-1. Install Vercel CLI: `npm install -g vercel`.
-2. In your `foundations-build-2` folder: `vercel`.
-3. Follow the prompts. Pick "yes" to all defaults. Sign in with GitHub or email.
-4. Copy the public URL it prints.
-
-### Option C — GitHub Pages
-
-1. Create a public GitHub repo. Push your `foundations-build-2` folder contents to it.
-2. Repo settings → Pages → Source: `main` branch, root.
-3. Wait ~1 minute. The public URL appears at the top of the Pages tab.
-
-**Whichever you pick:** open the public URL. Verify search + chat work. **Open it on your phone too** — confirm the widgets are responsive (they are out of the box, but it's a good check).
-
----
-
-## Step 9 — Write the 30-minute demo playbook (15 min)
+## Step 9 — Write the demo playbook (15 min)
 
 The whole pitch of widgets is *"a sales rep can put this in front of a customer in 30 minutes."* You're going to write the literal playbook that proves it.
 
-Open your AI. Paste this brief:
+Open your AI assistant. Paste this brief:
 
 ```
 Write me a one-page markdown playbook titled
 "Demo a Chatbot in 30 Minutes" that a non-technical sales rep can
 hand to a customer demo participant. The playbook walks them through:
 
-1. Five-minute setup: open the index.html template, paste a KB UUID
-   + API key + zone. (Tell them where to get these from the dashboard.)
-2. Ten-minute branding: edit five CSS variables (primary, secondary,
-   background, text, font). Reload. Show the result.
-3. Ten-minute filters: add a filters attribute to the search bar.
-   Show how content-type filtering changes results.
-4. Five-minute deep link: append ?q=<question> to the URL; show
-   shareable answers.
+1. Five-minute setup: open the Nuclia dashboard, navigate to the
+   Widget configurator on a Knowledge Box. Show the three panes
+   (configuration / live preview / code).
+2. Ten-minute exploration: walk the customer through the widget-type
+   picker (search vs chat) and the display options (layout,
+   placeholder, theme, citations) — let THEM pick options while you
+   narrate what changes in the preview.
+3. Five-minute branding: open the brand panel; let the customer pick
+   their primary colour and font. Live preview updates.
+4. Five-minute filter demo: add a filter expression that narrows
+   results to a content subset relevant to the customer (e.g.
+   /n/s/-product- for product catalogues, or /classification.labels/
+   audience/customer for audience-scoped views). Show the result-set
+   change live.
+5. Five-minute close: copy the embed code from the dashboard's code
+   panel; paste into a local index.html; double-click; the customer
+   sees the same experience running on their machine.
 
 Each step should have:
-- A "before" snippet of code.
-- An "after" snippet of code.
-- One sentence narrating what the customer is seeing.
+- A "you say:" line (talk track for the rep).
+- A "you click:" line (what action in the dashboard).
+- One sentence narrating what the customer is seeing change.
 
 End with a one-sentence pitch the rep can read aloud at the start
 of the demo.
@@ -408,25 +272,23 @@ This playbook is **part of your Build 2 submission**. Reviewers check it for cla
 
 Create `prompt-log.md` in your project folder. Paste:
 
-1. The index.html brief from Step 3.
-2. The deep-link script brief from Step 7b (if you used it).
-3. The playbook brief from Step 9.
-4. Any debugging prompts you used.
+1. The playbook brief from Step 9.
+2. Any debugging prompts you used (filter-syntax discovery, dashboard option not behaving as expected, etc.).
 
-This is the institutional knowledge for the next partner who has to make a branded widget page.
+This is the institutional knowledge for the next partner running this demo.
 
 ---
 
 ## Verification checklist
 
-- [ ] `index.html` deployed to a public URL (anyone can open it).
-- [ ] Branded with partner palette — CSS variables visibly applied (primary colour shows up on search bar / chat bubble).
-- [ ] Search returns at least one resource for a relevant query.
-- [ ] Chat streams an answer with citations.
-- [ ] PDF-only filter visibly scopes results.
-- [ ] `?q=` deep-link auto-fires once on load, then is stripped from the URL.
-- [ ] `playbook.md` saved — one-page, demo-ready.
-- [ ] `prompt-log.md` saved with all your AI briefs.
+- [ ] At least **5 configurator options** changed from defaults — written down which 5, so you can recite them later (e.g. "placeholder, theme, layout, citation style, filter").
+- [ ] **Brand palette** visibly applied — primary colour clearly *not* Nuclia's default blue.
+- [ ] **Product filter** working — search returns product resources only.
+- [ ] `index.html` opens by double-click on your Desktop and renders the configured widgets.
+- [ ] **Both widget types** demoed — search bar with results AND a chat surface.
+- [ ] (Optional) `index-v2.html` with a second configuration — you've seen two visibly different setups against the same Knowledge Box.
+- [ ] `playbook.md` saved — one-page, demo-ready, configurator-focused.
+- [ ] `prompt-log.md` saved.
 
 Then take the [Build 2 quiz](quiz.md). Pass → start [Build 3](../build-3-conversational-surfaces/).
 
@@ -434,25 +296,29 @@ Then take the [Build 2 quiz](quiz.md). Pass → start [Build 3](../build-3-conve
 
 ## Getting unstuck
 
-**Page loads but the widgets don't appear at all.**
-- Open DevTools → Console. Look for red errors.
-- Most common: the `<script src="...">` URL is wrong, or your `apikey` is malformed (trailing space, missing characters).
+**The Widget tab doesn't exist on my Knowledge Box.**
+- Some older Nuclia tenants surface it as "Embed" or "Integration"; check the side nav carefully. If it's genuinely missing, your account may need a permission flip — message your Progress partner manager.
 
-**Search returns 0 results no matter what I type.**
-- Wrong `knowledgebox` UUID, or your KB is empty. Re-confirm both in the dashboard.
+**The configurator's preview pane is blank or perpetually loading.**
+- Hard-refresh the dashboard (Cmd/Ctrl + Shift + R). The configurator caches state; a stale token after a long idle can stall the preview.
+
+**My local HTML page loads but the widget area is empty.**
+- Open DevTools → Console. Most common cause: the `<script src="...">` tag at the top of the pasted snippet got truncated. Re-copy from the configurator and re-paste.
+
+**Search returns zero results no matter what I type.**
+- Either your filter expression is too strict (try removing the filter in the configurator first, regenerating, and pasting fresh), or the Knowledge Box is empty (re-confirm the Build 0 ingest finished and the resources are visible in the dashboard's resource browser).
 
 **Chat works but search doesn't (or vice versa).**
-- Check that both `<nuclia-search-bar>` and `<nuclia-chat>` have the same `knowledgebox`, `zone`, `apikey`.
+- The configurator must have a coherent set of widget-type toggles. If you somehow ended up with `<nuclia-chat>` but not `<nuclia-search-bar>` in the snippet, regenerate.
 
-**Branding doesn't apply.**
-- The CSS variable names might be slightly different in your widget version. Use DevTools → Elements → select the search bar → Styles panel shows what variables are actually used.
+**Filter returns zero results.**
+- Open one of your product resources in the dashboard's resource browser and check its actual slug. Adjust the filter substring to match (`/n/s/product-` if products are slugged `product-foo`, or check the labelset path if your corpus tags products differently).
 
-**Deploy fails on Netlify Drop.**
-- Drag the **folder**, not the HTML file. Netlify expects a folder.
+**Branding doesn't apply (configurator preview shows correct colours, but local HTML doesn't).**
+- The configurator's brand panel writes the colours INTO the embed snippet. If your local copy doesn't reflect the colours, regenerate the snippet AFTER making the brand changes — the configurator doesn't always push live changes to an already-generated snippet until you click "regenerate" or copy fresh.
 
 **Anything else.**
-- Copy the error + the URL/screenshot.
-- Paste into your AI with *"this doesn't work — fix it."*
+- Open DevTools → Console. Screenshot the error. Paste into your AI: *"Widget doesn't render. Console shows X. Snippet looks like Y."*
 - Re-test.
 
 ---
