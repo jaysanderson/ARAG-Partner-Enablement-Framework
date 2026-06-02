@@ -21,7 +21,7 @@ The course is built around two truths most partner programmes ignore:
 
 By the end of the course, a named individual can:
 
-- Design and run a retrieval-quality measurement harness against any ARAG knowledge box.
+- Design and run a retrieval-quality measurement harness against any ARAG Knowledge Box.
 - Recommend per-content-type chunking strategies grounded in measured outcomes.
 - Tune hybrid retrieval, custom labelsets, and field-engineered surfaces for specific customer outcomes.
 - Design and deploy custom data-augmentation agents that produce typed knowledge graphs for verticals beyond the textbook examples.

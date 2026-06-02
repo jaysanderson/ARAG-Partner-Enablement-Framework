@@ -93,7 +93,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 ### In scope (must ship)
 
-- One ARAG Knowledge Box (`kb-aurora-concierge`) provisioned in EU region (USA failover documented) with all corpus documents ingested and labelset-tagged.
+- One ARAG Knowledge Box (`kb-aurora-concierge`) provisioned in **the region closest to you** — the same region you've used for every Foundations build (set in [Build 0 Step 1](../../build-0-hello-arag/walkthrough.md)). The other region is documented as failover but not deployed. All corpus documents ingested and labelset-tagged.
 - One bespoke data-augmentation agent extracting a customer-journey graph spanning product, content, and loyalty content (filtered at query time when relevant).
 - Six branded demo surfaces (one per tier of the capability ladder, plus the landing page and the abandoned-cart flow).
 - Three custom Tier 3 workflows oriented to digital-experience operations.
@@ -103,7 +103,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 - Floating chat with prospect vs Trail Club member voice — the conversion mechanic.
 -  fork as the technical baseline.
 - Re-skin playbook shipped alongside the build.
-- 25-minute demo script (Section 9) rehearsed and recorded.
+- 25-minute demo script (Section 9) rehearsed by the build owner. Recording is OPTIONAL — record one full take if you plan to use this build as a partner-marketing asset, or deliver the demo live to the review board. The recording checklist (Phase 6) is provided either way.
 
 ### Out of scope (explicitly)
 
@@ -129,7 +129,7 @@ These anchors get embedded into every document the corpus generator produces. Th
                               │ HTTPS + X-NUCLIA-SERVICEACCOUNT
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  Progress Agentic RAG (EU region)                            │
+│  Progress Agentic RAG (your provisioned region)              │
 │                                                              │
 │  ┌────────────────────────────────────────────────┐         │
 │  │  kb-aurora-concierge  (single KB)              │         │
@@ -259,7 +259,7 @@ Same overall shape as the Enterprise variant. Effort estimates are nearly identi
 
 - Lock the Aurora anchor details (6 products, 4 ambassadors, 5 destinations, 3 segments, 3 loyalty tiers, 4 brand pillars).
 - Run `progress-kb-use-case-generator` five times with Aurora's brand voice as input.
-- Provision one ARAG KB (`kb-aurora-concierge`) in EU region. Configure six labelsets — `content_type`, `audience`, `region`, `activity`, `destination`, `season` (plus `loyalty_tier` and `brand_pillar` as facet tags) — before ingest. Ingest all 280+ documents tagging each with appropriate values during ingest.
+- Provision one ARAG KB (`kb-aurora-concierge`) in **the same region you've used for every Foundations build** (set in Build 0 Step 1 — the rule is: pick the option closest to you geographically, then stick with it). Configure six labelsets — `content_type`, `audience`, `region`, `activity`, `destination`, `season` (plus `loyalty_tier` and `brand_pillar` as facet tags) — before ingest. Ingest all 280+ documents tagging each with appropriate values during ingest.
 - **Critical Phase 1 work specific to CX variant:** populate the field-engineered surfaces. Every product-content document gets a `callToAction` field (one short, branded sentence). Key product pages get a `searchResultDisplay` field with title + description copy designed for AI-answer rendering. Every video content document gets a structured `videoInfo` JSON with speakers, topics, key points, and a call-to-action.
 - **Exit criteria:** Aurora KB ingested and labelset-tagged. Field-engineered surfaces visible in `/find` responses.
 
@@ -301,13 +301,14 @@ Same overall shape as the Enterprise variant. Effort estimates are nearly identi
 - **No BYO-LLM toggle in the UI.** Generation backend is set at the KB level via the Nuclia dashboard; when the CIO joins, the talk-track is the Build 11 lesson (BYO-LLM wired at platform during co-engineered POC), not a click in the demo.
 - **Exit criteria:** Live "what about Japanese-speaking customers" question has a one-click answer.
 
-### Phase 6 — Demo script + recording + re-skin playbook (Week 7–8)
+### Phase 6 — Demo script + (optional) recording + re-skin playbook (Week 7–8)
 
-- Rehearse Section 9 end-to-end three times. Record one take.
+- Rehearse Section 9 end-to-end three times.
+- **Optional:** record one full take if you're using this build as a partner-marketing or training asset. The recording checklist below (Phase 6 — Section 10) walks you through production-quality setup. If you're not planning to publish the recording, skip this — a live demo for the review board is equally valid.
 - Write the CX re-skin playbook (Section 10).
-- Internal review board.
+- Internal review board — delivered live or as a recording, partner's choice.
 - Fix all reviewer notes.
-- **Exit criteria:** Recorded demo ships. Re-skin playbook committed.
+- **Exit criteria:** Demo delivered to and passed by the review board (live or recorded). Re-skin playbook committed.
 
 ---
 
@@ -320,7 +321,7 @@ Same overall shape as the Enterprise variant. Effort estimates are nearly identi
 | 3. Fork + reskin + floating chat | 1 | Palette swap, photography-led hero, two-voice chat wiring, persona switcher |
 | 4. Workflows + composite RAG | 2 | Three schemas, abandoned-cart pipeline visualisation, fixture data for Sara |
 | 5. Multilingual + production polish | 1 | Language switch, residency badge + live KB stats, observability panel |
-| 6. Demo + re-skin playbook | 0.5 | Script, rehearsal, recording, playbook |
+| 6. Demo + re-skin playbook | 0.5 | Script, rehearsal, (optional) recording, playbook |
 | **Total** | **8 weeks** | Single strong full-stack engineer with Progress SE on call |
 
 ---
@@ -339,7 +340,7 @@ The talk track for the CMO room.
 
 *[Indicate top-right: residency badge "EU", language switcher "English". Below the hero: live ingested-corpus stats card with resource, paragraph, and graph-node counts read from the active KB.]*
 
-> "Two things you'll see throughout, both proof points the demo is real not slideware: EU residency you can verify in the Nuclia dashboard, and live KB stats — those numbers update every time the corpus is re-indexed. Language switching is a query-prefix pattern that's three lines of code; you'll see it on the Concierge surface. The LLM that produces the words is wired at the platform level when we co-engineer the POC against your tenant — that's BYO-LLM, but it's not a button in the demo."
+> "Two things you'll see throughout, both proof points the demo is real not slideware: **<your-region>** residency (substitute the region you provisioned in — EU or USA — when you record) you can verify in the Nuclia dashboard, and live KB stats — those numbers update every time the corpus is re-indexed. Language switching is a query-prefix pattern that's three lines of code; you'll see it on the Concierge surface. The LLM that produces the words is wired at the platform level when we co-engineer the POC against your tenant — that's BYO-LLM, but it's not a button in the demo."
 
 ### 1:30 — 5:30 | Tier 1 + 2: Storefront + Floating Chat (4 min)
 
@@ -532,7 +533,7 @@ Aurora Concierge ships when *all* of the following are true:
 5. The abandoned-cart composite-RAG flow produces a winback message demonstrably better — on at least three reviewer-judged criteria — than a single-shot `/ask` for the same input.
 6. The multilingual switch works for at least three of the six listed languages.
 7. The hero shows live KB stats (resources, paragraphs, graph nodes) read from the active KB at page load — no hardcoded numbers, no slides.
-8. Recorded demo uploaded and shared internally before the wider partner programme opens.
+8. The 25-minute demo is delivered to and passed by the review board (live or recorded — partner's choice).
 9. CX re-skin playbook committed to this repo.
 10. Build owner has trained at least one other Progress SE to deliver the demo cold.
 
@@ -551,7 +552,7 @@ Aurora Concierge ships when *all* of the following are true:
 | Three Tier 3 workflows | Build owner | TODO |
 | Abandoned-cart composite RAG flow | Build owner | TODO |
 | Multilingual + production polish | Build owner | TODO |
-| 25-minute demo recording | Build owner | TODO |
+| 25-minute demo (live or recorded) | Build owner | TODO |
 | Re-skin playbook | Build owner | TODO |
 | Internal review board | Progress Solution lead | TODO |
 

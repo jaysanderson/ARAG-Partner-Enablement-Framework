@@ -6,7 +6,7 @@
 
 > ## 🚦 Prerequisite gate: pass the [final exam](../../final-exam.md) first
 >
-> Build 13 is the capstone. You may only submit it for review-board defence *after* passing the Developer Foundations final exam (40 MC + 5 short answer, pass = 32/40 + 3/5 short answer).
+> Build 13 is the capstone. You may only submit it for review-board defence *after* passing the Developer Foundations final exam (20 multiple-choice, pass = 16/20 / 80%).
 >
 > If you haven't passed the exam yet, do not start Build 13. Return to the lessons + walkthroughs for any Build whose quick quiz you didn't pass, then sit the final exam.
 
@@ -37,7 +37,7 @@ Builds one variant of the capstone: a single application that exercises every pr
 1. The capstone deployed at the partner's domain.
 2. End-to-end demo runs in 25 minutes covering all four tiers without code edits.
 3. At least one customer-specific data-augmentation agent in production.
-4. Org-level recorded demo passes a Progress-led review board.
+4. Org-level demo passes a Progress-led review board (delivered live or as a recording — partner's choice).
 
 ## Asset delivered
 

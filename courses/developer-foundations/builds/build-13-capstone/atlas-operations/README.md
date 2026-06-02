@@ -88,7 +88,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 ### In scope (must ship)
 
-- One ARAG Knowledge Box (`kb-atlas-operations`) provisioned in EU region (USA region failover documented but not deployed) with all corpus documents ingested and labelset-tagged.
+- One ARAG Knowledge Box (`kb-atlas-operations`) provisioned in **the region closest to you** — the same region you've used for every Foundations build (set in [Build 0 Step 1](../../build-0-hello-arag/walkthrough.md)). The other region is documented as failover but not deployed. All corpus documents ingested and labelset-tagged.
 - One bespoke data-augmentation agent extracting a typed graph spanning all business units (filtered at query time to specific business units when relevant).
 - Five branded demo surfaces (one per tier of the capability ladder, plus the Atlas Operations landing page).
 - Three custom Tier 3 workflows (schema-constrained generation) live and demo-ready.
@@ -96,7 +96,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 - Rate-limit-aware client (documented; doesn't need stress-testing in the demo).
 -  is the technical baseline — fork it, don't rebuild from zero. The repo is at ``.
 - Re-skin playbook (Section 10) shipped alongside the build.
-- 25-minute demo script (Section 9) rehearsed and recorded by the build owner.
+- 25-minute demo script (Section 9) rehearsed by the build owner. Recording is OPTIONAL — record one full take if you plan to use this build as a partner-marketing asset, or deliver the demo live to the review board. The recording checklist (Phase 6) is provided either way.
 
 ### Out of scope (explicitly)
 
@@ -121,7 +121,7 @@ These anchors get embedded into every document the corpus generator produces. Th
                               │ HTTPS + X-NUCLIA-SERVICEACCOUNT
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  Progress Agentic RAG (EU region)                            │
+│  Progress Agentic RAG (your provisioned region)              │
 │                                                              │
 │  ┌────────────────────────────────────────────────┐         │
 │  │  kb-atlas-operations  (single KB)              │         │
@@ -244,7 +244,7 @@ Total target: **8 weeks of focused work**, or **4 weeks at 2 FTE**. Phases can r
 
 - Lock the Atlas anchor details (5 customers, 8 products, 6 employees, 4 incidents, 5 regulations).
 - Run `progress-kb-use-case-generator` five times — once per KB — with anchor details supplied as inputs. Hand-edit for cross-KB consistency.
-- Provision one ARAG KB (`kb-atlas-operations`) in EU region. Configure four labelsets (`business_unit`, `region`, `content_type`, `audience`) before ingest. Ingest all 300+ documents and tag each with appropriate labelset values during ingest.
+- Provision one ARAG KB (`kb-atlas-operations`) in **the same region you've used for every Foundations build** (set in Build 0 Step 1 — the rule is: pick the option closest to you geographically, then stick with it). Configure four labelsets (`business_unit`, `region`, `content_type`, `audience`) before ingest. Ingest all 300+ documents and tag each with appropriate labelset values during ingest.
 - **Exit criteria:** Atlas KB ingested and labelset-tagged. `/find` and `/ask` filtered by `business_unit:engineering` (and other values) return correctly scoped results.
 
 ### Phase 2 — Data-augmentation agent design + deployment (Weeks 2–3)
@@ -282,13 +282,14 @@ Total target: **8 weeks of focused work**, or **4 weeks at 2 FTE**. Phases can r
 - **No BYO-LLM toggle in the UI.** Generation backend is set once at the KB level via the Nuclia dashboard; the demo never claims a per-click switch it doesn't ship. See [Build 11 — *When BYO-LLM doesn't fit*](../../build-11-production-readiness/lesson.md#when-byo-llm-doesnt-fit-clean-descope) for the discipline.
 - **Exit criteria:** A live CTO question about residency, lock-in, or rate limits has a one-click visual answer from inside Atlas Operations.
 
-### Phase 6 — Demo script + recording + re-skin playbook (Week 7–8)
+### Phase 6 — Demo script + (optional) recording + re-skin playbook (Week 7–8)
 
-- Rehearse the 25-minute demo script (Section 9) end-to-end three times. Record one full take.
+- Rehearse the 25-minute demo script (Section 9) end-to-end three times.
+- **Optional:** record one full take if you're using this build as a partner-marketing or training asset. The recording checklist below (Phase 6 — Section 10) walks you through the production-quality setup. If you're not planning to publish the recording, skip this — a live demo for the review board is equally valid.
 - Write the re-skin playbook (Section 10).
-- Internal review board: Progress Solution lead + at least one partner SE not involved in the build runs the full 25-minute demo against the recording.
+- Internal review board: Progress Solution lead + at least one partner SE not involved in the build evaluates the full 25-minute demo — delivered live or as a recording, partner's choice.
 - Fix every "I wouldn't have understood that" note from review.
-- **Exit criteria:** Recorded demo ships. Re-skin playbook committed to this repo.
+- **Exit criteria:** Demo delivered to and passed by the review board (live or recorded). Re-skin playbook committed to this repo.
 
 ---
 
@@ -301,7 +302,7 @@ Total target: **8 weeks of focused work**, or **4 weeks at 2 FTE**. Phases can r
 | 3. Fork + reskin | 1 | Tailwind palette swap, landing page rewrite, residency badge + live KB stats in the hero |
 | 4. Workflows + composite RAG | 2 | Three schemas + UI for each, composite-RAG pipeline visualisation |
 | 5. Production readiness | 1 | Residency badge, observability panel, rate-limit-aware client |
-| 6. Demo + re-skin playbook | 0.5 | Script, rehearsal, recording, playbook |
+| 6. Demo + re-skin playbook | 0.5 | Script, rehearsal, (optional) recording, playbook |
 | **Total** | **8 weeks** | Single strong full-stack engineer with Progress SE on call for skill orchestration |
 
 ---
@@ -318,7 +319,7 @@ This is the script the build owner rehearses to certification. Times are cumulat
 >
 > The corpus I'm demoing against is a fictional company called Atlas Global Industries. Fifty thousand employees, four regions, five business units. One Knowledge Box. Three labelsets — business unit, content type, region — covering HR, Engineering, Sales, Customer Success, Compliance. Every filter in this demo is a labelset query, not a separate KB. That matters when we talk about how your team would deploy this against your own corpus.
 >
-> Two things to notice before we start. Top-right: the residency badge — this KB is provisioned in the EU region, and that's verifiable in our Nuclia dashboard. And right beneath the hero: live ingested-corpus stats, pulled at page load — that's the actual count of resources, paragraphs, and graph nodes in this KB. Not a slide. Real numbers, real KB."
+> Two things to notice before we start. Top-right: the residency badge — this KB is provisioned in the **<your-region>** region (substitute the region you provisioned in — EU or USA — when you record), and that's verifiable in our Nuclia dashboard. And right beneath the hero: live ingested-corpus stats, pulled at page load — that's the actual count of resources, paragraphs, and graph nodes in this KB. Not a slide. Real numbers, real KB."
 
 > "The generation backend — which LLM produces the words — is configured at the KB level on the platform side, and we'll wire it into *your* Azure or Vertex or Bedrock tenant during the co-engineered POC. That's how BYO-LLM works in production. We're not faking it with a toggle in the demo UI today; what you'll see today is on the platform's default generator. The lock-in answer lives in the residency badge and the platform architecture, not in a click."
 
@@ -468,7 +469,7 @@ Atlas Operations ships when *all* of the following are true:
 2. The Atlas knowledge graph returns at least 200 typed-entity nodes and 500 typed relations across the Atlas KB.
 3. The composite-RAG flow demonstrably outperforms a single-shot `/ask` for the four named incidents — measured by citation count and reviewer-judged answer quality.
 4. The hero shows live KB stats (resources, paragraphs, graph nodes) read from the active KB at page load — no hardcoded numbers, no slides.
-5. The recorded demo is uploaded and shared internally before the wider partner programme opens.
+5. The 25-minute demo is delivered to and passed by the review board (live or recorded — partner's choice).
 6. The re-skin playbook is committed to this repo.
 7. The build owner has trained at least one other Progress SE to deliver the demo cold.
 
@@ -486,7 +487,7 @@ Atlas Operations ships when *all* of the following are true:
 | Three Tier 3 workflows | Build owner | TODO |
 | Composite-RAG flow | Build owner | TODO |
 | Production-readiness layer | Build owner | TODO |
-| 25-minute demo recording | Build owner | TODO |
+| 25-minute demo (live or recorded) | Build owner | TODO |
 | Re-skin playbook (`RESKIN.md`) | Build owner | TODO |
 | Internal review board | Progress Solution lead | TODO |
 

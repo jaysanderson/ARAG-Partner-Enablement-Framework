@@ -62,7 +62,7 @@ The video version of each lesson is the canonical learning surface — most part
 | **10** | [Composite RAG](builds/build-10-composite-rag/) | Chain calls; retry-on-low-confidence flow | 2.5 hrs | Tier 3–4 | 10 min |
 | **11** | [Production Readiness](builds/build-11-production-readiness/) | Residency, BYO-LLM, rate limits, observability — CTO conversations | 2 hrs | Tier 4 | 10 min |
 | **12** | [Capstone Prep](builds/build-12-capstone-prep/) | Plan and prompt the capstone vibe-code session | 2 hrs | All | 15 min |
-| **— Final exam —** | [final-exam.md](final-exam.md) | 40 MC + 5 SA, open-book, pass = 32/40 + 3/5 | 1.5 hrs | — | — |
+| **— Final exam —** | [final-exam.md](final-exam.md) | 20 MC, open-book, pass = 16/20 (80%) | 30 min | — | — |
 | **13** | [The Capstone](builds/build-13-capstone/) | Ship a wow build: [Atlas Operations](builds/build-13-capstone/atlas-operations/) (Enterprise) or [Aurora Concierge](builds/build-13-capstone/aurora-concierge/) (CX) | 4–8 wks | All | — |
 
 Total course effort: ~27–42 hours of focused work for Builds 0–12, plus the 4–8 week capstone.
@@ -84,10 +84,10 @@ A Developer Foundations Practitioner can, without supervision:
 
 | Stage | Format | Pass criterion |
 |---|---|---|
-| Per-Build quiz (×13) | 5–7 MC + 1 SA | 5/7 MC + credible SA |
-| Walkthrough deliverable (×13) | Recording, prompt log, working code | Reviewer sign-off |
-| Final exam | 40 MC + 5 SA | 32/40 MC + 3/5 SA |
-| Capstone (Build 13) | 25-minute end-to-end demo | Progress-led review board |
+| Per-Build quiz (×13) | 5 MC | 4/5 MC |
+| Walkthrough deliverable (×13) | Prompt log + working code | Self-verification |
+| Final exam | 20 MC | 16/20 (80%) |
+| Capstone (Build 13) | 25-minute end-to-end demo (live or recorded) | Progress-led review board |
 | Honesty | All deliverables must be the partner's own work | Audit on demand |
 
 Pass everything → **Developer Foundations Practitioner** cert (12-month validity).
