@@ -2,7 +2,7 @@
 
 > Part of [Developer Foundations](../README.md) — the partner-facing course in the [Progress Agentic RAG Partner Enablement Framework](../../../README.md).
 
-This folder is the home for course-wide assets that aren't tied to a single Build. Per-build assets live inside the relevant Build folder (e.g., `builds/build-3-schema-constrained-generation/`). Cross-build assets — slide-master template, course-wide rubric checklist, partner-onboarding kit — live here.
+This folder is the home for course-wide assets that aren't tied to a single Build. Per-build assets live inside the relevant Build folder (e.g., `builds/build-05-structured-outputs/`). Cross-build assets — slide-master template, course-wide rubric checklist, partner-onboarding kit — live here.
 
 ## Status snapshot
 
@@ -22,16 +22,16 @@ This folder is the home for course-wide assets that aren't tied to a single Buil
 
 Per-build assets are tracked inside each Build folder. Quick links:
 
-- [Build 0 — Hello ARAG](../builds/build-0-hello-arag/) — sandbox setup, first calls, vibe-coding workflow
-- [Build 1 — The Five Primitives](../builds/build-1-five-primitives/) — Postman collection + primitives-demo CLI
-- [Build 2 — Drop-in Widgets](../builds/build-2-drop-in-widgets/) — branded HTML snippet + 30-minute playbook
-- [Build 3 — Conversational Surfaces](../builds/build-3-conversational-surfaces/) — two-voice chat component + demo script
-- [Build 4 — Multilingual & Voice](../builds/build-4-multilingual-and-voice/) — `buildPrefix.ts` + language switcher
-- [Build 5 — Structured Outputs](../builds/build-5-structured-outputs/) — `askForJson.ts` + 3 workflow generators **(top-priority — Tier 3 unlock)**
-- [Build 6 — Data-Augmentation Agents](../builds/build-6-data-augmentation-agents/) — generator + labeller + graph configs
-- [Build 7 — Smart Filters & Labelsets](../builds/build-7-smart-filters/) — labelset design + filter UI
-- [Build 8 — Knowledge Graph 101](../builds/build-8-knowledge-graph/) — graph viewer + 12-vertical schema templates
-- [Build 9 — Field Engineering](../builds/build-9-field-engineering/) — field-engineering playbook + author training
+- [Build 0 — Hello ARAG](../builds/build-00-hello-arag/) — sandbox setup, first calls, vibe-coding workflow
+- [Build 1 — The Five Primitives](../builds/build-01-five-primitives/) — Postman collection + primitives-demo CLI
+- [Build 2 — Drop-in Widgets](../builds/build-02-drop-in-widgets/) — branded HTML snippet + 30-minute playbook
+- [Build 3 — Conversational Surfaces](../builds/build-03-conversational-surfaces/) — two-voice chat component + demo script
+- [Build 4 — Multilingual & Voice](../builds/build-04-multilingual-and-voice/) — `buildPrefix.ts` + language switcher
+- [Build 5 — Structured Outputs](../builds/build-05-structured-outputs/) — `askForJson.ts` + 3 workflow generators **(top-priority — Tier 3 unlock)**
+- [Build 6 — Data-Augmentation Agents](../builds/build-06-data-augmentation-agents/) — generator + labeller + graph configs
+- [Build 7 — Smart Filters & Labelsets](../builds/build-07-smart-filters/) — labelset design + filter UI
+- [Build 8 — Knowledge Graph 101](../builds/build-08-knowledge-graph/) — graph viewer + 12-vertical schema templates
+- [Build 9 — Field Engineering](../builds/build-09-field-engineering/) — field-engineering playbook + author training
 - [Build 10 — Composite RAG](../builds/build-10-composite-rag/) — composite-RAG cookbook + comparison page
 - [Build 11 — Production Readiness](../builds/build-11-production-readiness/) — residency statement + rate-limited client + dashboard spec
 - [Build 12 — Capstone Prep](../builds/build-12-capstone-prep/) — variant choice + master prompts + demo arc

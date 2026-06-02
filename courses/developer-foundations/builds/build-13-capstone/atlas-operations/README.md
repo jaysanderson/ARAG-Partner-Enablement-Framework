@@ -88,7 +88,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 ### In scope (must ship)
 
-- One ARAG Knowledge Box (`kb-atlas-operations`) provisioned in **the region closest to you** — the same region you've used for every Foundations build (set in [Build 0 Step 1](../../build-0-hello-arag/walkthrough.md)). The other region is documented as failover but not deployed. All corpus documents ingested and labelset-tagged.
+- One ARAG Knowledge Box (`kb-atlas-operations`) provisioned in **the region closest to you** — the same region you've used for every Foundations build (set in [Build 0 Step 1](../../build-00-hello-arag/2-walkthrough.md)). The other region is documented as failover but not deployed. All corpus documents ingested and labelset-tagged.
 - One bespoke data-augmentation agent extracting a typed graph spanning all business units (filtered at query time to specific business units when relevant).
 - Five branded demo surfaces (one per tier of the capability ladder, plus the Atlas Operations landing page).
 - Three custom Tier 3 workflows (schema-constrained generation) live and demo-ready.
@@ -140,7 +140,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 └─────────────────────────────────────────────────────────────┘
 ```
 
-> **Note on BYO-LLM.** BYO-LLM is a per-KB platform configuration (Azure OpenAI / Google Vertex / AWS Bedrock — see [Build 11 lesson](../../build-11-production-readiness/lesson.md#byo-llm-bring-your-own-llm)), not a UI lever in this capstone. Atlas Operations ships with the platform default generator and *no* in-app toggle. The "what about lock-in?" question is answered with the residency badge and the live KB stats in the hero — proof points the demo actually carries. The descoped pattern (no env vars, no UI surface, plus a graph-extraction blocklist so the model can't surface "BYO-LLM" as a product node) is documented in [*When BYO-LLM doesn't fit: clean descope*](../../build-11-production-readiness/lesson.md#when-byo-llm-doesnt-fit-clean-descope).
+> **Note on BYO-LLM.** BYO-LLM is a per-KB platform configuration (Azure OpenAI / Google Vertex / AWS Bedrock — see [Build 11 lesson](../../build-11-production-readiness/1-lesson.md#byo-llm-bring-your-own-llm)), not a UI lever in this capstone. Atlas Operations ships with the platform default generator and *no* in-app toggle. The "what about lock-in?" question is answered with the residency badge and the live KB stats in the hero — proof points the demo actually carries. The descoped pattern (no env vars, no UI surface, plus a graph-extraction blocklist so the model can't surface "BYO-LLM" as a product node) is documented in [*When BYO-LLM doesn't fit: clean descope*](../../build-11-production-readiness/1-lesson.md#when-byo-llm-doesnt-fit-clean-descope).
 
 ### 5.2 Frontend stack
 
@@ -279,7 +279,7 @@ Total target: **8 weeks of focused work**, or **4 weeks at 2 FTE**. Phases can r
 - Residency badge visible in the header — shows "EU" or "USA" based on the active KB region.
 - Rate-limit-aware client (backoff + request coalescing) implemented in the ARAG client wrapper.
 - Observability dashboard (Grafana or simple in-app panel) showing p50/p95 latency, citation rate, and per-endpoint request volume. Visible from a `/ops` route.
-- **No BYO-LLM toggle in the UI.** Generation backend is set once at the KB level via the Nuclia dashboard; the demo never claims a per-click switch it doesn't ship. See [Build 11 — *When BYO-LLM doesn't fit*](../../build-11-production-readiness/lesson.md#when-byo-llm-doesnt-fit-clean-descope) for the discipline.
+- **No BYO-LLM toggle in the UI.** Generation backend is set once at the KB level via the Nuclia dashboard; the demo never claims a per-click switch it doesn't ship. See [Build 11 — *When BYO-LLM doesn't fit*](../../build-11-production-readiness/1-lesson.md#when-byo-llm-doesnt-fit-clean-descope) for the discipline.
 - **Exit criteria:** A live CTO question about residency, lock-in, or rate limits has a one-click visual answer from inside Atlas Operations.
 
 ### Phase 6 — Demo script + (optional) recording + re-skin playbook (Week 7–8)

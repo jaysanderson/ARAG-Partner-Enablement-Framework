@@ -98,6 +98,33 @@ When something doesn't work:
 
 This loop — brief, read, run, iterate — is **every Build in the course**. By Build 3 it'll be muscle memory.
 
+## What the AI handles for you (the citizen-developer principle)
+
+You will *not* hand-roll dev tooling in this course. The AI does it.
+
+Specifically — anything in the **scaffolding / dependencies / config-file** category is the AI's job, not yours. You don't write the commands; you don't memorise the syntax; you don't open `tailwind.config.js` to edit a JSON array. You paste a brief that says *"install and configure X as part of your work,"* and the AI handles it. Examples that come up repeatedly across the Builds:
+
+| Job | Who does it | How it shows up in a Build |
+|---|---|---|
+| Install npm packages (e.g. `react-force-graph-2d`, `dotenv`, anything else) | The AI | A line in the brief: *"Install <package> as a dependency before writing the component."* |
+| Set up Tailwind CSS (install, init, edit `tailwind.config.js`, edit `src/index.css`) | The AI | A paragraph in the brief: *"Set up Tailwind CSS in this project first — install, init, configure content paths, replace `src/index.css` with the three @tailwind directives."* |
+| Create folders that don't exist yet (`src/lib/`, `src/components/`, etc.) | The AI | A line in the brief: *"Create the folder if it doesn't exist."* |
+| Wire env vars into the build (Vite's `import.meta.env`, etc.) | The AI | Specified in the brief alongside the API call. |
+| Write TypeScript types, JSON Schemas, response interfaces | The AI | The brief says "Full TypeScript types." |
+
+**How the two AI tool families handle this:**
+
+- **Claude Code / Cursor** can run shell commands and edit files directly. Paste the brief and they perform the install + config end-to-end. You watch.
+- **ChatGPT / Claude.ai (web)** can't touch your machine. They will give you **the commands to run and the file contents to paste** — copy them across one at a time, then come back to the chat and say *"done, ran fine"* (or paste any error). Either way you're not designing the command line.
+
+What you *do* type by hand, every Build:
+
+- `npm create vite@latest ...` — the project-scaffolding command in Step 1 of each project Build. Three commands total per Build (create, `cd`, `npm install`).
+- `npm run dev` — to start the dev server and see your work.
+- `git` commands when you save your work.
+
+That's the floor. Everything else — dependency installs, config edits, file scaffolding — is the AI's job. If a walkthrough ever has you editing `tailwind.config.js` or running `npm install -D ...` by hand, **that's a bug**. Paste the step into your AI and ask it to do that work for you instead.
+
 ## Four AI failure modes to watch for
 
 These are the four ways AI assistants reliably go wrong on ARAG tasks. Spot them every time.
@@ -168,4 +195,4 @@ To productionise demo-grade code: ask the AI *"add error handling, retry logic w
 - Catch the four AI failure modes (fake SDK, wrong header, wrong shape, missing `additionalProperties`).
 - Save your prompts.
 
-Now go to [Build 0](builds/build-0-hello-arag/).
+Now go to [Build 0](builds/build-00-hello-arag/).

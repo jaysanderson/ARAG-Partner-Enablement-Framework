@@ -16,10 +16,10 @@
 
 ## Start here
 
-1. **[lesson.md](lesson.md)** — capstone variant choice, the master prompt set, the 25-minute demo arc.
+1. **[lesson.md](1-lesson.md)** — capstone variant choice, the master prompt set, the 25-minute demo arc.
 2. **[video-script.md](video-script.md)** — 15-minute live planning session.
-3. **[walkthrough.md](walkthrough.md)** — write the planning doc, pick the variant, draft the 8 master prompts.
-4. **[quiz.md](quiz.md)** — 5 MC + 1 short answer.
+3. **[walkthrough.md](2-walkthrough.md)** — write the planning doc, pick the variant, draft the 8 master prompts.
+4. **[quiz.md](3-quiz.md)** — 5 MC + 1 short answer.
 
 ## What you can do after this Build
 

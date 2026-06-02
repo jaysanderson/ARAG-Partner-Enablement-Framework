@@ -10,16 +10,16 @@
 |---|---|
 | **Capability** | Chain ARAG calls — retry-on-low-citations, retrieve-then-rerank, multi-pass synthesis |
 | **Tier mapped to** | Tier 3–4 bridge |
-| **Prerequisite** | [Build 8](../build-9-field-engineering/) |
+| **Prerequisite** | [Build 8](../build-09-field-engineering/) |
 | **Estimated effort** | 2.5 hours focused |
 | **Video length** | 10 minutes |
 
 ## Start here
 
-1. **[lesson.md](lesson.md)** — generate → evaluate → augment recipe; agentic boundary.
+1. **[lesson.md](1-lesson.md)** — generate → evaluate → augment recipe; agentic boundary.
 2. **[video-script.md](video-script.md)** — 10-minute live build.
-3. **[walkthrough.md](walkthrough.md)** — vibe-code a retry-on-low-citations flow.
-4. **[quiz.md](quiz.md)** — 5 MC + 1 short answer.
+3. **[walkthrough.md](2-walkthrough.md)** — vibe-code a retry-on-low-citations flow.
+4. **[quiz.md](3-quiz.md)** — 5 MC + 1 short answer.
 
 ## What you can do after this Build
 
@@ -30,5 +30,5 @@
 
 ## See also
 
-- Previous: [Build 8](../build-9-field-engineering/)
+- Previous: [Build 8](../build-09-field-engineering/)
 - Next: [Build 11 — Production Readiness](../build-11-production-readiness/)

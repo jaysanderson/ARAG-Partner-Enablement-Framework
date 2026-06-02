@@ -126,9 +126,9 @@ The framework's [Part II competency model](../../README.md) lists the named comp
 
 ## Ready to start
 
-If you're an individual learner: open [`README.md`](README.md) for the build-by-build structure, then go to [Build 0 — Hello ARAG](builds/build-0-hello-arag/) and read the lesson. The walkthrough begins after that.
+If you're an individual learner: open [`README.md`](README.md) for the build-by-build structure, then go to [Build 0 — Hello ARAG](builds/build-00-hello-arag/) and read the lesson. The walkthrough begins after that.
 
-If you're a partner manager planning a team cohort: talk to your Progress partner manager about provisioning sandbox credentials for everyone in the cohort, then set up a shared Slack channel for the group and a weekly thirty-minute sync. Send the team the link to [Build 0](builds/build-0-hello-arag/) with a calendar invite for Build 0 day-one kickoff.
+If you're a partner manager planning a team cohort: talk to your Progress partner manager about provisioning sandbox credentials for everyone in the cohort, then set up a shared Slack channel for the group and a weekly thirty-minute sync. Send the team the link to [Build 0](builds/build-00-hello-arag/) with a calendar invite for Build 0 day-one kickoff.
 
 If you're evaluating ARAG before committing: start with the [framework README](../../README.md) for the commercial and architectural framing, then do Builds 0–3 of this course. Three builds — roughly seven hours of work — is enough to know whether ARAG fits your problem.
 

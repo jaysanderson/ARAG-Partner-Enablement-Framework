@@ -93,7 +93,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 ### In scope (must ship)
 
-- One ARAG Knowledge Box (`kb-aurora-concierge`) provisioned in **the region closest to you** — the same region you've used for every Foundations build (set in [Build 0 Step 1](../../build-0-hello-arag/walkthrough.md)). The other region is documented as failover but not deployed. All corpus documents ingested and labelset-tagged.
+- One ARAG Knowledge Box (`kb-aurora-concierge`) provisioned in **the region closest to you** — the same region you've used for every Foundations build (set in [Build 0 Step 1](../../build-00-hello-arag/2-walkthrough.md)). The other region is documented as failover but not deployed. All corpus documents ingested and labelset-tagged.
 - One bespoke data-augmentation agent extracting a customer-journey graph spanning product, content, and loyalty content (filtered at query time when relevant).
 - Six branded demo surfaces (one per tier of the capability ladder, plus the landing page and the abandoned-cart flow).
 - Three custom Tier 3 workflows oriented to digital-experience operations.
@@ -153,7 +153,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 └─────────────────────────────────────────────────────────────┘
 ```
 
-> **Note on BYO-LLM.** BYO-LLM is a per-KB platform configuration (Azure OpenAI / Google Vertex / AWS Bedrock — see [Build 11 lesson](../../build-11-production-readiness/lesson.md#byo-llm-bring-your-own-llm)), not a UI lever in this capstone. Aurora Concierge ships with the platform default generator and *no* in-app toggle. When the CIO joins the second meeting and asks "what about Azure?" the answer is the Build 11 lesson talk-track: BYO-LLM is wired at the platform level during the co-engineered POC against the customer's own tenant — it's not a click in the demo. See [*When BYO-LLM doesn't fit: clean descope*](../../build-11-production-readiness/lesson.md#when-byo-llm-doesnt-fit-clean-descope).
+> **Note on BYO-LLM.** BYO-LLM is a per-KB platform configuration (Azure OpenAI / Google Vertex / AWS Bedrock — see [Build 11 lesson](../../build-11-production-readiness/1-lesson.md#byo-llm-bring-your-own-llm)), not a UI lever in this capstone. Aurora Concierge ships with the platform default generator and *no* in-app toggle. When the CIO joins the second meeting and asks "what about Azure?" the answer is the Build 11 lesson talk-track: BYO-LLM is wired at the platform level during the co-engineered POC against the customer's own tenant — it's not a click in the demo. See [*When BYO-LLM doesn't fit: clean descope*](../../build-11-production-readiness/1-lesson.md#when-byo-llm-doesnt-fit-clean-descope).
 
 ### 5.2 Frontend stack
 

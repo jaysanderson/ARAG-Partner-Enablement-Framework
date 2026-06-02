@@ -16,10 +16,10 @@
 
 ## Start here
 
-1. **[lesson.md](lesson.md)** — EU/USA residency, BYO-LLM across Azure / Vertex / Bedrock, 2400 req/min, observability minimum.
+1. **[lesson.md](1-lesson.md)** — EU/USA residency, BYO-LLM across Azure / Vertex / Bedrock, 2400 req/min, observability minimum.
 2. **[video-script.md](video-script.md)** — 10-minute talk-track-heavy walkthrough.
-3. **[walkthrough.md](walkthrough.md)** — configure BYO-LLM, document residency, write a rate-limit-aware client (vibe-coded), draft the observability dashboard.
-4. **[quiz.md](quiz.md)** — 5 MC + 1 short answer.
+3. **[walkthrough.md](2-walkthrough.md)** — configure BYO-LLM, document residency, write a rate-limit-aware client (vibe-coded), draft the observability dashboard.
+4. **[quiz.md](3-quiz.md)** — 5 MC + 1 short answer.
 
 ## What you can do after this Build
 
