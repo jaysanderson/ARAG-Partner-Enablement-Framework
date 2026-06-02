@@ -552,20 +552,6 @@ Make sure `prompt-log.md` has all five briefs (Step 2 wrapper, Step 3 FAQ, Step 
 
 ---
 
-## Step 9 — Record a 4-minute walkthrough (20 min)
-
-Record yourself:
-
-1. **(45 sec)** Hook: *"ARAG isn't a chatbot — it's a programmable backend. Watch three workflows in four minutes."*
-2. **(60 sec)** FAQ generator. Show input. Show structured output. Narrate: *"This drops straight into our help-centre as JSON. No copy-paste, no formatting work."*
-3. **(60 sec)** Taxonomy generator. Show the domain list. Narrate: *"The KB just told us its own ontology. This is a Tier-3 discovery output."*
-4. **(60 sec)** Comparison-table generator. Show the markdown table. Narrate: *"This is the comparison feature the customer is paying a separate vendor for. We just generated it from our own KB."*
-5. **(15 sec)** Close: *"Schema-constrained generation. The Tier-3 unlock."*
-
-Upload to `#build-clinic-submissions`.
-
----
-
 ## Verification checklist
 
 - [ ] `src/lib/askForJson.mjs` (or `.ts`) wrapper works against your KB.
@@ -576,7 +562,6 @@ Upload to `#build-clinic-submissions`.
 - [ ] FAQ rows carry `citation_resource_id` values that match real KB resource IDs (Step 6) and render as working click-throughs.
 - [ ] All three response shapes verified (Step 7a, 7b, 7c).
 - [ ] `prompt-log.md` saved with all briefs.
-- [ ] 4-minute Loom recording submitted.
 
 Then take the [Build 5 quiz](quiz.md). Pass → start [Build 6](../build-6-data-augmentation-agents/).
 

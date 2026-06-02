@@ -282,20 +282,6 @@ Iterate until pass. **Don't start Build 13 without the sign-off** — you'll was
 
 ---
 
-## Step 7 — Record a 5-minute pitch (15 min)
-
-Once your review-board pass is signed:
-
-1. **(60 sec)** Read your `variant-choice.md` rationale.
-2. **(90 sec)** Walk through the demo arc — 7 sections, 25-min total.
-3. **(60 sec)** Read **prompt #1** (scaffolding) aloud — shows the level of specificity in your briefs.
-4. **(60 sec)** Read **prompt #8** (flagship composite) — shows how it composes Builds 1-11.
-5. **(30 sec)** Close: *"Eight prompts. Eight weeks. The capstone vibe-codes from here."*
-
-Upload to `#build-clinic-submissions`. **This recording orients anyone who picks up your capstone work.** It's also evidence for the reviewer.
-
----
-
 ## Verification checklist
 
 - [ ] `variant-choice.md` written — variant chosen, named customers, objections specified.
@@ -306,7 +292,6 @@ Upload to `#build-clinic-submissions`. **This recording orients anyone who picks
 - [ ] All three bundled into a single submission.
 - [ ] Submitted to `#capstone-review-board`.
 - [ ] **Review-board pass signed off.**
-- [ ] 5-minute pitch recorded and posted.
 
 Then take the [Build 12 quiz](quiz.md). Pass → start [Build 13 — the Capstone](../build-13-capstone/).
 

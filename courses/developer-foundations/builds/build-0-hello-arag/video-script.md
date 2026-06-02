@@ -31,10 +31,10 @@
 
 ## Section 3: Ingest 10 documents (3:30 – 4:30)
 
-**ON SCREEN:** Drag-and-drop 10 documents from Finder into the KB upload area. The processing indicator runs. Cut to fast-forward; cut back when all show "indexed".
+**ON SCREEN:** Drag-and-drop the 10 sample documents from the `sample-corpus/build-0/` folder into the KB upload area. The processing indicator runs. Cut to fast-forward; cut back when all show "indexed".
 
 **VOICEOVER:**
-> Drag any 10 documents in. PDFs, markdown, plain text — they all work. Processing takes about thirty seconds per document. While they're processing, a quick word about what's happening — ARAG is chunking, embedding, classifying, and extracting metadata from each one. That's the *platform* doing platform work. We don't touch any of it.
+> Drag in the 10 sample documents from the course's `sample-corpus/build-0/` folder. They're a mix of PDFs, markdown, and plain text — representative of the variety a real customer corpus carries. Processing takes about thirty seconds per document. While they're processing, a quick word about what's happening — ARAG is chunking, embedding, classifying, and extracting metadata from each one. That's the *platform* doing platform work. We don't touch any of it.
 
 ## Section 4: First `/find` call (4:30 – 6:00)
 

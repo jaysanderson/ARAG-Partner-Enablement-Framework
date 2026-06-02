@@ -2,7 +2,7 @@
 
 > **Duration target:** 15 minutes
 > **Format:** Screen recording + voiceover. Panoramic tour — one section per primitive.
-> **Tools on screen:** Postman (or Thunder Client / Bruno), terminal for one streaming demo, AI coding assistant for one short live brief.
+> **Tools on screen:** Postman, terminal for one streaming demo, AI coding assistant for one short live brief.
 > **Cuts encouraged:** between primitive sections.
 
 ## Cold open (0:00 – 0:30)
@@ -106,7 +106,7 @@
 ## Production notes
 
 - **Pacing:** 15 minutes is tight for five primitives. Keep each section to its allotted time. Don't deep-dive — that's what the deep-dive Builds are for.
-- **Postman vs Thunder vs Bruno:** show whichever you prefer. Just be consistent — don't switch tools mid-video.
+- **Postman:** the canonical tool for this build. If you prefer Thunder Client (VS Code extension), that's fine — but be consistent across the recording.
 - **Cut between primitive sections** — partners often pause and re-watch single sections; clean cuts make this easier.
 - **Red-circle highlights:** for the four "key things to notice" moments (paragraph scores, NDJSON shape, `additionalProperties: false`, the data-augmentation filter), put a visible red circle on screen. These are the four most-commonly-missed details in Foundations.
 - **End card** should include the URL or QR code to Build 2's video.

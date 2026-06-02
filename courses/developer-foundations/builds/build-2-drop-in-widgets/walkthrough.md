@@ -417,19 +417,6 @@ This is the institutional knowledge for the next partner who has to make a brand
 
 ---
 
-## Step 11 — Record your 3-minute walkthrough (15 min)
-
-Record yourself (Loom / QuickTime / OBS):
-
-1. **(30 sec)** Show the public URL (the one from Netlify/Vercel/GitHub Pages). Point out the branding.
-2. **(60 sec)** Run a search query. Show the results. Open the chat. Ask a question. Show the streaming answer + citations.
-3. **(45 sec)** Toggle to the PDF-only filter (or open a second URL/tab with the second filter). Show how the same query returns different results.
-4. **(45 sec)** Close with: *"30 minutes from blank page to this. No backend. No engineering team. This is what we hand to the customer's marketing team — they own it after this."*
-
-Upload to `#build-clinic-submissions` in the partner Slack.
-
----
-
 ## Verification checklist
 
 - [ ] `index.html` deployed to a public URL (anyone can open it).
@@ -440,7 +427,6 @@ Upload to `#build-clinic-submissions` in the partner Slack.
 - [ ] `?q=` deep-link auto-fires once on load, then is stripped from the URL.
 - [ ] `playbook.md` saved — one-page, demo-ready.
 - [ ] `prompt-log.md` saved with all your AI briefs.
-- [ ] 3-minute Loom recording submitted.
 
 Then take the [Build 2 quiz](quiz.md). Pass → start [Build 3](../build-3-conversational-surfaces/).
 

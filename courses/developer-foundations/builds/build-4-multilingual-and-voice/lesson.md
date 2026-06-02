@@ -93,8 +93,6 @@ Extend the Build 3 chat with:
 2. A "user segment" radio selector (3–4 segments specific to your KB content) → injects persona-framing prefix.
 3. A resource-context input (optional) → injects "Regarding…" prefix.
 
-Plus a recorded demo flipping each lever and showing the answer change in real time.
-
 ## Common pitfalls
 
 - **Over-engineering language.** Don't build a translation service. The prefix and the LLM are enough.

@@ -2,7 +2,7 @@
 
 > Estimated time: 2–3 hours focused. Complete Build 0 and read the [lesson](lesson.md) first.
 >
-> **New to API testing tools?** That's fine. We give you two paths: a tool with a friendly UI (Postman or Bruno), or plain `curl` commands you already know from Build 0. Pick whichever is less intimidating.
+> **New to API testing tools?** That's fine. We give you two paths: a tool with a friendly UI (Postman), or plain `curl` commands you already know from Build 0. Pick whichever is less intimidating.
 
 ## What you'll need open
 
@@ -32,27 +32,21 @@ Plus one bonus endpoint, `/labelsets`, that supports primitives 1–3.
 
 ## Step 1 — Pick your API tool (10 min)
 
-You have three options. **Pick one and stick with it through this Build.**
+You have two options. **Pick one and stick with it through this Build.**
 
-### Option A — Bruno (recommended, free, offline)
+### Option A — Postman (recommended, free, well-known)
 
-[Bruno](https://www.usebruno.com/) is a free API client that saves requests as plain files. No cloud account, no sync, nothing weird.
-
-1. Download from [usebruno.com](https://www.usebruno.com/).
-2. Install. Open it.
-3. Click **Create Collection**. Name it `ARAG Primitives`. Pick a folder on your Desktop.
-
-### Option B — Postman (free, popular)
-
-[Postman](https://www.postman.com/) is the most popular API tool. Requires a free account.
+[Postman](https://www.postman.com/) is the canonical API client. Free for individuals, friendly UI for inspecting big JSON responses, and the workflow (collections + environments + saved requests) is industry standard.
 
 1. Download from [postman.com](https://www.postman.com/downloads/).
-2. Install. Open it. Create a free account.
-3. Click **New** → **Collection**. Name it `ARAG Primitives`.
+2. Install. Open it.
+3. Either sign up for a free account, or click **Skip and go directly to Workspace** to use the desktop app without logging in.
+4. Create a new workspace called `Foundations`.
+5. Click **New** → **Collection**. Name it `ARAG Primitives`.
 
-### Option C — Just use `curl` (no setup)
+### Option B — Just use `curl` (no setup)
 
-If installing software is annoying, skip the GUI tool. Use the same `curl` pattern from Build 0. Every step below shows the equivalent `curl` command alongside the Postman/Bruno version.
+If installing software is annoying, skip the GUI tool. Use the same `curl` pattern from Build 0. Every step below shows the equivalent `curl` command alongside the Postman version.
 
 **Trade-off:** GUI tools make it easier to inspect big JSON responses. With `curl`, you'll want to pipe responses through `jq` (which prints JSON nicely):
 
@@ -74,28 +68,20 @@ If you can't install `jq`, that's fine — the JSON will just be a wall of text.
 
 The whole point of an API client is **not pasting your credentials into every request**. You set them once as variables, then reference them everywhere.
 
-### In Bruno
-
-1. With your `ARAG Primitives` collection open, click the **Environments** tab (gear icon).
-2. Create a new environment called `Build 1`.
-3. Add three variables:
-   - `NUCLIA_API_URL` → paste the value from your `.env` (e.g., `https://aws-eu-1.rag.progress.cloud/api/v1`)
-   - `NUCLIA_KB_ID` → paste your KB UUID
-   - `NUCLIA_API_KEY` → paste your service-account JWT
-4. Save. Select this environment from the dropdown.
-
 ### In Postman
 
 1. Click the **Environments** tab (left sidebar).
 2. **Create Environment** → name it `Build 1`.
-3. Add the same three variables. Use the **Initial Value** column.
-4. Save. Select the environment from the top-right dropdown.
+3. Add three variables (use the **Initial Value** column):
+   - `NUCLIA_API_URL` → paste the value from your `.env` (e.g., `https://aws-eu-1.rag.progress.cloud/api/v1`)
+   - `NUCLIA_KB_ID` → paste your KB UUID
+   - `NUCLIA_API_KEY` → paste your service-account JWT
+4. Save. Select this environment from the top-right dropdown.
 
 ### Set a default auth header on the collection
 
 This is the time-saver. Set the auth header **once on the collection** — every request inside inherits it automatically.
 
-- **Bruno:** open collection settings → Headers → Add header → name `X-NUCLIA-SERVICEACCOUNT`, value `Bearer {{NUCLIA_API_KEY}}`. Save.
 - **Postman:** open the collection → **Authorization** tab → Type: **API Key**. Key: `X-NUCLIA-SERVICEACCOUNT`. Value: `Bearer {{NUCLIA_API_KEY}}`. Add to: **Header**. Save.
 
 If you're using plain `curl`, you'll just keep pasting the header in each command — no setup needed.
@@ -157,7 +143,7 @@ Take 3 minutes. Look at:
 - The **top paragraph score** — find the highest `score` value in any paragraph. Anything above 0.6 is good; above 0.8 is excellent.
 - Any paragraphs with a `position` block containing `start_seconds` — only present for video/audio resources. Skip if your corpus is text-only.
 
-**Save the response.** In Bruno/Postman, just keep the tab open. In `curl`, redirect to a file: `... | jq . > find-response.json`.
+**Save the response.** In Postman, just keep the tab open. In `curl`, redirect to a file: `... | jq . > find-response.json`.
 
 ---
 
@@ -565,7 +551,7 @@ This file is **reviewed at the final exam**. Don't skip it. The map is the bridg
 
 Before moving to Build 2, confirm:
 
-- [ ] API tool (Bruno/Postman) collection with 6 saved requests, OR `curl` history with same coverage.
+- [ ] Postman collection with 6 saved requests, OR `curl` history with same coverage.
 - [ ] One successful response per endpoint (`/find`, `/ask` sync, `/ask` streaming, `/ask` with schema, `/labelsets`, `/graph`, `/resource/{id}`).
 - [ ] `primitives-demo.mjs` produces a sensible one-line summary for every primitive.
 - [ ] `prompt-log.md` saved with brief + final code.
@@ -591,10 +577,10 @@ Then take the [Build 1 quiz](quiz.md). Pass → start [Build 2](../build-2-drop-
 **`/graph` returns paths I didn't expect.**
 - You probably forgot the `{prop: "generated", by: "data-augmentation"}` filter. Without it, you'd get ARAG's default NER (DATE, ORG, MONEY noise). Always include the filter.
 
-**Environment variables not loading in Postman/Bruno.**
-- Did you select the environment from the dropdown? Top-right in Postman; top of the sidebar in Bruno.
+**Environment variables not loading in Postman.**
+- Did you select the environment from the dropdown? Top-right in Postman.
 
-**My JWT works in curl but not in Postman/Bruno.**
+**My JWT works in curl but not in Postman.**
 - The collection-level auth header. Open collection settings → confirm `X-NUCLIA-SERVICEACCOUNT: Bearer {{NUCLIA_API_KEY}}` is set.
 
 **Everything else.**

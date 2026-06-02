@@ -535,19 +535,6 @@ Make sure `prompt-log.md` has all five briefs:
 
 ---
 
-## Step 13 — Record a 3-minute walkthrough (15 min)
-
-Record yourself (Loom / QuickTime / OBS) walking through your `demo-script.md`:
-
-1. **(30 sec)** Show the page. Set up the problem.
-2. **(60 sec)** Prospect mode demo. Stream the answer. Point at the pill CTA.
-3. **(60 sec)** Member mode demo. Same query. Show the depth + citations.
-4. **(30 sec)** Close with the Tier-2 pitch.
-
-Upload to `#build-clinic-submissions`.
-
----
-
 ## Verification checklist
 
 - [ ] Vite + React + TypeScript project running on `localhost:5173`.
@@ -562,7 +549,6 @@ Upload to `#build-clinic-submissions`.
 - [ ] Dispatching `aurora.concierge.prefill` from the browser console opens the chat and streams the answer within ~1 second.
 - [ ] `demo-script.md` saved.
 - [ ] `prompt-log.md` saved with all briefs.
-- [ ] 3-minute Loom recording submitted.
 
 Then take the [Build 3 quiz](quiz.md). Pass → start [Build 4](../build-4-multilingual-and-voice/).
 

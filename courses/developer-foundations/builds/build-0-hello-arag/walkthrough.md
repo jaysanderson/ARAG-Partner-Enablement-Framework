@@ -23,7 +23,7 @@ node --version
 
 **Expected output:** something like `v20.11.0` or higher. If you see "command not found," Node didn't install correctly — reinstall from the link above.
 
-You also need a folder of **~10 documents** to upload. Anything works — PDFs of meeting notes, markdown files, plain text, a few blog posts saved as text. If you don't have anything handy, save 10 articles from your company's website as PDFs. The content quality doesn't matter for Build 0 — you just need *something* in the KB.
+The **10 sample documents we provide for Build 0** — included with the course at `courses/developer-foundations/sample-corpus/build-0/` in the framework repo. (If you don't have the framework repo cloned locally yet, clone it from [the partner-enablement repo URL] first, or download just the `sample-corpus/build-0/` folder as a zip from the same location.) These are the documents you'll upload to your Knowledge Box in Step 4. Using the same corpus everyone else in the course uses means every query you try later behaves the way the lessons describe — your results will line up with the screenshots and example outputs in subsequent Builds.
 
 ---
 
@@ -100,9 +100,11 @@ Save the file.
 
 Back in the Nuclia dashboard, open your KB. You should see an **upload area** (drag-and-drop zone).
 
-1. **Drag 10 files into the upload area.** PDFs, markdown, plain text — anything text-shaped.
+1. **Drag the 10 files from `courses/developer-foundations/sample-corpus/build-0/` into the upload area.** Select all 10 files in your file explorer (Cmd/Ctrl+A inside that folder) and drag them onto the Nuclia dashboard drop zone.
 2. Watch the progress indicator. Each document goes from "processing" → "indexed."
 3. Wait until **all 10** show as "indexed."
+
+> You can ingest your own documents later for experimentation, but the lessons, quizzes, and downstream Builds all assume the provided corpus is what's in your KB.
 
 **You should see:** 10 documents listed in your KB, each with a title, mimetype, and status "indexed."
 
@@ -126,9 +128,11 @@ Look at the 10 documents you uploaded. Think of a 4–6-word question your conte
 
 Whatever fits your content. Write it down.
 
-### 5b. Run the call
+### 5b. Build your scratch curl in VS Code
 
-Here's the command. **You will paste your three credentials in directly** (the easy way). Copy this template into a scratchpad:
+Don't try to edit a 5-line curl command directly in the terminal — especially not with a 500+ character JWT in the middle of it. One stray character and the call silently breaks in a way that's hard to debug. Instead, you'll keep a **scratch file** in VS Code with your working command, do all the placeholder replacement there with Find & Replace, then copy the finished command into the terminal.
+
+In VS Code, **File → New File**. Save it (Cmd/Ctrl + S) into your `foundations-build-0` folder as `scratch.sh`. Then paste this template in **exactly as-is** — do not edit anything yet:
 
 ```bash
 curl -s -X POST \
@@ -138,13 +142,25 @@ curl -s -X POST \
   "YOUR_API_URL/kb/YOUR_KB_ID/find"
 ```
 
-Replace **three things**:
+Now use VS Code's **Find & Replace** to swap in your real values from Step 2 — one placeholder at a time. Open Find & Replace with **Cmd/Ctrl + H**.
 
-- `YOUR_JWT_HERE` → your service-account JWT (the long `eyJhbG...` string).
-- `YOUR_QUESTION HERE` → your 4–6-word question.
-- `YOUR_API_URL/kb/YOUR_KB_ID` → e.g., `https://aws-eu-1.rag.progress.cloud/api/v1/kb/a1b2c3d4-...`
+1. Find `YOUR_API_URL` → Replace with your API URL (e.g., `https://aws-eu-1.rag.progress.cloud/api/v1`). Click **Replace All**.
+2. Find `YOUR_KB_ID` → Replace with your KB UUID. Click **Replace All**.
+3. Find `YOUR_JWT_HERE` → Replace with your service-account JWT (the long `eyJhbG...` string). Click **Replace All**.
 
-Paste the modified command into your terminal and press Enter.
+**Leave `YOUR QUESTION HERE` alone for now** — that one changes per call.
+
+Save the file (Cmd/Ctrl + S).
+
+> **Why this workflow.** The three credential placeholders (URL, KB ID, JWT) only need to be filled in once and they're the same for every API call in this build. Doing the swap in VS Code's Find & Replace — visually, character-perfect — eliminates the most common Build 0 error mode: a mis-pasted JWT. The scratch file then becomes your reusable pad for steps 6, 7, and 11.
+>
+> **Same warning as `.env`:** scratch.sh now contains a live credential. Don't share it. Don't commit it to git. We'll formalise this in Build 11.
+
+### 5c. Run your first call
+
+Back in `scratch.sh` in VS Code, replace `YOUR QUESTION HERE` with your 4–6-word question from 5a (just type over those three words). Save.
+
+Then **select the entire curl command** (Cmd/Ctrl + A if scratch.sh has only this one command) and copy it (Cmd/Ctrl + C). Switch to your terminal, paste, and press Enter.
 
 **What the command does (in plain English):**
 - `curl` is a "make an HTTP request" tool.
@@ -178,7 +194,7 @@ curl -s -X POST ... | jq .
 
 If you don't have `jq`, ignore this — the ugly JSON is fine.
 
-### 5c. Read the response
+### 5d. Read the response
 
 Take 2 minutes to actually read what came back. Scroll through. Find:
 
@@ -194,7 +210,7 @@ This is what every search-based feature in ARAG returns. Same shape across every
 
 Now the **generation** endpoint. Same auth, different URL, different body.
 
-Same template:
+Open `scratch.sh` from Step 5 in VS Code. Add a blank line below your `/find` curl, then paste this template **exactly as-is** below it:
 
 ```bash
 curl -s -X POST \
@@ -205,9 +221,11 @@ curl -s -X POST \
   "YOUR_API_URL/kb/YOUR_KB_ID/ask"
 ```
 
-Same three replacements as before. The new thing is the `x-synchronous: true` header — that asks for the response as one JSON blob instead of a streaming chunk-by-chunk response. Easier to read for Build 0.
+Run **Find & Replace** (Cmd/Ctrl + H) on this block exactly as you did in 5b — swap `YOUR_API_URL`, `YOUR_KB_ID`, and `YOUR_JWT_HERE` for your real values. (If you used Replace All earlier, all three placeholders should already be filled in across the file — verify that's the case and re-run any that didn't take.) Then replace `YOUR QUESTION HERE` with your question. Save.
 
-Run it.
+The new thing in this command is the `x-synchronous: true` header — that asks for the response as one JSON blob instead of a streaming chunk-by-chunk response. Easier to read for Build 0.
+
+Select the whole `/ask` curl command in `scratch.sh` (Cmd/Ctrl + click-drag, or use shift-arrows), copy, paste into your terminal, and press Enter.
 
 **You should see:**
 
@@ -221,7 +239,7 @@ Run it.
 
 ## Step 7 — Make your first streaming `/ask` call (10 min)
 
-Same call, but without the `x-synchronous` header, you get **streaming** — answer chunks arrive as they're generated. Watch:
+Same call, but without the `x-synchronous` header, you get **streaming** — answer chunks arrive as they're generated. Same scratch-file pattern: open `scratch.sh`, add a blank line below your previous block, paste this template exactly as-is:
 
 ```bash
 curl -N -X POST \
@@ -230,6 +248,8 @@ curl -N -X POST \
   -d '{"query":"YOUR QUESTION HERE","prefer_markdown":true,"rephrase":true,"max_tokens":500}' \
   "YOUR_API_URL/kb/YOUR_KB_ID/ask"
 ```
+
+If your Replace All in 5b already swapped the three credential placeholders across the whole file, they're already filled here too — just replace `YOUR QUESTION HERE` with your question, save, select-copy-paste into the terminal as before. If they didn't (e.g. you only replaced inside the first block), re-run Find & Replace now.
 
 The `-N` flag tells `curl` not to buffer — it streams the response as it arrives.
 
@@ -413,26 +433,13 @@ If something doesn't work, see "Getting unstuck" below.
 
 ---
 
-## Step 10 — Record your walkthrough (15 min)
-
-Record yourself (Loom, QuickTime, OBS — any screen recorder) doing:
-
-1. **(60 sec)** Show your Nuclia dashboard with the KB and 10 ingested documents.
-2. **(60 sec)** Run one of the `curl /find` commands. Narrate what you see in the response — point at `score`, point at `text`.
-3. **(90 sec)** Run `node ask.mjs "your question"` for three different questions. Narrate the streaming and citations.
-4. **(30 sec)** Close: *"This is the simplest end-to-end ARAG client. Every Build past this is a richer version of these calls."*
-
-Upload to `#build-clinic-submissions` in the partner Slack.
-
----
-
 ## Step 11 — Render the citations for your first `/ask` answer (15 min)
 
 You've watched the citations stream past in step 7 and you've printed the bare resource IDs at the end of `ask.mjs` in step 9. This step closes the loop: turn those IDs into a clean, de-duped, human-readable citation list. The lesson covers *why* the naive approach fails ([Citations — extracting, de-duping, and resolving](lesson.md#citations--extracting-de-duping-and-resolving)) — here you do it hands-on.
 
 ### 11a. Inspect `best_matches` in the raw response
 
-Run your sync `/ask` call from step 6 again, but this time pipe it through `jq` to isolate just the `best_matches` array:
+Run your sync `/ask` call from step 6 again, but this time pipe it through `jq` to isolate just the `best_matches` array. Open `scratch.sh`, add a blank line below your previous blocks, paste this template:
 
 ```bash
 curl -s -X POST \
@@ -444,7 +451,9 @@ curl -s -X POST \
   | jq '.retrieval_results.best_matches'
 ```
 
-(If you don't have `jq`, scroll the raw output and find the `"best_matches"` key by eye.)
+Same drill: if Find & Replace already swapped the three credential placeholders across the whole file, they're filled here too — just edit `YOUR QUESTION HERE`. Save, select the whole block, copy into the terminal, run.
+
+(If you don't have `jq`, drop the trailing `| jq ...` part and scroll the raw output to find the `"best_matches"` key by eye.)
 
 **You should see:** an array of strings shaped like `"a1b2c3d4-...-1234567890ab/t/body/12-340"`. Notice that the same resource id (the leading UUID) often repeats — one resource contributes several matching paragraphs.
 
@@ -495,13 +504,13 @@ Before moving to Build 1, confirm:
 
 - [ ] Knowledge Box provisioned in your chosen region (closest to you) with 10 indexed documents.
 - [ ] `.env` file with three credentials saved (and **not** committed to git).
+- [ ] `scratch.sh` file in your project folder with the three credential placeholders Find-and-Replaced for real values (also not committed to git).
 - [ ] `curl /find` call returns at least one paragraph with `score > 0.6`.
 - [ ] `curl /ask` (sync mode, with `x-synchronous: true`) returns an `answer` plus citations.
 - [ ] `curl /ask` (streaming, with `-N`) shows NDJSON chunks scrolling past.
 - [ ] `ask.mjs` script generated by your AI, reviewed by you, runs and streams.
 - [ ] Three queries run through `ask.mjs` with citations appearing.
 - [ ] `prompt-log.md` saved with your brief + the AI's working code.
-- [ ] 5-minute walkthrough recording submitted.
 
 Then take the [Build 0 quiz](quiz.md). Pass → start [Build 1](../build-1-five-primitives/).
 

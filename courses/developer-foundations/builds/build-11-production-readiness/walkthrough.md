@@ -328,21 +328,7 @@ Save the file. **This is the partner's starting-point asset for every Tier-3+ cu
 
 ---
 
-## Step 7 — Record a 3-minute "platform-grade" pitch (15 min)
-
-Record yourself walking through the **artefacts**, not code:
-
-1. **(45 sec)** Hook: *"Three things the customer's CTO cares about — residency, BYO-LLM, observability. Watch."*
-2. **(30 sec)** Read your `residency-statement.md` aloud. Don't paraphrase — read it. The CTO needs to hear the cadence.
-3. **(30 sec)** **BYO-LLM verbal beat** — narrate the architecture, do not demo a toggle. Say: *"BYO-LLM is configured at the KB level on the Nuclia platform — Azure OpenAI, Google Vertex, or AWS Bedrock against the customer's own tenant. Every generation call leaves Nuclia and lands in the customer's own cloud account. We don't ship a per-click toggle in customer builds — we wire it once during the co-engineered POC."* (This is the talk-track the [Build 11 lesson](lesson.md#when-byo-llm-doesnt-fit-clean-descope) covers.)
-4. **(45 sec)** Open `dashboard-spec.md`. Walk the citation-rate widget. Narrate: *"This is your retrieval-quality alarm. When this drops, something broke upstream — somebody added bad documents, or the labeller misclassified, or content moved."*
-5. **(30 sec)** Close: *"Platform-grade. Not demo-grade. Sign here."*
-
-Upload to `#build-clinic-submissions`.
-
----
-
-## Step 8 — Ship an explainability surface for the regulated-buyer conversation (25 min)
+## Step 7 — Ship an explainability surface for the regulated-buyer conversation (25 min)
 
 Observability points your operators at platform health. Explainability points the *customer's security reviewer* at retrieval honesty. Same primitives, opposite audience. Tier-3+ buyers in finance, healthcare, and government ask for this in the SOC 2 / vendor-risk pass. Build it once; reuse on every retrieval surface.
 

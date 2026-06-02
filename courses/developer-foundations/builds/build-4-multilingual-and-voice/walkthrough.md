@@ -331,20 +331,6 @@ Make sure `prompt-log.md` includes:
 
 ---
 
-## Step 8 — Record a 2-minute walkthrough (15 min)
-
-Record yourself walking the demo script:
-
-1. **(20 sec)** Hook — three customer questions.
-2. **(30 sec)** Language flip — English → French → Japanese.
-3. **(40 sec)** Segment flip — Beginner → Expert.
-4. **(20 sec)** Resource scope — focused summary.
-5. **(10 sec)** Close — "Fifteen lines of code."
-
-Upload to `#build-clinic-submissions`.
-
----
-
 ## Step 9 — Move audience scope from prefix to filter (20 min)
 
 The prefix lever you wired in Step 3 shapes voice beautifully. It is **not** a security boundary. This step proves that with a deliberate failure, then replaces the prefix-only scope with a server-enforced labelset filter — the pattern you'll reach for whenever a customer says "prospects must never see member-only content".
@@ -398,7 +384,6 @@ Re-run the same query from 9a 5–10 times.
 - [ ] Language list is a configurable prop, not hardcoded.
 - [ ] `demo-script.md` saved.
 - [ ] `prompt-log.md` saved with all briefs.
-- [ ] 2-minute Loom recording submitted.
 
 Then take the [Build 4 quiz](quiz.md). Pass → start [Build 5](../build-5-structured-outputs/).
 

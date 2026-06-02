@@ -396,14 +396,6 @@ Save as `demo-script.md`.
 
 ---
 
-## Step 8 — Record a 3-minute walkthrough (15 min)
-
-Record yourself running 3 queries through the comparison page. Narrate the citation count delta and the steps panel. Close with the Tier-4 framing.
-
-Upload to `#build-clinic-submissions`.
-
----
-
 ## Verification checklist
 
 - [ ] `hard-queries.md` with 5 queries + notes on why each was thin.
@@ -414,7 +406,6 @@ Upload to `#build-clinic-submissions`.
 - [ ] `comparison-results.md` with the 5-query result table.
 - [ ] `demo-script.md` saved.
 - [ ] `prompt-log.md` saved.
-- [ ] 3-minute Loom recording submitted.
 
 Then take the [Build 10 quiz](quiz.md). Pass → start [Build 11](../build-11-production-readiness/).
 

@@ -527,14 +527,6 @@ Save as `demo-script.md`.
 
 ---
 
-## Step 10 — Record a 4-minute walkthrough (15 min)
-
-Record yourself walking the demo script.
-
-Upload to `#build-clinic-submissions`.
-
----
-
 ## Verification checklist
 
 - [ ] `/graph` returns >0 paths with the data-augmentation filter.
@@ -545,7 +537,6 @@ Upload to `#build-clinic-submissions`.
 - [ ] At least one graph-only question demonstrated; screenshot saved.
 - [ ] `demo-script.md` saved.
 - [ ] `prompt-log.md` saved.
-- [ ] 4-minute Loom recording submitted.
 
 Then take the [Build 8 quiz](quiz.md). Pass → start [Build 9](../build-9-field-engineering/).
 

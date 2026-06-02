@@ -359,20 +359,6 @@ Save as `demo-script.md`.
 
 ---
 
-## Step 9 — Record a 3-minute walkthrough (15 min)
-
-Walk through `demo-script.md` with your screen recorder:
-
-1. **(30 sec)** Hook — filters are the cheapest precision lever.
-2. **(45 sec)** Unfiltered search results.
-3. **(45 sec)** Content-type chip → results shrink.
-4. **(45 sec)** Topic facet → results shrink further. Open DevTools briefly to show the filter array in the request.
-5. **(15 sec)** Close — *"Two filter axes. One afternoon. Customer signs."*
-
-Upload to `#build-clinic-submissions`.
-
----
-
 ## Verification checklist
 
 - [ ] `labelset-design.md` written with 5-9 labels + 1-sentence definitions + corpus examples.
@@ -383,7 +369,6 @@ Upload to `#build-clinic-submissions`.
 - [ ] Filter changes re-query live (you can see new `/find` requests in DevTools).
 - [ ] `demo-script.md` saved.
 - [ ] `prompt-log.md` saved.
-- [ ] 3-minute Loom recording submitted.
 
 Then take the [Build 7 quiz](quiz.md). Pass → start [Build 8](../build-8-knowledge-graph/).
 

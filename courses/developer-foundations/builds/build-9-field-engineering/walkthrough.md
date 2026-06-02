@@ -369,20 +369,6 @@ Make sure `prompt-log.md` has:
 
 ---
 
-## Step 10 — Record a 3-minute demo (15 min)
-
-Record yourself walking through:
-
-1. **(30 sec)** Hook: *"Field engineering is the highest-leverage recurring-revenue lever in the framework. Watch."*
-2. **(45 sec)** Show the chat in Prospect mode. Ask a query. Show the CTA pill. Point at it: *"That label and URL come from a custom field on the resource — written by the content team, not by an engineer."*
-3. **(45 sec)** Switch to the Nuclia dashboard. Open the resource. Edit the `callToAction` field. Save. Narrate: *"Content team edit. No code. No deploy."*
-4. **(45 sec)** Switch back to the chat. Re-ask the same query. Show the new CTA pill with the variant copy. *"Live. Same KB. Same code. Two minutes later."*
-5. **(15 sec)** Close: *"Customer's content team owns the CTA copy. Partner owns the platform. $10K/month per customer, ongoing."*
-
-Upload to `#build-clinic-submissions`.
-
----
-
 ## Verification checklist
 
 - [ ] 5 hero resources have `callToAction` fields with branded copy.
@@ -394,7 +380,6 @@ Upload to `#build-clinic-submissions`.
 - [ ] `cta-variant-a.png` and `cta-variant-b.png` screenshots saved.
 - [ ] `content-team-guide.md` written — one page, customer-ready.
 - [ ] `prompt-log.md` saved.
-- [ ] 3-minute Loom recording submitted.
 
 Then take the [Build 9 quiz](quiz.md). Pass → start [Build 10](../build-10-composite-rag/).
 

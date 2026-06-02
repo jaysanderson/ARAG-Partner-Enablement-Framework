@@ -436,20 +436,6 @@ Create `prompt-log.md`. Paste the Step 6 brief. Add notes about any fixes you ha
 
 ---
 
-## Step 7 — Record a 3-minute walkthrough (15 min)
-
-Record yourself in the **Nuclia dashboard** (not a code editor — this Build is platform configuration):
-
-1. **(30 sec)** *"ARAG ships three data-augmentation agents that enrich your KB at ingest. Watch — Generator, Labeller, Graph."*
-2. **(60 sec)** Generator. Show the dashboard config. Open a resource. Show the generated summary + Q&A pair fields. Narrate: *"This is what fixes the customer's 'search doesn't work' complaint — vocabulary mismatch."*
-3. **(45 sec)** Labeller. Show the dashboard config + the labelset definition. Open a resource. Show the assigned label. Narrate: *"This is what powers filter chips in Build 7."*
-4. **(45 sec)** Graph. Show the entity/relation schema. Switch to terminal. Run the `/graph` curl with the data-aug filter. Show a few typed paths. Narrate: *"This is what powers the graph navigation in Build 8."*
-5. **(15 sec)** Close: *"Three agents. Three customer signals. Vocabulary mismatch → Generator. Filter precision → Labeller. Relationship traversal → Graph."*
-
-Upload to `#build-clinic-submissions`.
-
----
-
 ## Verification checklist
 
 - [ ] `baseline.md` saved (pre-agents query + answer + citation count).
@@ -462,7 +448,6 @@ Upload to `#build-clinic-submissions`.
 - [ ] `baseline-comparison.md` saved (before/after observations).
 - [ ] `agent-status.mjs` working — all three agents PASS on 3 sample resources.
 - [ ] `prompt-log.md` saved.
-- [ ] 3-minute Loom recording submitted.
 
 Then take the [Build 6 quiz](quiz.md). Pass → start [Build 7](../build-7-smart-filters/).
 

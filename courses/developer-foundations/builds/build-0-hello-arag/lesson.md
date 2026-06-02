@@ -133,12 +133,11 @@ The Build 0 walkthrough has you do both: provision a KB (platform) and ask an AI
 ## What you'll do in the walkthrough
 
 1. Provision a sandbox Knowledge Box in the region closest to you (then stick with that same region for every Knowledge Box you provision in this course).
-2. Drag 10 documents into the dashboard.
+2. Drag the 10 sample documents we provide (in `sample-corpus/build-0/`) into the dashboard.
 3. Make a `/find` call from `curl`. Read the response.
 4. Make a streaming `/ask` call from `curl`. Watch the NDJSON stream.
 5. Open Claude Code (or Cursor / Copilot / ChatGPT). Brief it on the streaming `/ask` shape. Have it write you `ask.mjs`.
 6. Run the script. Verify the output streams correctly and the citations land.
-7. Record a 5-minute walk-through showing the three API calls plus your generated script.
 
 ## Common pitfalls
 

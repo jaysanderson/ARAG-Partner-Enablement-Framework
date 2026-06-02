@@ -137,7 +137,7 @@ Don't try to be clever. Don't try to memorise commands. Don't apologise for aski
 
 Three habits that separate partners who ship from partners who get stuck:
 
-- **Always test endpoints with `curl` (or Postman/Bruno) first**, before asking the AI to wrap them in code. If `curl` works but the AI's code doesn't, you know the AI's code is wrong (not your KB).
+- **Always test endpoints with `curl` (or Postman) first**, before asking the AI to wrap them in code. If `curl` works but the AI's code doesn't, you know the AI's code is wrong (not your KB).
 - **Always read the AI's code** before running it. Three-check pattern above.
 - **Always save the prompt that produced working code.** We ask for `prompt-log.md` in each Build. It's your institutional knowledge. Two months later you'll need the same component and the prompt is what reproduces it.
 
