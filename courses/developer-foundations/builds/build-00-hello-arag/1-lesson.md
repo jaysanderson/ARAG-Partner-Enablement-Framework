@@ -133,7 +133,7 @@ The Build 0 walkthrough has you do both: provision a KB (platform) and ask an AI
 ## What you'll do in the walkthrough
 
 1. Provision a sandbox Knowledge Box in the region closest to you (then stick with that same region for every Knowledge Box you provision in this course).
-2. Drag the 10 sample documents we provide (in `sample-corpus/build-0/`) into the dashboard.
+2. Upload the sample corpus we provide (`corpus/content_type/` inside this Build's folder — 37 documents organised into seven subfolders) using the dashboard's **Upload folder** option with **"use folder names as label names"** enabled. Nuclia auto-applies a `content_type` labelset so you've practised the workflow that every subsequent build, including the capstone, uses.
 3. Make a `/find` call from `curl`. Read the response.
 4. Make a streaming `/ask` call from `curl`. Watch the NDJSON stream.
 5. Open Claude Code (or Cursor / Copilot / ChatGPT). Brief it on the streaming `/ask` shape. Have it write you `ask.mjs`.

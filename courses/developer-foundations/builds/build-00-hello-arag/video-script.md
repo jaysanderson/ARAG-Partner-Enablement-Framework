@@ -29,12 +29,14 @@
 >
 > Once it's ready, three things you'll grab: the API endpoint URL, your KB ID, and your service-account JWT. Put them in a local `.env` file. Don't commit the file. We'll use these in every call going forward.
 
-## Section 3: Ingest 10 documents (3:30 – 4:30)
+## Section 3: Upload the corpus folder (3:30 – 4:30)
 
-**ON SCREEN:** Drag-and-drop the 10 sample documents from the `sample-corpus/build-0/` folder into the KB upload area. The processing indicator runs. Cut to fast-forward; cut back when all show "indexed".
+**ON SCREEN:** In the Nuclia dashboard, navigate to **Resources → Upload → Upload folder**. Pick the `corpus/content_type/` folder from the Build 0 directory. Enable the **"use folder names as label names"** toggle. Confirm. The processing indicator runs over 37 documents. Cut to fast-forward; cut back when all show "indexed". Briefly zoom on **KB → Labelsets** to show the auto-created `content_type` labelset with seven labels.
 
 **VOICEOVER:**
-> Drag in the 10 sample documents from the course's `sample-corpus/build-0/` folder. They're a mix of PDFs, markdown, and plain text — representative of the variety a real customer corpus carries. Processing takes about thirty seconds per document. While they're processing, a quick word about what's happening — ARAG is chunking, embedding, classifying, and extracting metadata from each one. That's the *platform* doing platform work. We don't touch any of it.
+> One folder, one click. The corpus we ship with this Build is at `corpus/content_type/` — 37 outdoor-retail documents organised into seven subfolders. I'm using Nuclia's **Upload folder** option with **use folder names as label names** turned on. That's the trick: Nuclia takes the parent folder name as the labelset and the subfolder names as label values. I get a labelset for free without tagging anything by hand.
+>
+> Processing takes about thirty seconds per document — Nuclia chunks, embeds, classifies, and extracts metadata from each one. That's the *platform* doing platform work. We don't touch any of it. Once the indicator hits zero, I have a Knowledge Box with 37 documents and a `content_type` labelset with seven values. Same workflow you'll re-use in every build past here — including the capstone.
 
 ## Section 4: First `/find` call (4:30 – 6:00)
 

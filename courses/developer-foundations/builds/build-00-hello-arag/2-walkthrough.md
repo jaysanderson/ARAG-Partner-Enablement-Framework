@@ -23,7 +23,9 @@ node --version
 
 **Expected output:** something like `v20.11.0` or higher. If you see "command not found," Node didn't install correctly — reinstall from the link above.
 
-The **10 sample documents we provide for Build 0** — included with the course at `courses/developer-foundations/sample-corpus/build-0/` in the framework repo. (If you don't have the framework repo cloned locally yet, clone it from [the partner-enablement repo URL] first, or download just the `sample-corpus/build-0/` folder as a zip from the same location.) These are the documents you'll upload to your Knowledge Box in Step 4. Using the same corpus everyone else in the course uses means every query you try later behaves the way the lessons describe — your results will line up with the screenshots and example outputs in subsequent Builds.
+**The sample corpus you'll ingest** — included with the course at `courses/developer-foundations/builds/build-00-hello-arag/corpus/content_type/` in the framework repo. 37 outdoor-retail documents organised into seven subfolders (`product/`, `trail_guide/`, `gear_review/`, etc.) — the folder names will become labels in Nuclia once you upload. (If you don't have the framework repo cloned locally yet, clone it from [the partner-enablement repo URL] first, or download just the `corpus/content_type/` folder using a tool like [download-directory.github.io](https://download-directory.github.io/).) Using the same corpus everyone else in the course uses means every query you try later behaves the way the lessons describe — your results will line up with the screenshots and example outputs in subsequent Builds.
+
+> **Why this corpus has folders.** Nuclia can use folder names as **label names** during ingest — a feature that lets you drag one folder, get labels for free, and skip the per-document tagging step. You'll use that feature in Step 4. The same folder-name-as-labels workflow runs through every build past Build 0, including the capstone, so learn it once here.
 
 ---
 
@@ -96,19 +98,27 @@ Save the file.
 
 ---
 
-## Step 4 — Ingest 10 documents (10 min)
+## Step 4 — Upload the corpus folder (10 min)
 
-Back in the Nuclia dashboard, open your KB. You should see an **upload area** (drag-and-drop zone).
+Back in the Nuclia dashboard, open your Knowledge Box. You're going to use the **Upload folder** option with the **"use folder names as label names"** feature — this is the workflow you'll re-use in every build, including the capstone.
 
-1. **Drag the 10 files from `courses/developer-foundations/sample-corpus/build-0/` into the upload area.** Select all 10 files in your file explorer (Cmd/Ctrl+A inside that folder) and drag them onto the Nuclia dashboard drop zone.
-2. Watch the progress indicator. Each document goes from "processing" → "indexed."
-3. Wait until **all 10** show as "indexed."
+1. In the dashboard navigate to **Resources** → **Upload** → **Upload folder** (exact wording varies by tenant — look for an "Upload folder" option, distinct from the single-file uploader).
+2. In your file explorer, locate the **`courses/developer-foundations/builds/build-00-hello-arag/corpus/content_type/`** folder. **Pick that folder** (the `content_type/` one — not its parent `corpus/`, not its children).
+3. **Enable the "use folder names as label names" option.** This is the toggle/checkbox that tells Nuclia to read your folder structure as labelset metadata. With it on:
+   - The parent folder's name (`content_type`) becomes the **labelset name**.
+   - Each subfolder's name (`product`, `trail_guide`, `gear_review`, etc.) becomes a **label value** applied to every document inside.
+4. Confirm and start the upload. Nuclia processes all 37 documents.
+5. Watch the dashboard's progress indicator. Each document goes from "processing" → "indexed."
+
+**You should see:** 37 documents listed in your KB, each with a `content_type` labelset value matching the subfolder it came from (`product`, `trail_guide`, etc.) — confirm by clicking into any resource and looking at its labels.
+
+You can also browse **KB → Labelsets** in the dashboard to see Nuclia has auto-created a `content_type` labelset with seven labels — no manual labelset configuration required.
+
+> **What you just did is the foundational ARAG ingest pattern.** Every build past this one — including the Build 13 capstone — uses the same `Upload folder` + `use folder names as label names` flow against a content-type-organised folder tree. You'll never need to tag documents one-by-one in this course.
 
 > You can ingest your own documents later for experimentation, but the lessons, quizzes, and downstream Builds all assume the provided corpus is what's in your KB.
 
-**You should see:** 10 documents listed in your KB, each with a title, mimetype, and status "indexed."
-
-**If processing is slow** (>2 minutes per doc), grab a coffee. Some PDFs take time. If a document gets stuck on "processing" for >10 minutes, click into it to see if there's an error message; if it failed, just delete and skip — 9 documents is fine.
+**If processing is slow** (>2 minutes per doc), grab a coffee. Some PDFs take time. If a document gets stuck on "processing" for >10 minutes, click into it to see if there's an error message; if it failed, just delete and skip — 35+ documents is fine.
 
 ---
 
@@ -120,7 +130,7 @@ This is the **simplest possible test** that your KB is reachable and your creden
 
 ### 5a. Pick a query
 
-Look at the 10 documents you uploaded. Think of a 4–6-word question your content could answer. Examples:
+Look at the 37 documents you uploaded. Think of a 4–6-word question your content could answer. Examples:
 
 - "What is our return policy?"
 - "How does the onboarding process work?"
@@ -502,7 +512,8 @@ If a title comes back as `undefined` or empty, the fallback to `rid.slice(0, 8)`
 
 Before moving to Build 1, confirm:
 
-- [ ] Knowledge Box provisioned in your chosen region (closest to you) with 10 indexed documents.
+- [ ] Knowledge Box provisioned in your chosen region (closest to you) with 37 indexed documents from `corpus/content_type/`.
+- [ ] `content_type` labelset auto-created via the "use folder names as label names" feature with seven label values (`product`, `trail_guide`, `gear_review`, `ambassador_video`, `loyalty_benefit`, `brand_story`, `support`).
 - [ ] `.env` file with three credentials saved (and **not** committed to git).
 - [ ] `scratch.sh` file in your project folder with the three credential placeholders Find-and-Replaced for real values (also not committed to git).
 - [ ] `curl /find` call returns at least one paragraph with `score > 0.6`.
