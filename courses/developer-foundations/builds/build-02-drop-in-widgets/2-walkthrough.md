@@ -2,7 +2,7 @@
 
 > Estimated time: 1 to 1.5 hours focused. Read the [lesson](1-lesson.md) first.
 >
-> **The learning is in the dashboard, not the editor.** Build 2 is the one walkthrough where the Nuclia platform does almost all the work — your job is to *see* the full spread of widget options the configurator exposes, pick a configuration that fits a demo, and watch it render locally. Code is one snippet you paste; no vibe-coding required (until the playbook at the end).
+> **The learning is in the dashboard, not the editor.** Build 2 is the one walkthrough where the Nuclia platform does almost all the work — your job is to *see* the full spread of widget options the configurator exposes, pick a configuration that fits a demo, and watch it render locally. Code is one snippet you paste; no vibe-coding required.
 
 ## What you'll build
 
@@ -20,7 +20,7 @@ A local `index.html` file on your Desktop running a Nuclia widget set you config
 - **Your Nuclia dashboard** (Knowledge Box still ingested from Build 0).
 - **Your code editor** (VS Code recommended) — you'll paste one snippet, that's it.
 - **A modern web browser** (Chrome / Edge / Firefox / Safari — any current version).
-- **Your AI assistant** — only used in Step 8 (the demo playbook). Skip it until then.
+- **Your AI assistant** — optional in Build 2. The dashboard does the work; you'd only ping the AI for help interpreting a filter-syntax surprise or a configurator option you can't find.
 
 ---
 
@@ -201,58 +201,22 @@ Copy the new embed code. In VS Code, **File → New File**, save as `index-v2.ht
 
 ---
 
-## Step 8 — Write the demo playbook (15 min)
+## Key Takeaways
 
-The whole pitch of widgets is *"a sales rep can put this in front of a customer in 30 minutes."* You're going to write the literal playbook that proves it.
+By the end of this Build you should be able to recite the configurator's seven panels and what each one controls — without notes. Specifically:
 
-Open your AI assistant. Paste this brief:
-
-```
-Write me a one-page markdown playbook titled
-"Demo a Chatbot in 30 Minutes" that a non-technical sales rep can
-hand to a customer demo participant. The playbook walks them through:
-
-1. Five-minute setup: open the Nuclia dashboard, navigate to the
-   Widget configurator on a Knowledge Box. Show the three panes
-   (configuration / live preview / code).
-2. Fifteen-minute exploration: walk the customer through the
-   widget-type picker (search vs chat) and the display options
-   (layout, placeholder, theme, citations, streaming, language) —
-   let THEM pick options while you narrate what changes in the
-   preview.
-3. Five-minute filter demo: add a filter expression that narrows
-   results to a content subset relevant to the customer (e.g.
-   /n/s/-product- for product catalogues, or /classification.labels/
-   audience/customer for audience-scoped views). Show the result-set
-   change live.
-4. Five-minute close: copy the embed code from the dashboard's code
-   panel; paste into a local index.html; double-click; the customer
-   sees the same experience running on their machine.
-
-Each step should have:
-- A "you say:" line (talk track for the rep).
-- A "you click:" line (what action in the dashboard).
-- One sentence narrating what the customer is seeing change.
-
-End with a one-sentence pitch the rep can read aloud at the start
-of the demo.
-
-Plain markdown. No code fences for the prose parts. Keep it to
-one printed page.
-```
-
-Save the result as `playbook.md` in your `foundations-build-2` folder.
-
-This playbook is **part of your Build 2 submission**. Reviewers check it for clarity.
+- **The dashboard does the work, not the editor.** The Nuclia widget configurator is the no-code surface partners use 90% of the time. Code only appears at the very end when you paste one snippet into a local HTML file.
+- **Four widget types**: `<nuclia-search-bar>`, `<nuclia-search-results>`, `<nuclia-chat>` (floating or inline), `<nuclia-popup>`. Pick the combination that fits the customer's site — most Tier 1 demos use search + chat together.
+- **Display + behaviour options** are exposed in the configurator's panels: placeholder text, layout style, theme, autocomplete, citations style (inline / trailing / hidden), streaming, multi-turn, language. Every option is a customer-conversation lever.
+- **Filtering is one expression**. The configurator's filter panel writes the same `filters` attribute you'd hand-author. The `/n/s/-product-` slug-substring pattern in this Build is the simplest no-labelset filter; once Build 6 is done you'll use labelset filters (`/classification.labels/<labelset>/<label>`) for anything richer.
+- **The embed code is just three custom-element tags plus a script** — your KB ID, zone, API key are baked in by the dashboard. One paste. No build step. The whole demo runs as a local file you double-click; no hosting, no deploy, no public URL.
+- **When widgets are the wrong choice**: different prompt voices per audience (Build 3 territory), structured outputs (Build 5), knowledge-graph navigation (Build 8), custom CTA pills or post-processing (Build 9+). Past Tier 1 the widget abstraction starts to limit you; that's when you graduate to hand-rolled React.
 
 ---
 
-## Step 9 — Save your prompts (5 min)
+## Step 8 — Save your prompts (5 min)
 
-Create `prompt-log.md` in your project folder. Paste:
-
-1. The playbook brief from Step 8.
-2. Any debugging prompts you used (filter-syntax discovery, dashboard option not behaving as expected, etc.).
+Create `prompt-log.md` in your project folder. Paste any debugging prompts you used (filter-syntax discovery, dashboard option not behaving as expected, etc.).
 
 This is the institutional knowledge for the next partner running this demo.
 
@@ -265,7 +229,6 @@ This is the institutional knowledge for the next partner running this demo.
 - [ ] `index.html` opens by double-click on your Desktop and renders the configured widgets.
 - [ ] **Both widget types** demoed — search bar with results AND a chat surface.
 - [ ] (Optional) `index-v2.html` with a second configuration — you've seen two visibly different setups against the same Knowledge Box.
-- [ ] `playbook.md` saved — one-page, demo-ready, configurator-focused.
 - [ ] `prompt-log.md` saved.
 
 Then take the [Build 2 quiz](3-quiz.md). Pass → start [Build 3](../build-03-conversational-surfaces/).

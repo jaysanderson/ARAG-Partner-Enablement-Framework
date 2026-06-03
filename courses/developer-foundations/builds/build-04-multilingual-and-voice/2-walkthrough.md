@@ -280,42 +280,13 @@ Restore the original six-language default for the final demo. (Or keep the custo
 
 ---
 
-## Step 6 — Write a 2-minute demo script (10 min)
+## Key Takeaways
 
-Open your AI:
-
-```
-Write me a 2-minute demo script for a sales rep showing the
-"Multi-Surface Chat Demo" page with the three new levers. Story:
-
-0:00–0:20 — Hook:
-  "Three customer questions you'll hear in every Tier-2 conversation:
-   'can it speak our customers' languages?', 'can it talk to beginners
-   AND experts?', 'can it focus on a specific document?' Watch."
-
-0:20–0:50 — Language lever:
-  Same query, English then French then Japanese. Narrate:
-  "Same KB. Same model. One dropdown."
-
-0:50–1:30 — Segment lever:
-  Same query, Beginner then Expert. Narrate:
-  "One KB. Two voices. Marketing sells the Beginner experience to
-   their CX team; sales sells the Expert experience to their R&D team."
-
-1:30–1:50 — Resource scope:
-  Paste a document title. Ask 'summarise this'. Narrate:
-  "Pre-sales engineer asked 'how does this specific document apply
-   to my customer?' — answered in one prefix."
-
-1:50–2:00 — Close:
-  "Three Tier-2 customer questions. Fifteen lines of code.
-   This is what 'platform' looks like."
-
-Format: plain markdown with timing headings. Include specific
-narration lines, not just feature descriptions.
-```
-
-Save as `demo-script.md` in the project folder.
+- **Three Tier-2 levers from one prefix string.** Language, segment, resource scope — each one is a prepended instruction to the user prompt. No model retrained, no extra KB provisioned, no filter required for the *voice* change. The whole pattern is `buildPrefix({ language, segment, resourceId })` returning a string the client glues onto the query.
+- **Query prefixes shape voice. They are NOT a security boundary.** This is the most important takeaway. The model treats prefixes as *hints*, not constraints. *"The user is a Prospect"* is influential ~70-95% of the time and leaks the rest. Anywhere you need a hard scope (member-only content, GDPR-residency-restricted docs, internal-only resources), use a `/find` labelset filter — the server enforces it, no model in the loop.
+- **The same prefix machinery scales to N customer questions.** Multilingual? Prefix. Persona voice? Prefix. "Just this PDF"? Prefix. Once a partner sees this they stop pitching ARAG as a chatbot and start pitching it as a *conversational substrate* — the platform-vs-feature framing in the Build 11 lessons.
+- **Resource-scoped chat is a 1-line trick.** A prefix like `"Use only the resource titled <X>"` plus a `/find` filter on `resource_id` produces "ask about this PDF" behaviour customers usually budget months of engineering for. Closes the "chat with the document, not the KB" objection in 30 seconds.
+- **Build 7 (Smart Filters) is where you graduate from prefixes to filters.** Build 4 is the *prefix* lesson. Build 7 makes the labelset side rigorous — sidebar facets, smart-default filters per user profile, the labelset architecture decisions that determine whether a filter actually exists for your scope rule.
 
 ---
 
@@ -326,8 +297,7 @@ Make sure `prompt-log.md` includes:
 1. Step 2 brief (buildPrefix).
 2. Step 3 brief (UI controls).
 3. Step 5 brief (configurable language prop).
-4. Step 6 brief (demo script).
-5. Any debugging prompts.
+4. Any debugging prompts.
 
 ---
 

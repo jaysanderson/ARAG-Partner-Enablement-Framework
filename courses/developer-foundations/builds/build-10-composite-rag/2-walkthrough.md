@@ -366,39 +366,14 @@ This is the **per-customer tuning artefact** a partner does during a POC.
 
 ---
 
-## Step 7 — Write a 3-minute demo script (15 min)
+## Key Takeaways
 
-Open your AI:
-
-```
-Write a 3-minute demo script for showing customers the
-Composite Comparison page. Story:
-
-0:00–0:30 — Hook:
-  "Most RAG vendors stop at single-shot. The customer asks
-   a hard question, gets a thin answer, blames AI. Watch what
-   happens when we chain calls."
-
-0:30–1:30 — Run hard query 1:
-  Single-shot panel populates first — 1 citation, vague answer.
-  Composite panel populates 2 seconds later — 5 citations, specific
-   answer.
-  Narrate: "Composite ran 3 calls. First /ask returned thin. We
-   evaluated, found low confidence, broadened the search via /find,
-   re-asked with the extra context."
-
-1:30–2:30 — Repeat with queries 2-3:
-  Same pattern. Show citation count delta each time.
-
-2:30–3:00 — Close:
-  "2x the LLM cost. Justified when single-shot is failing.
-   This is the on-ramp to true agentic — Tier 4 conversation
-   opens here."
-
-Format: markdown with timing headings + specific narration.
-```
-
-Save as `demo-script.md`.
+- **Composite RAG in three words: generate → evaluate → augment.** A first `/ask` runs. The result is *evaluated* against a confidence rule (citation count + top score). If confident, return. If not, broaden via `/find` (and optionally graph traversal), then re-ask with the augmented context. Three calls instead of one — but only when the cheap path failed.
+- **Selective composition is the cost story.** Composite RAG is *not* every query. It's the 10-30% of queries where single-shot returns thin. On those, the alternative is a wrong answer — which costs more than 1000 marginal LLM tokens, especially in regulated industries. *"2x cost on 20% of queries"* is the partner-facing line.
+- **Always cap retry depth at 1.** No recursion. No "if confidence still low, try again." Composite RAG runs the pipeline once. Going beyond 1 retry burns budget for marginal lift and crosses the line into true agentic — which is Build 8 of the Advanced course, not here.
+- **Latency cost: 1.5-2x single-shot.** One extra `/find` (sub-second) + one extra `/ask` (1-2 seconds). Customers with sub-2-second UX budgets need timeout-gated composite — if the pipeline exceeds budget, return the single-shot answer. Document this trade-off in the partner's `tuning.md`.
+- **The boundary between composite and agentic: who decides the next step.** Composite = the *programmer* writes the decision logic at write time (`if confidence < 0.7: broaden`). Agentic = the *model* decides at run time. ARAG ships composite as a first-class pattern; true agentic patterns are in the Advanced course. Tier 4 customers ask about both.
+- **The confidence rule is the tuning lever.** Default thresholds (`≥3 citations`, `top score ≥0.7`) are reasonable starting points. Every customer corpus will need them re-tuned — too strict and you re-run on queries that don't need it (wasted cost); too loose and you skip composite when single-shot is thin (wasted demos). Build 10's `tuning.md` is where partners practise this for the customer at hand.
 
 ---
 
@@ -410,7 +385,6 @@ Save as `demo-script.md`.
 - [ ] Composite wins on at least 3 of 5 hard queries (citation count or quality).
 - [ ] Threshold tuned and documented in `tuning.md`.
 - [ ] `comparison-results.md` with the 5-query result table.
-- [ ] `demo-script.md` saved.
 - [ ] `prompt-log.md` saved.
 
 Then take the [Build 10 quiz](3-quiz.md). Pass → start [Build 11](../build-11-production-readiness/).

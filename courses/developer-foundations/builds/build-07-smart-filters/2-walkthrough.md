@@ -328,40 +328,14 @@ Take a screenshot. Save it as `filter-compare.png` in your project folder.
 
 ---
 
-## Step 8 — Write a 2-minute demo script (15 min)
+## Key Takeaways
 
-Open your AI:
-
-```
-Write me a 2-minute demo script for a sales rep showing customers
-the filterable search UI. Story:
-
-0:00–0:20 — Hook:
-  "Filters are the cheapest precision lever in ARAG. They take
-   one engineer one afternoon. Watch what they do to result quality."
-
-0:20–0:50 — Full results:
-  Search a query. Show all results. Narrate the count and
-  the diversity of content types.
-
-0:50–1:30 — Content type filter:
-  Click PDFs. Results shrink. Narrate:
-  "Same query. Filtered to PDF policy docs only. Notice how the
-   irrelevant marketing content disappears."
-
-1:30–1:50 — Topic facet:
-  Click a topic. Results shrink further. Narrate:
-  "Two filter axes composed. The customer's content team designed
-   this taxonomy; the labeller agent applied it. We just expose it."
-
-1:50–2:00 — Close:
-  "Two filter axes, one afternoon. Procurement just got 3 weeks faster."
-
-Format: markdown with timing headings + specific narration text
-for each beat.
-```
-
-Save as `demo-script.md`.
+- **Filters are the cheapest precision lever in ARAG.** One labelset, one afternoon's design work, one filter array on `/find` — and you've shrunk a noisy 50-result list to a focused 8. Customers feel the difference immediately; the engineering cost is negligible.
+- **Filter composition stacks.** Three filters in one `filters` array (`content_type`, `audience`, `region` for example) compose with AND semantics inside one labelset and OR semantics across labels at the same level. You'll use stacked filters in every production engagement.
+- **Labelset design is its own discipline.** 5-9 labels per labelset, definitions partners agree on, no overlapping semantics, no exhaustive enumeration. Bad labelset design surfaces months later when a customer says *"we can't tell `policy` from `procedure` apart"* — at that point the corpus is tagged wrong and re-labelling is expensive. Do the design first, ship second.
+- **Smart-default filters are the partner's quiet win.** Pre-filtering by the user's profile (`region:emea` for an EMEA user; `audience:trail_club_pro` for a logged-in member) is a one-line change that customers don't notice but recommend-to-others quality lifts 30-50% on.
+- **Chips are just labelsets exposed as buttons.** The UI affordance is downstream of the data model. Once labelsets are designed right, the chip UI is half a day of vibe coding (Build 7's walkthrough). Wrong labelsets — you can't paper over with UI.
+- **Filters are the security boundary that prefixes aren't (Build 4).** When a customer says *"prospects must never see member content,"* the answer is a `audience:shopper` filter on the server, not a `"You are a prospect"` prefix on the prompt. Builds 4 and 7 together tell the full *prefix-for-voice / filter-for-scope* story.
 
 ---
 
@@ -373,7 +347,6 @@ Save as `demo-script.md`.
 - [ ] `src/components/SearchPage.tsx` running with search + chips + topic facets.
 - [ ] Toggling chips visibly shrinks/expands results.
 - [ ] Filter changes re-query live (you can see new `/find` requests in DevTools).
-- [ ] `demo-script.md` saved.
 - [ ] `prompt-log.md` saved.
 
 Then take the [Build 7 quiz](3-quiz.md). Pass → start [Build 8](../build-08-knowledge-graph/).

@@ -498,40 +498,14 @@ graph-only demo punchline.)
 
 ---
 
-## Step 9 — Write a demo script (15 min)
+## Key Takeaways
 
-Open your AI:
-
-```
-Write a 4-minute demo script for showing customers the
-GraphPage. Story:
-
-0:00–0:30 — Hook:
-  "Most AI vendors stop at retrieval. ARAG ships a typed knowledge
-   graph extracted automatically from your content. Watch."
-
-0:30–1:30 — The viewer:
-  Show the graph. Narrate: "These are custom entity types — defined
-   for this customer's domain. The data-augmentation agent extracts
-   them at ingest. No engineer wrote a knowledge-graph schema by hand."
-
-1:30–2:30 — Click-expand:
-  Click through entities. Show paths merging in. Narrate:
-   "Each click expands the graph. The customer is exploring their
-    own corpus — not searching, exploring."
-
-2:30–3:30 — Graph-only question:
-  Walk through the graph-only question. Narrate:
-   "This question — '<insert your question>' — cannot be answered
-    by single-shot retrieval. Only by walking the typed graph."
-
-3:30–4:00 — Close:
-  "Tier 4 closer. No competing vendor ships this."
-
-Format: markdown with timing headings + specific narration text.
-```
-
-Save as `demo-script.md`.
+- **Graphs answer questions retrieval can't.** *"Which engineers worked on both Atlas E-220 cooling AND BuildingHub firmware?"* — no single document carries that fact. Retrieval returns five docs that mention either; only a graph traversal answers the intersection. This is the Tier 4 demo move; no competing vendor ships it with the platform.
+- **The data-augmentation filter is non-negotiable.** Every graph query the app sends MUST wrap with `{ prop: "generated", by: "data-augmentation" }`. Without it Nuclia returns default NER nodes (DATE, MONEY, ORG, PERSON) alongside your typed entities and the result reads as noise. The filter is a one-line client-side discipline; ship it everywhere.
+- **Custom entity types beat generic NER.** Default NER gives you PERSON, ORG, DATE. Your customer's value comes from custom types: `INVESTIGATOR`, `COMPOUND`, `RUNBOOK`, `INCIDENT`. The data-augmentation agent (Build 6) is what produces them; this Build is where you query them.
+- **Click-expand is the partner's quiet demo lever.** The customer in the room doesn't know what to ask the graph. Click an entity to expand its neighbours — let the customer point and ask *"what's that?"* — answer with another click. The exploration feels organic; the graph reveals connections the customer didn't know they had.
+- **Graph schema is half the work.** 8-15 entity types, 8-15 relation types, definitions partners agree on, no overlapping semantics. Bad schema design surfaces in three places: the data-augmentation agent extracts noise (Build 6 fault), the graph viewer surfaces incoherent paths (this Build), the composite RAG flow (Build 10) can't traverse meaningfully. Get the schema right; the rest follows.
+- **`/graph/nodes` + `/graph` + `/find` is the leaf-node recipe.** Hop-1 traversal misses leaf entities (the things people *talk about* but rarely originate relations from — competitor products, regulations, venues). The `queryPathsAround` pattern (outbound + inbound merge) is the fix; you'll re-use it in every customer engagement past Tier 1.
 
 ---
 
@@ -543,7 +517,6 @@ Save as `demo-script.md`.
 - [ ] `src/pages/GraphPage.tsx` — fuzzy search + clickable graph + sidebar all working.
 - [ ] No NER noise (DATE, MONEY, ORG, etc.) visible in the graph.
 - [ ] At least one graph-only question demonstrated; screenshot saved.
-- [ ] `demo-script.md` saved.
 - [ ] `prompt-log.md` saved.
 
 Then take the [Build 8 quiz](3-quiz.md). Pass → start [Build 9](../build-09-field-engineering/).
