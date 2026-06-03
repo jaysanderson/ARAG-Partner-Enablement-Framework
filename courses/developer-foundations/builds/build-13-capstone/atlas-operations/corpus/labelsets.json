@@ -1,0 +1,13 @@
+{
+  "business_unit": {
+    "title": "Business unit",
+    "description": "Which Atlas business unit owns this content. Auto-applied from the top-level corpus folder name when a partner drag-and-drops the corpus folder into the Nuclia dashboard.",
+    "labels": [
+      { "name": "hr", "description": "HR policies, onboarding, compensation, training." },
+      { "name": "engineering", "description": "Runbooks, incidents, architecture, design docs, RFCs." },
+      { "name": "sales", "description": "Battlecards, pricing, deal contexts, proposals." },
+      { "name": "customer_success", "description": "Case studies, escalations, customer health, deployment guides." },
+      { "name": "compliance", "description": "Policies, audit findings, regulatory positions." }
+    ]
+  }
+}

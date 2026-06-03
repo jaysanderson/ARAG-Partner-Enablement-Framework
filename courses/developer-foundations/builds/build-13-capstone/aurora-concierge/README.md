@@ -60,19 +60,37 @@ Aurora is chosen because:
 
 Partners re-skinning the variant into a banking, hospitality, education, media, or telco context will find the chassis maps cleanly — just swap the corpus, swap the entity schema, swap the workflow inputs.
 
-### Single KB, multiple content domains via labelsets
+### Single KB, scoped by `content_type` labelset (with optional extras)
 
-Aurora Concierge runs on **one ARAG Knowledge Box** (`kb-aurora-concierge`) containing all corpus documents tagged with three labelsets. ARAG's labelset-driven filter composition gives the demo every content-routing capability of a multi-KB setup with a fraction of the operational complexity. Partners stand up one KB, not five — and customers can do the same in their POC.
+Aurora Concierge runs on **one ARAG Knowledge Box** (`kb-aurora-concierge`). Documents are organised by `content_type` — the one labelset the capstone scopes to for the drag-drop ingest path. Two additional labelsets (`audience`, `region`) are optional add-ons for the full `/for-you` persona-driven demo.
 
-| Labelset | Values | Volume target |
-|---|---|---|
-| `content_type` | `product`, `support`, `trail_guide`, `gear_review`, `ambassador_video`, `podcast`, `blog`, `loyalty_benefit`, `brand_story`, `sustainability` | Distributed roughly: Product 80–100, Support 50–70, Content (guides/reviews/video/podcast/blog) 80–100, Loyalty 40–60, Brand 30–50 |
-| `audience` | `shopper`, `trail_club_standard`, `trail_club_plus`, `trail_club_pro`, `internal` | Most content tagged `shopper`; member-exclusive tagged accordingly; brand content typically `shopper` |
-| `region` | `noram`, `emea`, `apac`, `anz` | Where the content applies / pricing region |
+| Labelset | Values | Required for | Volume target |
+|---|---|---|---|
+| `content_type` | `product`, `trail_guide`, `gear_review`, `ambassador_video`, `loyalty_benefit`, `brand_story`, `support` | Storefront filter chips, concierge product recommendations, journey-graph colour palette. **Drag-drop auto-applies this one.** | Distributed roughly: Product 80–100, Support 50–70, Content (guides/reviews/video) 80–100, Loyalty 40–60, Brand 30–50 |
+| `audience` | `shopper`, `trail_club_standard`, `trail_club_plus`, `trail_club_pro`, `internal` | `/for-you` persona-driven filtering (Sara vs Mara). Applied via dashboard editor or seed script after drag-drop. | Most content tagged `shopper`; member-exclusive tagged accordingly |
+| `region` | `noram`, `emea`, `apac`, `anz` | `/for-you` region scoping per active persona. Same optional-add path as `audience`. | Where the content applies / pricing region |
 
-The Shopper-mode floating chat filters to `audience:shopper` (excluding member-exclusive content). The Trail Club Member mode drops the filter (or expands it to include the member's tier). The storefront's content-type filter dropdown maps directly to the `content_type` labelset values. Same KB, same API, same auth token.
+The Shopper-mode floating chat works against `content_type` alone (no audience filter required). The `/for-you` page composes audience + content_type + region filters from the active persona — Sara (Prospect, NORAM) sees a different set of cards from Mara (Trail Club Pro, EMEA). For the full persona-flow demo, partners apply the optional `audience` + `region` labelsets after the drag-drop ingest.
 
-**Corpus build tool:** Same as the Enterprise variant — use the `progress-kb-use-case-generator` skill to generate documents across all five content domains; run it five times — once per content domain — with the Aurora anchor details locked in advance so cross-content-type references resolve. Aurora's voice (outdoor-adventure, technically credible, sustainability-forward, ambassador-led) is part of the input spec. Then ingest all 280+ documents into the single KB, tagging each during ingest.
+### Where the corpus lives and how partners ingest it
+
+The seed corpus is available in **two places**:
+
+- **Canonical source:** [`Capstone-Aurora-Concierge/corpus/content_type/`](https://github.com/jaysanderson/Capstone-Aurora-Concierge) on GitHub — alongside the runtime app code, the seed scripts, the `populate:fields` script, and the journey-graph spec.
+- **Mirror in this framework:** [`./corpus/content_type/`](corpus/content_type/) — the same 37 markdown documents, kept in the framework so a partner can browse, download, or upload the corpus without cloning the capstone repo.
+
+Both copies are identical. The mirror is convenience; the canonical source is the capstone repo (where the seed scripts, `populate:fields`, and runtime app also live).
+
+**The citizen-developer "Upload folder" ingest path** (primary):
+
+1. Partner clones `Capstone-Aurora-Concierge`.
+2. Partner provisions an empty Knowledge Box in their Nuclia dashboard.
+3. In the dashboard, partner opens the KB → **Resources** → **Upload** → **Upload folder**, picks the `corpus/content_type/` folder, and enables the **"use folder names as label names"** option. Nuclia applies `content_type` as the labelset and the subfolder names (`product`, `trail_guide`, etc.) as label values on every document.
+4. Done for storefront + concierge + journey graph. **For the full `/for-you` persona-flow demo**, partner either (a) creates the `audience` and `region` labelsets in the dashboard's editor and bulk-tags resources by frontmatter values, or (b) runs the optional `npm run seed` script which applies all three labelsets programmatically.
+
+**Field-engineering step (still required):** the `npm run populate:fields` script PATCHes `callToAction`, `searchResultDisplay`, and `videoInfo` custom fields onto the six hero products and three ambassador videos — these can't be set via folder ingest. This is the step that makes the storefront cards render their branded CTA pills.
+
+**Corpus build tool for scale:** use the `progress-kb-use-case-generator` skill from `anthropic-skills` to grow the corpus beyond 37 docs. Run it once per content type with the Aurora anchor details locked in advance so cross-content-type references resolve. Aurora's voice (outdoor-adventure, technically credible, sustainability-forward, ambassador-led) is part of the input spec. New files drop into `corpus/content_type/<ct>/`; partners then re-run the drag-drop or seed-script ingest.
 
 ### Cross-content-type anchor details (lock at corpus design time)
 

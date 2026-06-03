@@ -51,6 +51,10 @@ The two reference implementations linked above are the open-source chassis partn
 - Demo script + re-skin playbook + recording checklist.
 - Fly.io deploy config (`fly.toml` + `Dockerfile`).
 
+### Corpus ingest — no scripts required
+
+Both capstones use Nuclia's **"Upload folder"** dashboard option with the **"use folder names as label names"** toggle. The bundled corpus folders (`corpus/business_unit/` for Atlas, `corpus/content_type/` for Aurora) are pre-organised so a partner picks the folder in the dashboard's "Upload folder" picker, enables the folder-names-as-labels option, and Nuclia applies the primary labelset automatically — no Node.js, no env vars, no terminal commands required for the basic path. The seed scripts are kept as an optional path for partners scaling beyond the bundled corpus or wanting to apply additional labelsets programmatically. Per-capstone instructions are in each reference repo's `corpus/README.md`.
+
 ---
 
 ## See also

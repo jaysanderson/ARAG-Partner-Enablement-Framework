@@ -56,19 +56,37 @@ Atlas is chosen because:
 - Its content surface area is broad enough to demonstrate every tier of the capability ladder without feeling contrived.
 - It's *recognisable but generic*. The buyer in the room recognises their own org. There's no risk of demoing against a real Fortune 500's content and losing trust.
 
-### Single KB, multiple content domains via labelsets
+### Single KB, scoped by `business_unit` labelset
 
-Atlas Operations runs on **one ARAG Knowledge Box** (`kb-atlas-operations`) containing all corpus documents tagged with three labelsets. ARAG's labelset-driven filter composition (see) gives the demo every cross-domain capability of a multi-KB setup with a fraction of the operational complexity. Partners stand up one KB, not five — and customers can do the same in their POC.
+Atlas Operations runs on **one ARAG Knowledge Box** (`kb-atlas-operations`). Documents are organised by `business_unit` — the one labelset the capstone scopes to. Partners stand up one KB, not five — and customers can do the same in their POC.
 
 | Labelset | Values | Volume target |
 |---|---|---|
 | `business_unit` | `hr`, `engineering`, `sales`, `customer_success`, `compliance` | Documents distributed roughly: HR 60–80, Engineering 80–100, Sales 60–80, CS 60–80, Compliance 50–70 |
-| `content_type` | `policy`, `runbook`, `incident`, `case_study`, `audit_finding`, `proposal`, `deployment_guide`, `escalation`, `pricing`, `design_doc`, `rfc` | Each business unit owns a subset of these |
-| `region` | `noram`, `emea`, `apac`, `latam` | Where the content originates / applies |
 
-A query for "incident root cause" filtered to `business_unit:engineering` returns engineering incidents. A query for "policy" filtered to `region:emea AND business_unit:compliance` returns EU compliance policies. Cross-domain queries simply skip the filter. Same KB, same API, same auth token.
+A query for "incident root cause" filtered to `business_unit:engineering` returns engineering incidents. A query for "policy" filtered to `business_unit:compliance` returns compliance policies. Cross-domain queries simply skip the filter. Same KB, same API, same auth token.
 
-**Corpus build tool:** Use the `progress-kb-use-case-generator` skill from `anthropic-skills` to generate documents covering all five business units. The skill produces 56–63 realistic workplace documents per persona; run it five times — once per business unit — with the Atlas anchor details locked in advance so cross-business-unit references resolve cleanly. Then ingest all 300+ documents into the single KB, tagging each with its `business_unit`, `content_type`, and `region` values during ingest.
+Earlier iterations shipped with three labelsets (`business_unit` + `content_type` + `region`). Nuclia's folder-name-as-labelset auto-detection during ingest is flat (one labelset name + a list of labels per ingest), so a drag-drop ingest can cleanly apply *one* labelset. The Foundations capstone scopes to that one — `business_unit` — to keep the partner-onboarding path no-code. Partners who want the extra labelsets back can apply them via the dashboard's labelset editor after ingest, or by running the optional seed script — both paths are documented in `Capstone-Atlas-Operations/corpus/README.md`.
+
+### Where the corpus lives and how partners ingest it
+
+The seed corpus is available in **two places**:
+
+- **Canonical source:** [`Capstone-Atlas-Operations/corpus/business_unit/`](https://github.com/jaysanderson/Capstone-Atlas-Operations) on GitHub — alongside the runtime app code, the seed scripts, and the graph-agent spec. When a partner clones the capstone repo, the corpus comes with the code.
+- **Mirror in this framework:** [`./corpus/business_unit/`](corpus/business_unit/) — the same 320 markdown documents, kept in the framework so a partner can browse, download, or upload the corpus without cloning the capstone repo.
+
+Both copies are identical. The mirror is convenience; the canonical source is the capstone repo (where the seed scripts and runtime app also live).
+
+**The citizen-developer "Upload folder" ingest path** (primary):
+
+1. Partner clones `Capstone-Atlas-Operations`.
+2. Partner provisions an empty Knowledge Box in their Nuclia dashboard (Step 1 of `corpus/README.md`).
+3. In the dashboard, partner opens the KB → **Resources** → **Upload** → **Upload folder**, picks the `corpus/business_unit/` folder, and enables the **"use folder names as label names"** option. Nuclia applies `business_unit` as the labelset and the subfolder names (`hr`, `engineering`, etc.) as label values on every document.
+4. Done. No `npm`, no terminal, no `.env`.
+
+**The programmatic ingest path** (optional, for partners scaling beyond the bundled 320 docs): `scripts/seed-kb.mjs` POSTs documents to the Nuclia API with full classification metadata read from YAML frontmatter. Documented at `corpus/README.md` Step 2 → "Optional · Programmatic ingest".
+
+**Corpus build tool for scale:** Use the `progress-kb-use-case-generator` skill from `anthropic-skills` to grow the corpus beyond 320 docs. The skill produces 56–63 realistic workplace documents per business-unit persona; run it five times — once per business unit — with the Atlas anchor details locked in advance so cross-business-unit references resolve cleanly. The new files drop straight into `corpus/business_unit/<bu>/`; partners then re-run the drag-drop or seed-script ingest.
 
 ### Cross-business-unit anchor details (lock at corpus design time)
 

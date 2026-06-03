@@ -1,0 +1,52 @@
+{
+  "customers": [
+    { "name": "Norvale Energy", "industry": "Utilities", "primary_csm": "Priya Anand" },
+    { "name": "Halcyon Logistics", "industry": "3PL", "primary_csm": "Marcus Ortiz" },
+    { "name": "Meridian Bank", "industry": "Financial Services", "primary_csm": "Dr Sara Vance" },
+    { "name": "Cresta Health Network", "industry": "Healthcare", "primary_csm": "Aisha Okonkwo" },
+    { "name": "Talos Steelworks", "industry": "Heavy Industry", "primary_csm": "Liam Hayashi" }
+  ],
+  "products": [
+    { "sku": "ATLAS-E220", "name": "Atlas E-220", "category": "Industrial Equipment", "owner_employee": "Priya Anand" },
+    { "sku": "ATLAS-LOGIX", "name": "Atlas Logix", "category": "Logistics Software", "owner_employee": "Marcus Ortiz" },
+    { "sku": "ATLAS-BLDHUB", "name": "Atlas BuildingHub", "category": "Building Automation", "owner_employee": "Aisha Okonkwo" },
+    { "sku": "ATLAS-FIELDOPS", "name": "Atlas FieldOps", "category": "Customer Services", "owner_employee": "Liam Hayashi" },
+    { "sku": "ATLAS-PULSE", "name": "Atlas Pulse", "category": "Energy Systems", "owner_employee": "Priya Anand" },
+    { "sku": "ATLAS-GRID", "name": "Atlas Grid", "category": "Energy Systems", "owner_employee": "Marcus Ortiz" },
+    { "sku": "ATLAS-AURA", "name": "Atlas Aura", "category": "Building Automation", "owner_employee": "Aisha Okonkwo" },
+    { "sku": "ATLAS-LEDGER", "name": "Atlas Ledger", "category": "Customer Services", "owner_employee": "Dr Sara Vance" }
+  ],
+  "employees": [
+    { "name": "Priya Anand", "role": "VP Engineering", "tenure_years": 8, "business_unit": "Engineering", "region": "EMEA" },
+    { "name": "Marcus Ortiz", "role": "Principal Architect", "tenure_years": 12, "business_unit": "Engineering", "region": "NORAM" },
+    { "name": "Dr Sara Vance", "role": "Chief Compliance Officer", "tenure_years": 4, "business_unit": "Compliance", "region": "NORAM" },
+    { "name": "Aisha Okonkwo", "role": "Director of Customer Success", "tenure_years": 6, "business_unit": "Customer Services", "region": "EMEA" },
+    { "name": "Liam Hayashi", "role": "Head of Field Operations", "tenure_years": 9, "business_unit": "Customer Services", "region": "APAC" },
+    { "name": "Maya Schwartz", "role": "VP People", "tenure_years": 5, "business_unit": "HR", "region": "NORAM" }
+  ],
+  "incidents": [
+    { "id": "INC-2027-0142", "product": "Atlas E-220", "title": "Q4 turbine cooling regression", "escalated_to": "Priya Anand", "remediated_by": "RB-E220-Cooling-001" },
+    { "id": "INC-2027-0188", "product": "Atlas Logix", "title": "Logix routing engine memory leak", "escalated_to": "Marcus Ortiz", "remediated_by": "RB-Logix-MemLeak-002" },
+    { "id": "INC-2028-0019", "product": "Atlas BuildingHub", "title": "BuildingHub firmware rollback", "escalated_to": "Aisha Okonkwo", "remediated_by": "RB-BldHub-Firmware-003" },
+    { "id": "INC-2028-0034", "product": "Atlas FieldOps", "title": "FieldOps offline sync corruption", "escalated_to": "Liam Hayashi", "remediated_by": "RB-FieldOps-Sync-004" }
+  ],
+  "regulations": [
+    { "id": "EU-AI-ACT", "name": "EU AI Act", "scope": "EMEA", "applies_to": ["Atlas BuildingHub", "Atlas Logix"] },
+    { "id": "NIST-800-53-r5", "name": "NIST 800-53 r5", "scope": "NORAM", "applies_to": ["Atlas E-220", "Atlas FieldOps"] },
+    { "id": "GDPR", "name": "GDPR", "scope": "EMEA", "applies_to": ["Atlas Ledger", "Atlas FieldOps"] },
+    { "id": "SOX-404", "name": "SOX §404", "scope": "NORAM", "applies_to": ["Atlas Ledger"] },
+    { "id": "HIPAA", "name": "HIPAA", "scope": "NORAM", "applies_to": ["Atlas BuildingHub"] }
+  ],
+  "runbooks": [
+    { "id": "RB-E220-Cooling-001", "product": "Atlas E-220", "remediates": "INC-2027-0142", "owner": "Priya Anand" },
+    { "id": "RB-Logix-MemLeak-002", "product": "Atlas Logix", "remediates": "INC-2027-0188", "owner": "Marcus Ortiz" },
+    { "id": "RB-BldHub-Firmware-003", "product": "Atlas BuildingHub", "remediates": "INC-2028-0019", "owner": "Aisha Okonkwo" },
+    { "id": "RB-FieldOps-Sync-004", "product": "Atlas FieldOps", "remediates": "INC-2028-0034", "owner": "Liam Hayashi" }
+  ],
+  "policies": [
+    { "id": "POL-CONDUCT-v3.1", "name": "Atlas Code of Conduct v3.1", "governs": ["HR"] },
+    { "id": "POL-DATA-v3.1", "name": "Atlas Data Handling Policy v3.1", "governs": ["HR", "Engineering", "Customer Services", "Sales", "Compliance"] },
+    { "id": "POL-INCIDENT-v2.0", "name": "Atlas Incident Response Policy v2.0", "governs": ["Engineering", "Customer Services"] },
+    { "id": "POL-PRICING-v4.0", "name": "Atlas Pricing & Discount Policy v4.0", "governs": ["Sales"] }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "content_type": {
+    "title": "Content type",
+    "description": "Editorial / structural category. Auto-applied from the top-level corpus folder name when a partner drag-and-drops the corpus folder into the Nuclia dashboard.",
+    "labels": [
+      { "name": "product", "description": "Product pages." },
+      { "name": "trail_guide", "description": "Trail-guide content." },
+      { "name": "gear_review", "description": "Gear-review content." },
+      { "name": "ambassador_video", "description": "Ambassador-led video / podcast." },
+      { "name": "loyalty_benefit", "description": "Loyalty / Trail Club content." },
+      { "name": "brand_story", "description": "Brand pillars and sustainability content." },
+      { "name": "support", "description": "Support / policy content (returns, sizing, etc.)." }
+    ]
+  }
+}

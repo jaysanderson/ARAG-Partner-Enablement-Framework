@@ -157,11 +157,11 @@ Two branches. The answer-chunks fire many times and feed the token-by-token UI. 
 
 ## When the drop-in widget isn't enough — a 100-line React floating chat
 
-Build 2's `<nuclia-chat>` drop-in is the right call until you need one of three things: (a) **custom panel chrome** — a per-customer brand wrapper, a "concierge" hero header, your own pill-CTA renderer; (b) **cross-route prefill** — one page deep-links a question into the chat on another page ("click this product card → chat opens with 'tell me more about X'"); or (c) **a per-persona FAB style** — Prospect gets a bright pulsing FAB, Member gets a quiet one. Past that, you graduate to a hand-rolled React panel. The recipe is short — the surface is small.
+Build 2's `<nuclia-chat>` drop-in is the right call until you need one of three things: (a) **custom panel chrome** — a per-customer brand wrapper, a "concierge" hero header, your own pill-CTA renderer; (b) **cross-route prefill** — one page deep-links a question into the chat on another page ("click this product card → chat opens with 'tell me more about X'"); or (c) **per-persona styling on the floating chat button** — the small round button anchored to a screen corner (sometimes called a *FAB*, short for "floating action button") that opens the chat panel. Prospect gets a bright pulsing button, Member gets a quiet one. Past that, you graduate to a hand-rolled React panel. The recipe is short — the surface is small.
 
 API surface: `streamAsk` (you already wrote it) + a `CustomEvent` bus on `window` for cross-route prefill.
 
-A minimal React FAB + panel + streamAsk loop + CustomEvent listener:
+A minimal React floating-chat button + panel + streamAsk loop + CustomEvent listener:
 
 ```tsx
 const PREFILL = 'aurora.concierge.prefill';
@@ -193,7 +193,7 @@ export function FloatingChat() {
     return () => window.removeEventListener(PREFILL, onPrefill);
   }, []);
 
-  // ... FAB + panel JSX ...
+  // ... floating button + panel JSX ...
 }
 ```
 
