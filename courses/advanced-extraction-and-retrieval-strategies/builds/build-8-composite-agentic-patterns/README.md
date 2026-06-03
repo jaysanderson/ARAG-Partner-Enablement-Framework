@@ -28,7 +28,7 @@ A/B against single-shot for 20 hard queries selected from the Build 1 low-scorin
 2. A/B against single-shot on 20 hard queries with measured lift on at least 2 of 3 recipes.
 3. Failure-mode handling documented and tested.
 4. Cost analysis per recipe (LLM tokens, end-user latency, retrieval call volume).
-5. Recorded explanation of when each recipe is appropriate vs when single-shot is enough.
+5. Live explanation of when each recipe is appropriate vs when single-shot is enough.
 6. Where the boundary sits between "augmenting retrieval" and "running a true agent" defined clearly.
 
 ## Asset delivered

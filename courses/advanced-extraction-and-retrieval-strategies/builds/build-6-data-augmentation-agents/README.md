@@ -24,7 +24,7 @@ Designs a typed entity/relation schema for a partner-chosen vertical (or partner
 4. False-positive rate < 10%.
 5. Observability dashboard showing per-type metrics.
 6. Schema-evolution plan documented.
-7. Recorded demo answering a customer question that *cannot* be answered by single-shot retrieval.
+7. Live demo answering a customer question that *cannot* be answered by single-shot retrieval.
 
 ## Asset delivered
 

@@ -23,7 +23,7 @@ Ingests a video corpus (10+ videos) and a scanned-PDF corpus (10+ documents). Ve
 3. Transcript ↔ video sync working end-to-end.
 4. Audio diarization documented.
 5. Hit rate > 70% on a 20-query golden set of timestamp queries ("find the moment X is mentioned").
-6. Recorded demo deep-linking to a specific second of a video resource.
+6. Live demo deep-linking to a specific second of a video resource.
 
 ## Asset delivered
 

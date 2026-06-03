@@ -21,7 +21,7 @@ A/B tests dense-only vs keyword-only vs `features:['keyword','semantic']` hybrid
 3. At least one production code path migrated to hybrid with measured lift.
 4. Filter composition working with 3+ stacked filters.
 5. Score normalisation strategy documented (how to compare keyword scores to semantic scores).
-6. Recorded demo explaining when to recommend hybrid (and when single-mode is enough).
+6. Live demo explaining when to recommend hybrid (and when single-mode is enough).
 
 ## Asset delivered
 

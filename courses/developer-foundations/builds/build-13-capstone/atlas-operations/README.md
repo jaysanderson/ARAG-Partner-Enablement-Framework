@@ -114,7 +114,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 - Rate-limit-aware client (documented; doesn't need stress-testing in the demo).
 -  is the technical baseline — fork it, don't rebuild from zero. The repo is at ``.
 - Re-skin playbook (Section 10) shipped alongside the build.
-- 25-minute demo script (Section 9) rehearsed by the build owner. Recording is OPTIONAL — record one full take if you plan to use this build as a partner-marketing asset, or deliver the demo live to the review board. The recording checklist (Phase 6) is provided either way.
+- 25-minute demo script (Section 9) rehearsed by the build owner. Delivered live to the review board.
 
 ### Out of scope (explicitly)
 
@@ -300,14 +300,13 @@ Total target: **8 weeks of focused work**, or **4 weeks at 2 FTE**. Phases can r
 - **No BYO-LLM toggle in the UI.** Generation backend is set once at the KB level via the Nuclia dashboard; the demo never claims a per-click switch it doesn't ship. See [Build 11 — *When BYO-LLM doesn't fit*](../../build-11-production-readiness/1-lesson.md#when-byo-llm-doesnt-fit-clean-descope) for the discipline.
 - **Exit criteria:** A live CTO question about residency, lock-in, or rate limits has a one-click visual answer from inside Atlas Operations.
 
-### Phase 6 — Demo script + (optional) recording + re-skin playbook (Week 7–8)
+### Phase 6 — Demo script + re-skin playbook (Week 7–8)
 
 - Rehearse the 25-minute demo script (Section 9) end-to-end three times.
-- **Optional:** record one full take if you're using this build as a partner-marketing or training asset. The recording checklist below (Phase 6 — Section 10) walks you through the production-quality setup. If you're not planning to publish the recording, skip this — a live demo for the review board is equally valid.
 - Write the re-skin playbook (Section 10).
-- Internal review board: Progress Solution lead + at least one partner SE not involved in the build evaluates the full 25-minute demo — delivered live or as a recording, partner's choice.
+- Internal review board: Progress Solution lead + at least one partner SE not involved in the build evaluates the full 25-minute demo, delivered live by the build owner.
 - Fix every "I wouldn't have understood that" note from review.
-- **Exit criteria:** Demo delivered to and passed by the review board (live or recorded). Re-skin playbook committed to this repo.
+- **Exit criteria:** Demo delivered live to and passed by the review board. Re-skin playbook committed to this repo.
 
 ---
 
@@ -337,7 +336,7 @@ This is the script the build owner rehearses to certification. Times are cumulat
 >
 > The corpus I'm demoing against is a fictional company called Atlas Global Industries. Fifty thousand employees, four regions, five business units. One Knowledge Box. Three labelsets — business unit, content type, region — covering HR, Engineering, Sales, Customer Success, Compliance. Every filter in this demo is a labelset query, not a separate KB. That matters when we talk about how your team would deploy this against your own corpus.
 >
-> Two things to notice before we start. Top-right: the residency badge — this KB is provisioned in the **<your-region>** region (substitute the region you provisioned in — EU or USA — when you record), and that's verifiable in our Nuclia dashboard. And right beneath the hero: live ingested-corpus stats, pulled at page load — that's the actual count of resources, paragraphs, and graph nodes in this KB. Not a slide. Real numbers, real KB."
+> Two things to notice before we start. Top-right: the residency badge — this KB is provisioned in the **<your-region>** region (substitute the region you provisioned in — EU or USA — when you deliver the demo), and that's verifiable in our Nuclia dashboard. And right beneath the hero: live ingested-corpus stats, pulled at page load — that's the actual count of resources, paragraphs, and graph nodes in this KB. Not a slide. Real numbers, real KB."
 
 > "The generation backend — which LLM produces the words — is configured at the KB level on the platform side, and we'll wire it into *your* Azure or Vertex or Bedrock tenant during the co-engineered POC. That's how BYO-LLM works in production. We're not faking it with a toggle in the demo UI today; what you'll see today is on the platform's default generator. The lock-in answer lives in the residency badge and the platform architecture, not in a click."
 
@@ -487,7 +486,7 @@ Atlas Operations ships when *all* of the following are true:
 2. The Atlas knowledge graph returns at least 200 typed-entity nodes and 500 typed relations across the Atlas KB.
 3. The composite-RAG flow demonstrably outperforms a single-shot `/ask` for the four named incidents — measured by citation count and reviewer-judged answer quality.
 4. The hero shows live KB stats (resources, paragraphs, graph nodes) read from the active KB at page load — no hardcoded numbers, no slides.
-5. The 25-minute demo is delivered to and passed by the review board (live or recorded — partner's choice).
+5. The 25-minute demo is delivered live to and passed by the review board.
 6. The re-skin playbook is committed to this repo.
 7. The build owner has trained at least one other Progress SE to deliver the demo cold.
 
@@ -505,7 +504,7 @@ Atlas Operations ships when *all* of the following are true:
 | Three Tier 3 workflows | Build owner | TODO |
 | Composite-RAG flow | Build owner | TODO |
 | Production-readiness layer | Build owner | TODO |
-| 25-minute demo (live or recorded) | Build owner | TODO |
+| 25-minute live demo | Build owner | TODO |
 | Re-skin playbook (`RESKIN.md`) | Build owner | TODO |
 | Internal review board | Progress Solution lead | TODO |
 

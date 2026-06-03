@@ -87,7 +87,7 @@ A Developer Foundations Practitioner can, without supervision:
 | Per-Build quiz (×13) | 5 MC | 4/5 MC |
 | Walkthrough deliverable (×13) | Prompt log + working code | Self-verification |
 | Final exam | 20 MC | 16/20 (80%) |
-| Capstone (Build 13) | 25-minute end-to-end demo (live or recorded) | Progress-led review board |
+| Capstone (Build 13) | 25-minute end-to-end live demo | Progress-led review board |
 | Honesty | All deliverables must be the partner's own work | Audit on demand |
 
 Pass everything → **Developer Foundations Practitioner** cert (12-month validity).

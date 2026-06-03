@@ -12,7 +12,7 @@ This folder is the home for course-wide assets that aren't tied to a single Buil
 | Course-wide rubric checklist | Doc | TODO | this folder |
 | Course slide-master template | Slide deck | TODO | this folder |
 | Course onboarding kit (for Foundations Practitioners progressing here) | Doc + checklist | TODO | this folder |
-| Reviewer training pack (Build 9 review-board format) | Doc + recordings | TODO | this folder |
+| Reviewer training pack (Build 9 review-board format) | Doc | TODO | this folder |
 | Recurring-revenue commercial pack | Doc | TODO | this folder — proposal templates, retainer pricing, customer-facing assets for selling tuning engagements |
 
 ## Per-build assets

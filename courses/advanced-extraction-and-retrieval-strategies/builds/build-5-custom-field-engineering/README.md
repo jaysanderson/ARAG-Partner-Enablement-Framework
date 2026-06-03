@@ -23,7 +23,7 @@ Designs and deploys three custom JSON-encoded text fields per resource type, fol
 3. Front-end consumes the fields in search and chat surfaces.
 4. Author training script + style guide shipped.
 5. A/B test designed with first results documented.
-6. Recorded explanation of how to sell this as a content-engineering retainer to the partner's customer.
+6. Live explanation of how to sell this as a content-engineering retainer to the partner's customer.
 
 ## Asset delivered
 

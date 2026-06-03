@@ -88,7 +88,7 @@ Each walkthrough ends with a "getting unstuck" section listing the common failur
 
 **Do I need to record videos of myself doing the walkthroughs?**
 
-No. There used to be a recording requirement per build; that's gone. The only recording moment in the course is the Build 13 capstone, and even there it's optional — the review board accepts a live demo or a recording, whichever the partner prefers.
+No. There are no recording requirements anywhere in the course — not per build, not for the capstone. The Build 13 capstone is delivered live to a Progress-led review board; the demo script + re-skin playbook ship as deliverables; nobody asks you to publish a video.
 
 **What if the final exam is harder than the per-build quizzes?**
 

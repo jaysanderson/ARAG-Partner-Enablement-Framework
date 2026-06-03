@@ -9,7 +9,7 @@
 | | |
 |---|---|
 | **Owning track(s)** | Solution (Must), Deliver (Must) |
-| **Format** | Written tuning report (5–10 pages) + recorded review-board defence |
+| **Format** | Written tuning report (5–10 pages) + live review-board defence |
 | **Prerequisite** | All prior Builds (1–8) of this course + a deployed [Developer Foundations Build 7 capstone](../../../developer-foundations/builds/build-13-capstone/) |
 | **Estimated effort** | 20–30 hours focused, plus a half-day review-board defence |
 

@@ -156,7 +156,7 @@ npm run dev
 # → http://localhost:5173/
 ```
 
-### The 5 routes worth eyeballing before recording
+### The 5 routes worth eyeballing before the review-board demo
 
 1. `/search` — query *"What's the maintenance interval for the E-220 turbine?"* → should return runbook + design-doc results scored above 0.6.
 2. `/concierge` — Employee voice + Architect voice should produce visibly different responses to the same query.

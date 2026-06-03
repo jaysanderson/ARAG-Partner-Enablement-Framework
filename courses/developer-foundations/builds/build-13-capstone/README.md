@@ -37,7 +37,7 @@ Builds one variant of the capstone: a single application that exercises every pr
 1. The capstone deployed at the partner's domain.
 2. End-to-end demo runs in 25 minutes covering all four tiers without code edits.
 3. At least one customer-specific data-augmentation agent in production.
-4. Org-level demo passes a Progress-led review board (delivered live or as a recording — partner's choice).
+4. Org-level demo passes a Progress-led review board (delivered live).
 
 ## Asset delivered
 
@@ -48,7 +48,7 @@ The two reference implementations linked above are the open-source chassis partn
 - Complete Vite + React + TypeScript + Tailwind app (5-6 routes, all client libraries).
 - Synthetic corpus + anchor JSON + labelset schema.
 - Seed scripts (`seed-kb.mjs`), field-engineering scripts (Aurora only), graph-agent spec (`graph-agent.py`).
-- Demo script + re-skin playbook + recording checklist.
+- Demo script + re-skin playbook.
 - Fly.io deploy config (`fly.toml` + `Dockerfile`).
 
 ### Corpus ingest — no scripts required
