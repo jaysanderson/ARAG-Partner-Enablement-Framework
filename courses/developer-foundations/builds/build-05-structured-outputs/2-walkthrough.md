@@ -8,7 +8,7 @@
 
 Three working **schema-constrained generators** — Node.js scripts that call ARAG and get back **structured JSON**, not prose:
 
-1. **FAQ generator** — give it a topic; get back 5 grounded Q&A pairs with source titles.
+1. **FAQ generator** — give it a topic; get back up to 5 grounded Q&A pairs, each citing a real document title via a verbatim resource id.
 2. **Taxonomy generator** — no args; get back the KB's own domain ontology.
 3. **Comparison-table generator** — give it 2-4 item names; get back a structured comparison table.
 
@@ -75,7 +75,7 @@ TypeScript — both fine; pick one).
 
 Export an async function:
 
-  askForJson(query: string, schema: object): Promise<object>
+  askForJson(query: string, schema: object): Promise<{ result: object, resources: Record<string, any> }>
 
 It must do these things:
 
@@ -107,23 +107,36 @@ It must do these things:
    (the caller can pass either a wrapped { name, description, parameters }
     object OR just the parameters; handle both shapes gracefully)
 
-4. Parse the response. Handle THREE possible response shapes:
+4. Parse the response. Handle THREE possible response shapes for the
+   parsed JSON. In all three cases, ALSO surface the `resources` map
+   from the response (it lives at the top level of the /ask response
+   payload alongside the answer; callers need it to look up real
+   document titles by resource id).
+
+   Return shape from the function:
+     { result: <parsed JSON matching schema>, resources: <resources map or {}> }
 
    a. The happy path: response JSON has `data.answer_json` (an object).
-      Return it as-is.
+      result = data.answer_json.
    b. The streaming-stash path: response has `data.item.object` (an object).
-      Return it as-is.
+      result = data.item.object.
    c. The text-fallback path: the model returned the answer in `data.answer`
       as a string (sometimes wrapped in ```json fences). Strip the fences,
-      regex match either {[\s\S]*} or [[\s\S]*], JSON.parse, return.
+      regex match either {[\s\S]*} or [[\s\S]*], JSON.parse — that becomes
+      result.
 
-   If none of the three paths produce a parseable object,
+   In all three paths, resources = (data.resources ?? data.retrieval_results?.resources ?? {}).
+
+   If none of the three paths produce a parseable result object,
    throw a helpful error including the first 500 chars of the raw response.
 
 5. Use native fetch (Node 18+). NO external HTTP library. NO Nuclia SDK.
 
 6. Add JSDoc/TypeScript comments above the function explaining the
-   three response shapes and why we handle all three.
+   three response shapes and why we handle all three. Document the
+   return shape: { result, resources } — and why callers that render
+   citations need the resources map (to resolve verbatim resource ids
+   back to real document titles).
 ```
 
 Send.
@@ -135,12 +148,13 @@ Send.
 
 ### 2c. Read the code carefully
 
-This file's quality determines whether the rest of Build 5 is easy or painful. Four checks:
+This file's quality determines whether the rest of Build 5 is easy or painful. Five checks:
 
 1. **The injector is recursive.** Find the function that walks the schema. It must descend into `properties.<key>` AND into `items` (for arrays of objects).
 2. **The three response paths exist.** Search the file for: `answer_json`, `item.object` (or `item?.object`), and a regex like `/\{[\s\S]*\}/` for the text fallback.
-3. **Auth header** is `X-NUCLIA-SERVICEACCOUNT`.
-4. **No SDK** — uses plain `fetch`.
+3. **The return shape is `{ result, resources }`.** Search for `resources` and confirm the function pulls it from `data.resources` or `data.retrieval_results?.resources` (with a `{}` fallback) and returns it alongside the parsed JSON.
+4. **Auth header** is `X-NUCLIA-SERVICEACCOUNT`.
+5. **No SDK** — uses plain `fetch`.
 
 If any are missing, tell the AI: *"You forgot [X]. Re-write the file with it."*
 
@@ -168,12 +182,13 @@ const schema = {
   }
 };
 
-const result = await askForJson(
+const { result, resources } = await askForJson(
   "Suggest 3 follow-up questions someone might ask about my corpus.",
   schema
 );
 
-console.log(JSON.stringify(result, null, 2));
+console.log("result:", JSON.stringify(result, null, 2));
+console.log("resources keys:", Object.keys(resources).slice(0, 5));
 ```
 
 Run:
@@ -182,17 +197,20 @@ Run:
 node test-wrapper.mjs
 ```
 
-**You should see:** a JSON object printed:
+**You should see:** a parsed result object and a (possibly empty for this smoke test) resources map:
 
-```json
-{
+```
+result: {
   "questions": [
     "...",
     "...",
     "..."
   ]
 }
+resources keys: [ "..." ]
 ```
+
+The `resources` map will be populated once you run a real grounded query in Step 3 — for this smoke test it may be empty, and that's fine.
 
 If you get an error, paste the entire error into your AI: *"My askForJson wrapper produces this error. Fix it."*
 
@@ -229,9 +247,12 @@ It should:
            properties: {
              question: { type: "string" },
              answer: { type: "string" },
-             source_resource_title: { type: "string" }
+             citation_resource_id: {
+               type: "string",
+               description: "The verbatim resource id slug of the document that grounds this answer — copied from the retrieved context's resources map, not invented."
+             }
            },
-           required: ["question", "answer", "source_resource_title"]
+           required: ["question", "answer", "citation_resource_id"]
          }
        }
      },
@@ -240,19 +261,42 @@ It should:
    (The askForJson wrapper will auto-inject additionalProperties: false
     at every object level — don't add it manually.)
 
-3. Build the query:
-   "Based on content related to '<topic>', generate 5 FAQ entries
-    grounded in the corpus. Each entry includes a question, a 1-2
-    sentence answer, and the title of the source resource the answer
-    is grounded in."
+3. Build the query with a verbatim-id discipline preamble:
+   "For every FAQ item, set citation_resource_id to a VERBATIM resource
+    id from the retrieved context's `resources` map (e.g. `terratrek-7`,
+    `mara-chen`). Do NOT invent ids, slugs, hostnames, URLs, paths, or
+    descriptive captions. If you cannot ground an answer in a real
+    retrieved resource, omit that FAQ item entirely. Fewer well-grounded
+    items beat more captioned ones.
 
-4. Call askForJson(query, schema).
+    Based on content related to '<topic>', generate up to 5 FAQ entries
+    grounded in the corpus. Each entry includes a question, a 1-2 sentence
+    answer, and the citation_resource_id of the document that grounds it."
 
-5. Pretty-print the FAQs to the console:
-   "1. Q: <question>
-       A: <answer>
-       Source: <source_resource_title>"
-   With blank lines between entries.
+4. Call askForJson(query, schema). It returns { result, resources } where
+   result is the parsed JSON matching your schema and resources is the
+   resources map from the /ask response (used to look up real document
+   titles by their resource id).
+
+5. Pretty-print the FAQs to the console — look up each item's source
+   title from the resources map; fall back to the id itself if the
+   resource isn't in the map:
+
+   ```js
+   for (const [i, faq] of result.faqs.entries()) {
+     const r = resources[faq.citation_resource_id];
+     const sourceLabel = r?.title ?? faq.citation_resource_id;
+     console.log(`${i + 1}. Q: ${faq.question}`);
+     console.log(`   A: ${faq.answer}`);
+     console.log(`   Source: ${sourceLabel}`);
+     console.log("");
+   }
+   ```
+
+   The lookup is the whole point: the model emits a verbatim id, the
+   renderer resolves it to the real document title. Never print the
+   model's id field as the source label directly — that's how
+   hallucinated captions slip through.
 
 ES modules. Plain Node.js.
 ```
@@ -269,13 +313,14 @@ node faq-generator.mjs "onboarding"
 
 (Replace `"onboarding"` with a topic that fits your corpus.)
 
-**You should see:** 5 FAQ entries printed, each with a question, an answer, and a source resource title.
+**You should see:** up to 5 FAQ entries printed, each with a question, an answer, and a `Source:` line that resolves to a real document title from your corpus. The model may return fewer than 5 if it can only ground 3 or 4 — that's the verbatim-id discipline working as intended.
 
 ### 3c. Verify the output
 
 - **Is the JSON valid?** It should parse without errors.
-- **Are there 5 entries?** (Sometimes the model returns 4 — that's fine.)
-- **Do `source_resource_title` values match real documents in your KB?** Open the Nuclia dashboard and check. If the titles don't match, the model is hallucinating — open the schema and add a stricter prompt: *"DO NOT invent resource titles. Only cite titles that appear in the retrieved context."*
+- **Are there ≤5 entries?** (The prompt tells the model to omit items it can't ground — so 3 or 4 well-grounded items beats 5 captioned ones. Fewer is healthy.)
+- **Do `Source:` lines resolve to real document titles?** Open the Nuclia dashboard and confirm each printed source matches an actual resource title in your KB (e.g. *"Aurora TerraTrek 7 — Day & Thru-Hike Boot"*, not *"Mara on why she works with Aurora Outfitters"* — that second form is a model-invented caption).
+- **If a source label looks like a raw id (e.g. `terratrek-7`)** rather than a human-friendly title, the fallback fired — the model emitted a valid id but that resource wasn't in the resources map. That's still grounded and correct; the model just cited a result that fell outside the returned `resources` map. Print `resources` and confirm the id is there next run.
 
 ### 3d. Troubleshooting
 
@@ -283,9 +328,16 @@ node faq-generator.mjs "onboarding"
 |---|---|---|
 | `result.faqs` is undefined | Wrapper response-path mismatch | Add `console.log(result)` and inspect what came back. If it's a string, the text-fallback path is needed |
 | Answers are paragraphs of prose | The model ignored the schema | Add `additionalProperties: false` confirmation — check that the wrapper actually injected it |
-| `source_resource_title` is "Unknown" or made up | Model hallucinated | Tighten the prompt — see 3c above |
+| Source lines are inferred captions, not titles | Verbatim-id discipline missing OR rendering prints model output directly | Confirm the system prompt has the *"VERBATIM resource id"* + *"omit if you can't ground"* clauses. Confirm the rendering loop looks up `resources[faq.citation_resource_id]?.title` — never prints `faq.citation_resource_id` as the source label without the lookup |
+| Source lines are raw ids, never titles | `resources` map is empty | The wrapper isn't surfacing `data.resources` / `data.retrieval_results.resources`. Re-check Step 2's brief — the wrapper must return `{ result, resources }` |
 
-### 3e. Save your prompt log
+### 3e. Already running a broken FAQ generator?
+
+If you've already followed an earlier version of this build and your `faq-generator.mjs` is printing hallucinated source captions (e.g. *"Mara on why she works with Aurora Outfitters"*, *"Boot durability section"* — descriptive AI-inferred phrases, not real document titles), your code is using the old `source_resource_title` field with no lookup. Patch it by telling your AI:
+
+> *"Update faq-generator.mjs to use the new schema and prompt from Build 5 Step 3 — `citation_resource_id` field with VERBATIM-id discipline in the system prompt, and look up the source label from `resources[faq.citation_resource_id]?.title` in the print loop (fall back to the id itself if not in the map). The askForJson wrapper now returns `{ result, resources }` — destructure both. Re-run with `node faq-generator.mjs \"boots\"` and the sources should be real document titles."*
+
+### 3f. Save your prompt log
 
 Append the Step 3 brief to `prompt-log.md`.
 
@@ -325,7 +377,11 @@ Query: "Identify 6-8 distinct knowledge domains that best represent
 the content available to you in this corpus. Each domain is a coherent
 area of expertise. Return each with a 1-sentence description."
 
-Call askForJson(query, schema). Print as a numbered list:
+Call askForJson(query, schema) — it returns { result, resources }; the
+taxonomy doesn't cite specific resources, so destructure just `result`
+and ignore resources (`const { result } = await askForJson(...)`).
+
+Print as a numbered list:
 "1. <name> — <description>"
 
 ES modules.
@@ -362,21 +418,20 @@ Paste:
 ```
 Write comparison-generator.mjs in the project root.
 
-It takes one CLI argument: a JSON-encoded list of item names.
+It takes one CLI argument: a JSON-encoded list of item names that
+EXIST in the connected KB.
 Example invocation:
-  node comparison-generator.mjs '["Product A", "Product B", "Product C"]'
+  node comparison-generator.mjs '["TerraTrek 7", "RidgeRunner Pro", "StormShield Mid"]'
 
-Parse the argument with JSON.parse. If parsing fails or the result
-isn't an array of strings, print usage and exit.
+Parse the argument with JSON.parse. If parsing fails, isn't an array,
+isn't all strings, or has fewer than 2 items, print usage and exit.
 
-Schema:
+Schema (intentionally compact — only `rows` is required, the column
+headers come from the CLI argv, not the schema):
+
 {
   type: "object",
   properties: {
-    attributes: {
-      type: "array",
-      items: { type: "string" }
-    },
     rows: {
       type: "array",
       items: {
@@ -392,108 +447,134 @@ Schema:
       }
     }
   },
-  required: ["attributes", "rows"]
+  required: ["rows"]
 }
 
-Query (replace <items> with the JSON list):
-"Compare these items from the corpus: <items>. Return a comparison
-table with 5-8 rows. Each row is one attribute (e.g., price, materials,
-durability, use case) with values for each item, in the same order as
-the input list. If you don't have grounded information for a cell,
-write 'Not available' rather than guessing."
+(The askForJson wrapper will auto-inject additionalProperties: false
+ at every object level — don't add it manually.)
 
-Call askForJson(query, schema). Print as a markdown table:
+Query construction — interpolate the items into the prompt and pin
+the values-array length explicitly:
 
-| Attribute | Item 1 | Item 2 | Item 3 |
-| --- | --- | --- | --- |
-| <attribute> | <value1> | <value2> | <value3> |
-...
+const items = <parsed CLI argv>;
+const N = items.length;
+const query =
+  `Compare these ${N} items from the corpus: ${JSON.stringify(items)}.\n\n` +
+  `Return a comparison table with 5-8 rows. Each row is one attribute ` +
+  `(e.g. price, materials, durability, use case, weight, warranty) ` +
+  `with a "values" array of EXACTLY ${N} strings, in the same order ` +
+  `as the input list above (index 0 = "${items[0]}", index 1 = "${items[1]}", ` +
+  `etc.).\n\n` +
+  `For any cell you cannot ground in the retrieved context, the value ` +
+  `MUST be the literal string "Not available" — never guess, never invent. ` +
+  `It is better to return fewer well-grounded rows than more captioned ones. ` +
+  `If you cannot find at least 3 attributes that apply to all ${N} items, ` +
+  `return an empty rows array.`;
+
+Call askForJson(query, schema) — it returns { result, resources };
+the comparison table doesn't cite per-row resources, so destructure
+just `result`:
+  const { result } = await askForJson(query, schema);
+
+Defensive normalisation BEFORE rendering — the model can still return
+values arrays of the wrong length even with the prompt above. Pad or
+truncate each row's values to length N, filling missing cells with
+"Not available":
+
+  const normalisedRows = (result.rows ?? []).map(row => {
+    const vals = Array.isArray(row.values) ? row.values.slice(0, N) : [];
+    while (vals.length < N) vals.push("Not available");
+    return { attribute: row.attribute, values: vals };
+  });
+
+Print as a markdown table — header row comes from CLI argv, body rows
+from the normalised data:
+
+  const headerCells = ["Attribute", ...items];
+  console.log("| " + headerCells.join(" | ") + " |");
+  console.log("| " + headerCells.map(() => "---").join(" | ") + " |");
+  for (const row of normalisedRows) {
+    console.log("| " + [row.attribute, ...row.values].join(" | ") + " |");
+  }
+  if (normalisedRows.length === 0) {
+    console.log("\n(No grounded attributes found that apply to all items.)");
+  }
 
 ES modules.
 ```
 
-### 5b. Run with three items from your corpus
+### 5b. Pick three items your corpus actually contains
 
-Find three items your corpus actually contains. Examples vary by domain:
+Before running, find three items the connected KB knows about — the placeholder names from the example invocation will produce empty results because nothing in the corpus matches them.
 
-- E-commerce KB: three product names.
-- Policy KB: three policies.
-- Technical KB: three components or APIs.
+- E-commerce KB: three real product names.
+- Policy KB: three real policies.
+- Technical KB: three real components or APIs.
+
+Quick check: open the Nuclia dashboard → Resources → search for one of your candidate item names. If a resource comes back, the corpus knows about it.
+
+Then run:
 
 ```bash
-node comparison-generator.mjs '["Item A", "Item B", "Item C"]'
+node comparison-generator.mjs '["<real item 1>", "<real item 2>", "<real item 3>"]'
 ```
 
-**You should see:** a markdown table printed to console, with one column per item and 5-8 rows of attributes. Each cell has a grounded value or "Not available."
+**You should see:** a markdown table with `Attribute` + your three item names as column headers, and 5–8 rows of grounded attribute comparisons. Cells the model couldn't ground will say `Not available` literally — never invented prose.
 
 ### 5c. Verify
 
-- Each row's `values` array has the same length as your input list.
-- Cells with no source data should say "Not available" (or similar) — not made-up text.
+- Header row has exactly `Attribute` + your N item names, in argv order.
+- Every body row has exactly N value cells (the defensive normaliser guarantees this — but eyeball one row to confirm the columns line up).
+- `Not available` appears wherever the corpus has no grounded answer, not made-up text.
 - Spot-check 2-3 cells against your KB — open the dashboard, find a relevant document, confirm the cell value matches.
 
-If the model hallucinates cells, tighten the prompt: *"For any attribute you can't ground in the retrieved context, the value MUST be 'Not available' — never guess."*
+If every cell is `Not available`, the items aren't really in the corpus. Run a `/find` against one of the item names in the dashboard to confirm; pick different items if so.
+
+If the model hallucinates cells with prose instead of `Not available`, tighten the prompt: *"For any attribute you can't ground in the retrieved context, the value MUST be the literal string 'Not available' — never guess, never invent."*
 
 ### 5d. Append to prompt log
 
 ---
 
-## Step 6 — Add traceable citations to your structured output (25 min)
+## Step 6 — Render citations as click-throughs (10 min)
 
-The three workflows now return clean JSON. But none of those rows can be clicked back to a source — the answers are grounded, but the *output payload* is not traceable. Tier-3 buyers care about that. Add a `citation_resource_id` field to one workflow, lock it down with a system-prompt rule, and render it as a click-through.
+Step 3 already taught the right citation discipline: verbatim-id schema field, verbatim-id system prompt, lookup-then-render. The FAQ rows are grounded and resolve to real document titles. The last mile — Tier-3 polish — is making each cited row clickable.
 
-### 6a. Add `citation_resource_id` to one schema
+### 6a. Add a link template to the FAQ printer
 
-Pick `faq-generator.mjs`. Edit the schema so each FAQ item has a third required field:
-
-```js
-items: {
-  type: "object",
-  properties: {
-    question: { type: "string" },
-    answer: { type: "string" },
-    source_resource_title: { type: "string" },
-    citation_resource_id: { type: "string" }
-  },
-  required: ["question", "answer", "source_resource_title", "citation_resource_id"]
-}
-```
-
-**You should see:** the wrapper still accepts the schema and the response now carries a `citation_resource_id` on every row.
-
-### 6b. Add the "verbatim id" line to the system prompt
-
-In the same file, extend the query string (or add a system-style preamble — your `askForJson` wrapper currently only takes a `query`, so prepend it to the query):
+Edit `faq-generator.mjs`'s print loop. Add one extra console line per item:
 
 ```js
-const query =
-  "For every FAQ item, set citation_resource_id to a VERBATIM resource id " +
-  "from the retrieved context. Do NOT invent ids, slugs, hostnames or paths. " +
-  "If you cannot cite a real id, omit the item entirely.\n\n" +
-  `Based on content related to '${topic}', generate 5 FAQ entries ...`;
-```
-
-**You should see:** the IDs in the printed output now match real resource IDs from your KB (open the Nuclia dashboard, spot-check 2-3). If you see invented-looking slugs, the discipline line isn't biting — tighten it.
-
-### 6c. Render each row as a click-through
-
-Update the pretty-printer in `faq-generator.mjs` to emit a clickable line per item:
-
-```js
-for (const [i, f] of result.faqs.entries()) {
-  console.log(`${i + 1}. Q: ${f.question}`);
-  console.log(`   A: ${f.answer}`);
-  console.log(`   Source: ${f.source_resource_title}`);
-  console.log(`   Link: https://your-app.example.com/p/${f.citation_resource_id}`);
+for (const [i, faq] of result.faqs.entries()) {
+  const r = resources[faq.citation_resource_id];
+  const sourceLabel = r?.title ?? faq.citation_resource_id;
+  console.log(`${i + 1}. Q: ${faq.question}`);
+  console.log(`   A: ${faq.answer}`);
+  console.log(`   Source: ${sourceLabel}`);
+  console.log(`   Link:   https://your-app.example.com/p/${faq.citation_resource_id}`);
   console.log("");
 }
 ```
 
-(Swap `https://your-app.example.com` for whatever your downstream renderer is. In a real React app this becomes a `<CitationLink resourceId={f.citation_resource_id} />` — see the capstone reference below.)
+Swap `https://your-app.example.com` for your downstream renderer (a Vercel preview URL, a localhost dev server, whatever your team uses). In a real React app this becomes a `<CitationLink resourceId={faq.citation_resource_id} />` component — see the capstone.
 
-**Verification:** Every item in your structured output should have a working click-through to the cited resource page — zero invented ids.
+### 6b. Verify the click-throughs
 
-**See it in the capstone:** `Capstone-Aurora-Concierge/src/lib/askForJson.ts` (verbatim-id system prompt) and `Capstone-Aurora-Concierge/src/pages/Personalize.tsx` → `CitationLink` / `CitationInline` renderers.
+Re-run `node faq-generator.mjs "<topic>"`. Every line should now have:
+
+- A `Source:` resolving to a real document title (from Step 3's lookup).
+- A `Link:` containing a VERBATIM resource id slug — never an invented hostname or path.
+
+If you see invented-looking slugs in the `Link:` line (e.g. `aurora-outfitters.com/about-mara`), the verbatim-id discipline from Step 3 isn't biting hard enough — tighten the system-prompt clause and re-run.
+
+### 6c. See it wired into a real app
+
+The Aurora capstone shows the same pattern at React-component scale:
+
+- `Capstone-Aurora-Concierge/src/lib/askForJson.ts` — the wrapper (same `{ result, resources }` return shape, same verbatim-id system prompt).
+- `Capstone-Aurora-Concierge/src/pages/Personalize.tsx` — `CitationLink` / `CitationInline` renderers that take a `citation_resource_id`, look up the title from `resources`, and emit a working `<a href="/p/{id}">{title}</a>`.
+
+The plumbing you just wrote in `faq-generator.mjs` is the same plumbing. The capstone just dresses it up in JSX.
 
 ### 6d. Append to prompt log
 
@@ -543,18 +624,19 @@ When you sit in a customer engagement and `/ask` returns Shape C unexpectedly (i
 
 ## Step 8 — Update prompt-log.md (5 min)
 
-Make sure `prompt-log.md` has all five briefs (Step 2 wrapper, Step 3 FAQ, Step 4 taxonomy, Step 5 comparison, plus the citation-discipline edits from Step 6 and the response-shape verification narrative from Step 7).
+Make sure `prompt-log.md` has all five briefs (Step 2 wrapper, Step 3 FAQ — including the verbatim-id discipline and resources-lookup rendering, Step 4 taxonomy, Step 5 comparison, plus the link-template edit from Step 6 and the response-shape verification narrative from Step 7).
 
 ---
 
 ## Verification checklist
 
 - [ ] `src/lib/askForJson.mjs` (or `.ts`) wrapper works against your KB.
+- [ ] Wrapper returns `{ result, resources }` — both shapes used downstream.
 - [ ] `additionalProperties: false` is **auto-injected** at every nesting level (read the code; verify the recursion).
-- [ ] FAQ generator returns 4-5 grounded entries with **real** source resource titles.
+- [ ] FAQ generator returns up to 5 grounded entries; each `Source:` line resolves to a **real document title** from the resources lookup, never a model-invented caption.
 - [ ] Taxonomy generator returns 6-8 sensible domains for your corpus.
 - [ ] Comparison-table generator returns a structured table with same-length value arrays.
-- [ ] FAQ rows carry `citation_resource_id` values that match real KB resource IDs (Step 6) and render as working click-throughs.
+- [ ] FAQ rows render with a clickable `Link:` line built from the verbatim `citation_resource_id` (Step 6).
 - [ ] All three response shapes verified (Step 7a, 7b, 7c).
 - [ ] `prompt-log.md` saved with all briefs.
 
