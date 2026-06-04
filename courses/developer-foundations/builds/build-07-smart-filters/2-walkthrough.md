@@ -22,10 +22,10 @@ This is the Build that proves *"the cheapest precision lever in ARAG is filters.
 - **Your Build 0 KB** with Build 6's Labeller already configured (with a labelset you designed).
 - **Your `.env` file**.
 - **Your Build 3 React project** (we'll extend it) — or you can scaffold a fresh Vite + React project if you'd rather.
-- **Your terminal**.
 - **Your editor**.
 - **Your AI assistant**.
-- **A modern browser**.
+- **A modern browser** — Steps 1–3 are entirely dashboard-driven (no terminal). Steps 4+ vibe-code the UI.
+- **A terminal** — only if you take the optional Power-user paths in Step 3 (Mac/Linux). Windows `cmd` and PowerShell handle single-quoted JSON differently from bash, so the curl paths are Mac/Linux only.
 
 If Build 6 isn't configured, **stop and finish Build 6 first**. Build 7 needs the labelset to exist.
 
@@ -82,6 +82,15 @@ Otherwise, open the Nuclia dashboard:
 
 ### Verify the labelset
 
+**Dashboard path (recommended, works on any OS):**
+
+1. In the Nuclia dashboard, open **KB → Labelsets** (left nav).
+2. You should see your labelset listed with all the labels you defined.
+3. Click the labelset name to expand the labels and confirm the values match your design.
+
+<details>
+<summary><strong>Power-user path: same check via curl</strong> (Mac/Linux only — Windows users use the dashboard)</summary>
+
 ```bash
 export NUCLIA_API_URL="<your-url>"
 export NUCLIA_KB_ID="<your-kb-id>"
@@ -91,15 +100,32 @@ curl -s -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
   "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/labelsets"
 ```
 
-**You should see:** your labelset with all the labels you defined.
+Returns raw JSON containing your labelset and labels.
+
+</details>
 
 ---
 
-## Step 3 — Test filter composition with `curl` (15 min)
+## Step 3 — Test filter composition (15 min)
 
-Before you wire it into a UI, **prove the filter syntax works** with raw `curl` commands. Three patterns:
+Before you wire it into a UI, **prove the filter syntax works**. Three patterns to test — content type, label, and both composed.
+
+> **Why dashboard-first this time?** The filter API takes a JSON body. Windows `cmd` doesn't strip single quotes around `-d '{...}'` the way bash does, so a copy-pasted curl command ships malformed JSON and Nuclia replies with *"JSON decode error · Expecting value"*. The dashboard's Search panel has a filter UI that builds the same query without any shell-quoting hazard. The curl paths below are preserved for Mac/Linux power users.
 
 ### 3a. Filter by content type (mimetype icon)
+
+**Dashboard path:**
+
+1. Open your KB's **Search & Ask** (or **Try the API** / **Playground**) panel.
+2. Type a question your corpus can answer.
+3. In the filters area, add a **mimetype filter**: `/icon/application/pdf` (or whatever the dashboard's filter builder calls it — wording varies; look for "content type", "mimetype", or "icon").
+4. Submit. Note the result count.
+5. **Remove the filter** and re-submit the same query. Note the new (larger) result count.
+
+**You should see:** the filtered count is smaller than the unfiltered count. That's the filter working.
+
+<details>
+<summary><strong>Power-user path: same check via curl</strong> (Mac/Linux only)</summary>
 
 ```bash
 curl -s -X POST \
@@ -109,11 +135,24 @@ curl -s -X POST \
   "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/find"
 ```
 
-**What that did:** searched for your query, but only among PDFs (the `/icon/application/pdf` filter).
+Returns raw JSON. Scroll for the `resources` object — the number of keys is your result count; the `best_matches` array shows the ranked resource IDs.
 
-**You should see:** raw JSON. Scroll for the `resources` object — the number of keys is your result count; the `best_matches` array shows the ranked resource IDs. Compare to running the same query *without* the filter — count should drop.
+**Why this curl will fail on Windows cmd:** cmd doesn't process single quotes the way bash does — the `'{...}'` body arrives at Nuclia as garbage and you get *"JSON decode error"*. Either use PowerShell with backtick-escaped double quotes, or save the JSON body to a file and use `-d @body.json`, or just use the dashboard path above.
+
+</details>
 
 ### 3b. Filter by label
+
+**Dashboard path:**
+
+1. In the **Search & Ask** panel, add a **label filter** instead of a mimetype filter. The dashboard's filter builder lets you pick a labelset (e.g., `topic`) and a label (e.g., `procedure`).
+2. Submit your query.
+3. **You should see:** results scoped to only documents with that label.
+
+The wire-format filter path is `/classification.labels/<labelset>/<label>` — useful to know for the React UI you'll vibe-code in Step 5, but you don't need to type it directly here.
+
+<details>
+<summary><strong>Power-user path: same check via curl</strong> (Mac/Linux only)</summary>
 
 ```bash
 curl -s -X POST \
@@ -123,13 +162,22 @@ curl -s -X POST \
   "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/find"
 ```
 
-**Replace:**
-- `<labelset>` → your labelset name (e.g., `topic`).
-- `<label>` → one of your labels (e.g., `procedure`).
+Replace `<labelset>` with your labelset name (e.g., `topic`) and `<label>` with one of your labels (e.g., `procedure`).
 
-**You should see:** results scoped to only documents with that label.
+</details>
 
 ### 3c. Compose both filters
+
+**Dashboard path:**
+
+1. In the Search & Ask panel, add **both** a mimetype filter (e.g., `/icon/application/pdf`) **and** a label filter (e.g., `topic/procedure`).
+2. Submit.
+3. **You should see:** results scoped to PDFs **AND** the chosen topic. The result count is usually smaller than either filter alone.
+
+This proves the AND-composition behaviour the lesson covered. In your React UI you'll let the user toggle chips that map to these same filter paths.
+
+<details>
+<summary><strong>Power-user path: same check via curl</strong> (Mac/Linux only)</summary>
 
 ```bash
 curl -s -X POST \
@@ -139,16 +187,16 @@ curl -s -X POST \
   "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/find"
 ```
 
-**You should see:** results scoped to PDFs **AND** the chosen topic. The result count is usually smaller than either filter alone.
+</details>
 
-> **Filter syntax recap:**
+> **Filter syntax recap** (you'll reuse this in the React UI):
 > - Content type: `/icon/<mimetype>` (e.g., `/icon/application/pdf`, `/icon/video`, `/icon/audio`).
 > - Label: `/classification.labels/<labelset-name>/<label-name>`.
 > - Multiple filters in the array compose with AND.
 
 ### 3d. Save your evidence
 
-Append the three result counts to `labelset-design.md` so reviewers can see the filter math.
+Append the three result counts (3a, 3b, 3c) to `labelset-design.md` so reviewers can see the filter math. Screenshots of the dashboard's Search panel with each filter combination are also fine.
 
 ---
 

@@ -32,7 +32,7 @@ You are **the boss**. The AI is **the junior engineer who never gets tired**. Th
 
 | Thing | What it is | How to get it |
 |---|---|---|
-| A terminal | The black-window thing where you type commands. macOS: **Terminal** app. Windows: **PowerShell** or **WSL**. Linux: you know. | Already on your machine — open it. |
+| A terminal | The black-window thing where you type commands. macOS: **Terminal** app. Windows: **PowerShell** or **WSL** (preferred over Command Prompt — see Windows note below). Linux: you know. | Already on your machine — open it. |
 | Node.js (a JavaScript runtime) | What runs the code you'll generate | Download from [nodejs.org](https://nodejs.org) — pick the LTS version. Run the installer. Done. |
 | Git | A way to save and share code | macOS: comes with Xcode tools. Windows: [git-scm.com/download](https://git-scm.com/download). |
 | An AI coding assistant | The thing that writes the code for you | Pick one: **Claude Code** (CLI), **Cursor** (editor), **GitHub Copilot** (autocomplete), **ChatGPT** or **Claude.ai** (web). |
@@ -40,6 +40,18 @@ You are **the boss**. The AI is **the junior engineer who never gets tired**. Th
 | A Progress ARAG sandbox account | Your KB and credentials | Provided by your partner manager. If you don't have it, ask in `#partner-onboarding`. |
 
 If you've never used a terminal: **don't panic**. You'll type maybe 5 commands per Build, and we'll explain every one. If a command confuses you, paste it into your AI assistant and ask *"what does this command do?"* — that's a perfectly legitimate move in this course.
+
+### A note for Windows users on `curl` and the dashboard
+
+A few builds (Build 0, 6, 7, 8, 9, 11) include `curl` commands that POST a JSON body to Nuclia — copy-paste-friendly on macOS and Linux because bash strips the surrounding single quotes around `-d '{...}'`. **Windows `cmd` (Command Prompt) does not strip those single quotes** — it ships the literal characters to `curl` and Nuclia replies with *"JSON decode error · Expecting value"*. PowerShell behaves differently again (double quotes need backtick-escaping).
+
+Three ways through this — pick whichever fits:
+
+1. **Use the dashboard's Search & Ask / Try the API panel for verification.** Every build now ships a dashboard-first path for the verification curls; only the optional Power-user sections require a shell. This is the recommended path on Windows.
+2. **Use WSL (Windows Subsystem for Linux).** Open a WSL bash shell and the same `curl '-d {...}'` commands work as written.
+3. **Save the JSON body to a file and reference it.** Write the body to `body.json` in your editor (no quoting needed in a text file) and replace `-d '{...}'` with `-d @body.json`. Works on any shell.
+
+When in doubt, take the dashboard path — citizen-developer-friendly and OS-agnostic.
 
 ## Pick your AI assistant
 
