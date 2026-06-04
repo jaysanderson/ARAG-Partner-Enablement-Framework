@@ -19,7 +19,7 @@ Work through the four files for this Build in order:
 1. **[lesson.md](1-lesson.md)** — what ARAG is, the auth model, the three endpoints you'll touch today. Read first (or watch the video).
 2. **[video-script.md](video-script.md)** — production-ready talk track + shot list for the video version of the lesson. Watch the video if it's been recorded; otherwise the script is your guide.
 3. **[walkthrough.md](2-walkthrough.md)** — vibe-coded exercise: provision a KB, make calls, ask an AI to write `ask.mjs` for you, verify.
-4. **[quiz.md](3-quiz.md)** — 6 multiple-choice + 1 short answer. Pass = 5/6 + credible short answer.
+4. **[quiz.md](3-quiz.md)** — 5 multiple-choice. Open-book. Pass = 4/5.
 
 ## What you can do after this Build
 

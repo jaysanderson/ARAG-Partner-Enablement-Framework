@@ -112,7 +112,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 - Three custom Tier 3 workflows (schema-constrained generation) live and demo-ready.
 - One Tier 4 composite RAG flow live (the "incident root cause" workflow).
 - Rate-limit-aware client (documented; doesn't need stress-testing in the demo).
--  is the technical baseline — fork it, don't rebuild from zero. The repo is at ``.
+- [Capstone-Atlas-Operations](https://github.com/jaysanderson/Capstone-Atlas-Operations) is the technical baseline — fork it, don't rebuild from zero. The repo is at `github.com/jaysanderson/Capstone-Atlas-Operations`.
 - Re-skin playbook (Section 10) shipped alongside the build.
 - 25-minute demo script (Section 9) rehearsed by the build owner. Delivered live to the review board.
 
@@ -162,14 +162,14 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 ### 5.2 Frontend stack
 
-- **Framework:** Next.js 14 (App Router) or Vite + React 18 — choose whichever the build owner is fastest in. The  is Vite; staying consistent reduces fork cost.
+- **Framework:** Next.js 14 (App Router) or Vite + React 18 — choose whichever the build owner is fastest in. The `Capstone-Atlas-Operations` reference is Vite; staying consistent reduces fork cost.
 - **Styling:** Tailwind CSS with a Atlas-Operations-specific palette (dark control-room aesthetic — slate-950 base, electric-blue and amber accents). Avoid the demo teal/navy palette so the two repos are visually distinct.
-- **Routing:** React Router v7 (matches ). Five top-level routes plus the landing page.
+- **Routing:** React Router v7 (matches `Capstone-Atlas-Operations`). Five top-level routes plus the landing page.
 - **State:** React Context for the active KB, the demo "presenter mode" hotkeys, and (optionally) the language selector for the Concierge surface. No Redux, no Zustand — keep dependencies thin.
 
 ### 5.3 Backend stack
 
-- **ARAG only.** No custom backend. Atlas Operations talks directly to ARAG endpoints exactly the way  does. This is itself a demo point — *there is no middleware to maintain*.
+- **ARAG only.** No custom backend. Atlas Operations talks directly to ARAG endpoints exactly the way `Capstone-Atlas-Operations` does. This is itself a demo point — *there is no middleware to maintain*.
 - **Generation backend:** Configured at the KB level via the Nuclia dashboard. Not exposed in the demo UI (see Build 11 for when and how to surface BYO-LLM to a customer — descoped here so the demo only claims what it actually ships).
 
 ### 5.4 Data-augmentation agent — the typed graph

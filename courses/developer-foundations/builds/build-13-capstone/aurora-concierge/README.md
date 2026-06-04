@@ -119,7 +119,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 - Field-engineered CTAs front and centre — the demo presenter must point at where each call-to-action came from in the source content, because that's the content-engineering recurring-revenue pitch.
 - Multilingual switch on the concierge surface — D2C buyers ask this in the first ten minutes.
 - Floating chat with prospect vs Trail Club member voice — the conversion mechanic.
--  fork as the technical baseline.
+- [Capstone-Aurora-Concierge](https://github.com/jaysanderson/Capstone-Aurora-Concierge) fork as the technical baseline.
 - Re-skin playbook shipped alongside the build.
 - 25-minute demo script (Section 9) rehearsed by the build owner. Delivered live to the review board.
 
@@ -175,7 +175,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 ### 5.2 Frontend stack
 
-- **Framework:** Vite + React 18 (matches ).
+- **Framework:** Vite + React 18 (matches `Capstone-Aurora-Concierge`).
 - **Styling:** Tailwind CSS. Aurora-themed palette — warm sandstone base, alpine-blue and rust accents, generous whitespace, photography-led hero. Designed to look like a real D2C site, not a SaaS dashboard.
 - **Routing:** React Router v7.
 - **State:** React Context for the active customer persona (Sara the prospect vs Mara the Trail Club Pro member), the floating-chat mode, and presenter-mode hotkeys.

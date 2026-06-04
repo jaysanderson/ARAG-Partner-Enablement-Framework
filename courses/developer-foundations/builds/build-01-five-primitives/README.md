@@ -17,7 +17,7 @@
 1. **[lesson.md](1-lesson.md)** — concept tour of all five primitives + their endpoints.
 2. **[video-script.md](video-script.md)** — 15-minute walkthrough; one section per primitive.
 3. **[walkthrough.md](2-walkthrough.md)** — hit every primitive from `curl`/Postman. Vibe-code a tiny "primitive demo" tool that calls each endpoint and prints a summary.
-4. **[quiz.md](3-quiz.md)** — 7 multiple-choice + 1 short answer.
+4. **[quiz.md](3-quiz.md)** — 5 multiple-choice. Open-book. Pass = 4/5.
 
 ## What you can do after this Build
 
