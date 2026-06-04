@@ -1,11 +1,11 @@
-# Video Script — Build 7: Knowledge Graph 101
+# Video Script — Build 8: Knowledge Graph 101
 
 > **Duration target:** 12 minutes
 > **Format:** Screen recording + voiceover. Dashboard + curl + AI generation + browser demo.
 
 ## Cold open (0:00 – 0:30)
 
-**ON SCREEN:** Title card. *"Developer Foundations · Build 7 · Knowledge Graph 101."* Cut to an attractive graph visualisation with coloured nodes and edges.
+**ON SCREEN:** Title card. *"Developer Foundations · Build 8 · Knowledge Graph 101."* Cut to an attractive graph visualisation with coloured nodes and edges.
 
 **VOICEOVER:**
 > Twelve minutes. By the end you'll have a typed knowledge graph extracted from your KB, a navigable viewer, and a demo of a question that single-shot retrieval *cannot* answer. This is the Tier 4 surface — the single most differentiated capability in ARAG vs every other RAG vendor in the market.

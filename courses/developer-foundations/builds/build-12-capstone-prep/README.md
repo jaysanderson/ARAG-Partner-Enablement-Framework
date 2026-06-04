@@ -1,4 +1,4 @@
-# Build 11 — Capstone Prep
+# Build 12 — Capstone Prep
 
 > Part of [Developer Foundations](../../README.md).
 >
@@ -19,7 +19,7 @@
 1. **[lesson.md](1-lesson.md)** — capstone variant choice, the master prompt set, the 25-minute demo arc.
 2. **[video-script.md](video-script.md)** — 15-minute live planning session.
 3. **[walkthrough.md](2-walkthrough.md)** — write the planning doc, pick the variant, draft the 8 master prompts.
-4. **[quiz.md](3-quiz.md)** — 5 MC + 1 short answer.
+4. **[quiz.md](3-quiz.md)** — 5 multiple-choice. Pass = 4/5.
 
 ## What you can do after this Build
 

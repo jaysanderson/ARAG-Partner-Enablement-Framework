@@ -1,4 +1,4 @@
-# Build 7 — Knowledge Graph 101
+# Build 8 — Knowledge Graph 101
 
 > Part of [Developer Foundations](../../README.md).
 >

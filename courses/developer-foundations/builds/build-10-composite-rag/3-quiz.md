@@ -1,4 +1,4 @@
-# Build 9 — Quick Quiz: Composite RAG
+# Build 10 — Quick Quiz: Composite RAG
 
 > 5 multiple-choice. Open-book. Pass = 4/5.
 
@@ -53,4 +53,4 @@ D. Switch to a more expensive model instead.
 
 1. B · 2. B · 3. B · 4. C · 5. B
 
-4+ correct → pass. Continue to [Build 10](../build-11-production-readiness/).
+4+ correct → pass. Continue to [Build 11](../build-11-production-readiness/).

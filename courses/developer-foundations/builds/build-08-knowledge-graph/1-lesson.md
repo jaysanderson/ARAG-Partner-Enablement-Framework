@@ -1,4 +1,4 @@
-# Build 7 — Lesson: Knowledge Graph 101
+# Build 8 — Lesson: Knowledge Graph 101
 
 > Read time: 12 minutes. Companion to the 12-minute [video](video-script.md).
 
@@ -6,7 +6,7 @@
 
 Every other RAG vendor in the market ships retrieval + an LLM. That's the table-stakes feature. ARAG ships those *plus* a **typed knowledge graph** that an agent extracts from your unstructured corpus. The graph is queryable through one API. No vendor partner ships this. It's the moat.
 
-When a customer's CTO asks *"can your system actually reason about the relationships in our data, or is it just keyword matching with extra steps?"* — Build 7 is the answer.
+When a customer's CTO asks *"can your system actually reason about the relationships in our data, or is it just keyword matching with extra steps?"* — Build 8 is the answer.
 
 ## What the graph actually is
 
@@ -144,7 +144,7 @@ Apply to every graph response before rendering.
 
 ## Configuring the agent (preview)
 
-Foundations Build 7 teaches you to **use** the graph. The Advanced course's Build 6 (Data-Augmentation Agents at Depth) teaches you to *design* and *deploy* the extraction agent — including precision/coverage measurement and schema evolution.
+Foundations Build 8 teaches you to **use** the graph. The Advanced course's *Data-Augmentation Agents at Depth* module teaches you to *design* and *deploy* the extraction agent — including precision/coverage measurement and schema evolution.
 
 For Foundations, the sandbox KB you provisioned in Build 0 doesn't have a custom agent configured. You have two paths:
 

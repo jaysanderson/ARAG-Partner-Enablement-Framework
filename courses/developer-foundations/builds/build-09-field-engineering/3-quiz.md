@@ -1,4 +1,4 @@
-# Build 8 — Quick Quiz: Field Engineering
+# Build 9 — Quick Quiz: Field Engineering
 
 > 5 multiple-choice. Open-book. Pass = 4/5.
 
@@ -53,4 +53,4 @@ D. A percentage of conversion uplift.
 
 1. B · 2. C · 3. B · 4. B · 5. C
 
-4+ correct → pass. Continue to [Build 9](../build-10-composite-rag/).
+4+ correct → pass. Continue to [Build 10](../build-10-composite-rag/).

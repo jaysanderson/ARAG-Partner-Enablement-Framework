@@ -1,4 +1,4 @@
-# Build 8 — Lesson: Field Engineering
+# Build 9 — Lesson: Field Engineering
 
 > Read time: 10 minutes. Companion to the 10-minute [video](video-script.md).
 

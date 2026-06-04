@@ -332,15 +332,15 @@ Save the file. **This is the partner's starting-point asset for every Tier-3+ cu
 
 Observability points your operators at platform health. Explainability points the *customer's security reviewer* at retrieval honesty. Same primitives, opposite audience. Tier-3+ buyers in finance, healthcare, and government ask for this in the SOC 2 / vendor-risk pass. Build it once; reuse on every retrieval surface.
 
-### 8a. Build the WhyAmISeeingThis component that narrates the persona inputs driving retrieval
+### 7a. Build the WhyAmISeeingThis component that narrates the persona inputs driving retrieval
 
 In `src/components/WhyAmISeeingThis.tsx` (or your app's equivalent), write a small aside that turns the persona inputs feeding retrieval into one or two plain-English sentences. The shopper sees: *"Because you're a Gold member in EU, and member-only perks are unlocked."* No JSON. No filter syntax. The CMO can read it on a Tuesday and ship it on a Wednesday.
 
-### 8b. Add the dev toggle that pretty-prints the literal /find request body per section
+### 7b. Add the dev toggle that pretty-prints the literal /find request body per section
 
 Underneath the narration, add a `Show the AI's actual /find queries` button. When toggled on, render one `<pre>` per retrieval section containing the literal `{ query, filters, page_size }` object that was sent to ARAG — same source of truth as your `/find` call, no separate code path. Toggle stays **collapsed by default**; opt-in only.
 
-### 8c. Verify the surface answers a 3-question security review
+### 7c. Verify the surface answers a 3-question security review
 
 Sit down with the rendered page and walk it as if you were a vendor-risk analyst. Confirm the surface answers, in order:
 - (a) What data is the AI seeing? — the narration names the persona attributes.

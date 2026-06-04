@@ -1,11 +1,11 @@
-# Video Script — Build 8: Field Engineering
+# Video Script — Build 9: Field Engineering
 
 > **Duration target:** 10 minutes
 > **Format:** Screen recording. Dashboard + chat + live A/B test.
 
 ## Cold open (0:00 – 0:30)
 
-**ON SCREEN:** Title card. *"Developer Foundations · Build 8 · Field Engineering."* Subtitle: *"$5–15K/month recurring revenue per customer."*
+**ON SCREEN:** Title card. *"Developer Foundations · Build 9 · Field Engineering."* Subtitle: *"$5–15K/month recurring revenue per customer."*
 
 **VOICEOVER:**
 > Ten minutes. By the end, you'll have changed an AI answer by editing one field on a resource in the dashboard — no code deploy, no engineering ticket. That mechanism is the highest-leverage recurring-revenue lever in the entire partner programme. Stay focused.

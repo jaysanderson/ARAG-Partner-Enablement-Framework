@@ -1,11 +1,11 @@
-# Video Script — Build 9: Composite RAG
+# Video Script — Build 10: Composite RAG
 
 > **Duration target:** 10 minutes
 > **Format:** Screen recording + voiceover. Live build with side-by-side comparison demo.
 
 ## Cold open (0:00 – 0:30)
 
-**ON SCREEN:** Title card. *"Developer Foundations · Build 9 · Composite RAG."* Subtitle: *"The on-ramp to agentic."*
+**ON SCREEN:** Title card. *"Developer Foundations · Build 10 · Composite RAG."* Subtitle: *"The on-ramp to agentic."*
 
 **VOICEOVER:**
 > Ten minutes. By the end you'll have a composite-RAG pipeline running against your KB, a side-by-side comparison page showing single-shot vs composite, and a clear answer to the CTO question "where does composite RAG end and true agentic begin?" Let's go.

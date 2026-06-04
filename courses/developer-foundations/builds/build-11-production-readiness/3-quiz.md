@@ -1,4 +1,4 @@
-# Build 10 — Quick Quiz: Production Readiness
+# Build 11 — Quick Quiz: Production Readiness
 
 > 5 multiple-choice. Open-book. Pass = 4/5.
 
@@ -53,4 +53,4 @@ D. Average answer length.
 
 1. C · 2. C · 3. C · 4. A · 5. B
 
-4+ correct → pass. Continue to [Build 11](../build-12-capstone-prep/).
+4+ correct → pass. Continue to [Build 12](../build-12-capstone-prep/).

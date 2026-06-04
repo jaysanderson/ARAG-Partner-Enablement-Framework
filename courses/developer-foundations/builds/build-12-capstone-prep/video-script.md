@@ -1,11 +1,11 @@
-# Video Script — Build 11: Capstone Prep
+# Video Script — Build 12: Capstone Prep
 
 > **Duration target:** 15 minutes
 > **Format:** Screen recording + voiceover. Document-heavy. Mix of slides and editor.
 
 ## Cold open (0:00 – 0:45)
 
-**ON SCREEN:** Title card. *"Developer Foundations · Build 11 · Capstone Prep."* Subtitle: *"The synthesis."*
+**ON SCREEN:** Title card. *"Developer Foundations · Build 12 · Capstone Prep."* Subtitle: *"The synthesis."*
 
 **VOICEOVER:**
 > Fifteen minutes. By the end of this video, you'll have a plan for the capstone — variant chosen, eight master prompts drafted, twenty-five-minute demo script sketched. The capstone itself is eight weeks of execution if you plan well, twelve weeks if you don't. This Build is the planning.
@@ -34,7 +34,7 @@
 >
 > Notice the surfaces map directly to Builds you've already done.
 >
-> The landing page — Build 2 + the BYO-LLM toggle from Build 10. Search — Build 6. Concierge — Builds 3, 4, 8. Workflows — Build 5. Graph — Build 7. Flagship composite — Build 9.
+> The landing page — Build 2 + the residency badge and live KB stats from Build 11. Search — Build 7. Concierge — Builds 3, 4, 9. Workflows — Build 5. Graph — Build 8. Flagship composite — Build 10.
 >
 > The capstone is composition. Nothing fundamentally new. The art is in the orchestration.
 
@@ -63,7 +63,7 @@
 **VOICEOVER:**
 > The demo arc. Twenty-five minutes. Seven sections. Same skeleton across variants.
 >
-> Zero to two — hero plus BYO-LLM toggle. You flip Azure to Vertex in front of the customer. Lock-in objection killed in ninety seconds.
+> Zero to two — hero plus residency badge and live ingested-corpus stats. Customer sees this is a real KB in their region — document count ticks up on screen — not a static demo. Trust established in ninety seconds.
 >
 > Two to six — search. Tier 1 reflex. Show grounded search with filters. The CMO recognises this as "the search we wish we had."
 >
@@ -81,7 +81,7 @@
 
 ## Section 5: The review-board gate (11:30 – 13:00)
 
-**ON SCREEN:** A simple flow chart. *"Build 11 plan → Review board → Pass → Build 12 starts"*. With the four review-board check items: variant choice, prompt specificity, demo arc, build estimate.
+**ON SCREEN:** A simple flow chart. *"Build 12 plan → Review board → Pass → Build 13 starts"*. With the four review-board check items: variant choice, prompt specificity, demo arc, build estimate.
 
 **VOICEOVER:**
 > Before you start the eight vibe-coding sessions, your plan goes to a Progress Solution lead for review-board sign-off. Four checks.

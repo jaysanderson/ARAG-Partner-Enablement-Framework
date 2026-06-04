@@ -1,12 +1,12 @@
-# Build 10 — Lesson: Production Readiness
+# Build 11 — Lesson: Production Readiness
 
 > Read time: 10 minutes. Companion to the 10-minute [video](video-script.md).
 
 ## Why this Build is mostly conceptual
 
-A demo against a sandbox closes nothing. The customer signs after their CTO is satisfied that the platform clears their *production* bar. Build 10 is where you internalise the language and the levers that satisfy that bar.
+A demo against a sandbox closes nothing. The customer signs after their CTO is satisfied that the platform clears their *production* bar. Build 11 is where you internalise the language and the levers that satisfy that bar.
 
-The good news: ARAG handles most of this for you. Residency, rate limiting, model routing — all platform-native. Your job in Build 10 is to know what's available, how to configure it, and how to defend it in 90 seconds to a customer's CTO.
+The good news: ARAG handles most of this for you. Residency, rate limiting, model routing — all platform-native. Your job in Build 11 is to know what's available, how to configure it, and how to defend it in 90 seconds to a customer's CTO.
 
 ## Data residency: EU vs USA
 

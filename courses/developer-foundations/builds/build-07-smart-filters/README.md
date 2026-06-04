@@ -1,4 +1,4 @@
-# Build 6 — Smart Filters & Labelsets
+# Build 7 — Smart Filters & Labelsets
 
 > Part of [Developer Foundations](../../README.md).
 

@@ -1,4 +1,4 @@
-# Build 6 — Lesson: Smart Filters & Labelsets
+# Build 7 — Lesson: Smart Filters & Labelsets
 
 > Read time: 8 minutes. Companion to the 8-minute [video](video-script.md).
 
@@ -68,7 +68,7 @@ For obvious labels (region from filename, audience from folder path), write a sm
 
 ### Model-based / classifier
 
-For nuanced labels (priority, sentiment, topic), train a classifier that runs at ingest time. ARAG supports this; the dashboard has the configuration UI. For Build 6 we focus on **using** labels via filters; classifier *training* is an Advanced topic.
+For nuanced labels (priority, sentiment, topic), train a classifier that runs at ingest time. ARAG supports this; the dashboard has the configuration UI. For Build 7 we focus on **using** labels via filters; classifier *training* is an Advanced topic.
 
 ## Per-paragraph labels (advanced)
 

@@ -1,4 +1,4 @@
-# Build 11 — Quick Quiz: Capstone Prep
+# Build 12 — Quick Quiz: Capstone Prep
 
 > 5 multiple-choice. Open-book. Pass = 4/5.
 
@@ -7,7 +7,7 @@
 ### 1. The capstone vibe-codes against:
 
 A. A new ARAG SDK from Progress.
-B. The 8 master prompts you write in Build 11.
+B. The 8 master prompts you write in Build 12.
 C. A starter template partners rebrand.
 D. A fixed framework Progress maintains.
 

@@ -1,11 +1,11 @@
-# Video Script — Build 10: Production Readiness
+# Video Script — Build 11: Production Readiness
 
 > **Duration target:** 10 minutes
 > **Format:** Screen recording + voiceover. Mostly conceptual; one config demo, one short vibe-code.
 
 ## Cold open (0:00 – 0:30)
 
-**ON SCREEN:** Title card. *"Developer Foundations · Build 10 · Production Readiness."* Subtitle: *"The CTO meeting language."*
+**ON SCREEN:** Title card. *"Developer Foundations · Build 11 · Production Readiness."* Subtitle: *"The CTO meeting language."*
 
 **VOICEOVER:**
 > Ten minutes. Three things the customer's CTO cares about — residency, model choice, rate limits. Plus the one observability metric that matters more than the rest. By the end you'll have the 90-second pitch for each.

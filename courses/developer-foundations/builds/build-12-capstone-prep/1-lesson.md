@@ -1,12 +1,12 @@
-# Build 11 — Lesson: Capstone Prep
+# Build 12 — Lesson: Capstone Prep
 
 > Read time: 15 minutes. Companion to the 15-minute [video](video-script.md).
 >
 > This is the synthesis Build. Everything from Builds 0–10 composes here.
 
-## Why Build 11 exists
+## Why Build 12 exists
 
-The capstone is eight weeks of focused work for one engineer. Without a plan, that eight weeks turns into twelve. With a plan, four. Build 11 is the plan.
+The capstone is eight weeks of focused work for one engineer. Without a plan, that eight weeks turns into twelve. With a plan, four. Build 12 is the plan.
 
 Specifically, you'll:
 
@@ -26,7 +26,7 @@ The capstone ships in two pre-designed variants. You pick the one matching your 
 | **Atlas Operations** | CTO, CIO, Chief Data Officer | Atlas Global Industries (industrial manufacturer, one KB + business-unit labelsets) | Composite-RAG incident root-cause + cross-functional typed graph |
 | **Aurora Concierge** | CMO, Head of Digital, Chief Customer Officer | Aurora Outfitters (D2C outdoor retailer, one KB + content-type labelsets) | Two-voice floating chat + content-engineered CTAs + abandoned-cart composite RAG |
 
-Both build the same underlying architecture (one KB, labelsets, a data-augmentation agent, three Tier 3 workflows, one composite RAG flow, BYO-LLM toggle). They differ in **buyer**, **demo script**, and **commercial framing**.
+Both build the same underlying architecture (one KB, labelsets, a data-augmentation agent, three Tier 3 workflows, one composite RAG flow, residency badge + live KB stats in the header). They differ in **buyer**, **demo script**, and **commercial framing**.
 
 If you're not sure, default to Atlas — it's the broader applicable demo and works for CTO and CMO audiences in adapted form.
 
@@ -41,9 +41,9 @@ Whichever variant you pick, the capstone is built on:
 - **A data-augmentation agent** producing a typed knowledge graph.
 - **A single Vite + React app** at the partner's domain.
 - **Six demo surfaces**: a landing page, search, conversational concierge, structured-workflows, knowledge-graph viewer, and a flagship composite-RAG flow.
-- **A BYO-LLM toggle** in the header demonstrating Azure / Vertex / Bedrock parity.
+- **A residency badge + live ingested-corpus stats** in the header — visible proof the KB exists and is in the region the customer expects.
 
-Build 12 (the capstone itself) is just composition of everything from Builds 1–10. Nothing fundamentally new. The art is in the orchestration.
+Build 13 (the capstone itself) is just composition of everything from Builds 1–11. Nothing fundamentally new. The art is in the orchestration.
 
 ## The 8 master prompts
 
@@ -52,13 +52,13 @@ To vibe-code the capstone, you'll run 8 AI prompts in sequence. Each produces on
 | # | Prompt brief | What it produces |
 |---|---|---|
 | 1 | Scaffold the app | Fresh Vite + React + TypeScript project; Tailwind configured; routing for 6 surfaces; design-system palette applied |
-| 2 | ARAG client wrapper | `src/lib/ragClient.ts` — the wrapper from Builds 0+3+9 with streaming, sync, schema, and composite support |
-| 3 | Header + landing page | Brand header with residency badge and BYO-LLM toggle; landing page with hero copy + featured-content carousel |
-| 4 | Search surface | `/search` route with content-type chips + labelset facets (Build 6) + AI-summary card (Build 5 schema) + paginated results |
-| 5 | Conversational concierge | `/concierge` route with two-voice toggle (Build 3) + multilingual switch (Build 4) + field-engineered CTAs (Build 8) |
+| 2 | ARAG client wrapper | `src/lib/ragClient.ts` — the wrapper from Builds 0+3+10 with streaming, sync, schema, and composite support |
+| 3 | Header + landing page | Brand header with residency badge + live ingested-corpus stats; landing page with hero copy + featured-content carousel |
+| 4 | Search surface | `/search` route with content-type chips + labelset facets (Build 7) + AI-summary card (Build 5 schema) + paginated results |
+| 5 | Conversational concierge | `/concierge` route with two-voice toggle (Build 3) + multilingual switch (Build 4) + field-engineered CTAs (Build 9) |
 | 6 | Workflows page | `/workflows` route with the three Tier 3 schema-constrained workflows (Build 5) |
-| 7 | Knowledge graph viewer | `/graph` route with the graph navigation UI (Build 7) |
-| 8 | Composite flagship flow | `/incident-root-cause` or `/abandoned-cart` route (depending on variant) — the flagship composite-RAG pipeline (Build 9) with step-by-step visualisation |
+| 7 | Knowledge graph viewer | `/graph` route with the graph navigation UI (Build 8) |
+| 8 | Composite flagship flow | `/incident-root-cause` or `/abandoned-cart` route (depending on variant) — the flagship composite-RAG pipeline (Build 10) with step-by-step visualisation |
 
 Each prompt is 200–500 words. Each will produce 100–600 lines of generated code. The AI will get some things wrong; you iterate. Plan for 2–3 hours of vibe-coding per prompt for a total of 16–24 hours pure AI-direction time — plus ingest, labelset config, agent config, demo rehearsal.
 
@@ -88,7 +88,7 @@ Verification:
   After generation, I'll check: <list of things to verify>
 ```
 
-The AI is good at the *implementation*. You direct on *contract* — what goes in, what comes out, what conventions to follow. Build 11's walkthrough has you write all 8 prompts before you start building.
+The AI is good at the *implementation*. You direct on *contract* — what goes in, what comes out, what conventions to follow. Build 12's walkthrough has you write all 8 prompts before you start building.
 
 ## The 25-minute customer demo arc
 
@@ -96,7 +96,7 @@ Every capstone runs to a 25-minute talk track. The structure is the same across 
 
 | Minute | Section | Purpose |
 |---|---|---|
-| 0–2 | Hero + BYO-LLM toggle | Kill the lock-in objection in the opening 90 sec. |
+| 0–2 | Hero + residency badge + live KB stats | Show this is a real, live KB in the customer's region — not a static demo. |
 | 2–6 | Search demo | Tier 1 reflex; show grounded search with filters. |
 | 6–10 | Concierge demo | Tier 2 differentiation; two voices + multilingual. |
 | 10–15 | Structured workflows | Tier 3 unlock; show 3 workflows producing typed outputs. |

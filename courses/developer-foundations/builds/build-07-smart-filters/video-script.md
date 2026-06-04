@@ -1,11 +1,11 @@
-# Video Script — Build 6: Smart Filters & Labelsets
+# Video Script — Build 7: Smart Filters & Labelsets
 
 > **Duration target:** 8 minutes
 > **Format:** Screen recording. Dashboard + curl + AI generation + browser demo.
 
 ## Cold open (0:00 – 0:30)
 
-**ON SCREEN:** Title card. *"Developer Foundations · Build 6 · Smart Filters & Labelsets."* Cut to a search page mockup with chips at the top.
+**ON SCREEN:** Title card. *"Developer Foundations · Build 7 · Smart Filters & Labelsets."* Cut to a search page mockup with chips at the top.
 
 **VOICEOVER:**
 > Eight minutes. Filters are the cheapest precision lever in ARAG — five minutes of labelset design lifts retrieval precision twenty to forty percent. By the end of this video you'll have a working filtered search UI, vibe-coded, with content-type chips and a labelset facet sidebar.

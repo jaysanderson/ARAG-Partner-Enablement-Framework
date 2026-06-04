@@ -1,4 +1,4 @@
-# Build 9 — Composite RAG
+# Build 10 — Composite RAG
 
 > Part of [Developer Foundations](../../README.md).
 >
