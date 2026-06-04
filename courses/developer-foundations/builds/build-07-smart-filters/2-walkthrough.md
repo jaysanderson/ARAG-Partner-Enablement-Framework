@@ -218,7 +218,7 @@ cd foundations-build-7
 npm install
 ```
 
-You don't install Tailwind by hand — the AI does it as part of the SearchPage brief in Step 5, same citizen-developer pattern as Build 3.
+You don't install styling tooling by hand — the AI picks and configures it as part of the SearchPage brief in Step 5, same citizen-developer pattern as Build 3.
 
 Create or copy `.env` with your three `VITE_NUCLIA_*` credentials.
 
@@ -234,13 +234,10 @@ This is the meaty step. Brief your AI:
 In my Vite + React + TypeScript project, create
 src/components/SearchPage.tsx and route it (or render it from App.tsx).
 
-If Tailwind isn't already set up in this project, install and configure
-it as your first step: install tailwindcss, postcss, autoprefixer; run
-`npx tailwindcss init -p`; set the tailwind.config.js content array to
-["./index.html", "./src/**/*.{js,ts,jsx,tsx}"]; replace src/index.css
-with the three @tailwind directives (base, components, utilities).
-Claude Code / Cursor: do this directly. ChatGPT / Claude.ai web: emit
-the commands + file contents precisely so I can paste them.
+Pick a styling approach that fits a clean, modern search UI and set it
+up if it isn't already wired in (Claude Code / Cursor: do the setup
+directly; ChatGPT / Claude.ai web: emit the exact commands + file
+contents so I can paste them).
 
 Then create the page. It's a search-and-filter page with this layout:
 
@@ -273,7 +270,7 @@ Specifics:
 4. Topic facets sidebar (left column): a list of toggle buttons, one
    per label in topicLabels. State: const [activeTopics, setActiveTopics] =
    useState<string[]>([]). Clicking a topic toggles it in/out of the
-   array. Highlight active topics with Tailwind classes.
+   array. Style active topics so they're visually distinct.
 
 5. When query, contentType, or activeTopics change, fire POST /find with:
    {
@@ -295,8 +292,10 @@ Specifics:
    - Card shows: title, top paragraph excerpt (truncated to ~200 chars),
      small content-type icon, and any classifications under the resource.
 
-8. Use Tailwind for styling. Loading state ("Searching...") while
-   a request is in flight. Error state if the API fails.
+8. Style the whole page for a clean, modern feel — clear hierarchy,
+   readable type, hover states on chips and facets. Loading state
+   ("Searching...") while a request is in flight. Error state if the
+   API fails.
 
 Use plain fetch. No SDK.
 ```

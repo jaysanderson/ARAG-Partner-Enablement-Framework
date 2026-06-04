@@ -83,4 +83,4 @@
 - **Section 4 (label application):** the per-resource label assignment in the dashboard is tedious on camera. Fast-forward (×8) and show the result.
 - **Section 5 (curl):** show the result count change clearly — overlay the count on screen since the raw JSON output is hard to read live.
 - **Section 6 (vibe-code):** generation takes 60–90 seconds. Don't show the full cursor; fast-forward and cut to the finished page.
-- **Section 7 (demo):** the chip + facet UI should be visually clear. Use a high-contrast Tailwind theme.
+- **Section 7 (demo):** the chip + facet UI should be visually clear. Use a high-contrast clean theme.
