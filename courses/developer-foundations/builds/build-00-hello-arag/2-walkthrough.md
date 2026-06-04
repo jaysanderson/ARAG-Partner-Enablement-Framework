@@ -23,7 +23,9 @@ node --version
 
 **Expected output:** something like `v20.11.0` or higher. If you see "command not found," Node didn't install correctly — reinstall from the link above.
 
-**The sample corpus you'll ingest** — included with the course at `courses/developer-foundations/builds/build-00-hello-arag/corpus/content_type/` in the framework repo. 37 outdoor-retail documents organised into seven subfolders (`product/`, `trail_guide/`, `gear_review/`, etc.) — the folder names will become labels in Nuclia once you upload. (If you don't have the framework repo cloned locally yet, clone it from [the partner-enablement repo URL] first, or download just the `corpus/content_type/` folder using a tool like [download-directory.github.io](https://download-directory.github.io/).) Using the same corpus everyone else in the course uses means every query you try later behaves the way the lessons describe — your results will line up with the screenshots and example outputs in subsequent Builds.
+**The sample corpus you'll ingest** — clone the framework repo locally first; the corpus ships inside it at `courses/developer-foundations/builds/build-00-hello-arag/corpus/content_type/`. 37 outdoor-retail documents organised into seven subfolders (`product/`, `trail_guide/`, `gear_review/`, etc.) — the folder names will become labels in Nuclia once you upload. Using the same corpus everyone else in the course uses means every query you try later behaves the way the lessons describe — your results will line up with the screenshots and example outputs in subsequent Builds.
+
+> **Don't have git installed?** See *Getting unstuck* at the bottom for a no-clone download alternative — but cloning is the path the rest of the course assumes.
 
 > **Why this corpus has folders.** Nuclia can use folder names as **label names** during ingest — a feature that lets you drag one folder, get labels for free, and skip the per-document tagging step. You'll use that feature in Step 4. The same folder-name-as-labels workflow runs through every build past Build 0, including the capstone, so learn it once here.
 
@@ -441,13 +443,16 @@ If something doesn't work, see "Getting unstuck" below.
 - Paste both into your AI with: *"I ran [command] and got [error]. What's wrong?"*
 - The AI explains and proposes a fix. You apply it. Re-run.
 
+**I don't have git / can't clone the framework repo.**
+- Download just the `corpus/content_type/` folder using a tool like [download-directory.github.io](https://download-directory.github.io/) — paste the GitHub URL of the folder, get a ZIP, unzip, and use that folder for the Step 4 upload. The rest of the course assumes you have the repo locally — install git ([git-scm.com/downloads](https://git-scm.com/downloads)) and `git clone` it before Build 1 to avoid friction later.
+
 ---
 
-## Step 11 — Render the citations for your first `/ask` answer (15 min)
+## Step 10 — Render the citations for your first `/ask` answer (15 min)
 
 You've watched the citations stream past in step 7 and you've printed the bare resource IDs at the end of `ask.mjs` in step 9. This step closes the loop: turn those IDs into a clean, de-duped, human-readable citation list. The lesson covers *why* the naive approach fails ([Citations — extracting, de-duping, and resolving](1-lesson.md#citations--extracting-de-duping-and-resolving)) — here you do it hands-on.
 
-### 11a. Inspect `best_matches` in the raw response
+### 10a. Inspect `best_matches` in the raw response
 
 Run your sync `/ask` call from step 6 again, but this time pipe it through `jq` to isolate just the `best_matches` array. Open `scratch.sh`, add a blank line below your previous blocks, paste this template:
 
@@ -467,7 +472,7 @@ Same drill: if Find & Replace already swapped the three credential placeholders 
 
 **You should see:** an array of strings shaped like `"a1b2c3d4-...-1234567890ab/t/body/12-340"`. Notice that the same resource id (the leading UUID) often repeats — one resource contributes several matching paragraphs.
 
-### 11b. Implement the splitter
+### 10b. Implement the splitter
 
 Open `ask.mjs` in your editor. Find the spot where you currently print the resource IDs (the `---` separator section from step 9). Add the splitter the lesson showed — for plain JS it looks like this:
 
@@ -487,7 +492,7 @@ Run the script again: `node ask.mjs "your question"`.
 
 **You should see:** a much shorter list than `best_matches.length` — typically 1–5 unique IDs even if `best_matches` had 10–20 entries. That's the de-dup working.
 
-### 11c. Look up each rid in `resources` and print the title
+### 10c. Look up each rid in `resources` and print the title
 
 Now resolve those IDs against the `resources` map. In the same `retrieval` block you already capture, there's a `results.resources` (or `retrieval_results.resources` in sync mode) object. Extend the loop:
 

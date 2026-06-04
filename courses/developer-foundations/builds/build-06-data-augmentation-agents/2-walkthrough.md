@@ -602,8 +602,8 @@ Create `prompt-log.md`. Paste the Step 6 brief. Add notes about any fixes you ha
 - [ ] `generator-output.md` saved with config + sample output.
 - [ ] **Labeller** configured with one labelset (5-7 labels); model-based prompt; sample resource shows assigned label via API.
 - [ ] `labeller-output.md` saved with design + sample assignments.
-- [ ] **Graph** agent configured with 5–10 NER types (each with a Description listing actual corpus values) and at least 3 NER examples (text + tagged NERs + tagged Relations triples); `/graph` returns typed paths with the `data-augmentation` filter.
-- [ ] `graph-output.md` saved with NER types table + at least 3 NER examples + 5 sample paths.
+- [ ] **Graph** agent configured with 5–10 NER types (each with a Description listing actual corpus values) and **at least 3 NER examples — 5+ recommended, matching the worked example** (text + tagged NERs + tagged Relations triples); `/graph` returns typed paths with the `data-augmentation` filter.
+- [ ] `graph-output.md` saved with NER types table + at least 3 (ideally 5+) NER examples + 5 sample paths.
 - [ ] `baseline-comparison.md` saved (before/after observations).
 - [ ] `agent-status.mjs` working — all three agents PASS on 3 sample resources.
 - [ ] `prompt-log.md` saved.
