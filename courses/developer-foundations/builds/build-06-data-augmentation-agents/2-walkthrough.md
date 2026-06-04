@@ -43,23 +43,46 @@ sudo apt install jq
 
 Before you turn anything on, you want a **"before" snapshot**. That way you can prove the agents actually changed something.
 
+> **A note on this Build's verification path.** Build 6 is **dashboard-driven**. Every check in Steps 1–5 has a "do it in the Nuclia dashboard" path — works on any OS, no terminal, no `jq`. There's an optional *Power-user path* for partners who want the raw API call. Pick whichever fits — both produce the same artefact for `baseline.md` / `generator-output.md` / etc.
+
 ### 1a. Set up the Build 6 folder
 
-```bash
-cd ~/Desktop
-mkdir foundations-build-6
-cd foundations-build-6
-cp ../foundations-build-0/.env .
-code .
-```
+You need a folder on your machine to save notes and screenshots. Make it however your OS likes:
+
+- **Any OS (file manager):** create a new folder on your Desktop called `foundations-build-6`. Inside it, drop a copy of the `.env` file from your `foundations-build-0` folder so credentials are at hand. Open the folder in your editor of choice.
+- **macOS / Linux terminal:**
+  ```bash
+  cd ~/Desktop
+  mkdir foundations-build-6
+  cd foundations-build-6
+  cp ../foundations-build-0/.env .
+  code .
+  ```
+- **Windows PowerShell:**
+  ```powershell
+  cd $HOME\Desktop
+  mkdir foundations-build-6
+  cd foundations-build-6
+  Copy-Item ..\foundations-build-0\.env .
+  code .
+  ```
+- **Windows Command Prompt (cmd):**
+  ```bat
+  cd %USERPROFILE%\Desktop
+  mkdir foundations-build-6
+  cd foundations-build-6
+  copy ..\foundations-build-0\.env .
+  code .
+  ```
 
 ### 1b. Pick 3 sample documents
 
 Open your Nuclia dashboard → your KB → resource list. Pick **3 documents** with distinct content:
 
-- Different topics if possible.
-- Different file types if possible (one PDF, one text, one markdown).
-- Different lengths (one short, one long).
+- **Different topics** — e.g. one product spec, one ambassador profile, one brand pillar.
+- **Different lengths** — one short, one long.
+
+(The shipped sample corpus is all markdown; mixing file formats isn't the diversity that matters here. Topic and length are.)
 
 Click into each. Copy its **resource ID** (a UUID, usually visible in the URL or in a "details" panel).
 
@@ -74,9 +97,39 @@ Sample resources:
 - C: <uuid-3> — <title>
 ```
 
-### 1c. Run a baseline query
+### 1c. Run a baseline query in the dashboard
 
-Pick one question your corpus can answer. Run it via `/ask`:
+Pick one question your corpus can answer (e.g. *"Which Aurora boots are recommended for thru-hiking?"* against the sample corpus, or your own).
+
+**Dashboard path (recommended for citizen developers):**
+
+1. In the Nuclia dashboard, open your KB.
+2. Find the **Search & Ask** (or **Try the API**, **Playground**, **Search**) panel — most tenants have it in the left nav.
+3. Type your question and submit. Make sure *"Generative answer"* (or equivalent) is enabled so you get an LLM-generated answer alongside the raw retrieval.
+4. Capture three things:
+   - The **answer text** the generator returned.
+   - The **citation count** (number of sources shown under the answer — usually 3–10).
+   - The **top 3 source titles** (the first three documents in the citations panel).
+5. Paste them into `baseline.md` under a `## Baseline query result (before agents)` heading. A screenshot also works.
+
+Example shape:
+
+```markdown
+## Baseline query result (before agents)
+
+Query: "Which Aurora boots are recommended for thru-hiking?"
+Answer: "Based on the documents, the Aurora TerraTrek 7 is the flagship..."
+Citation count: 4
+Top 3 sources:
+1. Aurora TerraTrek 7 — Day & Thru-Hike Boot
+2. Mara Chen — Field Notes
+3. Built for the Worst Weather — Aurora Brand Pillar
+```
+
+This is what you'll compare against once the agents are running.
+
+<details>
+<summary><strong>Power-user path: same baseline via curl</strong> (Mac/Linux only — Windows users should use the dashboard path above)</summary>
 
 ```bash
 export NUCLIA_API_URL="<your-url>"
@@ -91,21 +144,9 @@ curl -s -X POST \
   "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" | jq '{answer, citation_count: (.retrieval_best_matches | length), top_citations: .retrieval_best_matches[0:3]}'
 ```
 
-**What that did:** ran an `/ask` query, then used `jq` to pull just three fields — the answer text, the citation count, and the top 3 source IDs.
+Requires `curl` + [`jq`](https://stedolan.github.io/jq/download/) installed. Outputs the same three fields as the dashboard path. On Windows, `export` and the `\` line-continuation aren't supported in cmd.exe and `jq` install is fiddly — stick with the dashboard path.
 
-**You should see:** a compact JSON summary like:
-
-```json
-{
-  "answer": "Based on the documents...",
-  "citation_count": 5,
-  "top_citations": ["uuid-1", "uuid-2", "uuid-3"]
-}
-```
-
-Paste this output into `baseline.md` under a heading "Baseline query result." This is what you'll compare against later.
-
-> **If `export` doesn't work on your shell** (Windows PowerShell, for example), substitute the actual values directly into the `curl` command, or load `.env` differently. The simplest fallback is to paste your three credentials directly into the command.
+</details>
 
 ---
 
@@ -115,29 +156,49 @@ The Generator produces derived content (summaries, Q&A pairs) from your document
 
 ### 2a. Configure in the dashboard
 
-1. Open your KB in the Nuclia dashboard.
-2. Navigate to **Settings** → **Augmentation** (or **Data Augmentation** → **Generator**).
-3. Toggle **Generator** on.
-4. Configure outputs — at minimum enable:
+1. Open your KB → **Data Augmentation Agents** → **Create agent** → choose **Generation** (or **Generator** — wording varies; it's the agent that produces summaries / Q&A pairs / synthetic content).
+2. **Agent settings:**
+   - **Agent name** — e.g. `aurora-faq-generator` (or anything memorable).
+   - **LLM** — *Gemini 2.5 Flash Lite* is a good cost default; bump up if quality lags.
+3. **Selected filters (optional)** — leave blank to run against the whole KB.
+4. **What to generate** — at minimum enable:
    - **Summary** (resource-level summary)
    - **Q&A pairs** (synthesised likely-user-question + grounded-answer pairs)
 5. If a **prompt template** field is visible for the Q&A generator, paste:
 
    > *"Generate 5 likely user questions a non-expert customer would ask about this document, with grounded answers. Use everyday language — not the document's technical jargon."*
 
-6. Save.
+6. **Save**.
+
+> The exact panel layout depends on your tenant. The shape above mirrors the **Graph extraction** agent in Step 4 (agent name + LLM + filter + type-specific config). If your dashboard labels differ slightly, follow the on-screen wording — the core ideas are stable.
 
 ### 2b. Trigger a re-run
 
-Look for a **"Run on existing content"** or **"Re-process"** button. Click it. The generator runs over your already-ingested documents.
+In the agent's **Execution** tab, click **Run** (or **Run on existing content** / **Re-process** — wording varies). The generator runs over your already-ingested documents.
 
 **Wait time:** for 10 documents, expect 5–15 minutes. Each document gets an LLM call to produce derivations. Take a coffee break.
 
 **You should see:** a progress indicator showing each document processing. Status moves from "queued" → "running" → "complete."
 
-### 2c. Verify the output
+### 2c. Verify the output in the dashboard
 
-Pick **Sample A** (one of your three sample resource IDs). Fetch it:
+Pick **Sample A** (one of your three sample resource IDs from 1b). Open it in the dashboard's resource browser.
+
+1. Navigate to the resource detail page (click the resource in the KB's resource list, or paste its ID into the URL).
+2. Look for **new fields that weren't there before the agent ran**. Depending on tenant, these appear:
+   - In an **Augmentation** / **Generated content** section on the resource detail page, or
+   - As new entries under the resource's **Texts** / **Extracted text** panel, or
+   - Tagged with a *"generated by data-augmentation"* badge.
+3. You're looking for two kinds of content:
+   - A **resource-level Summary** (a few sentences condensing the document).
+   - A set of **Q&A pairs** (question + grounded answer rows).
+
+**You should see:** the summary text and the Q&A pairs visible on the resource page. The exact field names depend on tenant — *"summary"*, *"qa_pairs"*, *"synthetic_qa"*, *"question_answer_pairs"* are all variants of the same thing. As long as something Generator-shaped appears that wasn't there before, the agent did its job.
+
+> **Why this beats the curl path:** the dashboard view shows you exactly what a customer-app developer will see when they query the KB. The curl-and-jq path returns the same data but adds a layer of JSON-parsing friction — useful only at scale.
+
+<details>
+<summary><strong>Power-user path: same verification via curl</strong> (optional)</summary>
 
 ```bash
 curl -s \
@@ -146,38 +207,36 @@ curl -s \
   | jq '.data.texts | keys'
 ```
 
-**What that did:** fetched the resource and listed the keys under `data.texts`.
-
-**You should see:** an array of keys. **Look for new keys that didn't exist before** — typically:
-
-- `summary` (or similar)
-- `qa_pairs` (or `synthetic_qa`, or `question_answer_pairs`)
-
-To see the actual content of a generated field:
+Lists the keys under `data.texts`. Look for new keys (`summary`, `qa_pairs`, etc.) that didn't exist before. To see actual generated content:
 
 ```bash
 curl -s \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
   "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/resource/<RESOURCE-ID-A>?show=basic&show=values&show=extracted" \
-  | jq '.data.texts.summary // .data.texts | to_entries[] | select(.key | test("summary|qa")) | {key, value: .value.body[0:300]}'
+  | jq '.data.texts | to_entries[] | select(.key | test("summary|qa")) | {key, value: .value.body[0:300]}'
 ```
 
-**You should see:** a few hundred characters of generated summary or Q&A pair content.
+Requires `curl` + `jq`. Mac/Linux preferred; Windows users use the dashboard path above.
+
+</details>
 
 ### 2d. Save the evidence
 
 In your project folder create `generator-output.md`. Paste:
 
 - The dashboard config (what you enabled + the prompt).
-- A sample of generated content from one resource (summary text + a Q&A pair).
+- A sample of generated content from one resource (summary text + a Q&A pair — copy-paste from the dashboard view).
+
+A screenshot of the resource detail page with the new fields visible is also fine.
 
 ### 2e. Troubleshooting
 
 | Problem | Likely cause | Fix |
 |---|---|---|
-| Generator option missing in dashboard | Tenant tier doesn't expose it | Ping `#partner-onboarding` to enable on your tenant |
-| Run never completes | Stuck job | Cancel + restart, or check tenant LLM quota |
-| `data.texts` shows no new keys | Run didn't process this resource | Confirm the document re-processed; pick a different resource ID |
+| No **Data Augmentation Agents** option in the dashboard | Tenant tier doesn't expose it | Ping `#partner-onboarding` to enable on your tenant |
+| Run never completes | Stuck job | Cancel + restart from the Execution tab, or check tenant LLM quota |
+| Resource has no new Summary / Q&A fields | Run didn't process this resource | Confirm the Execution tab shows "complete" status; pick a different resource ID |
+| Dashboard resource view doesn't show an Augmentation / Generated content section | Tenant UI variant | Look for the generated fields in the Texts panel or via the curl path above |
 
 ---
 
@@ -214,19 +273,39 @@ Labels:
 
 ### 3b. Configure in the dashboard
 
-1. Settings → Augmentation → **Labeller** (or **Classifier**).
-2. **Create labelset** → name it `topic` (or your chosen name).
-3. Add each label with a 1-sentence description (from your design above).
-4. Choose **model-based** classification.
-5. Paste the prompt:
+1. Open your KB → **Data Augmentation Agents** → **Create agent** → choose **Labelling** (or **Classifier**).
+2. **Agent settings:**
+   - **Agent name** — e.g. `aurora-topic-labeller`.
+   - **LLM** — *Gemini 2.5 Flash Lite* is the cost default.
+3. **Selected filters (optional)** — leave blank.
+4. **Labelset:**
+   - **Create labelset** → name it `topic` (or your chosen name).
+   - Add each label with a 1-sentence description (from your design above).
+5. **Classification mode** — pick **model-based** (not rule-based).
+6. **Prompt** — paste:
 
    > *"Classify this document into exactly ONE of these topics: {labels}. Reply with just the label name — nothing else."*
 
-6. Save and trigger a run.
+7. **Save** and trigger a run from the **Execution** tab.
+
+> Again — if your dashboard's labels differ slightly, follow the on-screen wording. The shape (agent name + LLM + filter + labelset + prompt) is the stable core.
 
 **Wait time:** ~1 minute per document for 10 documents (Labeller is cheaper than Generator).
 
-### 3c. Verify the labelset exists
+### 3c. Verify in the dashboard — labelset + assigned labels
+
+**Dashboard path:**
+
+1. **Confirm the labelset exists.** In the KB's **Labelsets** panel (left nav), you should see `topic` with the labels you defined.
+2. **Confirm labels were assigned.** Open one of your sample resources (A from Step 1b). On the resource detail page, look for a **Labels** / **Classifications** panel — you should see a chip like `topic: procedure` (or whatever the model assigned).
+3. **Repeat for B and C.** Note the label assigned to each.
+
+Save the three resource → label assignments in `labeller-output.md` under a `## Assigned labels (sample of 3)` heading. A screenshot of one resource's labels panel also works as evidence.
+
+<details>
+<summary><strong>Power-user path: same verification via curl</strong> (optional)</summary>
+
+Confirm the labelset exists:
 
 ```bash
 curl -s \
@@ -234,9 +313,9 @@ curl -s \
   "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/labelsets" | jq .
 ```
 
-**You should see:** a JSON object containing your `topic` labelset with the labels you defined.
+Returns a JSON object containing your `topic` labelset.
 
-### 3d. Verify labels were assigned
+Confirm labels were assigned to a sample resource:
 
 ```bash
 curl -s \
@@ -245,23 +324,17 @@ curl -s \
   | jq '.usermetadata.classifications // .classifications'
 ```
 
-**You should see:** an array of classifications, each with a `labelset` and `label` field:
+Returns an array of `{ labelset, label }` entries. Mac/Linux preferred; Windows users use the dashboard path above.
 
-```json
-[
-  { "labelset": "topic", "label": "procedure" }
-]
-```
+</details>
 
-Repeat for B and C. **Save the labels assigned to each sample resource** in `labeller-output.md`.
-
-### 3e. Troubleshooting
+### 3d. Troubleshooting
 
 | Problem | Fix |
 |---|---|
-| Labelset created but no labels appear on resources | Did the run actually run? Re-trigger from the dashboard |
-| Same label assigned to everything | Your labels are too generic — refine the descriptions |
-| Empty classifications array | Re-check the prompt; maybe the model refused to classify. Add a fallback default to the prompt |
+| Labelset created but no labels appear on the resource detail page | Confirm the agent's Execution tab shows "complete". Re-trigger if not |
+| Same label assigned to everything | Your label *descriptions* are too generic — refine each so the distinctions are clearer, save, re-run |
+| Empty classifications panel | The model refused to classify (often because none of the labels fit). Add a `general` / `other` fallback label to the labelset and re-run |
 
 ---
 
@@ -470,6 +543,17 @@ Save all your examples in `graph-output.md` under a `## NER examples` heading.
 
 ### 4d. Verify the graph populated
 
+**Dashboard path:**
+
+1. Open the Graph agent's **Execution** tab. Confirm the run shows status *"complete"* with a non-zero **paths extracted** count (or similar metric — wording varies by tenant).
+2. If your dashboard has a **Graph viewer** / **Knowledge graph** panel for the KB, open it. You should see nodes (entities) and edges (relations) using the types and labels you defined in 4a/4b — `PRODUCT`, `AMBASSADOR`, `worn_by`, `suited_to`, etc.
+3. If the graph viewer isn't available in your tenant, the curl path below returns the same data as raw JSON.
+
+(Build 8 is where you'll build a custom graph viewer on top of this same API — for now, confirm the data exists.)
+
+<details>
+<summary><strong>Power-user path: verify graph via API</strong> (Mac/Linux preferred; Windows users use the Execution tab above)</summary>
+
 ```bash
 curl -s -X POST \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
@@ -488,15 +572,17 @@ curl -s -X POST \
 
 ```json
 {
-  "source": { "value": "Acme Corp", "type": "ENTITY", "group": "ORGANIZATION" },
-  "relation": { "label": "works_for" },
-  "destination": { "value": "Jane Smith", "type": "ENTITY", "group": "PERSON" }
+  "source": { "value": "Aurora TerraTrek 7", "type": "ENTITY", "group": "PRODUCT" },
+  "relation": { "label": "worn_by" },
+  "destination": { "value": "Mara Chen", "type": "ENTITY", "group": "AMBASSADOR" }
 }
 ```
 
+</details>
+
 ### 4e. Save the evidence
 
-In `graph-output.md`, paste **5 sample paths** from the response. These are your proof the agent ran.
+In `graph-output.md`, paste **5 sample paths** from the dashboard's graph viewer (or the curl response). These are your proof the agent ran. A screenshot of the graph viewer with a handful of nodes and edges visible also works.
 
 ### 4f. Troubleshooting
 
@@ -513,18 +599,18 @@ In `graph-output.md`, paste **5 sample paths** from the response. These are your
 
 ## Step 5 — Compare before/after (15 min)
 
-Re-run **the same baseline query** from Step 1:
+Re-run **the same baseline query** from Step 1c against the same Search & Ask panel — same wording, same panel, same KB. The only thing that's changed is that the three agents have populated the KB with summaries, Q&A pairs, labels, and a typed graph.
 
-```bash
-curl -s -X POST \
-  -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
-  -H "Content-Type: application/json" \
-  -H "x-synchronous: true" \
-  -d '{"query":"YOUR SAME QUESTION","prefer_markdown":true,"rephrase":true,"max_tokens":300}' \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" | jq '{answer, citation_count: (.retrieval_best_matches | length), top_citations: .retrieval_best_matches[0:3]}'
-```
+**Dashboard path:**
 
-Compare to the Step 1c snapshot in `baseline.md`:
+1. Open the dashboard's **Search & Ask** (or **Playground** / **Try the API**) panel.
+2. Paste **the exact same question** you used in Step 1c.
+3. Capture the same three fields:
+   - Answer text.
+   - Citation count.
+   - Top 3 source titles.
+
+Compare side-by-side to the Step 1c snapshot in `baseline.md`. Look for:
 
 - **Citation count** — has it increased? (The Generator should help — derived content gives more retrieval hits.)
 - **Citation diversity** — different resources surfacing in the top 3? (Better recall from Generator output.)
@@ -543,6 +629,22 @@ Answer is more specific and grounded in the right document.
 ```
 
 If you don't see a noticeable improvement, that's fine for a 10-document sandbox — the effect is much more dramatic at customer scale. **Note this in your comparison file** for the reviewer.
+
+<details>
+<summary><strong>Power-user path: same comparison via curl</strong> (optional, Mac/Linux)</summary>
+
+```bash
+curl -s -X POST \
+  -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "x-synchronous: true" \
+  -d '{"query":"YOUR SAME QUESTION","prefer_markdown":true,"rephrase":true,"max_tokens":300}' \
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" | jq '{answer, citation_count: (.retrieval_best_matches | length), top_citations: .retrieval_best_matches[0:3]}'
+```
+
+Same `{ answer, citation_count, top_citations }` shape as the dashboard path. Requires `curl` + `jq`.
+
+</details>
 
 ---
 
