@@ -88,7 +88,7 @@ export NUCLIA_KB_ID="<your-kb-id>"
 export NUCLIA_API_KEY="<your-jwt>"
 
 curl -s -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/labelsets" | jq .
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/labelsets"
 ```
 
 **You should see:** your labelset with all the labels you defined.
@@ -106,12 +106,12 @@ curl -s -X POST \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":"your question","filters":["/icon/application/pdf"],"page_size":5,"features":["keyword","semantic"]}' \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/find" | jq '{count: (.resources | length), best_matches}'
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/find"
 ```
 
 **What that did:** searched for your query, but only among PDFs (the `/icon/application/pdf` filter).
 
-**You should see:** a result count + best_matches list. Compare to running the same query *without* the filter — count should drop.
+**You should see:** raw JSON. Scroll for the `resources` object — the number of keys is your result count; the `best_matches` array shows the ranked resource IDs. Compare to running the same query *without* the filter — count should drop.
 
 ### 3b. Filter by label
 
@@ -120,7 +120,7 @@ curl -s -X POST \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":"your question","filters":["/classification.labels/<labelset>/<label>"],"page_size":5}' \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/find" | jq '{count: (.resources | length), best_matches}'
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/find"
 ```
 
 **Replace:**
@@ -136,7 +136,7 @@ curl -s -X POST \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":"your question","filters":["/icon/application/pdf","/classification.labels/topic/procedure"],"page_size":5}' \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/find" | jq '{count: (.resources | length)}'
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/find"
 ```
 
 **You should see:** results scoped to PDFs **AND** the chosen topic. The result count is usually smaller than either filter alone.

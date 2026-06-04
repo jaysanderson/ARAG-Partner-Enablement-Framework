@@ -43,7 +43,7 @@ Q&A pairs)
 
 **ON SCREEN:** Nuclia dashboard. Navigate to KB → Augmentation → Generator. Toggle on. Configure outputs: summary + Q&A pairs. Optional prompt template field — type a sensible default. Save.
 
-Then jump to a terminal. Run a curl against `/resource/{id}` for a known resource. Pipe through jq. Highlight the new fields under `data.texts` — `summary`, `qa_pairs` — that didn't exist before.
+Then jump to a terminal. Run a curl against `/resource/{id}` for a known resource. Highlight the new fields under `data.texts` — `summary`, `qa_pairs` — that didn't exist before (use post-production overlays since the response is raw JSON).
 
 **VOICEOVER:**
 > The Generator. Enable in the dashboard. Choose outputs — summary, Q&A pairs. Optional prompt template if you want to nudge style.

@@ -48,19 +48,7 @@ You have two options. **Pick one and stick with it through this Build.**
 
 If installing software is annoying, skip the GUI tool. Use the same `curl` pattern from Build 0. Every step below shows the equivalent `curl` command alongside the Postman version.
 
-**Trade-off:** GUI tools make it easier to inspect big JSON responses. With `curl`, you'll want to pipe responses through `jq` (which prints JSON nicely):
-
-```bash
-# macOS — install jq once
-brew install jq
-
-# Linux — already there or:
-sudo apt install jq
-
-# Windows — download from https://stedolan.github.io/jq/download/
-```
-
-If you can't install `jq`, that's fine — the JSON will just be a wall of text.
+**Trade-off:** GUI tools make it easier to inspect big JSON responses. With `curl` the response is one long line of unformatted JSON — that's fine; scroll through it for the field you want, or paste it into any browser's URL bar prefixed with `data:application/json,` to get a pretty-printed view.
 
 ---
 
@@ -127,7 +115,7 @@ curl -s -X POST \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer YOUR_JWT" \
   -H "Content-Type: application/json" \
   -d '{"query":"your question","page_size":5,"features":["keyword","semantic"],"show":["basic","values","origin"]}' \
-  "YOUR_API_URL/kb/YOUR_KB_ID/find" | jq .
+  "YOUR_API_URL/kb/YOUR_KB_ID/find"
 ```
 
 **You should see:** a JSON response containing:
@@ -143,7 +131,7 @@ Take 3 minutes. Look at:
 - The **top paragraph score** — find the highest `score` value in any paragraph. Anything above 0.6 is good; above 0.8 is excellent.
 - Any paragraphs with a `position` block containing `start_seconds` — only present for video/audio resources. Skip if your corpus is text-only.
 
-**Save the response.** In Postman, just keep the tab open. In `curl`, redirect to a file: `... | jq . > find-response.json`.
+**Save the response.** In Postman, just keep the tab open. In `curl`, redirect to a file: `... > find-response.json`.
 
 ---
 
@@ -179,8 +167,7 @@ curl -s -X POST \
   -H "Content-Type: application/json" \
   -H "x-synchronous: true" \
   -d '{"query":"your question","prefer_markdown":true,"rephrase":true,"max_tokens":300}' \
-  "YOUR_API_URL/kb/YOUR_KB_ID/ask" | jq .
-```
+  "YOUR_API_URL/kb/YOUR_KB_ID/ask"```
 
 **You should see:**
 
@@ -293,8 +280,7 @@ curl -s -X POST \
   -H "Content-Type: application/json" \
   -H "x-synchronous: true" \
   -d '{"query":"Suggest 4 follow-up questions based on the corpus.","answer_json_schema":{"name":"follow_ups","description":"Generates 4 follow-up questions based on the corpus.","parameters":{"type":"object","additionalProperties":false,"properties":{"questions":{"type":"array","items":{"type":"string"}}},"required":["questions"]}}}' \
-  "YOUR_API_URL/kb/YOUR_KB_ID/ask" | jq .
-```
+  "YOUR_API_URL/kb/YOUR_KB_ID/ask"```
 
 **You should see:** the response now has a populated `answer_json` field:
 
@@ -336,8 +322,7 @@ Quick one. Returns the labelsets configured on your KB.
 ```bash
 curl -s \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer YOUR_JWT" \
-  "YOUR_API_URL/kb/YOUR_KB_ID/labelsets" | jq .
-```
+  "YOUR_API_URL/kb/YOUR_KB_ID/labelsets"```
 
 **You should see:** likely an empty object `{}` or a list with one or two default labelsets. For a fresh sandbox you haven't designed any labelsets yet — that's normal.
 
@@ -380,8 +365,7 @@ curl -s -X POST \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer YOUR_JWT" \
   -H "Content-Type: application/json" \
   -d '{"query":{"and":[{"prop":"path"},{"prop":"generated","by":"data-augmentation"}]},"top_k":20}' \
-  "YOUR_API_URL/kb/YOUR_KB_ID/graph" | jq .
-```
+  "YOUR_API_URL/kb/YOUR_KB_ID/graph"```
 
 **You should see:** for a fresh KB without the graph agent, `{"paths": []}`. That's it. **Don't worry — Build 6 configures the agent and Build 8 walks the populated graph.**
 
@@ -410,8 +394,7 @@ Go back to your Step 3 `/find` response. Pick any resource ID from the `best_mat
 ```bash
 curl -s \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer YOUR_JWT" \
-  "YOUR_API_URL/kb/YOUR_KB_ID/resource/PASTE_RESOURCE_ID?show=basic&show=origin&show=extra&show=values&show=extracted" | jq .
-```
+  "YOUR_API_URL/kb/YOUR_KB_ID/resource/PASTE_RESOURCE_ID?show=basic&show=origin&show=extra&show=values&show=extracted"```
 
 **You should see:** a big JSON blob with:
 

@@ -32,7 +32,7 @@ Then add a `searchResultDisplay` field with a JSON object value.
 
 ## Section 3: Verify in `/find` response (3:30 – 4:30)
 
-**ON SCREEN:** Terminal. curl against `/find` for a query that returns the resource. Pipe through jq. Highlight the `callToAction` and `searchResultDisplay` values in the response.
+**ON SCREEN:** Terminal. curl against `/find` for a query that returns the resource. Highlight the `callToAction` and `searchResultDisplay` values in the raw JSON response (use post-production overlays).
 
 **VOICEOVER:**
 > The fields appear in the `/find` response, under `data` or `values`. The retriever indexed them; the API returns them. The model will see them when retrieval happens.

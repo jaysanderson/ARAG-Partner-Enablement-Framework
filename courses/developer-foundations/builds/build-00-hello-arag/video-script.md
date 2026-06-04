@@ -3,7 +3,7 @@
 > **Duration target:** 12 minutes
 > **Format:** Screen recording + voiceover. 1080p, 30 fps. Single take preferred; cuts acceptable at section boundaries.
 > **Audience:** Partner technical learners starting Developer Foundations.
-> **Tools on screen:** Nuclia dashboard (Chrome), terminal (`curl`, `jq`), AI coding assistant (Claude Code / Cursor), code editor (VS Code).
+> **Tools on screen:** Nuclia dashboard (Chrome), terminal (`curl`), AI coding assistant (Claude Code / Cursor), code editor (VS Code).
 > **Branding:** Progress + Nuclia title card at open (3 sec); end card with "Build 1 — The Five Primitives" pointer (3 sec).
 
 ## Cold open (0:00 – 0:30)
@@ -40,7 +40,7 @@
 
 ## Section 4: First `/find` call (4:30 – 6:00)
 
-**ON SCREEN:** Switch to terminal. `source .env`. Run the `curl -X POST .../find` command (have the command on screen via a text overlay too — partners may pause to copy). Pipe through `jq`. The response prints. Highlight the `paragraphs.score` field and the `best_matches` array with red circles.
+**ON SCREEN:** Switch to terminal. `source .env`. Run the `curl -X POST .../find` command (have the command on screen via a text overlay too — partners may pause to copy). The raw JSON response prints. Highlight the `paragraphs.score` field and the `best_matches` array with red circles (use post-production overlays since the raw JSON is one long line).
 
 **VOICEOVER:**
 > Now the first API call. POST to `/find`. The `X-NUCLIA-SERVICEACCOUNT` header carries the JWT. The body is just a query, a page size, and a `show` list. Run it.

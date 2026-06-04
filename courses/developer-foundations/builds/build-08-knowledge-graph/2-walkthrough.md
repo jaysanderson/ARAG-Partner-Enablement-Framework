@@ -40,10 +40,10 @@ curl -s -X POST \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":{"and":[{"prop":"path"},{"prop":"generated","by":"data-augmentation"}]},"top_k":20}' \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/graph" | jq '.paths | length'
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/graph"
 ```
 
-**You should see:** a number greater than 0 (ideally 5–20+ depending on corpus size).
+**You should see:** raw JSON. Scroll for the `paths` array — it should have entries (ideally 5–20+ depending on corpus size). If it's `"paths": []`, see the troubleshooting below.
 
 If 0:
 1. Go back to your Nuclia dashboard. Check the Graph agent's run history — did extraction complete?
@@ -57,17 +57,17 @@ curl -s -X POST \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":{"prop":"path"},"top_k":20}' \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/graph" | jq '[.paths[].source.group] | unique'
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/graph"
 
 # FILTERED query — only your custom entity types
 curl -s -X POST \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":{"and":[{"prop":"path"},{"prop":"generated","by":"data-augmentation"}]},"top_k":20}' \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/graph" | jq '[.paths[].source.group] | unique'
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/graph"
 ```
 
-**You should see:** the filtered version lists only your custom entity types (e.g., `["PERSON", "PRODUCT", "ORGANIZATION"]`). The unfiltered version may include default NER groups (`["DATE", "MONEY", "ORG", ...]`).
+**You should see:** scroll the two responses and compare the `source.group` values that appear across `paths[]`. The filtered version contains only your custom entity types (e.g., `PERSON`, `PRODUCT`, `ORGANIZATION`). The unfiltered version mixes those with default NER groups (`DATE`, `MONEY`, `ORG`, ...).
 
 **Save the difference to `graph-evidence.md`** in a Build 8 project folder. Reviewers want to see this — it proves you understand the filter.
 

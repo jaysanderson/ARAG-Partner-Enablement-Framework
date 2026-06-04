@@ -77,13 +77,12 @@ export NUCLIA_API_KEY="<your-jwt>"
 
 curl -s \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/resource/<RESOURCE-ID>?show=basic&show=values&show=extracted" \
-  | jq '.usermetadata // .data | tostring | .[0:500]'
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/resource/<RESOURCE-ID>?show=basic&show=values&show=extracted"
 ```
 
-**You should see** the `callToAction` value somewhere in the response. The exact path depends on how the dashboard saves it (`usermetadata`, `data.texts.callToAction`, or `metadata.custom`).
+**You should see** the `callToAction` value somewhere in the raw JSON response. The exact path depends on how the dashboard saves it (`usermetadata`, `data.texts.callToAction`, or `metadata.custom`) — scroll through the response and search for the string you entered.
 
-If you can't find it, paste the response into your AI: *"I added a callToAction custom field. Where does it appear in this response? [paste 500-char snippet]"*
+If you can't find it, copy the first ~500 characters of the response and paste into your AI: *"I added a callToAction custom field. Where does it appear in this response? [paste snippet]"*
 
 ---
 
@@ -121,16 +120,16 @@ curl -s -X POST \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":"<query that matches a hero resource>","page_size":3,"show":["basic","values","origin"]}' \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/find" | jq '.resources | to_entries | .[0:1] | .[].value'
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/find"
 ```
 
-**You should see** the first matched resource's full data — including your custom fields somewhere. The shape varies by tenant version; common paths:
+**You should see** raw JSON containing the matched resources' full data — including your custom fields somewhere inside. The shape varies by tenant version; common paths:
 
 - `.data.texts.callToAction.value.body`
 - `.usermetadata.custom.callToAction`
 - `.fielddata.callToAction`
 
-Find where yours land. **Note the path** — you'll need it in the next steps.
+Search the response for `callToAction` (or whatever you named the field) to find where yours land. **Note the path** — you'll need it in the next steps.
 
 ---
 
@@ -389,7 +388,7 @@ Then take the [Build 9 quiz](3-quiz.md). Pass → start [Build 10](../build-10-c
 
 **Fields don't appear in `/find` response.**
 - Re-check `show: ["values"]` in the request body.
-- Different tenant versions store custom fields under different paths. Use `jq` to print the entire response and search for your field name: `... | jq . | grep -i callto`.
+- Different tenant versions store custom fields under different paths. Pipe the raw response to `grep` to find your field name: `... | grep -i callto`.
 
 **Model produces generic CTA, not the resource's one.**
 - The field isn't reaching the context, OR the prompt isn't explicit enough. First check the network response. If the field's there, tighten the prompt with stronger directives ("YOU MUST end with..." in caps).

@@ -198,17 +198,9 @@ If you see all that, **the API works**. Congratulations — you just made your f
 | Empty `resources` | The query didn't match anything | Try a different query that more obviously relates to your content. |
 | `curl: command not found` | curl isn't installed (rare) | On Windows, install curl: [curl.se/windows](https://curl.se/windows/). |
 
-**To make the JSON readable**, pipe it through a tool called `jq`. If you have it installed, add `| jq .` at the end of the command:
-
-```bash
-curl -s -X POST ... | jq .
-```
-
-If you don't have `jq`, ignore this — the ugly JSON is fine.
-
 ### 5d. Read the response
 
-Take 2 minutes to actually read what came back. Scroll through. Find:
+The output is a wall of unformatted JSON. That's fine — you don't need a pretty-printer. Take 2 minutes to scroll through and find:
 
 - One paragraph with a `score` field. The score is a number between 0 and 1. Higher = more confident match. Anything above 0.6 is a good match.
 - The `text` field next to the score — that's the paragraph from your document that matched.
@@ -454,7 +446,7 @@ You've watched the citations stream past in step 7 and you've printed the bare r
 
 ### 10a. Inspect `best_matches` in the raw response
 
-Run your sync `/ask` call from step 6 again, but this time pipe it through `jq` to isolate just the `best_matches` array. Open `scratch.sh`, add a blank line below your previous blocks, paste this template:
+Run your sync `/ask` call from step 6 again. Open `scratch.sh`, add a blank line below your previous blocks, paste this template:
 
 ```bash
 curl -s -X POST \
@@ -462,15 +454,12 @@ curl -s -X POST \
   -H "Content-Type: application/json" \
   -H "x-synchronous: true" \
   -d '{"query":"YOUR QUESTION HERE","prefer_markdown":true,"rephrase":true,"max_tokens":500}' \
-  "YOUR_API_URL/kb/YOUR_KB_ID/ask" \
-  | jq '.retrieval_results.best_matches'
+  "YOUR_API_URL/kb/YOUR_KB_ID/ask"
 ```
 
 Same drill: if Find & Replace already swapped the three credential placeholders across the whole file, they're filled here too — just edit `YOUR QUESTION HERE`. Save, select the whole block, copy into the terminal, run.
 
-(If you don't have `jq`, drop the trailing `| jq ...` part and scroll the raw output to find the `"best_matches"` key by eye.)
-
-**You should see:** an array of strings shaped like `"a1b2c3d4-...-1234567890ab/t/body/12-340"`. Notice that the same resource id (the leading UUID) often repeats — one resource contributes several matching paragraphs.
+Scroll through the raw JSON output and find the `"best_matches"` key under `"retrieval_results"` — it's an array of strings shaped like `"a1b2c3d4-...-1234567890ab/t/body/12-340"`. Notice the same resource id (the leading UUID) often repeats — one resource contributes several matching paragraphs.
 
 ### 10b. Implement the splitter
 

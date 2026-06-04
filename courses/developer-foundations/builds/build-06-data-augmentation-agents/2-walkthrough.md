@@ -20,22 +20,9 @@ Plus before/after evidence that each agent did something useful.
 
 - **Your Nuclia dashboard** with your Build 0 KB (10 documents ingested).
 - **Your `.env`** with the three credentials.
-- **A terminal** for verification `curl` calls.
 - **Your editor** for saving notes.
 - **A modern browser**.
-
-You also need **`jq`** installed for readable JSON output:
-
-```bash
-# macOS
-brew install jq
-
-# Linux
-sudo apt install jq
-
-# Windows
-# Download from https://stedolan.github.io/jq/download/
-```
+- **A terminal** — only if you take the optional Power-user paths (Mac/Linux). The default Build 6 path is entirely dashboard-driven.
 
 ---
 
@@ -43,7 +30,7 @@ sudo apt install jq
 
 Before you turn anything on, you want a **"before" snapshot**. That way you can prove the agents actually changed something.
 
-> **A note on this Build's verification path.** Build 6 is **dashboard-driven**. Every check in Steps 1–5 has a "do it in the Nuclia dashboard" path — works on any OS, no terminal, no `jq`. There's an optional *Power-user path* for partners who want the raw API call. Pick whichever fits — both produce the same artefact for `baseline.md` / `generator-output.md` / etc.
+> **A note on this Build's verification path.** Build 6 is **dashboard-driven**. Every check in Steps 1–5 has a "do it in the Nuclia dashboard" path — works on any OS, no terminal. There's an optional *Power-user path* for partners who want the raw API call (curl only; you'll be scrolling raw JSON — no `jq` or other formatters required). Pick whichever fits — both produce the same artefact for `baseline.md` / `generator-output.md` / etc.
 
 ### 1a. Set up the Build 6 folder
 
@@ -141,10 +128,10 @@ curl -s -X POST \
   -H "Content-Type: application/json" \
   -H "x-synchronous: true" \
   -d '{"query":"your question here","prefer_markdown":true,"rephrase":true,"max_tokens":300}' \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" | jq '{answer, citation_count: (.retrieval_best_matches | length), top_citations: .retrieval_best_matches[0:3]}'
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask"
 ```
 
-Requires `curl` + [`jq`](https://stedolan.github.io/jq/download/) installed. Outputs the same three fields as the dashboard path. On Windows, `export` and the `\` line-continuation aren't supported in cmd.exe and `jq` install is fiddly — stick with the dashboard path.
+Returns raw JSON — scroll to find the `answer` field, then `retrieval_best_matches` (array of resource IDs; its `length` is the citation count; the first three entries are your top citations). On Windows, `export` and the `\` line-continuation aren't supported in cmd.exe — stick with the dashboard path.
 
 </details>
 
@@ -195,7 +182,7 @@ Pick **Sample A** (one of your three sample resource IDs from 1b). Open it in th
 
 **You should see:** the summary text and the Q&A pairs visible on the resource page. The exact field names depend on tenant — *"summary"*, *"qa_pairs"*, *"synthetic_qa"*, *"question_answer_pairs"* are all variants of the same thing. As long as something Generator-shaped appears that wasn't there before, the agent did its job.
 
-> **Why this beats the curl path:** the dashboard view shows you exactly what a customer-app developer will see when they query the KB. The curl-and-jq path returns the same data but adds a layer of JSON-parsing friction — useful only at scale.
+> **Why this beats the curl path:** the dashboard view shows you exactly what a customer-app developer will see when they query the KB. The curl path returns the same data as raw JSON — useful only at scale.
 
 <details>
 <summary><strong>Power-user path: same verification via curl</strong> (optional)</summary>
@@ -203,20 +190,12 @@ Pick **Sample A** (one of your three sample resource IDs from 1b). Open it in th
 ```bash
 curl -s \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/resource/<RESOURCE-ID-A>?show=basic&show=values&show=extracted" \
-  | jq '.data.texts | keys'
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/resource/<RESOURCE-ID-A>?show=basic&show=values&show=extracted"
 ```
 
-Lists the keys under `data.texts`. Look for new keys (`summary`, `qa_pairs`, etc.) that didn't exist before. To see actual generated content:
+Returns the resource as raw JSON. Scroll to the `data.texts` block — you're looking for new keys like `summary`, `qa_pairs`, `synthetic_qa`, or `question_answer_pairs` that didn't exist before the agent ran. Each generated field's content lives under its `body` property.
 
-```bash
-curl -s \
-  -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/resource/<RESOURCE-ID-A>?show=basic&show=values&show=extracted" \
-  | jq '.data.texts | to_entries[] | select(.key | test("summary|qa")) | {key, value: .value.body[0:300]}'
-```
-
-Requires `curl` + `jq`. Mac/Linux preferred; Windows users use the dashboard path above.
+Mac/Linux preferred; Windows users use the dashboard path above.
 
 </details>
 
@@ -310,21 +289,20 @@ Confirm the labelset exists:
 ```bash
 curl -s \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/labelsets" | jq .
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/labelsets"
 ```
 
-Returns a JSON object containing your `topic` labelset.
+Returns raw JSON containing your `topic` labelset. Scroll for the labelset name to confirm it's there.
 
 Confirm labels were assigned to a sample resource:
 
 ```bash
 curl -s \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/resource/<RESOURCE-ID-A>?show=basic&show=values" \
-  | jq '.usermetadata.classifications // .classifications'
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/resource/<RESOURCE-ID-A>?show=basic&show=values"
 ```
 
-Returns an array of `{ labelset, label }` entries. Mac/Linux preferred; Windows users use the dashboard path above.
+Scroll for either `usermetadata.classifications` or top-level `classifications` — it's an array of `{ labelset, label }` entries. Mac/Linux preferred; Windows users use the dashboard path above.
 
 </details>
 
@@ -559,7 +537,7 @@ curl -s -X POST \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":{"and":[{"prop":"path"},{"prop":"generated","by":"data-augmentation"}]},"top_k":20}' \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/graph" | jq '.paths[0:5]'
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/graph"
 ```
 
 **Critical:** the filter `{"prop":"generated","by":"data-augmentation"}` is required. **Without it**, you get ARAG's default NER noise (random DATE, ORG, MONEY entities). **Always include it.**
@@ -639,10 +617,10 @@ curl -s -X POST \
   -H "Content-Type: application/json" \
   -H "x-synchronous: true" \
   -d '{"query":"YOUR SAME QUESTION","prefer_markdown":true,"rephrase":true,"max_tokens":300}' \
-  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" | jq '{answer, citation_count: (.retrieval_best_matches | length), top_citations: .retrieval_best_matches[0:3]}'
+  "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask"
 ```
 
-Same `{ answer, citation_count, top_citations }` shape as the dashboard path. Requires `curl` + `jq`.
+Returns raw JSON — scroll for `answer`, then `retrieval_best_matches` (its length is your citation count; first three entries are your top citations).
 
 </details>
 
