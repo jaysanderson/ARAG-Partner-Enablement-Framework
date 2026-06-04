@@ -269,49 +269,206 @@ Repeat for B and C. **Save the labels assigned to each sample resource** in `lab
 
 The Graph extracts typed entities and relations. Output is queryable via `/graph` and powers Build 8.
 
-### 4a. Design entity + relation types
+The Nuclia Graph agent dashboard asks for three things, in this order:
 
-Before clicking, decide what entities matter for your corpus. **5–8 entity types and 5–8 relation types** is right.
+1. **NER types** — your domain's entity vocabulary (`PRODUCT`, `AMBASSADOR`, `DESTINATION`, etc.), each with a 1–2 sentence **Description** that lists the actual values from your corpus.
+2. **NER examples** — at least 3 short pieces of prose from your corpus, each tagged with:
+   - **NERs** — every entity in the text labelled as `Entity Name (TYPE)`.
+   - **Relations** — every meaningful relation in the text expressed as `Subject — Object (relation_label)` triples.
+3. **LLM choice + optional filter** — pick the model that does the extraction (e.g. *Gemini 2.5 Flash Lite*) and, optionally, a filter expression so the agent only runs on a subset of the KB.
 
-For a generic corpus:
+There is **no separate "relation types" panel**. Relations are defined per-example as triples — the labels you use across your examples become your relation vocabulary.
 
-**Entity types:**
-- `PERSON`
-- `ORGANIZATION`
-- `PRODUCT`
-- `LOCATION`
-- `EVENT`
-- `CONCEPT`
+### 4a. Design your NER types with rich descriptions
 
-**Relation types:**
-- `works_for`
-- `located_in`
-- `relates_to`
-- `cites`
-- `participates_in`
-- `mentions`
+Before clicking, decide what entities matter for your corpus. **5–10 NER types** is the sweet spot.
 
-For a vertical-specific corpus, use the customer's vocabulary (legal: `JUDGE`, `MATTER`, `RULING`; pharma: `COMPOUND`, `TRIAL`, `INVESTIGATOR`; etc.).
+Two rules for naming and describing them:
 
-Write your schema down in `graph-output.md`:
+1. **Use the customer's vocabulary, not generic NER labels.** Generic types (`PERSON`, `ORG`, `LOCATION`) give you noise — Aurora Outfitters wants `AMBASSADOR` and `DESTINATION`, a legal firm wants `JUDGE` and `MATTER`, a pharma KB wants `COMPOUND` and `TRIAL`. Domain vocabulary always wins.
+2. **Each type needs a Description that lists actual example values from the corpus**, not just an abstract definition. The model uses these example values as anchors when scanning new documents.
+
+Worked example for the Aurora Outfitters corpus (this is the schema of a real working agent — the `aurora-journey-graph`):
+
+| NER type | Description |
+|---|---|
+| `PRODUCT` | An Aurora Outfitters product. Always prefixed "Aurora": Aurora TerraTrek 7, Aurora Skyline 45L, Aurora Helios, Aurora Cumulus 2P, Aurora Quill 850, Aurora Crag XR, Aurora Stratus 1P. |
+| `CATEGORY` | A product category: Hiking Boots, Multi-Day Packs, Down Insulation, Tents, Sleeping Quilts, Climbing Harnesses. |
+| `ACTIVITY` | An outdoor activity: Day Hiking, Thru-Hiking, Alpine Climbing, Bikepacking, Multi-Pitch Sport. |
+| `DESTINATION` | A trail or destination: Tasmania Overland Track, Patagonia W Trek, Tour du Mont Blanc, Annapurna Circuit, Yosemite High Sierra, Laugavegur, Te Araroa. |
+| `AMBASSADOR` | An Aurora Outfitters ambassador: Mara Chen, Jonah Reyes, Dr Anya Patel, Theo Sundberg. |
+| `CONTENT` | A piece of content — trail guide, blog post, video, podcast, or gear review. |
+| `CUSTOMER_SEGMENT` | A customer segment: Weekend Adventurer, Thru-Hiker, Alpine Pro. |
+| `LOYALTY_TIER` | A Trail Club tier: Trail Club Standard, Trail Club Plus, Trail Club Pro. |
+| `BRAND_PILLAR` | One of the four Aurora brand pillars: Built for the Worst Weather, Trail-Tested by Experts, Repairable for Life, Carbon-Negative by 2030. |
+| `SIZING_PROFILE` | A sizing profile: Standard, Wide Foot, Narrow Foot, High Arch. |
+
+For a different vertical, the shape is the same — domain-specific type names + a description with the actual values that appear in the corpus.
+
+Save your NER table in `graph-output.md` under a `## NER types` heading.
+
+### 4b. Build 3+ NER examples — text + tagged NERs + tagged Relations
+
+This is the few-shot teaching part. Each example is a short paragraph (1–3 sentences) of prose drawn from your corpus, with:
+
+- **NERs** listed in the format `Entity Name (TYPE)` — every entity in the text, tagged.
+- **Relations** listed in the format `Subject — Object (relation_label)` — every meaningful triple in the text.
+
+**At least 3 examples is the minimum; 5+ is solid.** The real working `aurora-journey-graph` has 5. More examples = better coverage and more accurate extraction.
+
+Two coverage rules:
+
+1. **Between all your examples, every NER type from 4a must appear at least once.** If `LOYALTY_TIER` never shows up in any example, the model has no demonstration of what one looks like.
+2. **Every relation label you want to extract must appear at least once.** Relation labels are inferred from the triples in your examples — `worn_by`, `recommended_for`, `pairs_with` only exist as relations because an example demonstrates them. If you never write a `(prefers)` triple, the model never learns `prefers`.
+
+Worked examples for the Aurora corpus (these are the 5 NER examples from the real working `aurora-journey-graph` agent):
 
 ```markdown
-# Graph schema
+# NER examples
 
-Entity types: PERSON, ORGANIZATION, PRODUCT, LOCATION, EVENT, CONCEPT
-Relation types: works_for, located_in, relates_to, cites, participates_in, mentions
+## Example 1
+Text:
+  "The Aurora TerraTrek 7 is Aurora Outfitters' flagship four-season
+   hiking boot. Designed with alpine guide Mara Chen across three field
+   seasons in Tasmania, Patagonia, and the Tour du Mont Blanc.
+   Recommended for Day Hiking and Thru-Hiking. Pairs with the Aurora
+   Skyline 45L pack. Wide Foot profile available. Embodies Aurora's
+   Repairable for Life brand pillar."
+
+NERs:
+  - Aurora TerraTrek 7 (PRODUCT)
+  - Mara Chen (AMBASSADOR)
+  - Tasmania Overland Track (DESTINATION)
+  - Patagonia W Trek (DESTINATION)
+  - Tour du Mont Blanc (DESTINATION)
+  - Day Hiking (ACTIVITY)
+  - Thru-Hiking (ACTIVITY)
+  - Aurora Skyline 45L (PRODUCT)
+  - Hiking Boots (CATEGORY)
+  - Wide Foot (SIZING_PROFILE)
+  - Repairable for Life (BRAND_PILLAR)
+
+Relations:
+  - Aurora TerraTrek 7 — Mara Chen (worn_by)
+  - Aurora TerraTrek 7 — Tasmania Overland Track (suited_to)
+  - Aurora TerraTrek 7 — Patagonia W Trek (suited_to)
+  - Aurora TerraTrek 7 — Day Hiking (recommended_for)
+  - Aurora TerraTrek 7 — Thru-Hiking (recommended_for)
+  - Aurora TerraTrek 7 — Aurora Skyline 45L (pairs_with)
+  - Aurora TerraTrek 7 — Wide Foot (fits)
+  - Aurora TerraTrek 7 — Repairable for Life (embodies)
+
+## Example 2
+Text:
+  "The Aurora Helios is the warmest down jacket Aurora makes. Mara Chen
+   wore it across her Patagonia season. Reviewed in the gear-review
+   piece 'Aurora Helios Temperature Rating Analysis' written by Mara
+   Chen."
+
+NERs:
+  - Aurora Helios (PRODUCT)
+  - Mara Chen (AMBASSADOR)
+  - Patagonia W Trek (DESTINATION)
+  - Aurora Helios Temperature Rating Analysis (CONTENT)
+  - Down Insulation (CATEGORY)
+
+Relations:
+  - Aurora Helios — Mara Chen (worn_by)
+  - Aurora Helios — Patagonia W Trek (suited_to)
+  - Aurora Helios — Aurora Helios Temperature Rating Analysis (featured_in)
+  - Aurora Helios Temperature Rating Analysis — Mara Chen (written_by)
+
+## Example 3
+Text:
+  "The Aurora Crag XR is Aurora's technical climbing harness, exclusive
+   to Trail Club Plus members. Theo Sundberg uses the Crag XR on every
+   alpine course he teaches in Chamonix. Recommended for Multi-Pitch
+   Sport and Alpine Climbing."
+
+NERs:
+  - Aurora Crag XR (PRODUCT)
+  - Trail Club Plus (LOYALTY_TIER)
+  - Theo Sundberg (AMBASSADOR)
+  - Multi-Pitch Sport (ACTIVITY)
+  - Alpine Climbing (ACTIVITY)
+  - Climbing Harnesses (CATEGORY)
+
+Relations:
+  - Aurora Crag XR — Trail Club Plus (exclusive_to)
+  - Aurora Crag XR — Theo Sundberg (worn_by)
+  - Aurora Crag XR — Multi-Pitch Sport (recommended_for)
+  - Aurora Crag XR — Alpine Climbing (recommended_for)
+
+## Example 4
+Text:
+  "The Tasmania Overland Track is a six-day alpine traverse. Thru-Hikers
+   prefer Multi-Day Packs over single-day daypacks for this trail.
+   Alpine Climbing requires Climbing Harnesses. Day Hiking can be done
+   with just Hiking Boots."
+
+NERs:
+  - Tasmania Overland Track (DESTINATION)
+  - Thru-Hiker (CUSTOMER_SEGMENT)
+  - Multi-Day Packs (CATEGORY)
+  - Alpine Climbing (ACTIVITY)
+  - Climbing Harnesses (CATEGORY)
+  - Day Hiking (ACTIVITY)
+  - Hiking Boots (CATEGORY)
+
+Relations:
+  - Thru-Hiker — Multi-Day Packs (prefers)
+  - Alpine Climbing — Climbing Harnesses (requires)
+  - Day Hiking — Hiking Boots (requires)
+
+## Example 5
+Text:
+  "The Aurora Quill 850 is a lighter alternative to the Aurora Skyline
+   45L's integrated quilt option. It embodies our Trail-Tested by
+   Experts brand pillar — Jonah Reyes carried Quill 850 prototypes
+   across the Triple Crown."
+
+NERs:
+  - Aurora Quill 850 (PRODUCT)
+  - Aurora Skyline 45L (PRODUCT)
+  - Trail-Tested by Experts (BRAND_PILLAR)
+  - Jonah Reyes (AMBASSADOR)
+  - Sleeping Quilts (CATEGORY)
+
+Relations:
+  - Aurora Quill 850 — Aurora Skyline 45L (alternative_to)
+  - Aurora Quill 850 — Trail-Tested by Experts (embodies)
+  - Aurora Quill 850 — Jonah Reyes (worn_by)
 ```
 
-### 4b. Configure in the dashboard
+Notice the patterns:
 
-1. Settings → Augmentation → **Graph** (or **Data Augmentation Agent** → Graph).
-2. **Define entity types** — add each of your 6.
-3. **Define relation types** — add each of your 6.
-4. Save and trigger extraction.
+- **Relations are between specific entities** (`Aurora TerraTrek 7 — Mara Chen`), not abstract types. Specific is what teaches the model.
+- **Relations can also be at the type level** when the prose generalises (`Thru-Hiker — Multi-Day Packs (prefers)` in Example 4 — this teaches a customer-segment-to-category preference, not a specific person).
+- **The same relation label gets reused across examples** (`worn_by` appears in Examples 1, 2, 3, 5) — that's how the agent learns a stable relation vocabulary.
+
+For a different corpus, write your examples the same way: 1–3 sentences of corpus prose + NERs tagged with your types from 4a + Relations as triples. Reuse relation labels across examples deliberately — that's what makes them stick.
+
+**Coverage check before moving on:** for each NER type in 4a, confirm it appears in at least one example's NERs list. For each relation label you want the agent to extract, confirm it appears in at least one example's Relations list.
+
+Save all your examples in `graph-output.md` under a `## NER examples` heading.
+
+### 4c. Configure in the dashboard
+
+1. Open your KB → **Data Augmentation Agents** → **Create agent** → choose **Graph extraction**.
+2. **Agent settings:**
+   - **Agent name** — give it a memorable slug, e.g. `aurora-journey-graph`.
+   - **LLM** — pick the model that does the extraction. *Gemini 2.5 Flash Lite* is a good default for cost; bump up to a heavier model only if extraction quality lags.
+3. **Selected filters (optional)** — leave blank for the whole KB, or add a filter expression to scope extraction to a labelset or path. For Build 6, leave blank — run against everything.
+4. **NER types** — add a row for each type from 4a. Paste the **Description** verbatim including the comma-separated value list. The values inside the description are the model's anchors.
+5. **NER examples** — click **Add example** at least 3 times (5+ if you have the time). For each:
+   - Paste the **Example text** on the right.
+   - On the left, list each entity from the text as `Entity Name (TYPE)` under **NERs**.
+   - Below, list each relation as `Subject — Object (relation_label)` under **Relations**.
+6. **Save** and trigger extraction (Execution tab → **Run**).
 
 **Wait time:** 30–60 seconds per document. For 10 documents, ~10 minutes total.
 
-### 4c. Verify the graph populated
+### 4d. Verify the graph populated
 
 ```bash
 curl -s -X POST \
@@ -337,18 +494,20 @@ curl -s -X POST \
 }
 ```
 
-### 4d. Save the evidence
+### 4e. Save the evidence
 
 In `graph-output.md`, paste **5 sample paths** from the response. These are your proof the agent ran.
 
-### 4e. Troubleshooting
+### 4f. Troubleshooting
 
 | Problem | Fix |
 |---|---|
-| `{"paths": []}` returned | Did the agent run finish? Check dashboard status. Wait longer for completion |
+| `{"paths": []}` returned | Did the agent run finish? Check the agent's **Execution** tab in the dashboard. Wait longer for completion |
 | Returned paths show types like `DATE`, `MONEY`, `ORG` | You forgot the `{"prop":"generated","by":"data-augmentation"}` filter. Add it |
-| Only a few paths returned | Your corpus is small — that's normal for 10 documents |
-| Some entity types you defined have no entries | The model didn't find any in your corpus — that's fine; it's evidence the agent's not hallucinating |
+| Only a few paths returned | Your corpus is small — that's normal for 10 documents. Also re-check 4b coverage — NER types with no example demonstration tend to extract few or zero paths |
+| Some NER types you defined have no entries | Either the model didn't find any in your corpus (fine — evidence the agent's not hallucinating) OR none of your examples in 4b had that type in the NERs list, so the model never learned what it looks like. Confirm every type appears in at least one example |
+| A relation label never appears in the graph | That label isn't in any example's Relations list. Edit an example to include a `Subject — Object (label)` triple using it and re-run |
+| NER descriptions are abstract ("a brand pillar concept") and extraction is noisy | The description needs concrete example values. Append the actual values from the corpus, comma-separated (`"... — Built for the Worst Weather, Trail-Tested by Experts, Repairable for Life, Carbon-Negative by 2030"`) and re-run |
 
 ---
 
@@ -443,8 +602,8 @@ Create `prompt-log.md`. Paste the Step 6 brief. Add notes about any fixes you ha
 - [ ] `generator-output.md` saved with config + sample output.
 - [ ] **Labeller** configured with one labelset (5-7 labels); model-based prompt; sample resource shows assigned label via API.
 - [ ] `labeller-output.md` saved with design + sample assignments.
-- [ ] **Graph** agent configured with 5-8 entity + 5-8 relation types; `/graph` returns typed paths with data-augmentation filter.
-- [ ] `graph-output.md` saved with schema + 5 sample paths.
+- [ ] **Graph** agent configured with 5–10 NER types (each with a Description listing actual corpus values) and at least 3 NER examples (text + tagged NERs + tagged Relations triples); `/graph` returns typed paths with the `data-augmentation` filter.
+- [ ] `graph-output.md` saved with NER types table + at least 3 NER examples + 5 sample paths.
 - [ ] `baseline-comparison.md` saved (before/after observations).
 - [ ] `agent-status.mjs` working — all three agents PASS on 3 sample resources.
 - [ ] `prompt-log.md` saved.
@@ -470,8 +629,11 @@ Then take the [Build 6 quiz](3-quiz.md). Pass → start [Build 7](../build-07-sm
 **`/graph` returns empty paths even after configuration.**
 - Did the run complete? Check dashboard status. The graph extraction is the slowest of the three.
 
-**Want to keep iterating on entity/relation schema.**
-- You can edit the schema and re-run extraction. Each re-run replaces previous output. Don't over-iterate on the first pass — get something basic working, then refine.
+**Want to keep iterating on NER types or examples.**
+- Open the agent in the dashboard → **Edit configuration** → tweak NER type descriptions or add/edit NER examples → save → re-run from the **Execution** tab. Each re-run replaces previous output. Don't over-iterate on the first pass — get a basic config working with 3 examples, see what extracts, then add the 4th and 5th examples to plug coverage gaps.
+
+**Built the graph in code instead of the dashboard.**
+- The `anthropic-skills:arag-graph-agent` skill can auto-generate a complete NER type table + 5+ NER examples from a sample of your KB by analysing the documents. Use it as a starting point if your corpus is large or the domain vocabulary isn't obvious; tune the output in the dashboard.
 
 **Anything else.**
 - Copy the symptom + dashboard screenshot + any error.
