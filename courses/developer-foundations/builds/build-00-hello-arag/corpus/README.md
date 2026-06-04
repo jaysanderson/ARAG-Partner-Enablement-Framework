@@ -4,14 +4,15 @@ Two folder-organised corpora ship with Build 0 so students learn Nuclia's **Uplo
 
 ```
 corpus/
-├── content_type/    (37 docs — Aurora Outfitters; the primary Build 0 corpus)
-│   ├── ambassador_video/
-│   ├── brand_story/
-│   ├── gear_review/
-│   ├── loyalty_benefit/
-│   ├── product/
-│   ├── support/
-│   └── trail_guide/
+├── content_type/    (48 files — Aurora Outfitters; the primary Build 0 corpus)
+│   ├── ambassador_video/  (5 md + 2 mp4)
+│   ├── brand_story/       (4 md + 1 docx + 1 pptx)
+│   ├── gear_review/       (6 md + 1 pdf)
+│   ├── loyalty_benefit/   (4 md + 1 pptx)
+│   ├── podcast/           (2 mp3)
+│   ├── product/           (7 md)
+│   ├── support/           (4 md + 1 pdf + 1 docx)
+│   └── trail_guide/       (7 md)
 └── business_unit/   (320 docs — Atlas Global Industries; secondary, larger)
     ├── compliance/
     ├── customer_success/
@@ -22,9 +23,11 @@ corpus/
 
 ## Build 0 uses `content_type/`
 
-The Build 0 walkthrough instructs students to upload the `content_type/` folder (37 outdoor-retail documents) using the dashboard's **Upload folder** option with the **"use folder names as label names"** toggle enabled. Nuclia auto-creates the `content_type` labelset with seven labels (`product`, `trail_guide`, etc.) and applies the matching label to each document based on its parent folder.
+The Build 0 walkthrough instructs students to upload the `content_type/` folder (47 outdoor-retail documents) using the dashboard's **Upload folder** option with the **"use folder names as label names"** toggle enabled. Nuclia auto-creates the `content_type` labelset with eight labels (`product`, `trail_guide`, `podcast`, etc.) and applies the matching label to each document based on its parent folder.
 
-37 documents is small enough to ingest in a few minutes during a Build 0 session and large enough to demonstrate meaningful retrieval against varied content.
+The corpus mixes formats deliberately: **37 markdown + 10 binary files** (2 PDF, 2 DOCX, 2 PPTX, 2 MP3, 2 MP4). Nuclia auto-OCRs PDFs, extracts text from DOCX and PPTX, and transcribes audio + video with Whisper at ingest — students see all of this happen during the Build 0 upload.
+
+47 documents is small enough to ingest in a few minutes during a Build 0 session and large enough to demonstrate meaningful retrieval across varied content and formats.
 
 ## `business_unit/` is available for partners who want a larger corpus
 

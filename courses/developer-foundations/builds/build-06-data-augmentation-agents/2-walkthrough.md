@@ -68,8 +68,7 @@ Open your Nuclia dashboard → your KB → resource list. Pick **3 documents** w
 
 - **Different topics** — e.g. one product spec, one ambassador profile, one brand pillar.
 - **Different lengths** — one short, one long.
-
-(The shipped sample corpus is all markdown; mixing file formats isn't the diversity that matters here. Topic and length are.)
+- **Different content modalities if possible** — one markdown product spec, one PDF gear review (e.g. `terratrek-7-field-report.pdf`), one MP4 ambassador video (e.g. `mara-chen-terratrek-field-test.mp4`). The shipped corpus contains 37 markdown and 10 binary files across 5 formats so you can see Nuclia's auto-OCR and auto-transcription propagating into the agents in Step 2 onward.
 
 Click into each. Copy its **resource ID** (a UUID, usually visible in the URL or in a "details" panel).
 

@@ -109,12 +109,14 @@ Back in the Nuclia dashboard, open your Knowledge Box. You're going to use the *
 3. **Enable the "use folder names as label names" option.** This is the toggle/checkbox that tells Nuclia to read your folder structure as labelset metadata. With it on:
    - The parent folder's name (`content_type`) becomes the **labelset name**.
    - Each subfolder's name (`product`, `trail_guide`, `gear_review`, etc.) becomes a **label value** applied to every document inside.
-4. Confirm and start the upload. Nuclia processes all 37 documents.
+4. Confirm and start the upload. Nuclia processes all 47 documents.
 5. Watch the dashboard's progress indicator. Each document goes from "processing" → "indexed."
 
-**You should see:** 37 documents listed in your KB, each with a `content_type` labelset value matching the subfolder it came from (`product`, `trail_guide`, etc.) — confirm by clicking into any resource and looking at its labels.
+> **The corpus contains markdown, PDFs, Word, PowerPoint, MP3, and MP4 files.** Drag the whole folder; Nuclia handles each format natively — it auto-OCRs the PDFs, extracts text from the DOCX and PPTX, and transcribes the MP3 and MP4 with its built-in Whisper integration. The MP4 and MP3 take longer than the text files because transcription runs at ingest.
 
-You can also browse **KB → Labelsets** in the dashboard to see Nuclia has auto-created a `content_type` labelset with seven labels — no manual labelset configuration required.
+**You should see:** 47 documents listed in your KB, each with a `content_type` labelset value matching the subfolder it came from (`product`, `trail_guide`, `podcast`, etc.) — confirm by clicking into any resource and looking at its labels. The video and audio resources will show their transcripts in the resource's text panel.
+
+You can also browse **KB → Labelsets** in the dashboard to see Nuclia has auto-created a `content_type` labelset with eight labels — no manual labelset configuration required.
 
 > **What you just did is the foundational ARAG ingest pattern.** Every build past this one — including the Build 13 capstone — uses the same `Upload folder` + `use folder names as label names` flow against a content-type-organised folder tree. You'll never need to tag documents one-by-one in this course.
 

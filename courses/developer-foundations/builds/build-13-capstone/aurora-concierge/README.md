@@ -66,7 +66,7 @@ Aurora Concierge runs on **one ARAG Knowledge Box** (`kb-aurora-concierge`). Doc
 
 | Labelset | Values | Required for | Volume target |
 |---|---|---|---|
-| `content_type` | `product`, `trail_guide`, `gear_review`, `ambassador_video`, `loyalty_benefit`, `brand_story`, `support` | Storefront filter chips, concierge product recommendations, journey-graph colour palette. **Drag-drop auto-applies this one.** | Distributed roughly: Product 80–100, Support 50–70, Content (guides/reviews/video) 80–100, Loyalty 40–60, Brand 30–50 |
+| `content_type` | `product`, `trail_guide`, `gear_review`, `ambassador_video`, `podcast`, `loyalty_benefit`, `brand_story`, `support` | Storefront filter chips, concierge product recommendations, journey-graph colour palette. **Drag-drop auto-applies this one.** | Distributed roughly: Product 80–100, Support 50–70, Content (guides/reviews/video/podcast) 80–100, Loyalty 40–60, Brand 30–50 |
 | `audience` | `shopper`, `trail_club_standard`, `trail_club_plus`, `trail_club_pro`, `internal` | `/for-you` persona-driven filtering (Sara vs Mara). Applied via dashboard editor or seed script after drag-drop. | Most content tagged `shopper`; member-exclusive tagged accordingly |
 | `region` | `noram`, `emea`, `apac`, `anz` | `/for-you` region scoping per active persona. Same optional-add path as `audience`. | Where the content applies / pricing region |
 
@@ -151,7 +151,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 │                                                              │
 │  ┌────────────────────────────────────────────────┐         │
 │  │  kb-aurora-concierge  (single KB)              │         │
-│  │  Labelsets: content_type, audience, region     │         │
+│  │  Labelsets: content_type (8), audience, region │         │
 │  │  280+ documents tagged at ingest               │         │
 │  └────────────────────────────────────────────────┘         │
 │                                                              │
