@@ -4,7 +4,7 @@
 > **Thesis:** Partner competency, not partner enthusiasm, predicts ARR.
 > **Evidence base:** Every technical pattern in this document is wired live in  (``). Every commercial claim is grounded in the Progress KB (data residency, BYO-LLM, rate limits).
 > **Audience:** Channel program owners, partner managers, partner SEs, and the partner orgs themselves.
-> **Owner:** Jay Sanderson — Vested Technology / Progress GTM
+> **Owner:** Progress GTM
 > **Last updated:** 2026-05-27
 
 ---

@@ -2,7 +2,7 @@
 
 > **Status:** Brief shipped + reference implementation shipped.
 > **Role in the programme:** Build 13 capstone + flagship reference + strategic-account sales-room closer.
-> **Owner:** Jay Sanderson (programme); Progress Solution lead (build).
+> **Owner:** Progress GTM (programme); Progress Solution lead (build).
 > **Target ship:** End of 90-day rollout window (Day 90).
 > **Companion docs:** [`../../../../../README.md`](../../../../../README.md) (umbrella framework), [`../README.md`](../README.md) (Build 13 overview + variant chooser), [`../aurora-concierge/README.md`](../aurora-concierge/README.md) (the other variant).
 
@@ -496,8 +496,8 @@ Atlas Operations ships when *all* of the following are true:
 
 | Item | Owner | Status |
 |---|---|---|
-| Brief (this doc) | Jay Sanderson | **Shipped — this commit** |
-| Atlas anchor details | Jay Sanderson | TODO — Phase 1 prerequisite |
+| Brief (this doc) | Progress GTM | **Shipped — this commit** |
+| Atlas anchor details | Progress GTM | TODO — Phase 1 prerequisite |
 | Corpus generation (one KB + labelset tagging) | Progress SE + `progress-kb-use-case-generator` skill | TODO |
 | Graph agent | Progress SE + `arag-graph-agent` skill | TODO |
 | Capstone chassis (Phase 3) | Build owner | TODO |

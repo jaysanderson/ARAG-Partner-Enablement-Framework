@@ -2,7 +2,7 @@
 
 > **Status:** Brief shipped + reference implementation shipped.
 > **Role in the programme:** Build 13 capstone, **Variant B** of two. The other variant — `../atlas-operations/README.md` — is the Enterprise / Internal Operations variant. Partners pick one based on their book of business and ship the second only when they've expanded into the other segment.
-> **Owner:** Jay Sanderson (programme); Progress Solution lead (build).
+> **Owner:** Progress GTM (programme); Progress Solution lead (build).
 > **Target ship:** End of 90-day rollout window (Day 90), in parallel with the Enterprise variant where partner bandwidth allows.
 > **When to pick this variant:** When the partner's customers are CMOs, Heads of Digital, Chief Customer Officers, retail/D2C/B2C operators, content businesses, or anyone whose AI budget sits inside the customer-facing P&L rather than IT.
 
@@ -560,8 +560,8 @@ Aurora Concierge ships when *all* of the following are true:
 
 | Item | Owner | Status |
 |---|---|---|
-| Brief (this doc) | Jay Sanderson | **Shipped — this commit** |
-| Aurora anchor details | Jay Sanderson | TODO — Phase 1 prerequisite |
+| Brief (this doc) | Progress GTM | **Shipped — this commit** |
+| Aurora anchor details | Progress GTM | TODO — Phase 1 prerequisite |
 | Corpus generation (one KB + labelset tagging) | Progress SE + `progress-kb-use-case-generator` | TODO |
 | Field engineering (CTAs, searchResultDisplay) | Aurora brand copywriter persona — handled by build owner | TODO |
 | Journey graph agent | Progress SE + `arag-graph-agent` | TODO |
