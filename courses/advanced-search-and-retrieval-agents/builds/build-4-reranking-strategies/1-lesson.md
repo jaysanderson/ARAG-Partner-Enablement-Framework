@@ -82,6 +82,7 @@ The deliverable from this Build is a decision matrix that maps customer scenario
 
 ## Reference reading
 
-- ARAG documentation: built-in reranker configuration.
+- **[`/ask` parameter reference §7 — Reranking](../../assets/ask-parameter-reference.md#7-reranking)** — the `reranker` parameter values + adaptive-reranking pattern.
+- **[`/ask` parameter reference §4 — Retrieval-mode control](../../assets/ask-parameter-reference.md#4-retrieval-mode-control)** — `top_k`, `page_size`, `min_score` (the levers that feed reranking).
 - BGE reranker, Cohere reranker, Voyage reranker — comparison surveys on arxiv.
 - Sibling course: [Advanced E&RS — Build 3 (Hybrid Retrieval Tuning)](../../../advanced-extraction-and-retrieval-strategies/builds/build-3-hybrid-retrieval-tuning/) — complementary measurement framing.

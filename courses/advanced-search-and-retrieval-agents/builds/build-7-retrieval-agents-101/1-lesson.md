@@ -143,7 +143,8 @@ If the question's answer fits in one paragraph and the latency budget is sub-3-s
 
 ## Reference reading
 
-- ARAG documentation: Retrieval Agents endpoint API reference.
+- **[`/ask` parameter reference §10 — Schema-constrained output](../../assets/ask-parameter-reference.md#10-schema-constrained-output)** — `answer_json_schema` is the parameter that powers the agent's structured output discipline.
+- **[`/ask` parameter reference §15 — Related endpoints](../../assets/ask-parameter-reference.md#15-related-endpoints--what-they-share)** — what the Retrieval Agent endpoint adds on top of `/ask` (the agent `brief`, `tools`, `cost_budget`, `latency_budget`, `include_trace` fields).
 - Research foundations: *ReAct: Synergising Reasoning and Acting* (Yao et al.), *Reflexion: Language Agents with Verbal Reinforcement Learning* (Shinn et al.), *Self-RAG* (Asai et al.) — the canonical academic starting points.
 - Build 1's selection flowchart — for confirming agent is the right primitive.
 - Build 8 (next) — for the depth on planning, tool use, observability.

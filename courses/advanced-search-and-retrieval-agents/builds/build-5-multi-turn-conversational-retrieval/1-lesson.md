@@ -117,6 +117,7 @@ The right default is hybrid. The wrong default is rolling — it loses citation 
 
 ## Reference reading
 
-- ARAG documentation: `/predict/chat` conversational mode, conversation state management.
+- **[`/ask` parameter reference §11 — Multi-turn / conversational context](../../assets/ask-parameter-reference.md#11-multi-turn--conversational-context)** — the `context` parameter format + relationship to the conversation-state schema this Build ships.
+- **[`/ask` parameter reference §15 — Related endpoints](../../assets/ask-parameter-reference.md#15-related-endpoints--what-they-share)** — what `/predict/chat` and the Retrieval Agent endpoint share with `/ask` and what they add.
 - Research: *"Conversational Search Sessions Datasets"* — academic surveys on multi-turn evaluation; arxiv search.
 - Build 1's selection flowchart for picking the primitive.

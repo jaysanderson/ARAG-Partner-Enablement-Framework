@@ -157,6 +157,7 @@ The flowchart and the matrix get committed to the course-level `assets/` folder 
 
 ## Reference reading
 
+- **[`/ask` parameter reference](../../assets/ask-parameter-reference.md)** — every parameter, header, and response field of `/ask`, with worked examples per Build. Read it cover-to-cover during this Build; return to it per parameter as you tune.
 - Foundations Build 1 — *Five Primitives* (the conceptual baseline).
 - ARAG documentation: each primitive's API reference.
 - Research: "retrieval primitives in production RAG" — recent arxiv survey papers cover the trade-off shape.

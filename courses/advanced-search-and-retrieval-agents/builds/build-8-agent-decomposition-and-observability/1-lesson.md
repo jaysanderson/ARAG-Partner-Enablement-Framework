@@ -150,6 +150,8 @@ When the partner can answer those four questions, the customer's procurement and
 
 ## Reference reading
 
-- ARAG documentation: tool catalogue schema, agent observability, cost reporting endpoints.
+- **[`/ask` parameter reference §12 — Observability and debug](../../assets/ask-parameter-reference.md#12-observability-and-debug)** — the `debug` and `show_consumption` parameters that feed this Build's tracing dashboard.
+- **[`/ask` parameter reference §13 — Response shape](../../assets/ask-parameter-reference.md#13-response-shape)** — the `consumption` block in the response is the cost-per-call data the tracing dashboard aggregates.
+- **[`/ask` parameter reference §17 — Common errors and fixes](../../assets/ask-parameter-reference.md#17-common-errors-and-fixes)** — the platform errors the failure-mode playbook needs to recover from.
 - Research foundations: *Toolformer* (Schick et al.), *ReAct* (Yao et al.), *Reflexion* (Shinn et al.) — the canonical academic starting points.
 - Build 7's brief / schema / failure modes — this Build extends each.

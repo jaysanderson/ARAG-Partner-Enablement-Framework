@@ -97,5 +97,5 @@ A partner who ships this component once doesn't rebuild it. Time spent here retu
 
 ## Reference reading
 
-- ARAG documentation: `/find` filter expression syntax, classification labels, paragraph-level filtering.
+- **[`/ask` parameter reference §6 — Filters](../../assets/ask-parameter-reference.md#6-filters)** — the `filters`, `filter_expression`, `security`, and `show_hidden` parameters in full, with worked nested examples.
 - Foundations Build 7 — *Smart Filters & Labelsets* — the entry-level baseline.

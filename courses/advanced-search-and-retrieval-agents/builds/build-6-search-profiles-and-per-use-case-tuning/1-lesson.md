@@ -79,5 +79,6 @@ A partner who ships three profiles without per-profile metrics is shipping three
 
 ## Reference reading
 
+- **[`/ask` parameter reference §16 — Worked examples per Build](../../assets/ask-parameter-reference.md#16-worked-examples-per-build)** — the worked Build-6 (per-profile-config-shopper) example shows every parameter a profile bundle sets in one request body.
 - Foundations Build 9 — *Field Engineering* — the per-resource customisation layer this Build composes on top of.
 - Builds 1–4 of this course — each contributes a lever the profile bundles.

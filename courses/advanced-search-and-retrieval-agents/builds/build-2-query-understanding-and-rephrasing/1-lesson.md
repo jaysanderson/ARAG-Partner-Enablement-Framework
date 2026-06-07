@@ -112,6 +112,6 @@ Each strategy has measurable lift on some archetypes and measurable hurt on othe
 
 ## Reference reading
 
-- ARAG documentation: rephraser configuration on `/ask` and `/predict/chat`.
+- **[`/ask` parameter reference §5 — Query understanding](../../assets/ask-parameter-reference.md#5-query-understanding)** — the `rephrase`, `rephrase_prompt`, and `autofilter` parameters in full.
 - HyDE paper: arxiv "Precise Zero-Shot Dense Retrieval without Relevance Labels" (Gao et al.).
 - Foundations Build 7 — *Smart Filters* — for the relationship between rephrasing and filter semantics.
