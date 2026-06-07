@@ -3,11 +3,16 @@
 > 20 multiple-choice. Closed-book. Pass = 16/20.
 > Time: 60 minutes.
 
-The final exam is the cert gate. A passing score is one of three required artefacts for the AS&RA Specialist cert:
+The final exam is one of six cert-criterion gates. The full set (course README §5):
 
-1. **8/8 Build quiz pass rubrics green.**
-2. **1 of 4 capstones shipped** + Solution-lead defence.
-3. **This final exam at 16/20 or above.**
+1. **8/8 Build quizzes** at 4/5 or better.
+2. **8/8 Build artefacts** produced and committed to the partner workspace.
+3. **1 of 4 capstones** shipped (artefact deployed, demo rehearsed).
+4. **This final exam** at 16/20 or above.
+5. **Artefact review** passed against a rubric, with a Progress Solution lead.
+6. **Live defence** — 90-minute walkthrough with a Solution lead on the chosen capstone.
+
+The exam screens for synthesis across Builds; the artefact review is the *primary* gate because it tests delivery, not recall.
 
 The exam draws across every Build. Answers from the per-Build quizzes are not sufficient; the exam tests the *synthesis* across Builds.
 
@@ -179,7 +184,7 @@ D. Following ARAG best practice.
 |---|---|---|
 | 1 | B | Sub-second latency budget + ranked-list UX → `/find`. |
 | 2 | C | Multi-part compliance questions cannot be single-shot retrieved. |
-| 3 | B | (0.18 − 0.008) × 50,000 ≈ $8,600. Material; pick `/ask`. |
+| 3 | B | (0.18 − 0.008) × 50,000 ≈ $8,600. Material; pick `/ask`. (*Specific dollar figures in the question are illustrative — every partner measures their own.*) |
 | 4 | B | Sentence-grade answer expected is the root decision. |
 | 5 | B | If any turn needs decomposition, agent-in-conversational-mode is right. |
 | 6 | C | HyDE crushes on exploratory; risks loss on factoids. |

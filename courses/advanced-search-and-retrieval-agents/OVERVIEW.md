@@ -2,6 +2,8 @@
 
 *A one-page version of the full course README for partner managers and prospective enrollees who want the shape, not the depth.*
 
+> **Heads-up before reading the lessons.** All cost and latency figures quoted in the course (*"$0.18 median per agent call"*, *"5–50× the cost of /ask"*, *"p95 of 28 s"*, etc.) are **illustrative of shape, not benchmarks**. They depend on tenant tier, generative-model choice, query scenario, and reranker configuration. The Build 1 deliverable is a measurement harness the partner runs against their own tenant; what's quoted in lessons is example data that anchors the conceptual conversation. **Do not quote these to a customer.** See the course README's [§0 What's shipped vs what the partner produces](README.md#0-whats-shipped-vs-what-the-partner-produces) for the full caveat.
+
 ---
 
 ## What this course makes a partner
@@ -53,7 +55,8 @@ A partner can hold one cert or both.
 
 - **Prereq:** Developer Foundations Practitioner cert. The sibling advanced course is a strong companion but not strictly required.
 - **Duration:** 5–7 weeks part-time per individual; 3 weeks at full focus.
-- **Cert criteria:** 8/8 Build pass-rubrics green + 1/4 capstones shipped + 90-minute final defence with a Progress Solution lead.
+- **Cert criteria:** 8/8 Build quizzes passed + 8/8 Build artefacts produced + 1/4 capstones shipped + final exam at 16/20 or above + artefact review with a Progress Solution lead + 90-minute live defence. See the course README §5 for the full breakdown — the artefact review is the *primary* gate; the quizzes and exam screen for concept recall, the artefacts screen for delivery.
+- **A small calendar note.** Sandbox dates in the lessons (compliance amendments, ambassador field reports, sustainability reports) reference 2027–2028. They're fictional sandbox scenarios timed to feel current at writing — read them as illustrative, not as a calendar reference for your own timeline.
 
 ---
 

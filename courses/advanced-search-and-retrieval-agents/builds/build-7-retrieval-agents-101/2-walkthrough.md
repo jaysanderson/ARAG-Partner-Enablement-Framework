@@ -115,38 +115,99 @@ Save to `agent-schema.json`.
 
 ## Step 4 — Deploy the agent (3 hours)
 
-Vibe-code a runner that:
+> **Recommended pattern: partner-orchestrated agent on `/ask`** (Pattern A from the lesson). Portable across tenants, fully debuggable, ships today on every ARAG tier. If your tenant exposes a native `/retrieval-agent` endpoint and you want to use it, see *4b* below — but verify the contract against your tenant's current API docs before relying on field names like `brief`, `tools`, or `include_trace`. The native endpoint's exact surface is platform-version-dependent.
 
-1. Reads the brief and schema.
-2. POSTs to `/kb/{id}/retrieval-agent` with the question.
-3. Receives the structured response.
-4. Logs the per-step execution trace.
+### 4a. Partner-orchestrated agent on `/ask`
+
+Vibe-code a runner that does the four loop steps explicitly in client code. Pseudo-shape:
 
 ```typescript
+import OpenAI from 'openai';  // or @anthropic-ai/sdk, etc. — partner's choice
+
 async function runAgent(question: string) {
   const brief = fs.readFileSync('./agent-brief.md', 'utf8');
   const schema = JSON.parse(fs.readFileSync('./agent-schema.json', 'utf8'));
 
-  const res = await fetch(`${NUCLIA_API_URL}/kb/${NUCLIA_KB_ID}/retrieval-agent`, {
-    method: 'POST',
-    headers: {
-      'X-NUCLIA-SERVICEACCOUNT': `Bearer ${NUCLIA_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      query: question,
-      brief,
-      schema,
-      include_trace: true,
-    }),
+  // 1. Plan — LLM call that returns sub-queries
+  const planLLM = new OpenAI({ apiKey: process.env.LLM_API_KEY });
+  const plan = await planLLM.chat.completions.create({
+    model: 'gpt-4o',
+    response_format: { type: 'json_schema', json_schema: planSchema },
+    messages: [
+      { role: 'system', content: brief + '\n\nReturn a structured plan with 3–8 sub-queries.' },
+      { role: 'user', content: question },
+    ],
+  });
+  const subQueries = JSON.parse(plan.choices[0].message.content).sub_queries;
+
+  // 2. Execute — one /ask call per sub-query
+  const subAnswers = [];
+  for (const sub of subQueries) {
+    const askRes = await fetch(`${NUCLIA_API_URL}/kb/${NUCLIA_KB_ID}/ask`, {
+      method: 'POST',
+      headers: {
+        'X-NUCLIA-SERVICEACCOUNT': `Bearer ${NUCLIA_API_KEY}`,
+        'Content-Type': 'application/json',
+        'x-synchronous': 'true',
+        'x-show-consumption': 'true',
+      },
+      body: JSON.stringify({
+        query: sub.question,
+        top_k: 20,
+        features: ['semantic', 'keyword'],
+        answer_json_schema: subAnswerSchema,
+        citations: true,
+      }),
+    });
+    const askData = await askRes.json();
+    subAnswers.push({ sub_question: sub.question, ...askData.answer_json, citations: askData.citations });
+  }
+
+  // 3. Merge + 4. Synthesise — one final LLM call against the final schema
+  const synth = await planLLM.chat.completions.create({
+    model: 'gpt-4o',
+    response_format: { type: 'json_schema', json_schema: schema },
+    messages: [
+      { role: 'system', content: brief + '\n\nSynthesise the final structured answer from these sub-answers.' },
+      { role: 'user', content: JSON.stringify({ question, sub_answers: subAnswers }) },
+    ],
   });
 
-  const data = await res.json();
-  return data;
+  return {
+    output: JSON.parse(synth.choices[0].message.content),
+    trace: { plan: subQueries, sub_answers: subAnswers },
+  };
 }
 ```
 
-Save to `agent-runner/`.
+Save to `agent-runner/`. The trace is the partner-built equivalent of `include_trace`; the partner has full control over the shape and what gets logged.
+
+### 4b. (Optional) Native `/retrieval-agent` endpoint
+
+If your tenant exposes the native endpoint and you want to use it, the call shape is *typically* something like the below — **but verify against your tenant's current API documentation before relying on any specific field**:
+
+```typescript
+const res = await fetch(`${NUCLIA_API_URL}/kb/${NUCLIA_KB_ID}/retrieval-agent`, {
+  method: 'POST',
+  headers: {
+    'X-NUCLIA-SERVICEACCOUNT': `Bearer ${NUCLIA_API_KEY}`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    query: question,
+    // Field names below are illustrative — check current tenant docs.
+    // The native endpoint may not expose all of these or may name them differently.
+    brief,
+    schema,
+    include_trace: true,
+  }),
+});
+const data = await res.json();
+```
+
+If your tenant's endpoint exposes `brief` + `schema` + `include_trace`, the API call is cleaner than the partner-orchestrated loop and the platform handles the planner-execute-merge internally. If the contract is different (subset of fields, different field names, different observability shape), the partner-orchestrated pattern in *4a* is the portable fallback.
+
+**Default recommendation for this Build:** ship 4a. It's the pattern that works on every tenant. Treat 4b as a follow-on optimisation when the contract is settled for your customer's tenant.
 
 ## Step 5 — Wire step-level observability (3 hours)
 

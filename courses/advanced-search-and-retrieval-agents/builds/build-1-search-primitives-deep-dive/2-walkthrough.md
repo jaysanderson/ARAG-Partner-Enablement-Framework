@@ -62,6 +62,8 @@ Keep it brief; this doc is for the partner's own reference.
 
 ## Step 2 — Vibe-code the harness (3–4 hours)
 
+> **Honest framing.** A reference harness has not yet shipped in `assets/`. Until it does, every partner who works this Build produces a slightly different harness, which means the trade-off matrix's credibility rides on the partner's harness implementation. The walkthrough that follows is a brief for the partner's AI assistant to produce a *first cut*; Step 2d below is **the correctness gate** that catches the bug classes that silently produce wrong numbers. Do not skip Step 2d.
+
 The harness is a script (TypeScript or Python) that:
 
 1. Reads each query from `test-queries.md`.
@@ -117,6 +119,21 @@ Pick query 1 (the factoid). Run the harness against just it. Open the results/ f
 **You should see:** five JSON files, latencies in a plausible range (`/find` fastest, agent slowest), and a citation count in each.
 
 If `/predict/chat` or the agent call fails — check that your KB has them enabled (some tenants gate the agent endpoint).
+
+### 2d. **Correctness gate — bugs that make your numbers lie**
+
+Run through this checklist *before* running the full 12-query harness. Every bug in the list silently produces wrong numbers; if any of them are present, the trade-off matrix from Step 3 will mislead every customer scoping conversation you take it into.
+
+1. **Streaming `/ask` latency measured wrong.** The harness must capture *last-byte* time, not first-byte. Bug: starting the timer on the connection and stopping it on the first chunk of streamed answer text. Fix: stop the timer when the stream signals `done` (NDJSON `{"type": "done"}` or SSE `event: done`).
+2. **Agent token counting misses the planner.** The agent endpoint makes multiple LLM calls — planner + per-sub-query synthesis + final merge. A naive counter only counts the final merge's tokens and reports the agent as ~5× cheaper than it is. Fix: sum tokens across *every* trace step, not just the synthesis output. Use `x-show-consumption: true` and read the `consumption.input_tokens` + `consumption.output_tokens` from the response, which the platform tallies correctly across all steps.
+3. **Sync `/ask` measured without the `x-synchronous: true` header.** Without the header, `/ask` streams by default. A "sync" measurement that actually streamed will look faster than it should. Fix: confirm the header is present on the sync configuration.
+4. **`top_k` confused with pagination.** `/ask` does not have `page_size`. The single retrieval-cardinality lever on `/ask` is `top_k` (max 200, default 20). Fix: confirm the harness sends `top_k`, not `page_size`, to `/ask`.
+5. **Token-count overestimated by including the system prompt.** Some tokenisers count the system prompt + all messages, not just the answer-generation cost the partner is trying to measure. Fix: use the platform's `consumption` block in the response — it splits input vs output tokens and is the canonical count.
+6. **`/predict/chat` measured without conversation state.** The platform manages conversation state when a session ID is provided. Measuring `/predict/chat` *without* a session means the rephraser runs on every turn as if it were the first — that's not the real production cost. Fix: include a session ID in `/predict/chat` calls for the multi-turn test queries.
+7. **Cost computed without per-model rate sheet.** `(input_tokens + output_tokens) * $0.001` is wrong — output tokens are typically 3–4× the price of input tokens on most models. Fix: use the per-model rate sheet from your tenant's BYO-LLM configuration (Foundations Build 11 covers this).
+8. **Cold-start latency conflated with steady-state.** First call to a primitive in a cold tenant takes longer than warm calls. Fix: discard the first call to each primitive (warm-up), then measure the next 12.
+
+If any of those bugs are present, the matrix lies. Re-run after fixing.
 
 ---
 

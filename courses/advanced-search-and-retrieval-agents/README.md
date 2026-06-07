@@ -5,8 +5,34 @@
 > **Tracks served:** Solution (primary), Deliver (strongly recommended)
 > **Prerequisites:** Developer Foundations Practitioner (current cert). The sibling course [Advanced Extraction & Retrieval Strategies](../advanced-extraction-and-retrieval-strategies/README.md) is a strong companion but not strictly required.
 > **Duration:** 5–7 weeks part-time per individual; 3 weeks at full focus
-> **Status:** Draft 1. The eight Build briefs and three small-capstone briefs are shipped; per-build workspaces (`harness/`, `slides/`, `verification.md`) will be filled in over subsequent passes.
+> **Status:** Draft 1. See [§0 What's shipped vs what the partner produces](#0-whats-shipped-vs-what-the-partner-produces) for the explicit list of what exists in this repo today.
 > **Companion docs:** [`../../README.md`](../../README.md) (umbrella), [`../developer-foundations/README.md`](../developer-foundations/README.md) (prerequisite course), [`../advanced-extraction-and-retrieval-strategies/README.md`](../advanced-extraction-and-retrieval-strategies/README.md) (sibling advanced course)
+
+---
+
+## 0. What's shipped vs what the partner produces
+
+This course is **Draft 1**. Read this section before reading the rest of the README so the language about *"deliverables"* doesn't read as overpromise.
+
+### What's shipped in this repository today
+
+- **The teaching material.** Every Build has `README.md`, `1-lesson.md`, `2-walkthrough.md`, `3-quiz.md`, `video-script.md`. Every capstone has `README.md` with brief, architecture, demo script, pass rubric, effort breakdown, reskinning notes.
+- **The course-level assets.** [`OVERVIEW.md`](OVERVIEW.md), [`final-exam.md`](final-exam.md), [`assets/ask-parameter-reference.md`](assets/ask-parameter-reference.md) (the exhaustive `/ask` reference) — these are the only files in `assets/` today.
+
+### What the *partner* produces by working the course
+
+Each Build's *"Asset delivered"* and *"Workspace"* sections describe artefacts the partner produces during the Build — `harness/`, `flowchart.md`, `trade-off-matrix.md`, `agent-brief.md`, the reusable filter UI component, the conversation-state schema implementation, the search-profile schemas, the tracing dashboard, etc. These are **outcomes of the Build**, not files pre-shipped in this repo. A partner working Build 1 produces `harness/` and `flowchart.md` *in their own workspace*; the partner then optionally contributes a sanitised copy back to the course-level `assets/` folder for the next partner to reference.
+
+### What's planned but not yet shipped
+
+- **A reference harness for Build 1** (`assets/reference-primitive-harness/`) — a committed, tested harness skeleton with cost-accounting + last-byte streaming latency + agent-token-counting wired correctly out of the box. *Not in the repo today.* Without it, every partner produces a slightly different harness, which puts the *"measured, not guessed"* matrix's credibility on whichever partner's harness gets it right. **Recommended next pass for course owners:** land this harness.
+- **A reference primitive-selection flowchart, conversation-state schema, search-profile schema, and agent-trace template** in `assets/`. These are described in the per-Build deliverables; partners are currently expected to author the canonical version themselves and copy back. *Not pre-shipped.*
+- **Capstone reference implementations.** Each capstone ships a brief; none currently ships running code. Listed as *"Brief shipped. Reference implementation lands in subsequent passes."*
+- **Per-build `walkthrough.md` (different from `2-walkthrough.md`), `harness/`, `slides/`, `verification.md`** that appear in some per-Build *Workspace* sections — these are partner-produced workspace conventions, not pre-shipped repo files. A partner cloning the repo will not find these inside the Build folders.
+
+### Numbers in this course are illustrative
+
+All cost figures (e.g. *"agents are 5–50× the cost of `/ask`"*, *"$0.18 median per agent call"*) and latency figures (p50 / p95 bands) in lessons, walkthroughs, quizzes, and the final exam are **illustrative of shape**, not benchmarks. They depend on tenant tier, generative-model choice, query scenario, and reranker config. Every Build instructs the partner to measure their own — the figures we cite are example points to anchor the conceptual conversation. **Do not quote them to a customer.**
 
 ---
 
@@ -185,11 +211,18 @@ Where the sibling course concludes with one large tuning engagement, this course
 
 The AS&RA Specialist cert is awarded when an individual has:
 
-1. **Passed all 8 Builds** — each Build's rubric green, evidence committed to the individual's partner workspace.
-2. **Shipped at least one capstone (A, B, C, or D)** — the artefact deployed, the brief delivered, the pass rubric green.
-3. **Completed the final assessment** — a 90-minute live walkthrough against a Progress Solution lead, defending the design choices in the chosen capstone.
+1. **Passed all 8 Build quizzes** — 4/5 or better, open-book.
+2. **Shipped artefacts for all 8 Builds** — every Build's *"Asset delivered"* section produced and committed to the individual's partner workspace. Build artefacts (not the MC quiz) are the primary evidence of competence; the quizzes screen for *"have you internalised the concept,"* and the artefacts screen for *"can you actually do the work."*
+3. **Shipped at least one capstone (A, B, C, or D)** — the artefact deployed against a real (sandbox or customer) KB, the deliverables in the capstone's pass rubric all green, the demo script rehearsed.
+4. **Passed the final exam** — 16/20 or better on the closed-book exam at [`final-exam.md`](final-exam.md).
+5. **Passed the artefact review** — a Progress Solution lead reviews the Build artefacts and the capstone artefact against a rubric (see [`assets/artefact-review-rubric.md`](assets/artefact-review-rubric.md) — *planned; partners and Solution leads currently use the per-Build "Pass rubric self-check" sections as the rubric until this canonical doc lands*). This is the bar that catches *"the partner copy-pasted a harness that produces wrong numbers"* before the live defence wastes everyone's time.
+6. **Completed the live defence** — a 90-minute live walkthrough against a Progress Solution lead, defending the design choices in the chosen capstone. The defence is the conversation; the artefacts are the evidence.
 
 A partner whose individual holds AS&RA can be listed as a *Search-Experience Design Specialist* in the partner programme directory and can quote against the corresponding service catalogue.
+
+### Why artefact review is the strongest gate
+
+The build artefacts (harness, flowchart, schema, agent runner, tracing dashboard) are the *real outputs* of the course. Multiple-choice quizzes test conceptual recall; artefact review tests delivery. A partner who passes every quiz but ships a harness with the bugs from Build 1 Step 2d ("Bugs that make your numbers lie") will produce a misleading matrix the moment they sit with a customer. Catching that at artefact review is cheap; catching it after the customer engagement starts is expensive. Solution leads should give artefact review at least as much weight as the live defence.
 
 ---
 
@@ -203,22 +236,40 @@ The reference reading is not gated — partners can read ahead before starting a
 
 ## 7. Workspace conventions
 
-Each Build folder has its own README + workspace. The convention mirrors the sibling course:
+### What's shipped in each Build folder
 
-- `README.md` — the Build's at-a-glance, pass rubric, and asset specification (shipped).
-- `walkthrough.md` — narrated implementation walkthrough (drafts land per Build over time).
-- `harness/` — reference harness code (TS + Python variants where applicable).
-- `slides/` — slide deck for the partner's own internal presentation.
-- `verification.md` — reviewer checklist used by the Solution lead during pass-review.
+| File | Shipped? | Purpose |
+|---|---|---|
+| `README.md` | ✅ | At-a-glance, pass rubric, asset specification. |
+| `1-lesson.md` | ✅ | Conceptual lesson (read-time ~12–18 min). |
+| `2-walkthrough.md` | ✅ | Step-by-step implementation guide. |
+| `3-quiz.md` | ✅ | 5 MC, open-book, pass 4/5. |
+| `video-script.md` | ✅ | Voiceover + on-screen markers for the screen-recording version. |
 
-The course-level `assets/` folder holds cross-Build reusable assets:
+### What the partner produces in their own workspace per Build
 
-- **[`ask-parameter-reference.md`](assets/ask-parameter-reference.md)** — exhaustive parameter reference for `/ask`. Every parameter, header, response field, and worked example per Build. Read it cover-to-cover during Build 1, then return to it per parameter as you tune. Cross-linked from every Build's lesson.
-- The primitive-selection flowchart (shipped from Build 1).
-- The conversation-state schema (shipped from Build 5).
-- The search-profile schema (shipped from Build 6).
-- The agent-trace report template (shipped from Build 8).
-- The research-session schema (shipped from Capstone D).
+The walkthrough instructs the partner to commit these *outside the course repo*, in their own workspace folder — typically `~/partner-workspace/{tenant}/build-N-{slug}/`:
+
+- `harness/` — the partner's measurement harness or reference implementation.
+- `slides/` — the partner's own internal presentation, if they choose to make one.
+- `verification.md` — the partner's reviewer checklist used by the Solution lead during pass review.
+- Per-Build deliverable files named in each Build's *"Asset delivered"* section (e.g. `trade-off-matrix.md`, `flowchart.md`, `agent-brief.md`).
+
+A partner cloning this course repo will *not* find these files inside the Build folders — they're outcomes the partner produces by working the Build.
+
+### Course-level `assets/` folder
+
+| File | Shipped? | Status |
+|---|---|---|
+| **[`ask-parameter-reference.md`](assets/ask-parameter-reference.md)** | ✅ | Exhaustive `/ask` parameter reference (~980 lines). Cross-linked from every Build's lesson. |
+| Reference primitive-comparison harness | ❌ planned | A committed, tested harness skeleton with cost accounting + last-byte streaming latency + agent-token counting wired correctly. Without this, every partner produces a slightly different harness and the *"measured, not guessed"* matrix's credibility rides on whichever partner gets it right. **Priority next pass.** |
+| Reference primitive-selection flowchart | ❌ planned | Will land once 3+ partners have produced a Build-1 flowchart we can merge. |
+| Reference conversation-state schema | ❌ planned | Same pattern — partner-produced first, canonicalised on a later pass. |
+| Reference search-profile schema | ❌ planned | Same pattern. |
+| Reference agent-trace template | ❌ planned | Same pattern. |
+| Reference research-session schema (Capstone D) | ❌ planned | Same pattern. |
+
+**The right way to read the per-Build *"Asset delivered"* sections:** these describe what the partner produces by working the Build. They are not pre-shipped files. The course owner's next pass should land at least the reference harness, since that's the one whose absence puts measurement credibility on the partner.
 
 ---
 

@@ -55,7 +55,7 @@ D. Number of paragraphs returned per query.
 
 2. **D** — multi-part questions ("X compliant with Y given amendment Z") cannot be answered by single-shot retrieval. This is the canonical case for a Retrieval Agent that decomposes.
 
-3. **B** — the matrix tells you `/ask` sync is the right primitive. 22× cost and 5× latency for a use case `/ask` handles is the textbook over-reach the lesson warns against.
+3. **B** — the matrix tells you `/ask` sync is the right primitive. 22× cost and 5× latency for a use case `/ask` handles is the textbook over-reach the lesson warns against. (*The specific dollar figures in the question are illustrative — every partner measures their own. The judgement is what the question tests.*)
 
 4. **C** — `/predict/chat` is the right primitive when each turn is single-shot but the conversation needs continuity. Agent-in-conversational-mode is the right choice only when at least one turn needs decomposition.
 

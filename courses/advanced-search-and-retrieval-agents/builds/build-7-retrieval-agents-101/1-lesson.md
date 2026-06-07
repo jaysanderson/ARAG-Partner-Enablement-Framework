@@ -8,28 +8,75 @@ The Retrieval Agent endpoint is the highest-leverage primitive ARAG ships. Every
 
 The biggest mindset shift: agents are not *"a heavier `/ask`."* They are a different kind of program. Same question goes in. A loop runs. A structured answer comes out. The partner's responsibility is to design the loop's brief, schema, observability, and failure recovery — not to write the loop's code.
 
-## What a Retrieval Agent actually does
+## Two ways to build a Retrieval Agent on ARAG
 
-The platform's agent endpoint accepts:
+> **Honest framing.** ARAG's *native* agent endpoint and its exact contract (which fields are settled, which are evolving) varies by tenant tier and platform version. Some tenants expose a `/retrieval-agent` endpoint that accepts a `brief` + structured `schema` + a `tools` catalogue and runs a planner-execute-merge loop server-side; other tenants do not yet expose that surface or expose only a subset of those fields. **Check your tenant's current API docs against the actual contract before relying on any specific field name.**
+>
+> The good news: a Retrieval Agent loop can be built **entirely from documented `/ask` primitives** without depending on a native agent endpoint. That's the pattern this Build teaches as the *default* — every partner can ship it today, regardless of tenant tier. The native endpoint, when it's available, is a convenience shortcut on top.
 
-- A **natural-language brief** — the agent's system prompt, defining its role and the rules of engagement.
-- A **structured output schema** — JSON-schema describing what the agent must produce.
-- An **input** — the user's question, plus optional session context.
-- (Optional) a **tool catalogue** — Build 8 covers this.
+### The Retrieval Agent loop, conceptually
 
-It returns:
-
-- A **structured output object** matching the schema.
-- An **execution trace** — every sub-query, every retrieved source, every tool call.
-
-Internally the agent runs a loop:
+Every Retrieval Agent — whether you build it on `/ask` or on a native endpoint — runs the same four-step loop:
 
 1. **Plan** — read the question, generate a list of sub-queries needed to answer it.
 2. **Execute** — run each sub-query against the KB.
 3. **Merge** — combine the per-sub-query evidence into one working set.
 4. **Synthesise** — produce the structured output the schema demands.
 
-Each step is an LLM call. The whole loop is 5–30 s and 5–50× the cost of `/ask`. When the question deserves it, it's the best primitive ARAG ships. When the question doesn't, it's wildly over-spec.
+Each step is an LLM call. The whole loop is roughly 5–30 s wall-clock and meaningfully more expensive than `/ask` (illustrative-of-shape numbers in lessons say *"5–50× the cost"* — verify against your own tenant). When the question deserves it, it's the best pattern ARAG supports. When the question doesn't, it's wildly over-spec.
+
+### Pattern A — Partner-orchestrated agent on `/ask` (recommended default)
+
+The partner writes the loop in client code (TypeScript or Python) and calls `/ask` per sub-question:
+
+```
+                  ┌─────────────────────────┐
+   question  ───▶ │  planner LLM call       │ ───▶ sub-queries
+                  └─────────────────────────┘
+                              │
+                              ▼ (one /ask call per sub-query)
+                  ┌─────────────────────────┐
+                  │  /ask per sub-query     │ ───▶ per-sub evidence
+                  │  with prequeries strat. │
+                  └─────────────────────────┘
+                              │
+                              ▼
+                  ┌─────────────────────────┐
+                  │  synthesis LLM call     │ ───▶ structured output
+                  │  + answer_json_schema   │     (matches schema)
+                  └─────────────────────────┘
+```
+
+Every step is a documented primitive:
+
+- The planner is a standalone LLM call (use the partner's preferred LLM SDK; not a `/ask` call).
+- Each sub-query is a `/ask` call with `answer_json_schema` constraining the sub-answer's shape and `rag_strategies.prequeries` letting the partner inject additional context queries.
+- The synthesis is a final `/ask` call (or LLM-only call) that consumes all the sub-answers and produces the final schema-constrained output.
+
+**This pattern is portable, debuggable, and works on every ARAG tenant today.** Builds 7 and 8's walkthroughs implement it.
+
+### Pattern B — Native `/retrieval-agent` endpoint (when available)
+
+When your tenant exposes the native agent endpoint, the platform runs the planner-execute-merge loop server-side and the partner skips the orchestration code. The native surface *typically* includes:
+
+- A **natural-language brief** (the agent's system prompt) — equivalent to the partner-orchestrated planner's system prompt.
+- A **structured output schema** — equivalent to `answer_json_schema` in `/ask`.
+- An **input** — the user's question + optional `chat_history`.
+- (Optional) a **tool catalogue** — Build 8 covers this when it's exposed.
+- (Optional) **observability flags** — to return a trace of the platform's internal steps.
+
+**Check the actual contract before assuming any specific field name or default.** The conceptual surface above is stable; the wire format is what moves.
+
+### When to pick which
+
+| Situation | Pick |
+|---|---|
+| You're shipping today, want portability across tenant tiers, want to debug per-step | Pattern A (partner-orchestrated) |
+| You want absolute minimum code, your tenant exposes the native endpoint, you accept platform-version coupling | Pattern B (native) |
+| You need custom tool calls *inside* the agent loop, and tool execution can stay in client code | Pattern A — easier to wire tools in your own runner than to negotiate with a native catalogue |
+| The customer's procurement team needs per-call cost breakdowns | Pattern A — observability you fully control |
+
+The walkthrough teaches Pattern A. If your tenant exposes Pattern B, the brief / schema / planner concepts all map across — the difference is which side of the network boundary the loop runs on.
 
 ## The agent's natural-language brief
 
