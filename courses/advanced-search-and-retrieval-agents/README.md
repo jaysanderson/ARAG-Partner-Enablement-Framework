@@ -211,7 +211,14 @@ Each Build folder has its own README + workspace. The convention mirrors the sib
 - `slides/` — slide deck for the partner's own internal presentation.
 - `verification.md` — reviewer checklist used by the Solution lead during pass-review.
 
-The course-level `assets/` folder holds cross-Build reusable assets (the primitive-selection flowchart, the conversation-state schema, the search-profile schema, the agent-trace report template).
+The course-level `assets/` folder holds cross-Build reusable assets:
+
+- **[`ask-parameter-reference.md`](assets/ask-parameter-reference.md)** — exhaustive parameter reference for `/ask`. Every parameter, header, response field, and worked example per Build. Read it cover-to-cover during Build 1, then return to it per parameter as you tune. Cross-linked from every Build's lesson.
+- The primitive-selection flowchart (shipped from Build 1).
+- The conversation-state schema (shipped from Build 5).
+- The search-profile schema (shipped from Build 6).
+- The agent-trace report template (shipped from Build 8).
+- The research-session schema (shipped from Capstone D).
 
 ---
 
