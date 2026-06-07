@@ -150,8 +150,11 @@ When the partner can answer those four questions, the customer's procurement and
 
 ## Reference reading
 
-- **[`/ask` parameter reference §12 — Observability and debug](../../assets/ask-parameter-reference.md#12-observability-and-debug)** — the `debug` and `show_consumption` parameters that feed this Build's tracing dashboard.
-- **[`/ask` parameter reference §13 — Response shape](../../assets/ask-parameter-reference.md#13-response-shape)** — the `consumption` block in the response is the cost-per-call data the tracing dashboard aggregates.
-- **[`/ask` parameter reference §17 — Common errors and fixes](../../assets/ask-parameter-reference.md#17-common-errors-and-fixes)** — the platform errors the failure-mode playbook needs to recover from.
+- **[`/ask` parameter reference §22 — Observability and debug](../../assets/ask-parameter-reference.md#22-observability-and-debug)** — `debug` and the `x-show-consumption` header feed this Build's tracing dashboard.
+- **[`/ask` parameter reference §23 — Response shape (sync mode)](../../assets/ask-parameter-reference.md#23-response-shape-sync-mode)** — the `consumption` block in the response is the cost-per-call data the tracing dashboard aggregates.
+- **[`/ask` parameter reference §14 — RAG context-building strategies](../../assets/ask-parameter-reference.md#14-rag-context-building-strategies--rag_strategies)** — the `prequeries` strategy is the platform-native way to ship planner-emitted sub-queries into the retrieval step. Use it instead of orchestrating sub-query loops in client code.
+- **[`/ask` parameter reference §16 — Generation control / `max_tokens`](../../assets/ask-parameter-reference.md#16-generation-control)** — `max_tokens` (and the `{ context, answer }` object form) is the canonical lever for Build 8's cost budget enforcement.
+- **[`/ask` parameter reference §5 — Audit metadata](../../assets/ask-parameter-reference.md#5-audit-metadata)** — `audit_metadata` is how Build 8's tracing dashboard tags per-call entries with scenario / persona / tenant context.
+- **[`/ask` parameter reference §27 — Common errors and fixes](../../assets/ask-parameter-reference.md#27-common-errors-and-fixes)** — the platform errors the failure-mode playbook needs to recover from.
 - Research foundations: *Toolformer* (Schick et al.), *ReAct* (Yao et al.), *Reflexion* (Shinn et al.) — the canonical academic starting points.
 - Build 7's brief / schema / failure modes — this Build extends each.

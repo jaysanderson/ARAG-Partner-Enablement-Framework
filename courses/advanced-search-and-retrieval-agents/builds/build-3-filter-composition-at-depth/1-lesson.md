@@ -97,5 +97,5 @@ A partner who ships this component once doesn't rebuild it. Time spent here retu
 
 ## Reference reading
 
-- **[`/ask` parameter reference §6 — Filters](../../assets/ask-parameter-reference.md#6-filters)** — the `filters`, `filter_expression`, `security`, and `show_hidden` parameters in full, with worked nested examples.
+- **[`/ask` parameter reference §6 — Retrieval scope & filters](../../assets/ask-parameter-reference.md#6-retrieval-scope--filters)** — every filter-related parameter: `filters`, `filter_expression`, `keyword_filters`, `resource_filters`, `fields`, `field_type_filter`, `range_creation_*`, `range_modification_*`, `show_hidden`. The `filter_expression` form replaces and supersedes the others when complex composition is needed.
 - Foundations Build 7 — *Smart Filters & Labelsets* — the entry-level baseline.

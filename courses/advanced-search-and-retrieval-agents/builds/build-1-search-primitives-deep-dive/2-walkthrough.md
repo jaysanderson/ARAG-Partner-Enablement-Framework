@@ -81,11 +81,13 @@ Read NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY from .env.
 For each query in test-queries.md, fire requests against all five primitives:
 
 1. POST /kb/{id}/find  — { query, page_size: 10, features: ['keyword','semantic'] }
-2. POST /kb/{id}/ask   — { query, prefer_markdown: true, rephrase: true }  with x-synchronous: true
+2. POST /kb/{id}/ask   — { query, top_k: 20, prefer_markdown: true, rephrase: false }  with x-synchronous: true. (Default `rephrase` on `/ask` is `false` — see the parameter reference.)
 3. POST /kb/{id}/ask   — same body, no x-synchronous (streaming); aggregate the stream into a final response
-4. POST /kb/{id}/search — same shape as /find but request show:['basic','values','origin','classification']
+4. POST /kb/{id}/search — same shape as /find but request show:['basic','values','origin','relations']
 5. POST /kb/{id}/predict/chat — single-turn version; capture the response
 6. POST /kb/{id}/retrieval-agent — minimal agent brief: "Answer the user's question grounded in the KB."
+
+Note: `/ask` uses `top_k` (max 200), not `page_size`. `/find` and `/search` use page-based pagination. Cross-reference the parameter doc for the exact body shape per primitive.
 
 For each call, capture:
 - response payload (just the answer/results, not the full body)

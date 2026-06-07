@@ -117,7 +117,9 @@ The right default is hybrid. The wrong default is rolling — it loses citation 
 
 ## Reference reading
 
-- **[`/ask` parameter reference §11 — Multi-turn / conversational context](../../assets/ask-parameter-reference.md#11-multi-turn--conversational-context)** — the `context` parameter format + relationship to the conversation-state schema this Build ships.
-- **[`/ask` parameter reference §15 — Related endpoints](../../assets/ask-parameter-reference.md#15-related-endpoints--what-they-share)** — what `/predict/chat` and the Retrieval Agent endpoint share with `/ask` and what they add.
+- **[`/ask` parameter reference §11 — Conversation history `chat_history`](../../assets/ask-parameter-reference.md#11-conversation-history--chat_history)** — `chat_history` is the live parameter (the `context` parameter is **deprecated**; check customer code on migrations).
+- **[`/ask` parameter reference §13 — Query rephrasing](../../assets/ask-parameter-reference.md#13-query-rephrasing)** — `chat_history_relevance_threshold` is the sensitivity dial when adversarial topic-switch patterns expose context bleed.
+- **[`/ask` parameter reference §14 — RAG context-building strategies](../../assets/ask-parameter-reference.md#14-rag-context-building-strategies--rag_strategies)** — `rag_strategies` with `hierarchy` and `neighbouring_paragraphs` are the canonical multi-turn enrichments.
+- **[`/ask` parameter reference §25 — Related endpoints](../../assets/ask-parameter-reference.md#25-related-endpoints--what-they-share)** — what `/predict/chat` and the Retrieval Agent endpoint share with `/ask` and what they add.
 - Research: *"Conversational Search Sessions Datasets"* — academic surveys on multi-turn evaluation; arxiv search.
 - Build 1's selection flowchart for picking the primitive.

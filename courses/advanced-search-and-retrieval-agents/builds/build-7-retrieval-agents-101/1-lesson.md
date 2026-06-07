@@ -143,8 +143,10 @@ If the question's answer fits in one paragraph and the latency budget is sub-3-s
 
 ## Reference reading
 
-- **[`/ask` parameter reference §10 — Schema-constrained output](../../assets/ask-parameter-reference.md#10-schema-constrained-output)** — `answer_json_schema` is the parameter that powers the agent's structured output discipline.
-- **[`/ask` parameter reference §15 — Related endpoints](../../assets/ask-parameter-reference.md#15-related-endpoints--what-they-share)** — what the Retrieval Agent endpoint adds on top of `/ask` (the agent `brief`, `tools`, `cost_budget`, `latency_budget`, `include_trace` fields).
+- **[`/ask` parameter reference §17 — Schema-constrained output](../../assets/ask-parameter-reference.md#17-schema-constrained-output--answer_json_schema)** — `answer_json_schema` powers the agent's structured output discipline. Note the two behaviour changes: streaming is disabled when this is set, and `citations` becomes inert (model citations into the schema instead).
+- **[`/ask` parameter reference §14 — RAG context-building strategies](../../assets/ask-parameter-reference.md#14-rag-context-building-strategies--rag_strategies)** — `rag_strategies` is the high-leverage Build-7 lever. The `prequeries` strategy is the platform-native version of Build 8's planner-emitted sub-queries: define them at retrieval-time so the LLM sees the right context. `hierarchy` and `metadata_extension` complement.
+- **[`/ask` parameter reference §20 — Reasoning](../../assets/ask-parameter-reference.md#20-reasoning)** — `reasoning: true` is often the right pick for compliance / multi-step evaluations.
+- **[`/ask` parameter reference §25 — Related endpoints](../../assets/ask-parameter-reference.md#25-related-endpoints--what-they-share)** — what the Retrieval Agent endpoint adds on top of `/ask` (the agent `brief`, `tools`, `cost_budget`, `latency_budget`, `include_trace` fields).
 - Research foundations: *ReAct: Synergising Reasoning and Acting* (Yao et al.), *Reflexion: Language Agents with Verbal Reinforcement Learning* (Shinn et al.), *Self-RAG* (Asai et al.) — the canonical academic starting points.
 - Build 1's selection flowchart — for confirming agent is the right primitive.
 - Build 8 (next) — for the depth on planning, tool use, observability.

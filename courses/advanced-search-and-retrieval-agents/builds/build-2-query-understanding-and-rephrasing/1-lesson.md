@@ -18,7 +18,7 @@ When you POST to `/ask` (or `/find` with the right flag), the platform:
 4. Retrieves against the embedded query.
 5. Generates the answer using the rephrased query as the LLM context.
 
-The rephrase step is the one you'll tune. By default it's on. By default the prompt is generic. By default it assumes English-language consumer-grade questions.
+The rephrase step is the one you'll tune. **On `/ask` the default is `rephrase: false`** — partners frequently miss this and assume the platform is already doing it. The default exists because rephrasing consumes extra LLM tokens and adds latency; the platform leaves the decision to the partner. When you turn it on (`rephrase: true`), the default rephraser prompt is generic and assumes English-language consumer-grade questions. The rest of this Build covers when to turn it on and what custom prompt to pass in alongside.
 
 ## The four query archetypes
 
@@ -46,7 +46,7 @@ The user is asking about a theme, not a specific fact. The corpus probably doesn
 
 *"Tell me about your gear philosophy."*
 
-Open-ended. The user doesn't know what's in the corpus. The right answer might span 5–10 documents. **Strategy:** rephrase on, expand aggressively, increase page_size.
+Open-ended. The user doesn't know what's in the corpus. The right answer might span 5–10 documents. **Strategy:** rephrase on, expand aggressively, raise `top_k` (up to the 200 cap).
 
 The first deliverable from this Build is the **query-archetype catalogue** — a markdown doc with each archetype, a definition, sample queries, and the recommended rephrasing strategy. Re-use it across every customer engagement.
 
@@ -112,6 +112,6 @@ Each strategy has measurable lift on some archetypes and measurable hurt on othe
 
 ## Reference reading
 
-- **[`/ask` parameter reference §5 — Query understanding](../../assets/ask-parameter-reference.md#5-query-understanding)** — the `rephrase`, `rephrase_prompt`, and `autofilter` parameters in full.
+- **[`/ask` parameter reference §13 — Query rephrasing](../../assets/ask-parameter-reference.md#13-query-rephrasing)** — `rephrase` (default `false`!) + `chat_history_relevance_threshold` in full.
 - HyDE paper: arxiv "Precise Zero-Shot Dense Retrieval without Relevance Labels" (Gao et al.).
 - Foundations Build 7 — *Smart Filters* — for the relationship between rephrasing and filter semantics.

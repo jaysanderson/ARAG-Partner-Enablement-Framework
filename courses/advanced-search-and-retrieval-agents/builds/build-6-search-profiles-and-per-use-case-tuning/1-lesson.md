@@ -79,6 +79,7 @@ A partner who ships three profiles without per-profile metrics is shipping three
 
 ## Reference reading
 
-- **[`/ask` parameter reference §16 — Worked examples per Build](../../assets/ask-parameter-reference.md#16-worked-examples-per-build)** — the worked Build-6 (per-profile-config-shopper) example shows every parameter a profile bundle sets in one request body.
+- **[`/ask` parameter reference §19 — Search-configuration preset](../../assets/ask-parameter-reference.md#19-search-configuration-preset--search_configuration)** — `search_configuration` is the **platform-native shipping mechanism for Build 6's profiles**. Commit each profile as a named search configuration on the KB; the front-end's job becomes just *"set the right name"*.
+- **[`/ask` parameter reference §26 — Worked examples per Build](../../assets/ask-parameter-reference.md#26-worked-examples-per-build)** — the worked Build-6 (per-profile-config-shopper) example.
 - Foundations Build 9 — *Field Engineering* — the per-resource customisation layer this Build composes on top of.
 - Builds 1–4 of this course — each contributes a lever the profile bundles.

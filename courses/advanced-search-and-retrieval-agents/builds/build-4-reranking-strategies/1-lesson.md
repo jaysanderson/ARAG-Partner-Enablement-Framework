@@ -82,7 +82,8 @@ The deliverable from this Build is a decision matrix that maps customer scenario
 
 ## Reference reading
 
-- **[`/ask` parameter reference §7 — Reranking](../../assets/ask-parameter-reference.md#7-reranking)** — the `reranker` parameter values + adaptive-reranking pattern.
-- **[`/ask` parameter reference §4 — Retrieval-mode control](../../assets/ask-parameter-reference.md#4-retrieval-mode-control)** — `top_k`, `page_size`, `min_score` (the levers that feed reranking).
+- **[`/ask` parameter reference §7 — Retrieval-mode control](../../assets/ask-parameter-reference.md#7-retrieval-mode-control)** — `top_k`, `min_score`, `features` (the levers that feed reranking).
+- **[`/ask` parameter reference §8 — Rank fusion & reranking](../../assets/ask-parameter-reference.md#8-rank-fusion--reranking)** — `rank_fusion` (default `"rrf"`) + `reranker` (default `"predict"`, with `"noop"` for adaptive-rerank setups) — the exact parameter shapes for the A/B/C measurement work.
+- **[`/ask` parameter reference §21 — Generate answer toggle](../../assets/ask-parameter-reference.md#21-generate-answer-toggle)** — `generate_answer: false` isolates retrieval-quality measurement from LLM cost during the A/B/C runs.
 - BGE reranker, Cohere reranker, Voyage reranker — comparison surveys on arxiv.
 - Sibling course: [Advanced E&RS — Build 3 (Hybrid Retrieval Tuning)](../../../advanced-extraction-and-retrieval-strategies/builds/build-3-hybrid-retrieval-tuning/) — complementary measurement framing.
