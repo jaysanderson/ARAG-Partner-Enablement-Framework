@@ -106,6 +106,7 @@ The framework's competency ladder is delivered through courses. Each course bund
 |---|---|---|---|
 | **Developer Foundations** | Shipped | Developer Foundations Practitioner | `courses/developer-foundations/README.md` |
 | **Advanced Extraction & Retrieval Strategies** | Shipped | AE&RS Specialist | `courses/advanced-extraction-and-retrieval-strategies/README.md` |
+| **Advanced Search & Retrieval Agents** | Draft 1 | AS&RA Specialist | `courses/advanced-search-and-retrieval-agents/README.md` |
 | **Sales Foundations** | Planned (target Q3) | Sales Foundations Practitioner | TBD |
 | **Solution Architecture Mastery** | Planned (target Q4) | Solution Architect Specialist | TBD |
 | **Production Operations & SLOs** | Planned (target Q4) | Operations Specialist | TBD |
@@ -207,6 +208,7 @@ Every asset has a name, an owner, a version, and a corresponding build. No orpha
 | Umbrella framework (this doc) | All courses | GTM | **Shipped** |
 | Developer Foundations course doc | Foundations | GTM | **Shipped** (`courses/developer-foundations/README.md`) |
 | Advanced Extraction & Retrieval Strategies course doc | Advanced | GTM | **Shipped** (`courses/advanced-extraction-and-retrieval-strategies/README.md`) |
+| Advanced Search & Retrieval Agents course doc | Advanced | GTM | **Draft 1 shipped** (`courses/advanced-search-and-retrieval-agents/README.md`) |
 | ARAG primitives slide deck | Foundations Build 0 | GTM | TODO |
 | Widget showcase + branded snippets | Foundations Build 1 | Solution | Stub |
 | "Three voices, one KB" demo script | Foundations Build 2 | GTM | TODO |
