@@ -28,7 +28,7 @@ By the end of the course, a named individual can:
 - Build multi-turn conversational retrieval surfaces with citation continuity across turns.
 - Design and deploy **search profiles** — multiple search configurations against the same KB for different personas / use cases.
 - Stand up Retrieval Agents end-to-end: from problem-statement to deployed agent with observability and cost budgeting.
-- Design and ship **three small capstones** — multilingual conversational agent, cross-KB federated search, and a query-decomposition compliance agent — each a real customer-shaped deliverable.
+- Design and ship **small customer-shaped capstones** — multilingual conversational agent, cross-KB federated search, query-decomposition compliance agent, **or a research portal** — each a real customer-shaped deliverable.
 
 That last bullet is the commercial point. **The AS&RA Specialist cert exists to make the partner saleable as a search-experience design consultancy.** Customers buy ARAG once; they buy years of *"can you make it understand this kind of question?"* tuning. This course is the credential that lets the partner charge for that.
 
@@ -45,7 +45,7 @@ The two advanced courses cover complementary surfaces:
 | **Day-to-day deliverable** | Retrieval-quality tuning engagement | Search-experience design + agent flow |
 | **Measurement focus** | Precision/recall/MRR/nDCG against a golden set | Per-scenario success rate + latency budget per agent loop |
 | **Lever inventory** | Chunking · labelsets · hybrid weighting · field engineering · multimodal extraction · data-augmentation agents | Primitive choice · query rephrasing · filter composition · reranking · multi-turn context · search profiles · retrieval agents · cross-KB / multilingual federation |
-| **Capstone shape** | One large tuning engagement against a customer KB | **Three** small capstones, each a different customer scenario |
+| **Capstone shape** | One large tuning engagement against a customer KB | **Four** small capstones, each a different customer scenario |
 | **Commercial framing** | "We make your existing search better" | "We design the search your existing platform can't" |
 
 A partner can hold one cert or both. A partner book of business that skews toward greenfield enterprise design tends to favour this course; a book of business that skews toward existing-deployment tuning tends to favour the sibling.
@@ -138,9 +138,9 @@ Each Build is hands-on against a real ARAG sandbox. Each ships a specific artefa
 
 ---
 
-## 4. The three small capstones
+## 4. The four small capstones
 
-Where the sibling course concludes with one large tuning engagement, this course concludes with **three small capstones** — each a 5–10 day deliverable against a distinct customer scenario shape. The partner picks any one as required for the cert; partners pursuing the cert plus deep specialism deliver all three.
+Where the sibling course concludes with one large tuning engagement, this course concludes with **four small capstones** — each a 5–10 day deliverable against a distinct customer scenario shape. The partner picks any one as required for the cert; partners pursuing the cert plus deep specialism deliver all four.
 
 ### Capstone A — Multilingual Conversational Retrieval Agent
 
@@ -169,6 +169,16 @@ Where the sibling course concludes with one large tuning engagement, this course
 | **Leverages** | Builds 4 (reranking), 7 + 8 (agents, decomposition, observability). |
 | **Effort** | 8–10 days. |
 
+### Capstone D — Research Portal
+
+| Field | Value |
+|---|---|
+| **Customer shape** | A research-driven organisation — investment firm, consulting firm, R&D team, policy think tank, journalism organisation, market-research firm, scientific research group. The analyst hour is consumed by reading and synthesising, not by the analytical work the firm actually pays the analyst for. |
+| **Deliverable** | A research portal with a plan-execute-synthesise loop: analyst types a research question; agent decomposes into an editable plan; analyst edits the plan; portal runs each sub-question with adaptive reranking; portal synthesises a structured brief with section-by-section citations; analyst spawns follow-up threads from any claim; analyst exports the brief. Session model supports multiple briefs per session with a follow-up thread tree. |
+| **Leverages** | Builds 3, 4, 5, 6, 7, 8 — **the deepest of the four, treats every Build as a sub-system**. |
+| **Effort** | 8–10 days. |
+| **Commercial framing** | The most commercially recognisable capstone — every customer it gets pitched to has either built an internal version (badly), bought a vendor version (and is annoyed), or is actively budgeted to do one of those within the year. |
+
 ---
 
 ## 5. Cert criteria
@@ -176,7 +186,7 @@ Where the sibling course concludes with one large tuning engagement, this course
 The AS&RA Specialist cert is awarded when an individual has:
 
 1. **Passed all 8 Builds** — each Build's rubric green, evidence committed to the individual's partner workspace.
-2. **Shipped at least one capstone (A, B, or C)** — the artefact deployed, the brief delivered, the pass rubric green.
+2. **Shipped at least one capstone (A, B, C, or D)** — the artefact deployed, the brief delivered, the pass rubric green.
 3. **Completed the final assessment** — a 90-minute live walkthrough against a Progress Solution lead, defending the design choices in the chosen capstone.
 
 A partner whose individual holds AS&RA can be listed as a *Search-Experience Design Specialist* in the partner programme directory and can quote against the corresponding service catalogue.

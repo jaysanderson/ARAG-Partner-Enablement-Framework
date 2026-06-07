@@ -2,19 +2,20 @@
 
 > Part of [Advanced Search & Retrieval Agents](../README.md).
 
-Where the sibling advanced course concludes with one large tuning engagement, this course concludes with **three small capstones** — each a 5–10 day deliverable against a distinct customer scenario shape.
+Where the sibling advanced course concludes with one large tuning engagement, this course concludes with **four small capstones** — each a 5–10 day deliverable against a distinct customer scenario shape.
 
-A partner pursuing the AS&RA Specialist cert ships **one** of the three. A partner pursuing the deep specialism (and the senior-band listing in the partner directory) ships **all three**.
+A partner pursuing the AS&RA Specialist cert ships **one** of the four. A partner pursuing the deep specialism (and the senior-band listing in the partner directory) ships **all four**.
 
-## The three capstones
+## The four capstones
 
 | | Capstone | Customer shape | Effort | Builds leveraged |
 |---|---|---|---|---|
 | **A** | [Multilingual Conversational Retrieval Agent](capstone-a-multilingual-conversational-agent/) | Consumer brand with multilingual customers; conversational follow-ups across language switches | 5–7 days | Builds 2, 5, 7 |
 | **B** | [Cross-KB Federated Search](capstone-b-cross-kb-federated-search/) | Enterprise with multiple KBs (per business unit / region / security boundary); single search UX with per-KB attribution | 7–10 days | Builds 1, 3, 6 |
 | **C** | [Query-Decomposition Compliance Agent](capstone-c-query-decomposition-compliance-agent/) | Regulated industry (financial services, healthcare, energy, public sector); multi-part compliance questions | 8–10 days | Builds 4, 7, 8 |
+| **D** | [Research Portal](capstone-d-research-portal/) | Research-driven organisation (investment, consulting, R&D, policy, market research, journalism) — analyst time consumed by synthesis, not analysis | 8–10 days | Builds 3, 4, 5, 6, 7, 8 — **the deepest of the four** |
 
-Pick the capstone whose customer shape most closely matches the partner's book of business.
+Pick the capstone whose customer shape most closely matches the partner's book of business. Capstone D is the most commercially recognisable — every customer it gets pitched to has either built an internal version (badly), bought a vendor version (and is annoyed), or is actively budgeted to do one of those within the year.
 
 ## Capstone shape
 

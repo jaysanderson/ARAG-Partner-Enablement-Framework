@@ -25,13 +25,14 @@ Eight competencies plus three small capstones. The competencies are all **config
 | 7 | Retrieval Agents 101 | A deployed Retrieval Agent with traced execution + failure-mode playbook. |
 | 8 | Agent Decomposition, Tool Use & Cost Observability | A planner-driven agent with custom tools, cost budget, latency budget, and a tracing dashboard. |
 
-### The three small capstones (pick one for the cert)
+### The four small capstones (pick one for the cert)
 
 - **A · Multilingual Conversational Retrieval Agent** — 5–7 days. Combines Builds 2, 5, 7.
 - **B · Cross-KB Federated Search** — 7–10 days. Combines Builds 1, 3, 6.
 - **C · Query-Decomposition Compliance Agent** — 8–10 days. Combines Builds 4, 7, 8.
+- **D · Research Portal** — 8–10 days. Combines Builds 3, 4, 5, 6, 7, 8 (the deepest). The most commercially recognisable — every research-driven org wants one.
 
-A partner pursuing the deep specialism delivers all three.
+A partner pursuing the deep specialism delivers all four.
 
 ---
 
@@ -41,7 +42,7 @@ A partner pursuing the deep specialism delivers all three.
 |---|---|---|
 | Asks | *Is retrieval as good as it can be?* | *Is the search experience as smart as it can be?* |
 | Primary track | Deliver | Solution |
-| Capstone shape | One large tuning engagement | Three small customer-shaped capstones |
+| Capstone shape | One large tuning engagement | Four small customer-shaped capstones |
 | Commercial framing | *"We make your existing search better"* | *"We design the search your existing platform can't"* |
 
 A partner can hold one cert or both.
@@ -52,7 +53,7 @@ A partner can hold one cert or both.
 
 - **Prereq:** Developer Foundations Practitioner cert. The sibling advanced course is a strong companion but not strictly required.
 - **Duration:** 5–7 weeks part-time per individual; 3 weeks at full focus.
-- **Cert criteria:** 8/8 Build pass-rubrics green + 1/3 capstones shipped + 90-minute final defence with a Progress Solution lead.
+- **Cert criteria:** 8/8 Build pass-rubrics green + 1/4 capstones shipped + 90-minute final defence with a Progress Solution lead.
 
 ---
 

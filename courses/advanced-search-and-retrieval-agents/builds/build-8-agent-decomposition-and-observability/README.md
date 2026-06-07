@@ -62,3 +62,4 @@ The partner walks away knowing how to *price* an agent-based deployment to a cus
 
 - Previous build: [Build 7 — Retrieval Agents 101](../build-7-retrieval-agents-101/)
 - Capstones: [Capstones overview](../../capstones/)
+- Capstone D — Research Portal: leverages **everything in this Build** at full depth (planner + tools + cost + observability). The most natural next step after passing Build 8.
