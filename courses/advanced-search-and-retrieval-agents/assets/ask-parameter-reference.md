@@ -108,7 +108,7 @@ Used downstream for audit dashboards + per-cohort analytics.
 
 Restrict retrieval to specific fields. Format: `<resource-type-letter>/<field-name>`. Example: `a/title` searches only on the title field.
 
-Reference: [search-in-a-specific-field](https://docs.nuclia.dev/docs/rag/advanced/search/#search-in-a-specific-field).
+Reference: [search-in-a-specific-field](https://docs.rag.progress.cloud/docs/rag/advanced/search/#search-in-a-specific-field).
 
 ### `filters` (array of strings, default `[]`)
 
@@ -123,13 +123,13 @@ The list of filter paths. Multiple filters in the array compose with **AND**. Ea
 }
 ```
 
-Build 3 covers single-axis filtering depth. Reference: [search-filters](https://docs.nuclia.dev/docs/rag/advanced/search-filters).
+Build 3 covers single-axis filtering depth. Reference: [search-filters](https://docs.rag.progress.cloud/docs/rag/advanced/search-filters).
 
 ### `filter_expression` (object or null)
 
 A nested boolean tree of filter clauses with explicit AND / OR / NOT semantics. **Replaces and supersedes `fields`, `filters`, `range_*`, `resource_filters`, `keyword_filters`** when complex composition is needed.
 
-Build 3's reusable UI component emits `filter_expression` trees. See [search-filters](https://docs.nuclia.dev/docs/rag/advanced/search-filters) for the full syntax.
+Build 3's reusable UI component emits `filter_expression` trees. See [search-filters](https://docs.rag.progress.cloud/docs/rag/advanced/search-filters) for the full syntax.
 
 ### `keyword_filters` (array of strings or objects, default `[]`)
 
@@ -980,4 +980,4 @@ Plus header: `x-show-consumption: true`.
 - Course Build 6 — *Search Profiles* — `search_configuration` as the native shipping mechanism.
 - Course Build 7 — *Retrieval Agents 101* — `answer_json_schema` + `rag_strategies.prequeries`.
 - Course Build 8 — *Agent Decomposition, Tool Use & Cost Observability* — `debug` + `x-show-consumption` for tracing.
-- Progress Agentic RAG docs: [search-filters](https://docs.nuclia.dev/docs/rag/advanced/search-filters), [search-in-a-specific-field](https://docs.nuclia.dev/docs/rag/advanced/search/#search-in-a-specific-field), [restrict-access](https://docs.rag.progress.cloud/docs/management/how-to/restrict-access).
+- Progress Agentic RAG docs: [search-filters](https://docs.rag.progress.cloud/docs/rag/advanced/search-filters), [search-in-a-specific-field](https://docs.rag.progress.cloud/docs/rag/advanced/search/#search-in-a-specific-field), [restrict-access](https://docs.rag.progress.cloud/docs/management/how-to/restrict-access).
