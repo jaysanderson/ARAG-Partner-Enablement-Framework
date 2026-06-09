@@ -1,12 +1,12 @@
 # Video Script — Build 2: Drop-in Widgets
 
 > **Duration target:** 6 minutes
-> **Format:** Screen recording + voiceover. Most of the runtime is in the Nuclia dashboard's widget configurator.
-> **Tools on screen:** Nuclia dashboard (primary — at least 5 of 7 minutes here), code editor (VS Code, brief), browser.
+> **Format:** Screen recording + voiceover. Most of the runtime is in the Progress Agentic RAG dashboard's widget configurator.
+> **Tools on screen:** Progress Agentic RAG dashboard (primary — at least 5 of 7 minutes here), code editor (VS Code, brief), browser.
 
 ## Cold open (0:00 – 0:30)
 
-**ON SCREEN:** Title card. *"Developer Foundations · Build 2 · Drop-in Widgets"*. Cut to the Nuclia dashboard's Widget tab on a Knowledge Box.
+**ON SCREEN:** Title card. *"Developer Foundations · Build 2 · Drop-in Widgets"*. Cut to the Progress Agentic RAG dashboard's Widget tab on a Knowledge Box.
 
 **VOICEOVER:**
 > Build 2. Six minutes. By the end of this video we'll have a working chatbot running locally from a single HTML file on the Desktop — but the interesting part is *where* the work happens. It's not in an editor. It's in this dashboard, in a no-code configurator that picks the widgets, sets the options, configures the filter, and hands me an embed snippet. The partner's job in Build 2 is to know what every panel does, not to write any code.
@@ -45,7 +45,7 @@
 **ON SCREEN:** Open the filter panel. Type `/n/s/-product-` into the filter expression input. Watch the preview run a query — only product resources come back in the result list. Trail guides and brand stories disappear.
 
 **VOICEOVER:**
-> The filter panel. One expression — slash-n-slash-s-slash-dash-product-dash. That's Nuclia's slug-substring filter. Resources whose slug contains `-product-` come through; everything else is excluded. The same panel accepts content-type filters like `/icon/application/pdf` and labelset paths like `/classification.labels/audience/customer` — Build 6 and 7 go deep on those.
+> The filter panel. One expression — slash-n-slash-s-slash-dash-product-dash. That's Progress Agentic RAG's slug-substring filter. Resources whose slug contains `-product-` come through; everything else is excluded. The same panel accepts content-type filters like `/icon/application/pdf` and labelset paths like `/classification.labels/audience/customer` — Build 6 and 7 go deep on those.
 
 ## Section 5: Copy + paste + open locally (4:45 – 5:30)
 

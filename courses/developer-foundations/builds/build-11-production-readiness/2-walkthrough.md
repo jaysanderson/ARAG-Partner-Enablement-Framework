@@ -18,7 +18,7 @@ Plus a `production-checklist.md` and a 3-minute "platform-grade" pitch video.
 
 ## What you'll need open
 
-- **Your Nuclia dashboard** with your Build 0 KB.
+- **Your Progress Agentic RAG dashboard** with your Build 0 KB.
 - **Your terminal, editor, AI assistant**.
 
 ---
@@ -48,7 +48,7 @@ This is the artefact the CTO will read. **It must be precise. No hand-waving.**
 
 ### 2a. Capture the facts from your dashboard
 
-Open the Nuclia dashboard. For your KB, capture:
+Open the Progress Agentic RAG dashboard. For your KB, capture:
 
 - **Region** — EU or US (or other).
 - **Endpoint URL** — your `NUCLIA_API_URL` from Build 0.
@@ -70,7 +70,7 @@ jurisdiction.
 The LLM endpoint is BYO-LLM (Bring Your Own LLM) and is configured to
 a customer-owned tenant (currently: <provider, e.g., Azure OpenAI in
 Sweden Central>). The model never sees ARAG infrastructure — every
-generation request leaves Nuclia and lands in the customer's own
+generation request leaves Progress Agentic RAG and lands in the customer's own
 cloud account, billed to the customer's own tenant.
 
 For EU-residency requirements, both the KB and the LLM endpoint are
@@ -79,7 +79,7 @@ US-provisioned. Cross-region operation is not supported by default
 and requires explicit configuration.
 
 Authentication uses scoped service-account JWTs with TTL <ttl-value>
-and revocation via the Nuclia dashboard. PII handling follows the
+and revocation via the Progress Agentic RAG dashboard. PII handling follows the
 customer's data-classification policy; no PII is logged in ARAG's
 operational telemetry.
 ```
@@ -245,7 +245,7 @@ Create `dashboard-spec.md`:
 
 ### Rate-limit headroom
 - Current req/min / rate limit (e.g., 2400), as percentage.
-- ALARM: > 80% for 15 min straight — request rate-limit increase from Nuclia.
+- ALARM: > 80% for 15 min straight — request rate-limit increase from Progress Agentic RAG.
 
 ### BYO-LLM cost
 - LLM tokens / day, $ / day from the customer's tenant billing.
@@ -294,7 +294,7 @@ For each item, tick when verified for the customer's environment.
 
 ## Resilience
 - [ ] Rate-limit-aware client deployed (backoff + coalescing + 15s timeout).
-- [ ] Process documented for requesting rate-limit increase from Nuclia
+- [ ] Process documented for requesting rate-limit increase from Progress Agentic RAG
       (default 2400 req/min; can request more for customer's tenant).
 - [ ] Circuit-breaker pattern around ARAG calls (when latency exceeds threshold).
 - [ ] Fallback behaviour defined when ARAG is unavailable (e.g., empty state,
@@ -371,13 +371,13 @@ Then take the [Build 11 quiz](3-quiz.md). Pass → start [Build 12](../build-12-
 ## Getting unstuck
 
 **Residency statement reads generic.**
-- Re-read it aloud and time it. If you can't say it in 30–40 seconds with conviction, the placeholders aren't filled in with *your* values. Replace every `<placeholder>` with a concrete answer your CTO audience could verify in the Nuclia dashboard.
+- Re-read it aloud and time it. If you can't say it in 30–40 seconds with conviction, the placeholders aren't filled in with *your* values. Replace every `<placeholder>` with a concrete answer your CTO audience could verify in the Progress Agentic RAG dashboard.
 
 **Coalescing demo: only 1-2 calls coalesce instead of ~49.**
 - Cache key isn't deterministic. The AI may be including a timestamp or random ID. Tell AI: *"My cache key includes [X]; remove it so identical queries produce identical keys."*
 
 **429s firing in normal use.**
-- You're under-using coalescing OR genuinely hitting your sandbox limit. Reduce concurrency. In production, request a tenant-level rate-limit increase from Nuclia.
+- You're under-using coalescing OR genuinely hitting your sandbox limit. Reduce concurrency. In production, request a tenant-level rate-limit increase from Progress Agentic RAG.
 
 **Dashboard spec feels generic.**
 - The customer's CTO has *specific* concerns. Re-write each widget to address a real customer requirement. The goal is "this is THE dashboard, not A dashboard."

@@ -130,7 +130,7 @@ It must do these things:
    If none of the three paths produce a parseable result object,
    throw a helpful error including the first 500 chars of the raw response.
 
-5. Use native fetch (Node 18+). NO external HTTP library. NO Nuclia SDK.
+5. Use native fetch (Node 18+). NO external HTTP library. NO Progress Agentic RAG SDK.
 
 6. Add JSDoc/TypeScript comments above the function explaining the
    three response shapes and why we handle all three. Document the
@@ -319,7 +319,7 @@ node faq-generator.mjs "onboarding"
 
 - **Is the JSON valid?** It should parse without errors.
 - **Are there ≤5 entries?** (The prompt tells the model to omit items it can't ground — so 3 or 4 well-grounded items beats 5 captioned ones. Fewer is healthy.)
-- **Do `Source:` lines resolve to real document titles?** Open the Nuclia dashboard and confirm each printed source matches an actual resource title in your KB (e.g. *"Aurora TerraTrek 7 — Day & Thru-Hike Boot"*, not *"Mara on why she works with Aurora Outfitters"* — that second form is a model-invented caption).
+- **Do `Source:` lines resolve to real document titles?** Open the Progress Agentic RAG dashboard and confirm each printed source matches an actual resource title in your KB (e.g. *"Aurora TerraTrek 7 — Day & Thru-Hike Boot"*, not *"Mara on why she works with Aurora Outfitters"* — that second form is a model-invented caption).
 - **If a source label looks like a raw id (e.g. `terratrek-7`)** rather than a human-friendly title, the fallback fired — the model emitted a valid id but that resource wasn't in the resources map. That's still grounded and correct; the model just cited a result that fell outside the returned `resources` map. Print `resources` and confirm the id is there next run.
 
 ### 3d. Troubleshooting
@@ -511,7 +511,7 @@ Before running, find three items the connected KB knows about — the placeholde
 - Policy KB: three real policies.
 - Technical KB: three real components or APIs.
 
-Quick check: open the Nuclia dashboard → Resources → search for one of your candidate item names. If a resource comes back, the corpus knows about it.
+Quick check: open the Progress Agentic RAG dashboard → Resources → search for one of your candidate item names. If a resource comes back, the corpus knows about it.
 
 Then run:
 

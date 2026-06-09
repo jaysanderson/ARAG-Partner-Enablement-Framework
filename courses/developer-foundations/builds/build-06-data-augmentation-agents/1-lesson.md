@@ -16,7 +16,7 @@ Partners who treat these as **one platform feature** scope customer engagements 
 | **Labeller** | Classifies resources and paragraphs into labelsets at ingest — content_type, audience, region, priority, sensitivity, etc. | *"We have thousands of documents and users need to filter."* |
 | **Graph** | Extracts typed entities + typed relations into a queryable knowledge graph | *"Find the connections between X and Y."* / *"Which judges ruled on these matters and also cited these precedents?"* |
 
-All three run **at ingest** (or as a one-off batch later). All three are configured **per KB** in the Nuclia dashboard or via API. All three produce artefacts that downstream API calls — `/find`, `/ask`, `/graph` — return alongside the document content.
+All three run **at ingest** (or as a one-off batch later). All three are configured **per KB** in the Progress Agentic RAG dashboard or via API. All three produce artefacts that downstream API calls — `/find`, `/ask`, `/graph` — return alongside the document content.
 
 ## P1 — The Generator agent
 
@@ -33,7 +33,7 @@ The least-understood of the three. Most partners don't even know it exists.
 
 **Customer-facing pitch:** *"We pre-generate Q&A pairs and summaries from your documents so retrieval works against both your team's vocabulary and your users' vocabulary."*
 
-**Configuration:** in the Nuclia dashboard → KB → Augmentation. Toggle Generator. Choose which derived content types to produce. Provide an optional prompt template (e.g., for the Q&A generator). Run.
+**Configuration:** in the Progress Agentic RAG dashboard → KB → Augmentation. Toggle Generator. Choose which derived content types to produce. Provide an optional prompt template (e.g., for the Q&A generator). Run.
 
 ## P2 — The Labeller agent
 

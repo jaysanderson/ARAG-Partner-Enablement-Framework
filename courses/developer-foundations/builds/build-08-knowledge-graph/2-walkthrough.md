@@ -46,7 +46,7 @@ curl -s -X POST \
 **You should see:** raw JSON. Scroll for the `paths` array — it should have entries (ideally 5–20+ depending on corpus size). If it's `"paths": []`, see the troubleshooting below.
 
 If 0:
-1. Go back to your Nuclia dashboard. Check the Graph agent's run history — did extraction complete?
+1. Go back to your Progress Agentic RAG dashboard. Check the Graph agent's run history — did extraction complete?
 2. If it ran and you still see 0, your entity/relation schema may be too restrictive for your corpus. Loosen the entity types (use more generic ones like `PERSON`, `ORGANIZATION`, `CONCEPT`) and re-run.
 
 ### 1b. Confirm the filter excludes NER noise
@@ -501,7 +501,7 @@ graph-only demo punchline.)
 ## Key Takeaways
 
 - **Graphs answer questions retrieval can't.** *"Which engineers worked on both Atlas E-220 cooling AND BuildingHub firmware?"* — no single document carries that fact. Retrieval returns five docs that mention either; only a graph traversal answers the intersection. This is the Tier 4 demo move; no competing vendor ships it with the platform.
-- **The data-augmentation filter is non-negotiable.** Every graph query the app sends MUST wrap with `{ prop: "generated", by: "data-augmentation" }`. Without it Nuclia returns default NER nodes (DATE, MONEY, ORG, PERSON) alongside your typed entities and the result reads as noise. The filter is a one-line client-side discipline; ship it everywhere.
+- **The data-augmentation filter is non-negotiable.** Every graph query the app sends MUST wrap with `{ prop: "generated", by: "data-augmentation" }`. Without it Progress Agentic RAG returns default NER nodes (DATE, MONEY, ORG, PERSON) alongside your typed entities and the result reads as noise. The filter is a one-line client-side discipline; ship it everywhere.
 - **Custom entity types beat generic NER.** Default NER gives you PERSON, ORG, DATE. Your customer's value comes from custom types: `INVESTIGATOR`, `COMPOUND`, `RUNBOOK`, `INCIDENT`. The data-augmentation agent (Build 6) is what produces them; this Build is where you query them.
 - **Click-expand is the partner's quiet demo lever.** The customer in the room doesn't know what to ask the graph. Click an entity to expand its neighbours — let the customer point and ask *"what's that?"* — answer with another click. The exploration feels organic; the graph reveals connections the customer didn't know they had.
 - **Graph schema is half the work.** 8-15 entity types, 8-15 relation types, definitions partners agree on, no overlapping semantics. Bad schema design surfaces in three places: the data-augmentation agent extracts noise (Build 6 fault), the graph viewer surfaces incoherent paths (this Build), the composite RAG flow (Build 10) can't traverse meaningfully. Get the schema right; the rest follows.
@@ -526,7 +526,7 @@ Then take the [Build 8 quiz](3-quiz.md). Pass → start [Build 9](../build-09-fi
 ## Getting unstuck
 
 **`/graph` returns 0 paths even though the agent ran.**
-- Confirm in the Nuclia dashboard that the Graph agent's run completed (status: success).
+- Confirm in the Progress Agentic RAG dashboard that the Graph agent's run completed (status: success).
 - Re-run extraction if needed.
 - Loosen your entity types — too narrow a schema = no extractions.
 

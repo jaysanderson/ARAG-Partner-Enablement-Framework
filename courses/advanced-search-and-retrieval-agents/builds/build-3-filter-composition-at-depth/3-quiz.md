@@ -45,7 +45,7 @@ D. Zero — it's a flat AND.
 A. UI layer — it's faster.
 B. Computed-filter layer — harder to bypass and centralised.
 C. Either is fine.
-D. Nuclia handles security automatically.
+D. Progress Agentic RAG handles security automatically.
 
 ---
 

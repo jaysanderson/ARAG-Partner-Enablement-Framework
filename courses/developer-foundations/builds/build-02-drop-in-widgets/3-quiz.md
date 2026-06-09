@@ -4,7 +4,7 @@
 
 ---
 
-### 1. The Nuclia widget library ships as:
+### 1. The Progress Agentic RAG widget library ships as:
 
 A. A React component package on npm
 B. Standard Web Components from a CDN script
@@ -22,7 +22,7 @@ D. `restrict="application/video"`
 
 ---
 
-### 3. The Nuclia widget configurator's three panes are:
+### 3. The Progress Agentic RAG widget configurator's three panes are:
 
 A. Editor, terminal, browser
 B. Configuration, live preview, generated code

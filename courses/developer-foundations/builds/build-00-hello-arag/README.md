@@ -23,7 +23,7 @@ Work through the four files for this Build in order:
 
 ## What you can do after this Build
 
-- Provision a Nuclia KB and ingest documents into it.
+- Provision a Progress Agentic RAG KB and ingest documents into it.
 - Make `/find` and `/ask` calls (sync and streaming) from `curl`.
 - Direct an AI coding assistant to write a working ARAG client in 5 minutes.
 - Read the response shape for `/find` (paragraphs + scores) and `/ask` (NDJSON stream).

@@ -1,6 +1,6 @@
 # `/ask` — Exhaustive Parameter Reference
 
-> Part of [Advanced Search & Retrieval Agents](../README.md). The canonical reference for every parameter, header, and response field of ARAG's `/ask` endpoint, mirroring the Nuclia API contract verbatim.
+> Part of [Advanced Search & Retrieval Agents](../README.md). The canonical reference for every parameter, header, and response field of ARAG's `/ask` endpoint, mirroring the Progress Agentic RAG API contract verbatim.
 >
 > Every Build in this course tunes one or more of these parameters. Read it cover-to-cover during Build 1, then return to it per Build.
 
@@ -246,13 +246,13 @@ When the partner overrides this, they're usually building a custom-weighted hybr
 
 ### `reranker` (string or object, default `"predict"`)
 
-The reranker that runs over the fused candidates. Default: `"predict"` (Nuclia Predict's built-in reranker).
+The reranker that runs over the fused candidates. Default: `"predict"` (Progress Agentic RAG Predict's built-in reranker).
 
 Common values:
 
 | Value | Behaviour |
 |---|---|
-| `"predict"` | Default — Nuclia Predict's reranker. Sub-second. |
+| `"predict"` | Default — Progress Agentic RAG Predict's reranker. Sub-second. |
 | `"noop"` | No reranking. Returns the fused-rank-fusion order. |
 | (custom) | Tenant-specific external reranker if configured at the KB level. |
 
@@ -980,4 +980,4 @@ Plus header: `x-show-consumption: true`.
 - Course Build 6 — *Search Profiles* — `search_configuration` as the native shipping mechanism.
 - Course Build 7 — *Retrieval Agents 101* — `answer_json_schema` + `rag_strategies.prequeries`.
 - Course Build 8 — *Agent Decomposition, Tool Use & Cost Observability* — `debug` + `x-show-consumption` for tracing.
-- Nuclia docs: [search-filters](https://docs.nuclia.dev/docs/rag/advanced/search-filters), [search-in-a-specific-field](https://docs.nuclia.dev/docs/rag/advanced/search/#search-in-a-specific-field), [restrict-access](https://docs.rag.progress.cloud/docs/management/how-to/restrict-access).
+- Progress Agentic RAG docs: [search-filters](https://docs.nuclia.dev/docs/rag/advanced/search-filters), [search-in-a-specific-field](https://docs.nuclia.dev/docs/rag/advanced/search/#search-in-a-specific-field), [restrict-access](https://docs.rag.progress.cloud/docs/management/how-to/restrict-access).

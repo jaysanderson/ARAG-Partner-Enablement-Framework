@@ -48,7 +48,7 @@ Each build follows the same rhythm so the cognitive load stays predictable:
 
 1. **Read or watch the lesson.** Ten to fifteen minutes of conceptual setup. What does this primitive return? What customer problem does it solve? What's the API surface? Each lesson has both a written version and a recorded video — pick whichever works for you. The video is the canonical surface; the markdown is the searchable transcript.
 
-2. **Work the walkthrough.** One to three hours of hands-on building. You'll provision things in the Nuclia dashboard, run curl commands against your Knowledge Box, brief an AI coding assistant to build a component, run it, verify the output, fix anything broken. Every walkthrough ends with a working artefact you save to your local project folder.
+2. **Work the walkthrough.** One to three hours of hands-on building. You'll provision things in the Progress Agentic RAG dashboard, run curl commands against your Knowledge Box, brief an AI coding assistant to build a component, run it, verify the output, fix anything broken. Every walkthrough ends with a working artefact you save to your local project folder.
 
 3. **Take the quiz.** Five multiple-choice questions, open-book, four out of five to pass. The quiz exists to catch genuinely-missed concepts before you build on top of them in the next Build, not to be an obstacle. If you fail, re-read the relevant lesson section and re-sit.
 
@@ -72,9 +72,9 @@ If you can dedicate roughly an evening every other day (90–120 minutes per ses
 
 ## What it costs
 
-For Progress partner organisations: nothing additional. The course is included in your partner programme. Your Nuclia sandbox credentials are provided as part of partner onboarding; every build runs against that sandbox at no incremental cost.
+For Progress partner organisations: nothing additional. The course is included in your partner programme. Your Progress Agentic RAG sandbox credentials are provided as part of partner onboarding; every build runs against that sandbox at no incremental cost.
 
-For non-partner technical evaluators: you'll need a Nuclia account to do the builds. The free tier covers Builds 0 through 5; from Build 6 onward (data-augmentation agents, graph extraction, the capstone) you'll either need to be inside a partner org or convert to a paid plan. The lesson reading and video watching are free regardless.
+For non-partner technical evaluators: you'll need a Progress Agentic RAG account to do the builds. The free tier covers Builds 0 through 5; from Build 6 onward (data-augmentation agents, graph extraction, the capstone) you'll either need to be inside a partner org or convert to a paid plan. The lesson reading and video watching are free regardless.
 
 ## Frequently asked questions
 
@@ -108,7 +108,7 @@ No penalty. The course is designed to be picked up and put down. Your progress t
 
 **Can I take this course if my partner org hasn't onboarded yet?**
 
-Builds 0 through 5 work against any free-tier Nuclia account, so yes — you can self-start while your org's partner paperwork is in flight. From Build 6 onward you'll want partner-tier credentials. Talk to your partner manager.
+Builds 0 through 5 work against any free-tier Progress Agentic RAG account, so yes — you can self-start while your org's partner paperwork is in flight. From Build 6 onward you'll want partner-tier credentials. Talk to your partner manager.
 
 ## For partner managers and SE leads
 

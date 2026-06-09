@@ -230,7 +230,7 @@ Language back to English.
 
 ### 4c. Test the resource-scope lever
 
-1. Pick a document title from your KB (open the Nuclia dashboard → list of resources → copy any title verbatim).
+1. Pick a document title from your KB (open the Progress Agentic RAG dashboard → list of resources → copy any title verbatim).
 2. Paste it into the **Resource Context** input.
 3. Ask: *"Summarise this."*
 
@@ -336,7 +336,7 @@ features.retrieval (or the equivalent retrieval config object —
 check the request your client is currently building).
 ```
 
-Apply the change. (Your KB needs an `audience` labelset with at least a `shopper` label for this to bind to real content — if you don't have one yet, add a label to 2–3 resources in the Nuclia dashboard first, then re-index.)
+Apply the change. (Your KB needs an `audience` labelset with at least a `shopper` label for this to bind to real content — if you don't have one yet, add a label to 2–3 resources in the Progress Agentic RAG dashboard first, then re-index.)
 
 Re-run the same query from 9a 5–10 times.
 

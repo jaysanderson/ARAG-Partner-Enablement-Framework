@@ -2,7 +2,7 @@
 
 > Estimated time: 2–3 hours focused. Read the [lesson](1-lesson.md) first.
 >
-> **This Build is mostly dashboard configuration — not vibe coding.** You'll click around the Nuclia dashboard to enable three platform features, then verify each works. The point is *understanding the family*. Builds 7 (Smart Filters) and 8 (Knowledge Graph) are where the UIs come alive.
+> **This Build is mostly dashboard configuration — not vibe coding.** You'll click around the Progress Agentic RAG dashboard to enable three platform features, then verify each works. The point is *understanding the family*. Builds 7 (Smart Filters) and 8 (Knowledge Graph) are where the UIs come alive.
 
 ## What you'll build
 
@@ -14,11 +14,11 @@ Three data-augmentation agents configured against your Build 0 sandbox KB:
 
 Plus before/after evidence that each agent did something useful.
 
-> **Note:** the path to augmentation panels varies by Nuclia tenant tier. We give general directions ("Settings → Augmentation") — your dashboard may say "Data Augmentation," "Agents," or similar. If you can't find a panel, ask in `#partner-onboarding` Slack with a screenshot.
+> **Note:** the path to augmentation panels varies by Progress Agentic RAG tenant tier. We give general directions ("Settings → Augmentation") — your dashboard may say "Data Augmentation," "Agents," or similar. If you can't find a panel, ask in `#partner-onboarding` Slack with a screenshot.
 
 ## What you'll need open
 
-- **Your Nuclia dashboard** with your Build 0 KB (10 documents ingested).
+- **Your Progress Agentic RAG dashboard** with your Build 0 KB (10 documents ingested).
 - **Your `.env`** with the three credentials.
 - **Your editor** for saving notes.
 - **A modern browser**.
@@ -30,7 +30,7 @@ Plus before/after evidence that each agent did something useful.
 
 Before you turn anything on, you want a **"before" snapshot**. That way you can prove the agents actually changed something.
 
-> **A note on this Build's verification path.** Build 6 is **dashboard-driven**. Every check in Steps 1–5 has a "do it in the Nuclia dashboard" path — works on any OS, no terminal. There's an optional *Power-user path* for partners who want the raw API call (curl only; you'll be scrolling raw JSON — no `jq` or other formatters required). Pick whichever fits — both produce the same artefact for `baseline.md` / `generator-output.md` / etc.
+> **A note on this Build's verification path.** Build 6 is **dashboard-driven**. Every check in Steps 1–5 has a "do it in the Progress Agentic RAG dashboard" path — works on any OS, no terminal. There's an optional *Power-user path* for partners who want the raw API call (curl only; you'll be scrolling raw JSON — no `jq` or other formatters required). Pick whichever fits — both produce the same artefact for `baseline.md` / `generator-output.md` / etc.
 
 ### 1a. Set up the Build 6 folder
 
@@ -64,11 +64,11 @@ You need a folder on your machine to save notes and screenshots. Make it however
 
 ### 1b. Pick 3 sample documents
 
-Open your Nuclia dashboard → your KB → resource list. Pick **3 documents** with distinct content:
+Open your Progress Agentic RAG dashboard → your KB → resource list. Pick **3 documents** with distinct content:
 
 - **Different topics** — e.g. one product spec, one ambassador profile, one brand pillar.
 - **Different lengths** — one short, one long.
-- **Different content modalities if possible** — one markdown product spec, one PDF gear review (e.g. `terratrek-7-field-report.pdf`), one MP4 ambassador video (e.g. `mara-chen-terratrek-field-test.mp4`). The shipped corpus contains 37 markdown and 10 binary files across 5 formats so you can see Nuclia's auto-OCR and auto-transcription propagating into the agents in Step 2 onward.
+- **Different content modalities if possible** — one markdown product spec, one PDF gear review (e.g. `terratrek-7-field-report.pdf`), one MP4 ambassador video (e.g. `mara-chen-terratrek-field-test.mp4`). The shipped corpus contains 37 markdown and 10 binary files across 5 formats so you can see Progress Agentic RAG's auto-OCR and auto-transcription propagating into the agents in Step 2 onward.
 
 Click into each. Copy its **resource ID** (a UUID, usually visible in the URL or in a "details" panel).
 
@@ -89,7 +89,7 @@ Pick one question your corpus can answer (e.g. *"Which Aurora boots are recommen
 
 **Dashboard path (recommended for citizen developers):**
 
-1. In the Nuclia dashboard, open your KB.
+1. In the Progress Agentic RAG dashboard, open your KB.
 2. Find the **Search & Ask** (or **Try the API**, **Playground**, **Search**) panel — most tenants have it in the left nav.
 3. Type your question and submit. Make sure *"Generative answer"* (or equivalent) is enabled so you get an LLM-generated answer alongside the raw retrieval.
 4. Capture three things:
@@ -319,7 +319,7 @@ Scroll for either `usermetadata.classifications` or top-level `classifications` 
 
 The Graph extracts typed entities and relations. Output is queryable via `/graph` and powers Build 8.
 
-The Nuclia Graph agent dashboard asks for three things, in this order:
+The Progress Agentic RAG Graph agent dashboard asks for three things, in this order:
 
 1. **NER types** — your domain's entity vocabulary (`PRODUCT`, `AMBASSADOR`, `DESTINATION`, etc.), each with a 1–2 sentence **Description** that lists the actual values from your corpus.
 2. **NER examples** — at least 3 short pieces of prose from your corpus, each tagged with:

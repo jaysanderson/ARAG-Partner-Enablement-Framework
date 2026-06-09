@@ -72,7 +72,7 @@ Labels:
 
 If your Build 6 labelset already matches your design — skip to Step 3.
 
-Otherwise, open the Nuclia dashboard:
+Otherwise, open the Progress Agentic RAG dashboard:
 
 1. **Settings → Labelsets** (or Augmentation → Labeller).
 2. Edit your existing labelset to match your `labelset-design.md`.
@@ -84,7 +84,7 @@ Otherwise, open the Nuclia dashboard:
 
 **Dashboard path (recommended, works on any OS):**
 
-1. In the Nuclia dashboard, open **KB → Labelsets** (left nav).
+1. In the Progress Agentic RAG dashboard, open **KB → Labelsets** (left nav).
 2. You should see your labelset listed with all the labels you defined.
 3. Click the labelset name to expand the labels and confirm the values match your design.
 
@@ -110,7 +110,7 @@ Returns raw JSON containing your labelset and labels.
 
 Before you wire it into a UI, **prove the filter syntax works**. Three patterns to test — content type, label, and both composed.
 
-> **Why dashboard-first this time?** The filter API takes a JSON body. Windows `cmd` doesn't strip single quotes around `-d '{...}'` the way bash does, so a copy-pasted curl command ships malformed JSON and Nuclia replies with *"JSON decode error · Expecting value"*. The dashboard's Search panel has a filter UI that builds the same query without any shell-quoting hazard. The curl paths below are preserved for Mac/Linux power users.
+> **Why dashboard-first this time?** The filter API takes a JSON body. Windows `cmd` doesn't strip single quotes around `-d '{...}'` the way bash does, so a copy-pasted curl command ships malformed JSON and Progress Agentic RAG replies with *"JSON decode error · Expecting value"*. The dashboard's Search panel has a filter UI that builds the same query without any shell-quoting hazard. The curl paths below are preserved for Mac/Linux power users.
 
 ### 3a. Filter by content type (mimetype icon)
 
@@ -137,7 +137,7 @@ curl -s -X POST \
 
 Returns raw JSON. Scroll for the `resources` object — the number of keys is your result count; the `best_matches` array shows the ranked resource IDs.
 
-**Why this curl will fail on Windows cmd:** cmd doesn't process single quotes the way bash does — the `'{...}'` body arrives at Nuclia as garbage and you get *"JSON decode error"*. Either use PowerShell with backtick-escaped double quotes, or save the JSON body to a file and use `-d @body.json`, or just use the dashboard path above.
+**Why this curl will fail on Windows cmd:** cmd doesn't process single quotes the way bash does — the `'{...}'` body arrives at Progress Agentic RAG as garbage and you get *"JSON decode error"*. Either use PowerShell with backtick-escaped double quotes, or save the JSON body to a file and use `-d @body.json`, or just use the dashboard path above.
 
 </details>
 

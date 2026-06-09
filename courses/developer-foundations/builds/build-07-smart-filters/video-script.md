@@ -39,7 +39,7 @@
 
 ## Section 4: Apply labels in the dashboard (3:30 – 4:30)
 
-**ON SCREEN:** Nuclia dashboard. Settings → Labelsets → Create. Name it `topic`. Add the 7 labels. Then jump to a resource, apply 2–3 labels to it. Repeat for 4–5 resources. Fast-forward.
+**ON SCREEN:** Progress Agentic RAG dashboard. Settings → Labelsets → Create. Name it `topic`. Add the 7 labels. Then jump to a resource, apply 2–3 labels to it. Repeat for 4–5 resources. Fast-forward.
 
 **VOICEOVER:**
 > In the dashboard, create the labelset. Add the labels. Then apply to your resources. For a 10-document sandbox you do this by hand in fifteen minutes. For a customer's 10,000-document corpus you train a classifier — that's the Advanced course.

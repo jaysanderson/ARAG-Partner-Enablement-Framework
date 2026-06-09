@@ -12,7 +12,7 @@
 
 ## Section 1: Residency (0:30 – 2:00)
 
-**ON SCREEN:** A map showing EU and USA regions. Annotation: *"Per KB. Choose at provisioning. Data stays."* Then cut to Nuclia dashboard showing the KB region setting.
+**ON SCREEN:** A map showing EU and USA regions. Annotation: *"Per KB. Choose at provisioning. Data stays."* Then cut to Progress Agentic RAG dashboard showing the KB region setting.
 
 **VOICEOVER:**
 > Residency. Per KB. Set at provisioning. The KB's documents, embeddings, graph, metadata — all stay in the chosen region. EU or USA.
@@ -23,7 +23,7 @@
 
 ## Section 2: BYO-LLM (2:00 – 4:30)
 
-**ON SCREEN:** Three-column slide — Azure OpenAI, Google Vertex, AWS Bedrock — with their model offerings under each. Then switch to Nuclia dashboard. Open the KB's generative-model setting. Switch from default to "Custom Azure OpenAI." Paste in endpoint URL + API key from a prepared deployment. Save. Run a quick `/ask` query — it works, voice slightly different.
+**ON SCREEN:** Three-column slide — Azure OpenAI, Google Vertex, AWS Bedrock — with their model offerings under each. Then switch to Progress Agentic RAG dashboard. Open the KB's generative-model setting. Switch from default to "Custom Azure OpenAI." Paste in endpoint URL + API key from a prepared deployment. Save. Run a quick `/ask` query — it works, voice slightly different.
 
 **VOICEOVER:**
 > BYO-LLM. ARAG decouples retrieval from generation. The retrieval engine, the graph, the data-augmentation agent — all on ARAG. The LLM is the customer's choice — Azure, Vertex, or Bedrock, pointed at their own tenant.

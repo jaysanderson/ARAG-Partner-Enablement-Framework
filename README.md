@@ -393,7 +393,7 @@ Compact catalogue of the patterns partners will compose in customer engagements.
 | F4 | Paths from source node (undirected) | `/graph` (path) | 4 |
 | F5 | Entity → resources lookup (hybrid retrieval) | `/find` with `features:['keyword','semantic']` | 4 |
 | F6 | Incremental client-side graph merge | (uses F4 + dedupe) | 4 |
-| I  | Drop-in web components (search-bar, chat, popup, results) | Nuclia widget CDN | 1 |
+| I  | Drop-in web components (search-bar, chat, popup, results) | Progress Agentic RAG widget CDN | 1 |
 
 ---
 

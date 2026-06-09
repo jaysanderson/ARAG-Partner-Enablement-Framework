@@ -8,7 +8,7 @@
 
 ## Reference implementation
 
-The complete reference app is at **[github.com/jaysanderson/Capstone-Atlas-Operations](https://github.com/jaysanderson/Capstone-Atlas-Operations)** — a Vite + React + TypeScript + Tailwind chassis that scores 100% against this brief once provisioned against a populated Nuclia KB. It includes:
+The complete reference app is at **[github.com/jaysanderson/Capstone-Atlas-Operations](https://github.com/jaysanderson/Capstone-Atlas-Operations)** — a Vite + React + TypeScript + Tailwind chassis that scores 100% against this brief once provisioned against a populated Progress Agentic RAG KB. It includes:
 
 - All five demo surfaces + landing + an `/ops` mock observability page.
 - All three Tier-3 workflows (Onboarding-Path, Battle-Card, Compliance-Trace).
@@ -66,7 +66,7 @@ Atlas Operations runs on **one ARAG Knowledge Box** (`kb-atlas-operations`). Doc
 
 A query for "incident root cause" filtered to `business_unit:engineering` returns engineering incidents. A query for "policy" filtered to `business_unit:compliance` returns compliance policies. Cross-domain queries simply skip the filter. Same KB, same API, same auth token.
 
-Earlier iterations shipped with three labelsets (`business_unit` + `content_type` + `region`). Nuclia's folder-name-as-labelset auto-detection during ingest is flat (one labelset name + a list of labels per ingest), so a drag-drop ingest can cleanly apply *one* labelset. The Foundations capstone scopes to that one — `business_unit` — to keep the partner-onboarding path no-code. Partners who want the extra labelsets back can apply them via the dashboard's labelset editor after ingest, or by running the optional seed script — both paths are documented in `Capstone-Atlas-Operations/corpus/README.md`.
+Earlier iterations shipped with three labelsets (`business_unit` + `content_type` + `region`). Progress Agentic RAG's folder-name-as-labelset auto-detection during ingest is flat (one labelset name + a list of labels per ingest), so a drag-drop ingest can cleanly apply *one* labelset. The Foundations capstone scopes to that one — `business_unit` — to keep the partner-onboarding path no-code. Partners who want the extra labelsets back can apply them via the dashboard's labelset editor after ingest, or by running the optional seed script — both paths are documented in `Capstone-Atlas-Operations/corpus/README.md`.
 
 ### Where the corpus lives and how partners ingest it
 
@@ -80,11 +80,11 @@ Both copies are identical. The mirror is convenience; the canonical source is th
 **The citizen-developer "Upload folder" ingest path** (primary):
 
 1. Partner clones `Capstone-Atlas-Operations`.
-2. Partner provisions an empty Knowledge Box in their Nuclia dashboard (Step 1 of `corpus/README.md`).
-3. In the dashboard, partner opens the KB → **Resources** → **Upload** → **Upload folder**, picks the `corpus/business_unit/` folder, and enables the **"use folder names as label names"** option. Nuclia applies `business_unit` as the labelset and the subfolder names (`hr`, `engineering`, etc.) as label values on every document.
+2. Partner provisions an empty Knowledge Box in their Progress Agentic RAG dashboard (Step 1 of `corpus/README.md`).
+3. In the dashboard, partner opens the KB → **Resources** → **Upload** → **Upload folder**, picks the `corpus/business_unit/` folder, and enables the **"use folder names as label names"** option. Progress Agentic RAG applies `business_unit` as the labelset and the subfolder names (`hr`, `engineering`, etc.) as label values on every document.
 4. Done. No `npm`, no terminal, no `.env`.
 
-**The programmatic ingest path** (optional, for partners scaling beyond the bundled 320 docs): `scripts/seed-kb.mjs` POSTs documents to the Nuclia API with full classification metadata read from YAML frontmatter. Documented at `corpus/README.md` Step 2 → "Optional · Programmatic ingest".
+**The programmatic ingest path** (optional, for partners scaling beyond the bundled 320 docs): `scripts/seed-kb.mjs` POSTs documents to the Progress Agentic RAG API with full classification metadata read from YAML frontmatter. Documented at `corpus/README.md` Step 2 → "Optional · Programmatic ingest".
 
 **Corpus build tool for scale:** Use the `progress-kb-use-case-generator` skill from `anthropic-skills` to grow the corpus beyond 320 docs. The skill produces 56–63 realistic workplace documents per business-unit persona; run it five times — once per business unit — with the Atlas anchor details locked in advance so cross-business-unit references resolve cleanly. The new files drop straight into `corpus/business_unit/<bu>/`; partners then re-run the drag-drop or seed-script ingest.
 
@@ -170,7 +170,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 ### 5.3 Backend stack
 
 - **ARAG only.** No custom backend. Atlas Operations talks directly to ARAG endpoints exactly the way `Capstone-Atlas-Operations` does. This is itself a demo point — *there is no middleware to maintain*.
-- **Generation backend:** Configured at the KB level via the Nuclia dashboard. Not exposed in the demo UI (see Build 11 for when and how to surface BYO-LLM to a customer — descoped here so the demo only claims what it actually ships).
+- **Generation backend:** Configured at the KB level via the Progress Agentic RAG dashboard. Not exposed in the demo UI (see Build 11 for when and how to surface BYO-LLM to a customer — descoped here so the demo only claims what it actually ships).
 
 ### 5.4 Data-augmentation agent — the typed graph
 
@@ -297,7 +297,7 @@ Total target: **8 weeks of focused work**, or **4 weeks at 2 FTE**. Phases can r
 - Residency badge visible in the header — shows "EU" or "USA" based on the active KB region.
 - Rate-limit-aware client (backoff + request coalescing) implemented in the ARAG client wrapper.
 - Observability dashboard (Grafana or simple in-app panel) showing p50/p95 latency, citation rate, and per-endpoint request volume. Visible from a `/ops` route.
-- **No BYO-LLM toggle in the UI.** Generation backend is set once at the KB level via the Nuclia dashboard; the demo never claims a per-click switch it doesn't ship. See [Build 11 — *When BYO-LLM doesn't fit*](../../build-11-production-readiness/1-lesson.md#when-byo-llm-doesnt-fit-clean-descope) for the discipline.
+- **No BYO-LLM toggle in the UI.** Generation backend is set once at the KB level via the Progress Agentic RAG dashboard; the demo never claims a per-click switch it doesn't ship. See [Build 11 — *When BYO-LLM doesn't fit*](../../build-11-production-readiness/1-lesson.md#when-byo-llm-doesnt-fit-clean-descope) for the discipline.
 - **Exit criteria:** A live CTO question about residency, lock-in, or rate limits has a one-click visual answer from inside Atlas Operations.
 
 ### Phase 6 — Demo script + re-skin playbook (Week 7–8)
@@ -336,7 +336,7 @@ This is the script the build owner rehearses to certification. Times are cumulat
 >
 > The corpus I'm demoing against is a fictional company called Atlas Global Industries. Fifty thousand employees, four regions, five business units. One Knowledge Box. Three labelsets — business unit, content type, region — covering HR, Engineering, Sales, Customer Success, Compliance. Every filter in this demo is a labelset query, not a separate KB. That matters when we talk about how your team would deploy this against your own corpus.
 >
-> Two things to notice before we start. Top-right: the residency badge — this KB is provisioned in the **<your-region>** region (substitute the region you provisioned in — EU or USA — when you deliver the demo), and that's verifiable in our Nuclia dashboard. And right beneath the hero: live ingested-corpus stats, pulled at page load — that's the actual count of resources, paragraphs, and graph nodes in this KB. Not a slide. Real numbers, real KB."
+> Two things to notice before we start. Top-right: the residency badge — this KB is provisioned in the **<your-region>** region (substitute the region you provisioned in — EU or USA — when you deliver the demo), and that's verifiable in our Progress Agentic RAG dashboard. And right beneath the hero: live ingested-corpus stats, pulled at page load — that's the actual count of resources, paragraphs, and graph nodes in this KB. Not a slide. Real numbers, real KB."
 
 > "The generation backend — which LLM produces the words — is configured at the KB level on the platform side, and we'll wire it into *your* Azure or Vertex or Bedrock tenant during the co-engineered POC. That's how BYO-LLM works in production. We're not faking it with a toggle in the demo UI today; what you'll see today is on the platform's default generator. The lock-in answer lives in the residency badge and the platform architecture, not in a click."
 

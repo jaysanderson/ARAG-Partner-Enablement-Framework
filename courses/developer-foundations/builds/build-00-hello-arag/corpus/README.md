@@ -1,6 +1,6 @@
 # Build 0 Sample Corpus
 
-Two folder-organised corpora ship with Build 0 so students learn Nuclia's **Upload folder** ingest flow with the **"use folder names as label names"** option from the very first build. Same structure the Build 13 capstones use; same workflow students will run when they ship their capstone.
+Two folder-organised corpora ship with Build 0 so students learn Progress Agentic RAG's **Upload folder** ingest flow with the **"use folder names as label names"** option from the very first build. Same structure the Build 13 capstones use; same workflow students will run when they ship their capstone.
 
 ```
 corpus/
@@ -23,9 +23,9 @@ corpus/
 
 ## Build 0 uses `content_type/`
 
-The Build 0 walkthrough instructs students to upload the `content_type/` folder (47 outdoor-retail documents) using the dashboard's **Upload folder** option with the **"use folder names as label names"** toggle enabled. Nuclia auto-creates the `content_type` labelset with eight labels (`product`, `trail_guide`, `podcast`, etc.) and applies the matching label to each document based on its parent folder.
+The Build 0 walkthrough instructs students to upload the `content_type/` folder (47 outdoor-retail documents) using the dashboard's **Upload folder** option with the **"use folder names as label names"** toggle enabled. Progress Agentic RAG auto-creates the `content_type` labelset with eight labels (`product`, `trail_guide`, `podcast`, etc.) and applies the matching label to each document based on its parent folder.
 
-The corpus mixes formats deliberately: **37 markdown + 10 binary files** (2 PDF, 2 DOCX, 2 PPTX, 2 MP3, 2 MP4). Nuclia auto-OCRs PDFs, extracts text from DOCX and PPTX, and transcribes audio + video with Whisper at ingest — students see all of this happen during the Build 0 upload.
+The corpus mixes formats deliberately: **37 markdown + 10 binary files** (2 PDF, 2 DOCX, 2 PPTX, 2 MP3, 2 MP4). Progress Agentic RAG auto-OCRs PDFs, extracts text from DOCX and PPTX, and transcribes audio + video with Whisper at ingest — students see all of this happen during the Build 0 upload.
 
 47 documents is small enough to ingest in a few minutes during a Build 0 session and large enough to demonstrate meaningful retrieval across varied content and formats.
 

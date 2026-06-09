@@ -8,7 +8,7 @@
 
 Before you start, have these open on your screen:
 
-- **The Nuclia dashboard** (link in your partner-onboarding email).
+- **The Progress Agentic RAG dashboard** (link in your partner-onboarding email).
 - **A terminal** — macOS Terminal app, Windows PowerShell, or Linux shell. Open a new tab.
 - **A code editor** — VS Code is the easiest. We'll only edit two small files.
 - **Your AI assistant** — Claude Code, Cursor, Claude.ai, or ChatGPT. Have a chat window ready.
@@ -23,22 +23,22 @@ node --version
 
 **Expected output:** something like `v20.11.0` or higher. If you see "command not found," Node didn't install correctly — reinstall from the link above.
 
-**The sample corpus you'll ingest** — clone the framework repo locally first; the corpus ships inside it at `courses/developer-foundations/builds/build-00-hello-arag/corpus/content_type/`. 37 outdoor-retail documents organised into seven subfolders (`product/`, `trail_guide/`, `gear_review/`, etc.) — the folder names will become labels in Nuclia once you upload. Using the same corpus everyone else in the course uses means every query you try later behaves the way the lessons describe — your results will line up with the screenshots and example outputs in subsequent Builds.
+**The sample corpus you'll ingest** — clone the framework repo locally first; the corpus ships inside it at `courses/developer-foundations/builds/build-00-hello-arag/corpus/content_type/`. 37 outdoor-retail documents organised into seven subfolders (`product/`, `trail_guide/`, `gear_review/`, etc.) — the folder names will become labels in Progress Agentic RAG once you upload. Using the same corpus everyone else in the course uses means every query you try later behaves the way the lessons describe — your results will line up with the screenshots and example outputs in subsequent Builds.
 
 > **Don't have git installed?** See *Getting unstuck* at the bottom for a no-clone download alternative — but cloning is the path the rest of the course assumes.
 
-> **Why this corpus has folders.** Nuclia can use folder names as **label names** during ingest — a feature that lets you drag one folder, get labels for free, and skip the per-document tagging step. You'll use that feature in Step 4. The same folder-name-as-labels workflow runs through every build past Build 0, including the capstone, so learn it once here.
+> **Why this corpus has folders.** Progress Agentic RAG can use folder names as **label names** during ingest — a feature that lets you drag one folder, get labels for free, and skip the per-document tagging step. You'll use that feature in Step 4. The same folder-name-as-labels workflow runs through every build past Build 0, including the capstone, so learn it once here.
 
 ---
 
 ## Step 1 — Create your Knowledge Box (5 min)
 
-Open the Nuclia dashboard.
+Open the Progress Agentic RAG dashboard.
 
 1. Click **"New Knowledge Box"** (or "Create KB" — wording varies).
 2. **Name:** `<your-initials>-foundations` (e.g., `jay-foundations`).
 3. **Region:** **pick the option geographically closest to you** — EU if you're in Europe / EMEA, USA if you're in the Americas. **Then stick with that same region for every Knowledge Box you provision in this course.** Knowledge Boxes in different regions can't share data, and switching mid-course adds confusion. Residency is covered in Build 11.
-4. **Generative model:** leave on **"Default Nuclia model."** We'll cover BYO-LLM in Build 11.
+4. **Generative model:** leave on **"Default Progress Agentic RAG model."** We'll cover BYO-LLM in Build 11.
 5. Click **Create**.
 
 Wait ~30 seconds. The KB appears in your dashboard.
@@ -53,7 +53,7 @@ Inside your new KB, find the **Settings** or **API Keys** panel. You need three 
 
 | Value | What it is | Looks like |
 |---|---|---|
-| **API URL** | The base URL of the Nuclia API for your region | `https://aws-eu-1.rag.progress.cloud/api/v1` |
+| **API URL** | The base URL of the Progress Agentic RAG API for your region | `https://aws-eu-1.rag.progress.cloud/api/v1` |
 | **KB ID** | The unique ID of this specific KB | `a1b2c3d4-...-1234567890ab` (a UUID) |
 | **Service-account JWT** | Your auth token (treat like a password) | `eyJhbG...` (a long random-looking string starting with `eyJ`) |
 
@@ -102,21 +102,21 @@ Save the file.
 
 ## Step 4 — Upload the corpus folder (10 min)
 
-Back in the Nuclia dashboard, open your Knowledge Box. You're going to use the **Upload folder** option with the **"use folder names as label names"** feature — this is the workflow you'll re-use in every build, including the capstone.
+Back in the Progress Agentic RAG dashboard, open your Knowledge Box. You're going to use the **Upload folder** option with the **"use folder names as label names"** feature — this is the workflow you'll re-use in every build, including the capstone.
 
 1. In the dashboard navigate to **Resources** → **Upload** → **Upload folder** (exact wording varies by tenant — look for an "Upload folder" option, distinct from the single-file uploader).
 2. In your file explorer, locate the **`courses/developer-foundations/builds/build-00-hello-arag/corpus/content_type/`** folder. **Pick that folder** (the `content_type/` one — not its parent `corpus/`, not its children).
-3. **Enable the "use folder names as label names" option.** This is the toggle/checkbox that tells Nuclia to read your folder structure as labelset metadata. With it on:
+3. **Enable the "use folder names as label names" option.** This is the toggle/checkbox that tells Progress Agentic RAG to read your folder structure as labelset metadata. With it on:
    - The parent folder's name (`content_type`) becomes the **labelset name**.
    - Each subfolder's name (`product`, `trail_guide`, `gear_review`, etc.) becomes a **label value** applied to every document inside.
-4. Confirm and start the upload. Nuclia processes all 47 documents.
+4. Confirm and start the upload. Progress Agentic RAG processes all 47 documents.
 5. Watch the dashboard's progress indicator. Each document goes from "processing" → "indexed."
 
-> **The corpus contains markdown, PDFs, Word, PowerPoint, MP3, and MP4 files.** Drag the whole folder; Nuclia handles each format natively — it auto-OCRs the PDFs, extracts text from the DOCX and PPTX, and transcribes the MP3 and MP4 with its built-in Whisper integration. The MP4 and MP3 take longer than the text files because transcription runs at ingest.
+> **The corpus contains markdown, PDFs, Word, PowerPoint, MP3, and MP4 files.** Drag the whole folder; Progress Agentic RAG handles each format natively — it auto-OCRs the PDFs, extracts text from the DOCX and PPTX, and transcribes the MP3 and MP4 with its built-in Whisper integration. The MP4 and MP3 take longer than the text files because transcription runs at ingest.
 
 **You should see:** 47 documents listed in your KB, each with a `content_type` labelset value matching the subfolder it came from (`product`, `trail_guide`, `podcast`, etc.) — confirm by clicking into any resource and looking at its labels. The video and audio resources will show their transcripts in the resource's text panel.
 
-You can also browse **KB → Labelsets** in the dashboard to see Nuclia has auto-created a `content_type` labelset with eight labels — no manual labelset configuration required.
+You can also browse **KB → Labelsets** in the dashboard to see Progress Agentic RAG has auto-created a `content_type` labelset with eight labels — no manual labelset configuration required.
 
 > **What you just did is the foundational ARAG ingest pattern.** Every build past this one — including the Build 13 capstone — uses the same `Upload folder` + `use folder names as label names` flow against a content-type-organised folder tree. You'll never need to tag documents one-by-one in this course.
 
@@ -312,9 +312,9 @@ Copy this brief and paste it in. **Don't edit it.** It's specific on purpose —
 Write me a Node.js script called ask.mjs (ES modules / import syntax).
 
 IMPORTANT — verify the API before coding:
-This hits the Progress Agentic RAG (ARAG / Nuclia) /ask streaming endpoint.
+This hits the Progress Agentic RAG (ARAG / Progress Agentic RAG) /ask streaming endpoint.
 Do NOT trust my description of the response schema below — I may have it wrong.
-Before writing code, confirm the current schema against the Nuclia/Progress ARAG
+Before writing code, confirm the current schema against the Progress Agentic RAG/Progress ARAG
 docs (the AskResponse and FindResults interfaces in particular):
   - the exact set of streaming item.type values emitted
   - the shape of every field you read — especially whether best_matches is
@@ -421,7 +421,7 @@ If something doesn't work, see "Getting unstuck" below.
 - Did `npm install dotenv` finish without errors? Run it again. If it errors, paste the error into your AI.
 
 **HTTP 401 or 403.**
-- Your JWT is wrong or expired. Re-copy from the Nuclia dashboard. The JWT must be the full string (often 500+ characters).
+- Your JWT is wrong or expired. Re-copy from the Progress Agentic RAG dashboard. The JWT must be the full string (often 500+ characters).
 
 **Answer comes through, but no citations.**
 - Your query didn't strongly match anything. Try a more obvious question.
@@ -500,7 +500,7 @@ Run the script one more time.
 
 **You should see:** one row per cited resource — N rows where N === unique rids in `best_matches`. Each row shows the cleaned-up document title followed by the resource id. This is what a real citation chip in a chat UI is built on top of.
 
-If a title comes back as `undefined` or empty, the fallback to `rid.slice(0, 8)` keeps the row from looking broken. If *all* titles are empty, your KB documents were ingested without titles — open one in the Nuclia dashboard and check the "basic" metadata panel.
+If a title comes back as `undefined` or empty, the fallback to `rid.slice(0, 8)` keeps the row from looking broken. If *all* titles are empty, your KB documents were ingested without titles — open one in the Progress Agentic RAG dashboard and check the "basic" metadata panel.
 
 ---
 

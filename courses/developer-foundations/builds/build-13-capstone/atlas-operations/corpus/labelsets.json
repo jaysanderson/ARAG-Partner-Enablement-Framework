@@ -1,7 +1,7 @@
 {
   "business_unit": {
     "title": "Business unit",
-    "description": "Which Atlas business unit owns this content. Auto-applied from the top-level corpus folder name when a partner drag-and-drops the corpus folder into the Nuclia dashboard.",
+    "description": "Which Atlas business unit owns this content. Auto-applied from the top-level corpus folder name when a partner drag-and-drops the corpus folder into the Progress Agentic RAG dashboard.",
     "labels": [
       { "name": "hr", "description": "HR policies, onboarding, compensation, training." },
       { "name": "engineering", "description": "Runbooks, incidents, architecture, design docs, RFCs." },

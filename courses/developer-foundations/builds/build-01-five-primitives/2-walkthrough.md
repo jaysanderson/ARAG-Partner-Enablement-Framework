@@ -6,7 +6,7 @@
 
 ## What you'll need open
 
-- **Your Nuclia dashboard** (with the KB from Build 0 still alive and ingested).
+- **Your Progress Agentic RAG dashboard** (with the KB from Build 0 still alive and ingested).
 - **Your `.env` file from Build 0** — same three credentials.
 - **An API testing tool** (we'll set one up in Step 1) OR a terminal if you'd rather stick with `curl`.
 - **Your editor** — VS Code or similar.
@@ -473,7 +473,7 @@ Click send. Wait for the file.
 
 Open `primitives-demo.mjs`. Three checks:
 
-1. **No fake SDK** — uses `fetch(...)`, not `import { Nuclia } from 'nuclia'`.
+1. **No fake SDK** — uses `fetch(...)`, not `import { Progress Agentic RAG } from 'nuclia'`.
 2. **Right auth header** — `X-NUCLIA-SERVICEACCOUNT: Bearer ...`, not `Authorization`.
 3. **`additionalProperties: false`** on the ask-schema body's schema object.
 

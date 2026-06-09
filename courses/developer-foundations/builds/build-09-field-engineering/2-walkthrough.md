@@ -19,7 +19,7 @@ Specifically:
 ## What you'll need open
 
 - **Your Build 0 KB** (10 documents).
-- **Your Nuclia dashboard** for editing custom fields.
+- **Your Progress Agentic RAG dashboard** for editing custom fields.
 - **Your Build 3 React project** (we'll extend the chat) or any chat project from earlier Builds.
 - **Your terminal**, editor, AI assistant, browser.
 
@@ -29,7 +29,7 @@ If you don't have Build 3 running, you can use Build 4 (the multilingual version
 
 ## Step 1 — Pick your 5 "hero" resources (10 min)
 
-Open the Nuclia dashboard. Look at your 10 documents. Pick **5 that would be the most natural CTA targets** — the ones a sales rep would point at first.
+Open the Progress Agentic RAG dashboard. Look at your 10 documents. Pick **5 that would be the most natural CTA targets** — the ones a sales rep would point at first.
 
 Examples:
 
@@ -45,7 +45,7 @@ If your sandbox content isn't obvious-CTA shaped, **fabricate the CTAs** — thi
 
 ## Step 2 — Add `callToAction` to each hero resource (25 min)
 
-In the Nuclia dashboard, for each of the 5 hero resources:
+In the Progress Agentic RAG dashboard, for each of the 5 hero resources:
 
 1. **Open the resource** (click into its detail view).
 2. Look for a **Custom Fields**, **Metadata**, or **User Metadata** panel (wording varies).
@@ -269,7 +269,7 @@ Reload the page. Ask a Prospect-mode query that matches a hero resource.
 
 ### 7a. Variant A → Variant B
 
-1. In the Nuclia dashboard, open the resource.
+1. In the Progress Agentic RAG dashboard, open the resource.
 2. **Note the current `callToAction` value.** Take a screenshot.
 3. Ask a Prospect-mode query that matches this resource. Screenshot the answer (CTA pill).
 4. Now **edit the `callToAction` field** to a noticeably different sentence:
@@ -319,7 +319,7 @@ Sections (in order):
    - Why this matters: editing these = changing what users see, no engineer needed
 
 2. WHERE TO EDIT (step-by-step)
-   - Login to Nuclia dashboard
+   - Login to Progress Agentic RAG dashboard
    - Open KB
    - Find resource
    - Open Custom Fields panel

@@ -3,12 +3,12 @@
 > **Duration target:** 12 minutes
 > **Format:** Screen recording + voiceover. 1080p, 30 fps. Single take preferred; cuts acceptable at section boundaries.
 > **Audience:** Partner technical learners starting Developer Foundations.
-> **Tools on screen:** Nuclia dashboard (Chrome), terminal (`curl`), AI coding assistant (Claude Code / Cursor), code editor (VS Code).
-> **Branding:** Progress + Nuclia title card at open (3 sec); end card with "Build 1 — The Five Primitives" pointer (3 sec).
+> **Tools on screen:** Progress Agentic RAG dashboard (Chrome), terminal (`curl`), AI coding assistant (Claude Code / Cursor), code editor (VS Code).
+> **Branding:** Progress + Progress Agentic RAG title card at open (3 sec); end card with "Build 1 — The Five Primitives" pointer (3 sec).
 
 ## Cold open (0:00 – 0:30)
 
-**ON SCREEN:** Title card. *"Developer Foundations · Build 0 · Hello ARAG"*. Fade to a split screen — left: Nuclia dashboard; right: a terminal.
+**ON SCREEN:** Title card. *"Developer Foundations · Build 0 · Hello ARAG"*. Fade to a split screen — left: Progress Agentic RAG dashboard; right: a terminal.
 
 **VOICEOVER:**
 > Welcome to Build 0 of the Progress Agentic RAG Developer Foundations course. Twelve minutes from now, you'll have a working ARAG Knowledge Box, you'll have made three API calls against it, and you'll have watched an AI write your first ARAG client in 90 seconds. That last part — the AI writing the code — is the entire mental model of this course. I'll come back to it. Let's start.
@@ -22,7 +22,7 @@
 
 ## Section 2: Provision a KB (2:00 – 3:30)
 
-**ON SCREEN:** Switch to Nuclia dashboard. Click "New Knowledge Box". Name it `foundations-sandbox`. Region: pick the option closest to you (EU for Europe / EMEA, USA for the Americas). Click create. Wait for provisioning (cut to fast-forward if it takes >10 seconds). Open the settings panel, copy the API key + KB ID + endpoint URL.
+**ON SCREEN:** Switch to Progress Agentic RAG dashboard. Click "New Knowledge Box". Name it `foundations-sandbox`. Region: pick the option closest to you (EU for Europe / EMEA, USA for the Americas). Click create. Wait for provisioning (cut to fast-forward if it takes >10 seconds). Open the settings panel, copy the API key + KB ID + endpoint URL.
 
 **VOICEOVER:**
 > In the dashboard, new Knowledge Box, name it whatever you want — I'm going `foundations-sandbox`. For region, pick whichever option is closest to you geographically — EU if you're in Europe, USA if you're in the Americas — and **then stick with that same region for every Knowledge Box you provision in this course**. Mixing regions across builds will create confusion you don't need today. Default model. Provision. Takes a few seconds.
@@ -31,12 +31,12 @@
 
 ## Section 3: Upload the corpus folder (3:30 – 4:30)
 
-**ON SCREEN:** In the Nuclia dashboard, navigate to **Resources → Upload → Upload folder**. Pick the `corpus/content_type/` folder from the Build 0 directory. Enable the **"use folder names as label names"** toggle. Confirm. The processing indicator runs over 37 documents. Cut to fast-forward; cut back when all show "indexed". Briefly zoom on **KB → Labelsets** to show the auto-created `content_type` labelset with seven labels.
+**ON SCREEN:** In the Progress Agentic RAG dashboard, navigate to **Resources → Upload → Upload folder**. Pick the `corpus/content_type/` folder from the Build 0 directory. Enable the **"use folder names as label names"** toggle. Confirm. The processing indicator runs over 37 documents. Cut to fast-forward; cut back when all show "indexed". Briefly zoom on **KB → Labelsets** to show the auto-created `content_type` labelset with seven labels.
 
 **VOICEOVER:**
-> One folder, one click. The corpus we ship with this Build is at `corpus/content_type/` — 37 outdoor-retail documents organised into seven subfolders. I'm using Nuclia's **Upload folder** option with **use folder names as label names** turned on. That's the trick: Nuclia takes the parent folder name as the labelset and the subfolder names as label values. I get a labelset for free without tagging anything by hand.
+> One folder, one click. The corpus we ship with this Build is at `corpus/content_type/` — 37 outdoor-retail documents organised into seven subfolders. I'm using Progress Agentic RAG's **Upload folder** option with **use folder names as label names** turned on. That's the trick: Progress Agentic RAG takes the parent folder name as the labelset and the subfolder names as label values. I get a labelset for free without tagging anything by hand.
 >
-> Processing takes about thirty seconds per document — Nuclia chunks, embeds, classifies, and extracts metadata from each one. That's the *platform* doing platform work. We don't touch any of it. Once the indicator hits zero, I have a Knowledge Box with 37 documents and a `content_type` labelset with seven values. Same workflow you'll re-use in every build past here — including the capstone.
+> Processing takes about thirty seconds per document — Progress Agentic RAG chunks, embeds, classifies, and extracts metadata from each one. That's the *platform* doing platform work. We don't touch any of it. Once the indicator hits zero, I have a Knowledge Box with 37 documents and a `content_type` labelset with seven values. Same workflow you'll re-use in every build past here — including the capstone.
 
 ## Section 4: First `/find` call (4:30 – 6:00)
 

@@ -12,7 +12,7 @@ The app at `https://capstone-atlas-operations.fly.dev/` (or your local `npm run 
 
 ## Step 1 · Provision the Knowledge Box
 
-In the Nuclia dashboard:
+In the Progress Agentic RAG dashboard:
 
 | Setting | Value |
 |---|---|
@@ -37,7 +37,7 @@ cp .env.example .env
 
 ## Step 2 · Upload the corpus folder (no scripts)
 
-The corpus ships pre-organised by business unit. Each subfolder name under `corpus/business_unit/` will become a label on the `business_unit` labelset when you upload with Nuclia's folder-as-labels feature.
+The corpus ships pre-organised by business unit. Each subfolder name under `corpus/business_unit/` will become a label on the `business_unit` labelset when you upload with Progress Agentic RAG's folder-as-labels feature.
 
 ```
 corpus/
@@ -49,12 +49,12 @@ corpus/
     └── sales/             (66 docs)
 ```
 
-In the Nuclia dashboard:
+In the Progress Agentic RAG dashboard:
 
 1. Open your Knowledge Box → **Resources** → **Upload** → **Upload folder** (exact wording varies; look for an "Upload folder" option, not the single-file uploader).
 2. Pick the **`corpus/business_unit/`** folder on your machine.
-3. Enable the **"Use folder names as label names"** option (the exact label varies by tenant; look for a checkbox or toggle that says "folder names as labels" or "auto-label from folders"). With that enabled, Nuclia takes the parent folder name (`business_unit`) as the labelset name and the subfolder names (`hr`, `engineering`, etc.) as the label values applied to every document inside.
-4. Confirm and start the upload. Nuclia processes all 320 documents.
+3. Enable the **"Use folder names as label names"** option (the exact label varies by tenant; look for a checkbox or toggle that says "folder names as labels" or "auto-label from folders"). With that enabled, Progress Agentic RAG takes the parent folder name (`business_unit`) as the labelset name and the subfolder names (`hr`, `engineering`, etc.) as the label values applied to every document inside.
+4. Confirm and start the upload. Progress Agentic RAG processes all 320 documents.
 5. Wait for ingest to complete. The dashboard's progress indicator shows resource count climbing.
 
 That's it. No scripts, no env vars, no terminal commands. Once ingest finishes, every document in your Knowledge Box has the `business_unit` labelset applied automatically, with the right label per document derived from which subfolder it lived in.
@@ -65,13 +65,13 @@ The reference app uses `business_unit` to scope results to a specific BU on the 
 
 ### What about the other Atlas labelsets?
 
-Earlier iterations of this corpus shipped with three labelsets (`business_unit`, `content_type`, `region`). The capstone now scopes to **one labelset** (`business_unit`) for the citizen-developer-friendly drag-drop path — Nuclia's folder-to-labelset auto-apply is flat (one labelset name + a list of labels), not multi-dimensional, so a single drag-drop applies one labelset cleanly.
+Earlier iterations of this corpus shipped with three labelsets (`business_unit`, `content_type`, `region`). The capstone now scopes to **one labelset** (`business_unit`) for the citizen-developer-friendly drag-drop path — Progress Agentic RAG's folder-to-labelset auto-apply is flat (one labelset name + a list of labels), not multi-dimensional, so a single drag-drop applies one labelset cleanly.
 
 YAML frontmatter inside each `.md` file still carries `content_type` and `region` values for descriptive reference; they're documentation, not enforced labelsets. Partners who want to add those labelsets back can do so via the dashboard's labelset editor after ingest, or via the optional seed script below.
 
 ### Optional · Programmatic ingest via seed script
 
-For partners scaling beyond the bundled 320 docs (e.g. after running `progress-kb-use-case-generator` to produce a larger corpus) or who want to apply additional labelsets programmatically, the `scripts/seed-kb.mjs` script POSTs documents directly to the Nuclia API with full classification metadata read from frontmatter:
+For partners scaling beyond the bundled 320 docs (e.g. after running `progress-kb-use-case-generator` to produce a larger corpus) or who want to apply additional labelsets programmatically, the `scripts/seed-kb.mjs` script POSTs documents directly to the Progress Agentic RAG API with full classification metadata read from frontmatter:
 
 ```bash
 npm run seed -- --dry-run   # preview (lists slug + labels per file)

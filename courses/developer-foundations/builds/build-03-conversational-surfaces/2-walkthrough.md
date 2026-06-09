@@ -48,7 +48,7 @@ Open your AI assistant. Paste this brief **verbatim**:
 ```
 Build me a Vite + React + TypeScript app called `foundations-build-3` in
 ~/Desktop that demonstrates a multi-surface chat experience against a
-Progress Agentic RAG (ARAG / Nuclia) Knowledge Box.
+Progress Agentic RAG (ARAG / Progress Agentic RAG) Knowledge Box.
 
 PROJECT SETUP:
 1. Scaffold a fresh Vite + React + TS project (`npm create vite@latest
@@ -71,7 +71,7 @@ PROJECT SETUP:
 
 VERIFY THE API BEFORE CODING:
 This hits the ARAG /ask streaming endpoint. Do NOT trust my description
-of the response schema below — confirm against the current Nuclia /
+of the response schema below — confirm against the current Progress Agentic RAG /
 Progress ARAG docs (the AskResponse and FindResults interfaces). State
 the verified assumptions in a header comment on src/lib/ragClient.ts.
 

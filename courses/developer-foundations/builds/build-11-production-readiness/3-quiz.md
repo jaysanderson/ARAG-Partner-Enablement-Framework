@@ -27,7 +27,7 @@ D. Unlimited.
 A. Globally across all KBs.
 B. Per HTTP request.
 C. Per KB, in generative-model settings.
-D. By the Nuclia ops team only.
+D. By the Progress Agentic RAG ops team only.
 
 ---
 

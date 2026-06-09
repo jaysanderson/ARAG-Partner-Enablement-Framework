@@ -2,11 +2,11 @@
 
 > Estimated time: 1 to 1.5 hours focused. Read the [lesson](1-lesson.md) first.
 >
-> **The learning is in the dashboard, not the editor.** Build 2 is the one walkthrough where the Nuclia platform does almost all the work — your job is to *see* the full spread of widget options the configurator exposes, pick a configuration that fits a demo, and watch it render locally. Code is one snippet you paste; no vibe-coding required.
+> **The learning is in the dashboard, not the editor.** Build 2 is the one walkthrough where the Progress Agentic RAG platform does almost all the work — your job is to *see* the full spread of widget options the configurator exposes, pick a configuration that fits a demo, and watch it render locally. Code is one snippet you paste; no vibe-coding required.
 
 ## What you'll build
 
-A local `index.html` file on your Desktop running a Nuclia widget set you configured entirely through the dashboard's Widget configurator. By the end you'll know:
+A local `index.html` file on your Desktop running a Progress Agentic RAG widget set you configured entirely through the dashboard's Widget configurator. By the end you'll know:
 
 - **Every widget type** the platform ships (search bar, search results, chat, popup) and when to pick each one.
 - **Every display + behaviour option** the configurator exposes (placeholder text, theme, citations style, autocomplete, language, default filters).
@@ -17,7 +17,7 @@ A local `index.html` file on your Desktop running a Nuclia widget set you config
 
 ## What you'll need open
 
-- **Your Nuclia dashboard** (Knowledge Box still ingested from Build 0).
+- **Your Progress Agentic RAG dashboard** (Knowledge Box still ingested from Build 0).
 - **Your code editor** (VS Code recommended) — you'll paste one snippet, that's it.
 - **A modern web browser** (Chrome / Edge / Firefox / Safari — any current version).
 - **Your AI assistant** — optional in Build 2. The dashboard does the work; you'd only ping the AI for help interpreting a filter-syntax surprise or a configurator option you can't find.
@@ -43,7 +43,7 @@ Open VS Code (or any text editor). **File → New File**. Save it into `~/Deskto
 <body>
   <div class="hero">
     <h1>My ARAG widget</h1>
-    <!-- The Nuclia widget embed code will be pasted here in Step 6. -->
+    <!-- The Progress Agentic RAG widget embed code will be pasted here in Step 6. -->
   </div>
 </body>
 </html>
@@ -55,9 +55,9 @@ That's the entire HTML you'll write in this Build. Everything else comes from th
 
 ## Step 2 — Open the widget configurator in your dashboard (5 min)
 
-This is where Build 2 happens. The Nuclia dashboard exposes a **widget configurator** — a no-code UI that builds the embed snippet for you. Spend 5 minutes orienting before configuring anything.
+This is where Build 2 happens. The Progress Agentic RAG dashboard exposes a **widget configurator** — a no-code UI that builds the embed snippet for you. Spend 5 minutes orienting before configuring anything.
 
-1. Open your Nuclia dashboard and select your Knowledge Box.
+1. Open your Progress Agentic RAG dashboard and select your Knowledge Box.
 2. Look for a tab called **Widget**, **Widgets**, or **Embed** in the left-hand nav (wording varies by tenant).
 3. You'll see three panes:
    - A **configuration panel** on the left (tabs / sections covering the widget options).
@@ -140,11 +140,11 @@ In the filter input, add:
 /n/s/-product-
 ```
 
-This is Nuclia's **slug-path filter** matching any resource whose slug contains the substring `-product-`. The Build 0 sample corpus slugs its product documents that way (e.g. `aurora-terratrek-7-product`, `aurora-skyline-45l-product`). With the filter applied, the widget returns only product resources; trail guides, ambassador posts, and brand stories disappear.
+This is Progress Agentic RAG's **slug-path filter** matching any resource whose slug contains the substring `-product-`. The Build 0 sample corpus slugs its product documents that way (e.g. `aurora-terratrek-7-product`, `aurora-skyline-45l-product`). With the filter applied, the widget returns only product resources; trail guides, ambassador posts, and brand stories disappear.
 
 Watch the live preview run a query — confirm the result list snaps to products only.
 
-**If the preview shows zero results:** open one of your product documents in the dashboard's resource browser and check the actual slug. If your corpus uses a different pattern, adjust the filter substring to match (`/n/s/product-` for prefix, or `/icon/application/pdf` if you'd rather filter to PDFs as a first try). The configurator accepts any valid Nuclia filter path.
+**If the preview shows zero results:** open one of your product documents in the dashboard's resource browser and check the actual slug. If your corpus uses a different pattern, adjust the filter substring to match (`/n/s/product-` for prefix, or `/icon/application/pdf` if you'd rather filter to PDFs as a first try). The configurator accepts any valid Progress Agentic RAG filter path.
 
 This is the first taste of filtering. Build 7 (Smart Filters) wires this into a much richer faceted UI driven by labelsets.
 
@@ -156,7 +156,7 @@ Now ship it locally.
 
 1. In the configurator's **code panel** (the right-hand pane), click the **copy button**. The full embed snippet — script tag, configured widget elements with your credentials and options baked in — lands on your clipboard.
 2. Switch to VS Code and open the `index.html` you created in Step 1.
-3. Find the comment line `<!-- The Nuclia widget embed code will be pasted here in Step 6. -->`.
+3. Find the comment line `<!-- The Progress Agentic RAG widget embed code will be pasted here in Step 6. -->`.
 4. Replace that comment with the snippet from your clipboard. Save.
 5. Open Finder, navigate to `~/Desktop/foundations-build-2/`, and **double-click `index.html`**. Your default browser opens the file.
 
@@ -205,7 +205,7 @@ Copy the new embed code. In VS Code, **File → New File**, save as `index-v2.ht
 
 By the end of this Build you should be able to recite the configurator's seven panels and what each one controls — without notes. Specifically:
 
-- **The dashboard does the work, not the editor.** The Nuclia widget configurator is the no-code surface partners use 90% of the time. Code only appears at the very end when you paste one snippet into a local HTML file.
+- **The dashboard does the work, not the editor.** The Progress Agentic RAG widget configurator is the no-code surface partners use 90% of the time. Code only appears at the very end when you paste one snippet into a local HTML file.
 - **Four widget types**: `<nuclia-search-bar>`, `<nuclia-search-results>`, `<nuclia-chat>` (floating or inline), `<nuclia-popup>`. Pick the combination that fits the customer's site — most Tier 1 demos use search + chat together.
 - **Display + behaviour options** are exposed in the configurator's panels: placeholder text, layout style, theme, autocomplete, citations style (inline / trailing / hidden), streaming, multi-turn, language. Every option is a customer-conversation lever.
 - **Filtering is one expression**. The configurator's filter panel writes the same `filters` attribute you'd hand-author. The `/n/s/-product-` slug-substring pattern in this Build is the simplest no-labelset filter; once Build 6 is done you'll use labelset filters (`/classification.labels/<labelset>/<label>`) for anything richer.
@@ -238,7 +238,7 @@ Then take the [Build 2 quiz](3-quiz.md). Pass → start [Build 3](../build-03-co
 ## Getting unstuck
 
 **The Widget tab doesn't exist on my Knowledge Box.**
-- Some older Nuclia tenants surface it as "Embed" or "Integration"; check the side nav carefully. If it's genuinely missing, your account may need a permission flip — message your Progress partner manager.
+- Some older Progress Agentic RAG tenants surface it as "Embed" or "Integration"; check the side nav carefully. If it's genuinely missing, your account may need a permission flip — message your Progress partner manager.
 
 **The configurator's preview pane is blank or perpetually loading.**
 - Hard-refresh the dashboard (Cmd/Ctrl + Shift + R). The configurator caches state; a stale token after a long idle can stall the preview.

@@ -6,11 +6,11 @@
 
 Half the customers you'll demo to don't have a development team standing by. They have a marketing site on WordPress, a knowledge centre on Zendesk, a member portal on something they can barely touch. For those customers, the time between "POC kickoff" and "we have a chatbot live on our brand" is the difference between closing the deal and being told *"we'll think about it."*
 
-Nuclia ships a widget library — standard Web Components — that gets there in 30 minutes with no backend code. **And almost none of that 30 minutes is spent in a text editor.** The Nuclia dashboard ships a **widget configurator** — a no-code UI that picks widgets, sets options, configures filters, and generates the embed snippet for you. The partner's job is to know what every option does and which combinations fit which customer; the partner's editor only sees one paste.
+Progress Agentic RAG ships a widget library — standard Web Components — that gets there in 30 minutes with no backend code. **And almost none of that 30 minutes is spent in a text editor.** The Progress Agentic RAG dashboard ships a **widget configurator** — a no-code UI that picks widgets, sets options, configures filters, and generates the embed snippet for you. The partner's job is to know what every option does and which combinations fit which customer; the partner's editor only sees one paste.
 
 ## The widget configurator (where the work actually happens)
 
-Open any Knowledge Box in the Nuclia dashboard and you'll find a **Widget** (or **Embed** / **Integration**) tab. Three panes:
+Open any Knowledge Box in the Progress Agentic RAG dashboard and you'll find a **Widget** (or **Embed** / **Integration**) tab. Three panes:
 
 - **Configuration** on the left — every option organised into sections (widget type, display, search behaviour, generation, filters, language, advanced).
 - **Live preview** in the middle — updates as you change options.
@@ -88,7 +88,7 @@ The configuration panel exposes a wide spread of options. Build 2's walkthrough 
 
 ### Filters
 
-- Free-text filter expression — accepts any valid Nuclia filter path.
+- Free-text filter expression — accepts any valid Progress Agentic RAG filter path.
 
 ### Language
 

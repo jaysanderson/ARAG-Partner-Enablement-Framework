@@ -46,7 +46,7 @@ D. P5 — `/resource` for the judge's bio
 
 ---
 
-### 5. The Nuclia widget library ships as:
+### 5. The Progress Agentic RAG widget library ships as:
 
 A. A React component package on npm
 B. Standard Web Components from a CDN script

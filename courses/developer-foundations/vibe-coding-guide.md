@@ -43,7 +43,7 @@ If you've never used a terminal: **don't panic**. You'll type maybe 5 commands p
 
 ### A note for Windows users on `curl` and the dashboard
 
-A few builds (Build 0, 6, 7, 8, 9, 11) include `curl` commands that POST a JSON body to Nuclia — copy-paste-friendly on macOS and Linux because bash strips the surrounding single quotes around `-d '{...}'`. **Windows `cmd` (Command Prompt) does not strip those single quotes** — it ships the literal characters to `curl` and Nuclia replies with *"JSON decode error · Expecting value"*. PowerShell behaves differently again (double quotes need backtick-escaping).
+A few builds (Build 0, 6, 7, 8, 9, 11) include `curl` commands that POST a JSON body to Progress Agentic RAG — copy-paste-friendly on macOS and Linux because bash strips the surrounding single quotes around `-d '{...}'`. **Windows `cmd` (Command Prompt) does not strip those single quotes** — it ships the literal characters to `curl` and Progress Agentic RAG replies with *"JSON decode error · Expecting value"*. PowerShell behaves differently again (double quotes need backtick-escaping).
 
 Three ways through this — pick whichever fits:
 
@@ -143,9 +143,9 @@ These are the four ways AI assistants reliably go wrong on ARAG tasks. Spot them
 
 ### 1. The AI invents an SDK that doesn't exist
 
-If your AI writes `import { Nuclia } from 'nuclia'` or `from nuclia import Client` — **stop**. There's no first-party Nuclia npm or pip package. ARAG is HTTP. Tell the AI:
+If your AI writes `import { Progress Agentic RAG } from 'nuclia'` or `from nuclia import Client` — **stop**. There's no first-party Progress Agentic RAG npm or pip package. ARAG is HTTP. Tell the AI:
 
-> "There's no Nuclia SDK. Rewrite this using plain `fetch` against the API documented in my brief."
+> "There's no Progress Agentic RAG SDK. Rewrite this using plain `fetch` against the API documented in my brief."
 
 ### 2. The AI uses the wrong auth header
 
@@ -184,7 +184,7 @@ Three habits that separate partners who ship from partners who get stuck:
 
 A few things you do yourself, by hand. AI doesn't help:
 
-- **Provisioning a KB** in the Nuclia dashboard — that's a dashboard click, 5 minutes.
+- **Provisioning a KB** in the Progress Agentic RAG dashboard — that's a dashboard click, 5 minutes.
 - **Ingesting documents** — drag-and-drop in the dashboard.
 - **Configuring labelsets** — dashboard UI.
 - **Picking the BYO-LLM endpoint** — dashboard config.

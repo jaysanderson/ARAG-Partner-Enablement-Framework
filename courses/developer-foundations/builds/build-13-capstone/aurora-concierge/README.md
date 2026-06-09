@@ -8,7 +8,7 @@
 
 ## Reference implementation
 
-The complete reference app is at **[github.com/jaysanderson/Capstone-Aurora-Concierge](https://github.com/jaysanderson/Capstone-Aurora-Concierge)** — a Vite + React + TypeScript + Tailwind chassis that scores 100% against this brief once provisioned against a populated Nuclia KB. It includes:
+The complete reference app is at **[github.com/jaysanderson/Capstone-Aurora-Concierge](https://github.com/jaysanderson/Capstone-Aurora-Concierge)** — a Vite + React + TypeScript + Tailwind chassis that scores 100% against this brief once provisioned against a populated Progress Agentic RAG KB. It includes:
 
 - All six demo surfaces with the always-present two-voice floating chat.
 - Multilingual language switcher in the global header.
@@ -84,8 +84,8 @@ Both copies are identical. The mirror is convenience; the canonical source is th
 **The citizen-developer "Upload folder" ingest path** (primary):
 
 1. Partner clones `Capstone-Aurora-Concierge`.
-2. Partner provisions an empty Knowledge Box in their Nuclia dashboard.
-3. In the dashboard, partner opens the KB → **Resources** → **Upload** → **Upload folder**, picks the `corpus/content_type/` folder, and enables the **"use folder names as label names"** option. Nuclia applies `content_type` as the labelset and the subfolder names (`product`, `trail_guide`, etc.) as label values on every document.
+2. Partner provisions an empty Knowledge Box in their Progress Agentic RAG dashboard.
+3. In the dashboard, partner opens the KB → **Resources** → **Upload** → **Upload folder**, picks the `corpus/content_type/` folder, and enables the **"use folder names as label names"** option. Progress Agentic RAG applies `content_type` as the labelset and the subfolder names (`product`, `trail_guide`, etc.) as label values on every document.
 4. Done for storefront + concierge + journey graph. **For the full `/for-you` persona-flow demo**, partner either (a) creates the `audience` and `region` labelsets in the dashboard's editor and bulk-tags resources by frontmatter values, or (b) runs the optional `npm run seed` script which applies all three labelsets programmatically.
 
 **Field-engineering step (still required):** the `npm run populate:fields` script PATCHes `callToAction`, `searchResultDisplay`, and `videoInfo` custom fields onto the six hero products and three ambassador videos — these can't be set via folder ingest. This is the step that makes the storefront cards render their branded CTA pills.
@@ -183,7 +183,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 ### 5.3 Backend stack
 
 - **ARAG only.** Same architecture point as the Enterprise variant: there is no middleware to maintain. The CMO appreciates this differently from the CTO — no integration project to extract them from on day one.
-- **Generation backend:** Configured at the KB level via the Nuclia dashboard. Not exposed in the demo UI (see Build 11 for when and how to surface BYO-LLM to a customer — descoped here so the demo only claims what it actually ships).
+- **Generation backend:** Configured at the KB level via the Progress Agentic RAG dashboard. Not exposed in the demo UI (see Build 11 for when and how to surface BYO-LLM to a customer — descoped here so the demo only claims what it actually ships).
 
 ### 5.4 Data-augmentation agent — the customer-journey graph
 
@@ -316,7 +316,7 @@ Same overall shape as the Enterprise variant. Effort estimates are nearly identi
 - Live ingested-corpus stats wired into the hero (resources, paragraphs, graph nodes) — read from the active KB at page load, no hardcoded values.
 - Rate-limit-aware client in the wrapper.
 - Lightweight observability panel — call volume per surface, average response time per workflow.
-- **No BYO-LLM toggle in the UI.** Generation backend is set at the KB level via the Nuclia dashboard; when the CIO joins, the talk-track is the Build 11 lesson (BYO-LLM wired at platform during co-engineered POC), not a click in the demo.
+- **No BYO-LLM toggle in the UI.** Generation backend is set at the KB level via the Progress Agentic RAG dashboard; when the CIO joins, the talk-track is the Build 11 lesson (BYO-LLM wired at platform during co-engineered POC), not a click in the demo.
 - **Exit criteria:** Live "what about Japanese-speaking customers" question has a one-click answer.
 
 ### Phase 6 — Demo script + re-skin playbook (Week 7–8)
@@ -357,7 +357,7 @@ The talk track for the CMO room.
 
 *[Indicate top-right: residency badge "EU", language switcher "English". Below the hero: live ingested-corpus stats card with resource, paragraph, and graph-node counts read from the active KB.]*
 
-> "Two things you'll see throughout, both proof points the demo is real not slideware: **<your-region>** residency (substitute the region you provisioned in — EU or USA — when you deliver the demo) you can verify in the Nuclia dashboard, and live KB stats — those numbers update every time the corpus is re-indexed. Language switching is a query-prefix pattern that's three lines of code; you'll see it on the Concierge surface. The LLM that produces the words is wired at the platform level when we co-engineer the POC against your tenant — that's BYO-LLM, but it's not a button in the demo."
+> "Two things you'll see throughout, both proof points the demo is real not slideware: **<your-region>** residency (substitute the region you provisioned in — EU or USA — when you deliver the demo) you can verify in the Progress Agentic RAG dashboard, and live KB stats — those numbers update every time the corpus is re-indexed. Language switching is a query-prefix pattern that's three lines of code; you'll see it on the Concierge surface. The LLM that produces the words is wired at the platform level when we co-engineer the POC against your tenant — that's BYO-LLM, but it's not a button in the demo."
 
 ### 1:30 — 5:30 | Tier 1 + 2: Storefront + Floating Chat (4 min)
 

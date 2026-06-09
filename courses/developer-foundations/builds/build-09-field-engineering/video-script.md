@@ -21,7 +21,7 @@
 
 ## Section 2: Add fields in the dashboard (1:30 – 3:30)
 
-**ON SCREEN:** Nuclia dashboard. Open a hero resource. Click Add Field → text field. Name: `callToAction`. Value: "Try the TerraTrek 7 in your local store →". Save. Repeat for 2 more resources (fast-forward).
+**ON SCREEN:** Progress Agentic RAG dashboard. Open a hero resource. Click Add Field → text field. Name: `callToAction`. Value: "Try the TerraTrek 7 in your local store →". Save. Repeat for 2 more resources (fast-forward).
 
 Then add a `searchResultDisplay` field with a JSON object value.
 
