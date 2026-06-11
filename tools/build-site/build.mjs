@@ -808,8 +808,17 @@ fs.mkdirSync(OUT, { recursive: true });
 fs.writeFileSync(path.join(OUT, 'index.html'), doc);
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
 
+// The four standard SCORM 1.2 definition files (IMS/ADL schemas) belong at
+// the package root — strict LMS validators reject packages without them.
+const SCHEMA_DIR = path.join(__dirname, 'scorm-schemas');
+const schemaEntries = fs
+  .readdirSync(SCHEMA_DIR)
+  .filter((f) => f.endsWith('.xsd'))
+  .map((f) => ({ name: f, data: fs.readFileSync(path.join(SCHEMA_DIR, f)) }));
+
 const zip = buildZip([
   { name: 'imsmanifest.xml', data: Buffer.from(SCORM_MANIFEST, 'utf8') },
+  ...schemaEntries,
   { name: 'index.html', data: Buffer.from(doc, 'utf8') },
 ]);
 fs.writeFileSync(path.join(OUT, 'developer-foundations-scorm12.zip'), zip);

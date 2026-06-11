@@ -35,7 +35,8 @@ this tool is build-time only and ships nothing to the browser.
 ## SCORM package (for LMS import)
 
 The build also emits **`docs/developer-foundations-scorm12.zip`** — a SCORM
-1.2 single-SCO package (`imsmanifest.xml` + the same `index.html`) that
+1.2 single-SCO package (`imsmanifest.xml`, the four standard IMS/ADL
+schema files, and the same `index.html`) that
 imports into Moodle, Cornerstone, Docebo, SCORM Cloud, and any other
 SCORM-1.2-compliant LMS. When launched from an LMS the course:
 
