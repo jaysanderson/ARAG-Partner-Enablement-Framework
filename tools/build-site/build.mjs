@@ -26,6 +26,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import zlib from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -595,6 +596,32 @@ const css = fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8');
 const ROUTER = `
 (() => {
   history.scrollRestoration = 'manual';
+
+  // SCORM 1.2 glue: when launched from an LMS, report status, score on the
+  // final exam, and bookmark the current page. No-op in a plain browser.
+  const lms = (() => {
+    const find = (win) => {
+      for (let i = 0; i < 10 && win; i++) {
+        try { if (win.API) return win.API; } catch { return null; }
+        if (win.parent === win) break;
+        win = win.parent;
+      }
+      return null;
+    };
+    let api = null;
+    try { api = find(window) ?? (window.opener ? find(window.opener) : null); } catch { api = null; }
+    if (!api) return null;
+    api.LMSInitialize('');
+    const status = api.LMSGetValue('cmi.core.lesson_status');
+    if (status === 'not attempted' || status === '') api.LMSSetValue('cmi.core.lesson_status', 'incomplete');
+    window.addEventListener('beforeunload', () => api.LMSFinish(''));
+    return api;
+  })();
+  if (lms) {
+    const mark = lms.LMSGetValue('cmi.core.lesson_location');
+    if (mark && !location.hash) location.hash = mark;
+  }
+
   const route = () => {
     const hash = decodeURIComponent(location.hash.slice(1));
     const target = hash ? document.getElementById(hash) : null;
@@ -604,13 +631,19 @@ const ROUTER = `
     if (target && target !== page) target.scrollIntoView();
     else window.scrollTo(0, 0);
     document.title = (page.querySelector('h1')?.textContent ?? 'Developer Foundations') + ' \\u00b7 Developer Foundations';
+    if (lms) lms.LMSSetValue('cmi.core.lesson_location', location.hash);
   };
   document.addEventListener('click', (e) => {
     const a = e.target.closest?.('a[href^="#"]');
     if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     e.preventDefault();
     const href = a.getAttribute('href');
-    if (href !== location.hash) history.pushState(null, '', href);
+    try {
+      if (href !== location.hash) history.pushState(null, '', href);
+    } catch {
+      location.hash = href; // sandboxed LMS players can refuse pushState
+      return;
+    }
     route();
   });
   window.addEventListener('popstate', route);
@@ -640,6 +673,13 @@ const ROUTER = `
     });
     const total = questions.length;
     const pass = +btn.dataset.pass || 0;
+    if (lms && scope.id === 'final-exam' && answered === total) {
+      lms.LMSSetValue('cmi.core.score.min', '0');
+      lms.LMSSetValue('cmi.core.score.max', String(total));
+      lms.LMSSetValue('cmi.core.score.raw', String(right));
+      if (right >= pass) lms.LMSSetValue('cmi.core.lesson_status', 'passed');
+      lms.LMSCommit('');
+    }
     const out = scope.querySelector('.quiz-result');
     out.hidden = false;
     out.classList.remove('pass', 'fail');
@@ -679,10 +719,101 @@ ${sections}
 </html>
 `;
 
+// ---------------------------------------------------------------------------
+// SCORM 1.2 package — single SCO wrapping the same index.html, plus the
+// imsmanifest.xml an LMS needs. The page's inline SCORM glue reports status,
+// bookmarks the current page, and posts the final-exam score (pass = 80%).
+// ---------------------------------------------------------------------------
+
+const SCORM_MANIFEST = `<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="com.progress.arag.developer-foundations" version="1.0"
+    xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
+    xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>1.2</schemaversion>
+  </metadata>
+  <organizations default="org-developer-foundations">
+    <organization identifier="org-developer-foundations">
+      <title>Developer Foundations · Progress Agentic RAG</title>
+      <item identifier="item-course" identifierref="res-course" isvisible="true">
+        <title>Developer Foundations</title>
+        <adlcp:masteryscore>80</adlcp:masteryscore>
+      </item>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="res-course" type="webcontent" adlcp:scormtype="sco" href="index.html">
+      <file href="index.html"/>
+    </resource>
+  </resources>
+</manifest>
+`;
+
+// Minimal ZIP writer (deflate via node:zlib) — keeps the build dependency-free.
+function buildZip(entries) {
+  const now = new Date();
+  const dosTime = (now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1);
+  const dosDate = (((now.getFullYear() - 1980) & 0x7f) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+  const locals = [];
+  const central = [];
+  let offset = 0;
+  for (const { name, data } of entries) {
+    const nameBuf = Buffer.from(name, 'utf8');
+    const crc = zlib.crc32(data) >>> 0;
+    const deflated = zlib.deflateRawSync(data, { level: 9 });
+    const stored = deflated.length >= data.length;
+    const payload = stored ? data : deflated;
+    const method = stored ? 0 : 8;
+    const lfh = Buffer.alloc(30);
+    lfh.writeUInt32LE(0x04034b50, 0);
+    lfh.writeUInt16LE(20, 4);
+    lfh.writeUInt16LE(method, 8);
+    lfh.writeUInt16LE(dosTime, 10);
+    lfh.writeUInt16LE(dosDate, 12);
+    lfh.writeUInt32LE(crc, 14);
+    lfh.writeUInt32LE(payload.length, 18);
+    lfh.writeUInt32LE(data.length, 22);
+    lfh.writeUInt16LE(nameBuf.length, 26);
+    locals.push(lfh, nameBuf, payload);
+    const cdh = Buffer.alloc(46);
+    cdh.writeUInt32LE(0x02014b50, 0);
+    cdh.writeUInt16LE(20, 4);
+    cdh.writeUInt16LE(20, 6);
+    cdh.writeUInt16LE(method, 10);
+    cdh.writeUInt16LE(dosTime, 12);
+    cdh.writeUInt16LE(dosDate, 14);
+    cdh.writeUInt32LE(crc, 16);
+    cdh.writeUInt32LE(payload.length, 20);
+    cdh.writeUInt32LE(data.length, 24);
+    cdh.writeUInt16LE(nameBuf.length, 28);
+    cdh.writeUInt32LE(offset, 42);
+    central.push(cdh, nameBuf);
+    offset += 30 + nameBuf.length + payload.length;
+  }
+  const cd = Buffer.concat(central);
+  const eocd = Buffer.alloc(22);
+  eocd.writeUInt32LE(0x06054b50, 0);
+  eocd.writeUInt16LE(entries.length, 8);
+  eocd.writeUInt16LE(entries.length, 10);
+  eocd.writeUInt32LE(cd.length, 12);
+  eocd.writeUInt32LE(offset, 16);
+  return Buffer.concat([...locals, cd, eocd]);
+}
+
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });
 fs.writeFileSync(path.join(OUT, 'index.html'), doc);
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
 
+const zip = buildZip([
+  { name: 'imsmanifest.xml', data: Buffer.from(SCORM_MANIFEST, 'utf8') },
+  { name: 'index.html', data: Buffer.from(doc, 'utf8') },
+]);
+fs.writeFileSync(path.join(OUT, 'developer-foundations-scorm12.zip'), zip);
+
 const kb = Math.round(Buffer.byteLength(doc) / 1024);
 console.log(`Built ${order.length} sections into one file → docs/index.html (${kb} KB)`);
+console.log(`SCORM 1.2 package → docs/developer-foundations-scorm12.zip (${Math.round(zip.length / 1024)} KB)`);

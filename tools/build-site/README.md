@@ -32,6 +32,22 @@ this tool is build-time only and ships nothing to the browser.
 - **Not published:** corpus folders and anything outside the course. Links to
   unpublished files are rendered as plain text so the file has no dead links.
 
+## SCORM package (for LMS import)
+
+The build also emits **`docs/developer-foundations-scorm12.zip`** — a SCORM
+1.2 single-SCO package (`imsmanifest.xml` + the same `index.html`) that
+imports into Moodle, Cornerstone, Docebo, SCORM Cloud, and any other
+SCORM-1.2-compliant LMS. When launched from an LMS the course:
+
+- reports `lesson_status` (`incomplete` on first launch),
+- bookmarks the learner's current page and resumes there next launch,
+- reports the **final-exam score** (`cmi.core.score.raw`, out of 20) and sets
+  `lesson_status = passed` at 16+ (mastery score 80 in the manifest).
+
+A failed exam attempt leaves the status `incomplete` (retry-friendly, matching
+the open-book course design). Outside an LMS all of this is inert — the same
+file works standalone.
+
 ## Rebuild (after any content change)
 
 ```bash

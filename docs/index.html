@@ -10329,6 +10329,32 @@ Requesting review-board sign-off to start Build 13.
 <script>
 (() => {
   history.scrollRestoration = 'manual';
+
+  // SCORM 1.2 glue: when launched from an LMS, report status, score on the
+  // final exam, and bookmark the current page. No-op in a plain browser.
+  const lms = (() => {
+    const find = (win) => {
+      for (let i = 0; i < 10 && win; i++) {
+        try { if (win.API) return win.API; } catch { return null; }
+        if (win.parent === win) break;
+        win = win.parent;
+      }
+      return null;
+    };
+    let api = null;
+    try { api = find(window) ?? (window.opener ? find(window.opener) : null); } catch { api = null; }
+    if (!api) return null;
+    api.LMSInitialize('');
+    const status = api.LMSGetValue('cmi.core.lesson_status');
+    if (status === 'not attempted' || status === '') api.LMSSetValue('cmi.core.lesson_status', 'incomplete');
+    window.addEventListener('beforeunload', () => api.LMSFinish(''));
+    return api;
+  })();
+  if (lms) {
+    const mark = lms.LMSGetValue('cmi.core.lesson_location');
+    if (mark && !location.hash) location.hash = mark;
+  }
+
   const route = () => {
     const hash = decodeURIComponent(location.hash.slice(1));
     const target = hash ? document.getElementById(hash) : null;
@@ -10338,13 +10364,19 @@ Requesting review-board sign-off to start Build 13.
     if (target && target !== page) target.scrollIntoView();
     else window.scrollTo(0, 0);
     document.title = (page.querySelector('h1')?.textContent ?? 'Developer Foundations') + ' \u00b7 Developer Foundations';
+    if (lms) lms.LMSSetValue('cmi.core.lesson_location', location.hash);
   };
   document.addEventListener('click', (e) => {
     const a = e.target.closest?.('a[href^="#"]');
     if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     e.preventDefault();
     const href = a.getAttribute('href');
-    if (href !== location.hash) history.pushState(null, '', href);
+    try {
+      if (href !== location.hash) history.pushState(null, '', href);
+    } catch {
+      location.hash = href; // sandboxed LMS players can refuse pushState
+      return;
+    }
     route();
   });
   window.addEventListener('popstate', route);
@@ -10374,6 +10406,13 @@ Requesting review-board sign-off to start Build 13.
     });
     const total = questions.length;
     const pass = +btn.dataset.pass || 0;
+    if (lms && scope.id === 'final-exam' && answered === total) {
+      lms.LMSSetValue('cmi.core.score.min', '0');
+      lms.LMSSetValue('cmi.core.score.max', String(total));
+      lms.LMSSetValue('cmi.core.score.raw', String(right));
+      if (right >= pass) lms.LMSSetValue('cmi.core.lesson_status', 'passed');
+      lms.LMSCommit('');
+    }
     const out = scope.querySelector('.quiz-result');
     out.hidden = false;
     out.classList.remove('pass', 'fail');
