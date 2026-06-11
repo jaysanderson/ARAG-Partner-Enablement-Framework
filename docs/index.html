@@ -38,18 +38,20 @@ main {
   padding: 1.5rem 1.25rem 3rem;
 }
 
-/* ---------- SPA behaviour: one "page" visible at a time, pure CSS :target ----------
-   No JavaScript. Clicking any #anchor swaps the visible section; browser
-   back/forward works through hash history. Old browsers without :has()
-   degrade gracefully: home stays visible and the opened section appears
-   below it. Printing shows the whole course. */
+/* ---------- SPA behaviour: one "page" visible at a time ----------
+   A small inline script routes on the URL hash and toggles .current.
+   Clicking any #anchor swaps the visible section; browser back/forward
+   works through hash history. Without JavaScript a <noscript> style
+   shows the whole course as one scrolling document. Printing shows
+   everything. */
 
 section.page { display: none; padding-top: 0.5rem; }
-#home { display: block; }                                /* default page + legacy fallback */
-section.page:target { display: block; }                  /* #section-id links */
-section.page:has(:target) { display: block; }            /* deep links to headings inside a page */
-main:has(section.page:not(#home):target) #home,
-main:has(section.page:not(#home) :target) #home { display: none; }
+section.page.current { display: block; animation: page-in 0.18s ease; }
+
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
 
 section.page { scroll-margin-top: 0.75rem; }
 [id] { scroll-margin-top: 0.75rem; }
@@ -245,6 +247,7 @@ mark.placeholder {
 }
 
 </style>
+<noscript><style>section.page { display: block !important; }</style></noscript>
 </head>
 <body>
 <main>
@@ -10095,5 +10098,32 @@ D. A reference to an external spec doc.</p>
 <footer class="site-footer">
   <p>Developer Foundations · Progress Agentic RAG Partner Enablement Framework</p>
 </footer>
+<script>
+(function () {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  function route() {
+    var hash = decodeURIComponent(location.hash.slice(1));
+    var target = hash ? document.getElementById(hash) : null;
+    var page = (target && target.closest('section.page')) || document.getElementById('home');
+    var open = document.querySelectorAll('section.page.current');
+    for (var i = 0; i < open.length; i++) open[i].classList.remove('current');
+    page.classList.add('current');
+    if (target && target !== page) target.scrollIntoView();
+    else window.scrollTo(0, 0);
+    var h1 = page.querySelector('h1');
+    document.title = (h1 ? h1.textContent : 'Developer Foundations') + ' \u00b7 Developer Foundations';
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    var href = a.getAttribute('href');
+    if (href !== location.hash) history.pushState(null, '', href);
+    route();
+  });
+  window.addEventListener('popstate', route);
+  route();
+})();
+</script>
 </body>
 </html>

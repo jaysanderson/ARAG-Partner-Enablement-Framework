@@ -11,12 +11,14 @@ this tool is build-time only and ships nothing to the browser.
   the capstone briefs, with CSS inlined. Double-click it, email it, drop it on
   any static host — it works the same everywhere, no server needed.
 - **Behaves like a single-page app** — only one course page is visible at a
-  time; clicking any link swaps the page and browser back/forward works. This
-  is pure CSS (`:target`), still zero JavaScript. Very old browsers without
-  `:has()` degrade gracefully (home stays visible above the opened page).
-  Printing renders the whole course; note that browser find-in-page only
-  searches the currently open page.
-- **Zero JavaScript** — quiz answer keys use native `<details>`/`<summary>`.
+  time; clicking any link swaps the page (landing at the top, with the browser
+  tab title updating), and back/forward walks your page history. This is a
+  ~30-line inline hash router — the only JavaScript in the file. With
+  JavaScript disabled the file degrades to one scrolling document. Printing
+  renders the whole course; note that browser find-in-page only searches the
+  currently open page.
+- Quiz answer keys use native `<details>`/`<summary>` (no scoring, no
+  persistence).
 - Code blocks are syntax-highlighted at build time (classes baked into the
   HTML, palette in the inlined CSS).
 - Navigation is derived from the folder structure: a landing section with an

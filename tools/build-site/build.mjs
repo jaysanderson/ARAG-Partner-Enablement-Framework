@@ -4,9 +4,11 @@
  *
  * Reads markdown from courses/developer-foundations/ (source of truth — never
  * modified) and writes ONE self-contained HTML file: docs/index.html.
- * CSS is inlined; there is no JavaScript at all — quiz answer keys use native
- * <details>/<summary>. The file opens by double-clicking it, attaches to an
- * email, and works identically on any static host.
+ * CSS is inlined; the only JavaScript is a ~20-line inline hash router that
+ * shows one course page at a time (SPA feel) — quiz answer keys use native
+ * <details>/<summary>. Without JavaScript the file degrades to one scrolling
+ * document (<noscript> style). The file opens by double-clicking it, attaches
+ * to an email, and works identically on any static host.
  *
  * Every course page becomes a <section id="…">; all cross-page links become
  * #fragment links. Heading anchors are prefixed with their section id so they
@@ -554,6 +556,39 @@ const sections = order
 
 const css = fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8');
 
+// Hash router: shows the section the URL hash points at (or contains), hides
+// the rest, scrolls to the right place, and keeps the document title in sync.
+// Link clicks are intercepted and routed via pushState so the browser never
+// performs its own fragment scroll (no race with ours); back/forward arrives
+// through popstate. Browser history works as page history.
+const ROUTER = `
+(function () {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  function route() {
+    var hash = decodeURIComponent(location.hash.slice(1));
+    var target = hash ? document.getElementById(hash) : null;
+    var page = (target && target.closest('section.page')) || document.getElementById('home');
+    var open = document.querySelectorAll('section.page.current');
+    for (var i = 0; i < open.length; i++) open[i].classList.remove('current');
+    page.classList.add('current');
+    if (target && target !== page) target.scrollIntoView();
+    else window.scrollTo(0, 0);
+    var h1 = page.querySelector('h1');
+    document.title = (h1 ? h1.textContent : 'Developer Foundations') + ' \\u00b7 Developer Foundations';
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    var href = a.getAttribute('href');
+    if (href !== location.hash) history.pushState(null, '', href);
+    route();
+  });
+  window.addEventListener('popstate', route);
+  route();
+})();
+`;
+
 const doc = `<!doctype html>
 <html lang="en">
 <head>
@@ -563,6 +598,7 @@ const doc = `<!doctype html>
 <style>
 ${css}
 </style>
+<noscript><style>section.page { display: block !important; }</style></noscript>
 </head>
 <body>
 <main>
@@ -571,6 +607,7 @@ ${sections}
 <footer class="site-footer">
   <p>Developer Foundations · Progress Agentic RAG Partner Enablement Framework</p>
 </footer>
+<script>${ROUTER}</script>
 </body>
 </html>
 `;
