@@ -1,4 +1,4 @@
-var COURSE_PACKAGE_VERSION = "IaKDLjyy";
+var COURSE_PACKAGE_VERSION = "VWoobofk";
 var RESET_LEARNER_DATA = false;
 
 function isTrue(val) {
@@ -82,5 +82,5 @@ function commitHeartbeat() {
 }
 
 function getCourseTitle() {
-  return 'Corticon'
+  return 'Zone Migration Essentials: Processes, Risks, and Troubleshooting'
 }

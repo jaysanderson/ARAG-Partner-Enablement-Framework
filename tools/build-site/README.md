@@ -34,9 +34,9 @@ this tool is build-time only and ships nothing to the browser.
 
 ## SCORM package (for LMS import)
 
-The build also emits **`docs/developer-foundations-scorm12.zip`** — a SCORM
-1.2 package in the same layout as Progress's authoring-tool exports
-(Articulate Rise / Rustici SCORM driver):
+The build also emits **`docs/developer-foundations-scorm2004_4.zip`** — a
+SCORM 2004 4th Edition package in the same layout as Progress's
+authoring-tool exports (Articulate Rise / Rustici SCORM driver):
 
 ```
 imsmanifest.xml, metadata.xml, *.xsd     (package root)
@@ -51,15 +51,15 @@ scormcontent/index.html                  (the whole course, with its own
   `SetBookmark` / `SetScore` / `SetPassed` / `SetFailed` / `SetReachedEnd`.
 - **Resume** is driver-native: the bookmark is `index.html#<page>`, so a
   relaunch reopens the learner's last page.
-- The **final exam** reports its score to the gradebook and sets
-  `passed` at 16+/20 (or `failed`), plus course completion via
-  `SetReachedEnd`.
+- The **final exam** reports its score to the gradebook as a percentage
+  (`cmi.score.raw`/`scaled`) and sets `passed` at 16+/20 (or `failed`), plus
+  course completion via `SetReachedEnd`.
 - The course UI shows a persistent **sidebar course menu** (all builds with
   Lesson / Walkthrough / Quiz), so inside the LMS player it behaves like a
   standard authored course, not a bare web page.
 
 The driver files under `tools/build-site/scorm-template/` were taken from a
-Progress (Corticon) Rise export and are reused verbatim apart from the content
+Progress Rise SCORM 2004 4th Ed export (zone-migration-essentials) and are reused verbatim apart from the content
 launch URL. `docs/index.html` is the same course for web/standalone use.
 
 ## Rebuild (after any content change)

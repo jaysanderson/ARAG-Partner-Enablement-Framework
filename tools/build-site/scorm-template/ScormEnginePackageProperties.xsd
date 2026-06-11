@@ -52,7 +52,6 @@
 			<xs:element name="numberOfScoringObjects" type="xs:int" minOccurs="0" maxOccurs="1" />
 			<xs:element name="statusRollupMode" type="statusRollupType" minOccurs="0" maxOccurs="1" />
 			<xs:element name="thresholdScoreForCompletion" type="xs:decimal" minOccurs="0" maxOccurs="1" />
-      <xs:element name="applyRollupStatusToSuccess" type="yesNoType" minOccurs="0" maxOccurs="1" />
 			<xs:element name="firstScoIsPretest" type="yesNoType" minOccurs="0" maxOccurs="1" />
 			<xs:element name="finishCausesImmediateCommit" type="yesNoType" minOccurs="0" maxOccurs="1" />
 			<xs:element name="invalidMenuItemAction" type="invalidMenuItemActionType" minOccurs="0" maxOccurs="1" />
@@ -61,7 +60,6 @@
 			<xs:element name="resetRtTiming" type="resetRunTimeDataTimingType" minOccurs="0" maxOccurs="1" />
 			<xs:element name="lookaheadSequencerMode" type="lookaheadSequencerModeType" minOccurs="0" maxOccurs="1" />
 			<xs:element name="scoreOverridesStatus" type="yesNoType" minOccurs="0" maxOccurs="1" />
-      <xs:element name="allowCompleteStatusChange" type="yesNoType" minOccurs="0" maxOccurs="1" />
 			<xs:element name="scaleRawScore" type="yesNoType" minOccurs="0" maxOccurs="1" />
       <xs:element name="useQuickLookaheadSequencer" type="yesNoType" minOccurs="0" maxOccurs="1" />
       <xs:element name="rollupRuntimeAtScoUnload" type="yesNoType" minOccurs="0" maxOccurs="1" />
@@ -73,8 +71,6 @@
       <xs:element name="returnToLmsAction" type="returnToLmsActionType" minOccurs="0" maxOccurs="1" />
       <xs:element name="rollupEmptySetToUnknown" type="yesNoType" minOccurs="0" maxOccurs="1" />
       <xs:element name="validateInteractionTypes" type="yesNoType" minOccurs="0" maxOccurs="1" />
-      <xs:element name="suspendDataMaxLength" type="xs:int" minOccurs="0" maxOccurs="1" />
-      <xs:element name="timeLimit" type="xs:int" minOccurs="0" maxOccurs="1" />
     </xs:all>
 	</xs:complexType>
 	<xs:complexType name="rsopSpec">

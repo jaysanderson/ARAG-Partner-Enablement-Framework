@@ -10454,7 +10454,9 @@ Requesting review-board sign-off to start Build 13.
   window.__reportQuiz = (scope, right, answered, total, pass) => {
     if (scope.id !== 'final-exam' || answered < total) return;
     if (driver) {
-      driver.SetScore(right, total, 0);
+      // The Rustici driver's SetScore expects a percentage (it derives
+      // cmi.score.scaled by dividing by 100).
+      driver.SetScore(Math.round((right / total) * 100), 100, 0);
       if (right >= pass) {
         driver.SetPassed();
         driver.SetReachedEnd();

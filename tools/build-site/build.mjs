@@ -692,7 +692,9 @@ const ROUTER = `
   window.__reportQuiz = (scope, right, answered, total, pass) => {
     if (scope.id !== 'final-exam' || answered < total) return;
     if (driver) {
-      driver.SetScore(right, total, 0);
+      // The Rustici driver's SetScore expects a percentage (it derives
+      // cmi.score.scaled by dividing by 100).
+      driver.SetScore(Math.round((right / total) * 100), 100, 0);
       if (right >= pass) {
         driver.SetPassed();
         driver.SetReachedEnd();
@@ -819,29 +821,45 @@ function scormManifest(driverFiles) {
     .map((f) => `      <file href="${f}" />`)
     .join('\n');
 
-  return `<?xml version="1.0" ?>
-<manifest identifier="com.progress.arag.developer-foundations" version="1"
-  xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
-  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+  return `<?xml version="1.0" standalone="no" ?>
+<manifest identifier="com.progress.arag.developer-foundations" version="1.3"
+  xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd
-                      http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd">
+  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3"
+  xmlns:adlseq="http://www.adlnet.org/xsd/adlseq_v1p3"
+  xmlns:adlnav = "http://www.adlnet.org/xsd/adlnav_v1p3"
+  xmlns:imsss="http://www.imsglobal.org/xsd/imsss"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_v1p1 imscp_v1p1.xsd
+                      http://www.adlnet.org/xsd/adlcp_v1p3 adlcp_v1p3.xsd
+                      http://www.adlnet.org/xsd/adlseq_v1p3 adlseq_v1p3.xsd
+                      http://www.adlnet.org/xsd/adlnav_v1p3 adlnav_v1p3.xsd
+                      http://www.imsglobal.org/xsd/imsss imsss_v1p0.xsd">
   <metadata>
     <schema>ADL SCORM</schema>
-    <schemaversion>1.2</schemaversion>
+    <schemaversion>2004 4th Edition</schemaversion>
     <adlcp:location>metadata.xml</adlcp:location>
   </metadata>
-  <organizations default="developer_foundations">
-      <organization identifier="developer_foundations">
+  <organizations default="B0">
+    <organization identifier="B0" adlseq:objectivesGlobalToSystem="false">
       <title>Developer Foundations</title>
       <item identifier="i1" identifierref="r1" isvisible="true">
         <title>Developer Foundations</title>
-        <adlcp:datafromlms>datafromlms</adlcp:datafromlms>
+        <adlcp:dataFromLMS>dataFromLMS</adlcp:dataFromLMS>
+
+        <imsss:sequencing>
+          <imsss:deliveryControls tracked="true" completionSetByContent="true" objectiveSetByContent="true"/>
+        </imsss:sequencing>
       </item>
+      <metadata>
+        <adlcp:location>metadata.xml</adlcp:location>
+      </metadata>
+      <imsss:sequencing>
+        <imsss:controlMode choice="true" flow="true"/>
+      </imsss:sequencing>
     </organization>
   </organizations>
   <resources>
-    <resource identifier="r1" type="webcontent" adlcp:scormtype="sco" href="scormdriver/indexAPI.html">
+    <resource identifier="r1" type="webcontent" adlcp:scormType="sco" href="scormdriver/indexAPI.html">
 ${fileList}
     </resource>
   </resources>
@@ -905,23 +923,17 @@ fs.mkdirSync(OUT, { recursive: true });
 fs.writeFileSync(path.join(OUT, 'index.html'), doc);
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
 
-// Root schema files, matching the reference package exactly (the reference
-// ships adlcp/ims_xml/imscp at root; imsmd is referenced but not shipped).
-const SCHEMA_DIR = path.join(__dirname, 'scorm-schemas');
-const schemaEntries = ['adlcp_rootv1p2.xsd', 'ims_xml.xsd', 'imscp_rootv1p1p2.xsd'].map((f) => ({
-  name: f,
-  data: fs.readFileSync(path.join(SCHEMA_DIR, f)),
-}));
-
-const driverFiles = templateFiles(); // scormdriver/*, metadata.xml, ScormEnginePackageProperties.xsd
+// scorm-template/ carries the reference package root verbatim (xsds, dtds,
+// metadata.xml, ScormEnginePackageProperties.xsd, scormdriver/) — everything
+// except the generated manifest and the course content.
+const driverFiles = templateFiles();
 const zip = buildZip([
   { name: 'imsmanifest.xml', data: Buffer.from(scormManifest(driverFiles), 'utf8') },
-  ...schemaEntries,
   ...driverFiles,
   { name: 'scormcontent/index.html', data: Buffer.from(doc, 'utf8') },
 ]);
-fs.writeFileSync(path.join(OUT, 'developer-foundations-scorm12.zip'), zip);
+fs.writeFileSync(path.join(OUT, 'developer-foundations-scorm2004_4.zip'), zip);
 
 const kb = Math.round(Buffer.byteLength(doc) / 1024);
 console.log(`Built ${order.length} sections into one file → docs/index.html (${kb} KB)`);
-console.log(`SCORM 1.2 package (Rustici-driver layout) → docs/developer-foundations-scorm12.zip (${Math.round(zip.length / 1024)} KB)`);
+console.log(`SCORM 2004 4th Ed package (Rustici-driver layout) → docs/developer-foundations-scorm2004_4.zip (${Math.round(zip.length / 1024)} KB)`);
