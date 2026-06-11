@@ -277,7 +277,12 @@ function parseBlocks(lines, ctx) {
       !RAW_BLOCK.test(lines[i]) &&
       !/^\s*(-{3,}|\*{3,})\s*$/.test(lines[i])
     ) { para.push(lines[i]); i++; }
-    html += `<p>${inline(para.join('\n'))}</p>\n`;
+    // Quiz answer options (A. / B. / C. / D. on consecutive lines) keep their
+    // line breaks; all other soft breaks collapse per CommonMark.
+    const joined = para
+      .map((l, k) => (k > 0 && /^[A-D]\.\s/.test(l.trim()) ? '\x02' + l : l))
+      .join('\n');
+    html += `<p>${inline(joined).replace(/\n\x02/g, '<br>\n')}</p>\n`;
   }
   return html;
 }

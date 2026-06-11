@@ -10,6 +10,12 @@ this tool is build-time only and ships nothing to the browser.
 - **One file** (~800 KB): every lesson, walkthrough, quiz, the final exam, and
   the capstone briefs, with CSS inlined. Double-click it, email it, drop it on
   any static host — it works the same everywhere, no server needed.
+- **Behaves like a single-page app** — only one course page is visible at a
+  time; clicking any link swaps the page and browser back/forward works. This
+  is pure CSS (`:target`), still zero JavaScript. Very old browsers without
+  `:has()` degrade gracefully (home stays visible above the opened page).
+  Printing renders the whole course; note that browser find-in-page only
+  searches the currently open page.
 - **Zero JavaScript** — quiz answer keys use native `<details>`/`<summary>`.
 - Code blocks are syntax-highlighted at build time (classes baked into the
   HTML, palette in the inlined CSS).

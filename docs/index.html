@@ -38,14 +38,19 @@ main {
   padding: 1.5rem 1.25rem 3rem;
 }
 
-/* ---------- section chrome (one <section class="page"> per course page) ---------- */
+/* ---------- SPA behaviour: one "page" visible at a time, pure CSS :target ----------
+   No JavaScript. Clicking any #anchor swaps the visible section; browser
+   back/forward works through hash history. Old browsers without :has()
+   degrade gracefully: home stays visible and the opened section appears
+   below it. Printing shows the whole course. */
 
-section.page {
-  border-top: 4px solid var(--line);
-  margin-top: 3rem;
-  padding-top: 0.5rem;
-}
-section.page:first-child { border-top: none; margin-top: 0; }
+section.page { display: none; padding-top: 0.5rem; }
+#home { display: block; }                                /* default page + legacy fallback */
+section.page:target { display: block; }                  /* #section-id links */
+section.page:has(:target) { display: block; }            /* deep links to headings inside a page */
+main:has(section.page:not(#home):target) #home,
+main:has(section.page:not(#home) :target) #home { display: none; }
+
 section.page { scroll-margin-top: 0.75rem; }
 [id] { scroll-margin-top: 0.75rem; }
 
@@ -233,6 +238,7 @@ mark.placeholder {
 /* ---------- print ---------- */
 
 @media print {
+  section.page { display: block !important; }
   .section-header, .site-footer, .pager { display: none; }
   details.answer-key { display: block; }
   main { max-width: 100%; }
@@ -1303,33 +1309,33 @@ console.log(<span class="hljs-string">'Unique resource IDs:'</span>, uniqueRids)
 </blockquote>
 <hr>
 <h3 id="build-00-quiz--1-the-auth-header-on-every-arag-api-request-is">1. The auth header on every ARAG API request is:</h3>
-<p>A. <code>Authorization: Bearer &lt;jwt&gt;</code>
-B. <code>X-NUCLIA-SERVICEACCOUNT: Bearer &lt;jwt&gt;</code>
-C. <code>X-API-Key: &lt;key&gt;</code>
+<p>A. <code>Authorization: Bearer &lt;jwt&gt;</code><br>
+B. <code>X-NUCLIA-SERVICEACCOUNT: Bearer &lt;jwt&gt;</code><br>
+C. <code>X-API-Key: &lt;key&gt;</code><br>
 D. <code>Cookie: session=...</code></p>
 <hr>
 <h3 id="build-00-quiz--2-the-two-endpoints-you-used-in-build-0-are">2. The two endpoints you used in Build 0 are:</h3>
-<p>A. <code>/search</code> and <code>/chat</code>
-B. <code>/embed</code> and <code>/generate</code>
-C. <code>/find</code> and <code>/ask</code>
+<p>A. <code>/search</code> and <code>/chat</code><br>
+B. <code>/embed</code> and <code>/generate</code><br>
+C. <code>/find</code> and <code>/ask</code><br>
 D. <code>/retrieve</code> and <code>/answer</code></p>
 <hr>
 <h3 id="build-00-quiz--3-a-streaming-ask-response-is-delivered-as">3. A streaming <code>/ask</code> response is delivered as:</h3>
-<p>A. A single JSON blob
-B. NDJSON, one JSON object per line
-C. Server-Sent Events
+<p>A. A single JSON blob<br>
+B. NDJSON, one JSON object per line<br>
+C. Server-Sent Events<br>
 D. WebSocket frames</p>
 <hr>
 <h3 id="build-00-quiz--4-two-ask-body-parameters-you-should-set-on-most-calls">4. Two <code>/ask</code> body parameters you should set on most calls:</h3>
-<p>A. <code>temperature</code> and <code>top_p</code>
-B. <code>prefer_markdown</code> and <code>rephrase</code>
-C. <code>stream</code> and <code>cache</code>
+<p>A. <code>temperature</code> and <code>top_p</code><br>
+B. <code>prefer_markdown</code> and <code>rephrase</code><br>
+C. <code>stream</code> and <code>cache</code><br>
 D. <code>verify_citations</code> and <code>max_retries</code></p>
 <hr>
 <h3 id="build-00-quiz--5-the-vibe-coding-mental-model-for-this-course-says">5. The vibe-coding mental model for this course says:</h3>
-<p>A. The AI does design and implementation; you observe.
-B. You design and verify; the AI writes the code.
-C. You hand-write production code; AI writes demos.
+<p>A. The AI does design and implementation; you observe.<br>
+B. You design and verify; the AI writes the code.<br>
+C. You hand-write production code; AI writes demos.<br>
 D. The AI is only used for documentation.</p>
 <hr>
 <details class="answer-key"><summary>Reveal answer key</summary>
@@ -2034,33 +2040,33 @@ Resource title: &quot;Onboarding Guide&quot;, extracted_text length: 4129 chars
 </blockquote>
 <hr>
 <h3 id="build-01-quiz--1-which-primitive-returns-paragraph-level-matches-with-scores">1. Which primitive returns paragraph-level matches with scores?</h3>
-<p>A. P2 — <code>/ask</code>
-B. P1 — <code>/find</code>
-C. P3 — <code>/ask</code> with <code>answer_json_schema</code>
+<p>A. P2 — <code>/ask</code><br>
+B. P1 — <code>/find</code><br>
+C. P3 — <code>/ask</code> with <code>answer_json_schema</code><br>
 D. P4 — <code>/graph</code></p>
 <hr>
 <h3 id="build-01-quiz--2-the-two-placeholders-arag-substitutes-inside-promptuser-are">2. The two placeholders ARAG substitutes inside <code>prompt.user</code> are:</h3>
-<p>A. <code>{retrieval}</code> and <code>{query}</code>
-B. <code>{context}</code> and <code>{question}</code>
-C. <code>${context}</code> and <code>${question}</code>
+<p>A. <code>{retrieval}</code> and <code>{query}</code><br>
+B. <code>{context}</code> and <code>{question}</code><br>
+C. <code>${context}</code> and <code>${question}</code><br>
 D. <code>&lt;&lt;context&gt;&gt;</code> and <code>&lt;&lt;question&gt;&gt;</code></p>
 <hr>
 <h3 id="build-01-quiz--3-a-customer-wants-ai-to-generate-a-structured-form-letter-with-fixed-fields-this-is">3. A customer wants AI to generate a structured form letter with fixed fields. This is:</h3>
-<p>A. P1 — semantic search
-B. P2 — free-form chat
-C. P3 — schema-constrained generation
+<p>A. P1 — semantic search<br>
+B. P2 — free-form chat<br>
+C. P3 — schema-constrained generation<br>
 D. P5 — secure media</p>
 <hr>
 <h3 id="build-01-quiz--4-a-customer-wants-to-traverse-judge-smith--cited-precedents-this-is">4. A customer wants to traverse &quot;Judge Smith → cited precedents.&quot; This is:</h3>
-<p>A. P1 — <code>/find</code> for &quot;Judge Smith&quot;
-B. P2 — <code>/ask</code> with a Judge Smith prompt
-C. P4 — <code>/graph</code> traversal
+<p>A. P1 — <code>/find</code> for &quot;Judge Smith&quot;<br>
+B. P2 — <code>/ask</code> with a Judge Smith prompt<br>
+C. P4 — <code>/graph</code> traversal<br>
 D. P5 — <code>/resource</code> for the judge's bio</p>
 <hr>
 <h3 id="build-01-quiz--5-hybrid-retrieval-is-invoked-by-setting-which-body-field-on-find">5. Hybrid retrieval is invoked by setting which body field on <code>/find</code>?</h3>
-<p>A. <code>mode: &quot;hybrid&quot;</code>
-B. <code>features: [&quot;keyword&quot;, &quot;semantic&quot;]</code>
-C. <code>retrieval_type: &quot;both&quot;</code>
+<p>A. <code>mode: &quot;hybrid&quot;</code><br>
+B. <code>features: [&quot;keyword&quot;, &quot;semantic&quot;]</code><br>
+C. <code>retrieval_type: &quot;both&quot;</code><br>
 D. <code>query_strategy: &quot;fuzzy_and_dense&quot;</code></p>
 <hr>
 <details class="answer-key"><summary>Reveal answer key</summary>
@@ -2498,33 +2504,33 @@ D. <code>query_strategy: &quot;fuzzy_and_dense&quot;</code></p>
 </blockquote>
 <hr>
 <h3 id="build-02-quiz--1-the-progress-agentic-rag-widget-library-ships-as">1. The Progress Agentic RAG widget library ships as:</h3>
-<p>A. A React component package on npm
-B. Standard Web Components from a CDN script
-C. A jQuery plugin
+<p>A. A React component package on npm<br>
+B. Standard Web Components from a CDN script<br>
+C. A jQuery plugin<br>
 D. An iframe embed</p>
 <hr>
 <h3 id="build-02-quiz--2-to-restrict-a-nuclia-search-bar-to-videos-only-the-attribute-is">2. To restrict a <code>&lt;nuclia-search-bar&gt;</code> to videos only, the attribute is:</h3>
-<p>A. <code>content-type=&quot;video&quot;</code>
-B. <code>filter=&quot;video&quot;</code>
-C. <code>filters='[&quot;/icon/video&quot;]'</code>
+<p>A. <code>content-type=&quot;video&quot;</code><br>
+B. <code>filter=&quot;video&quot;</code><br>
+C. <code>filters='[&quot;/icon/video&quot;]'</code><br>
 D. <code>restrict=&quot;application/video&quot;</code></p>
 <hr>
 <h3 id="build-02-quiz--3-the-progress-agentic-rag-widget-configurators-three-panes-are">3. The Progress Agentic RAG widget configurator's three panes are:</h3>
-<p>A. Editor, terminal, browser
-B. Configuration, live preview, generated code
-C. Search, chat, analytics
+<p>A. Editor, terminal, browser<br>
+B. Configuration, live preview, generated code<br>
+C. Search, chat, analytics<br>
 D. Filters, deploy, logs</p>
 <hr>
 <h3 id="build-02-quiz--4-a-cmo-wants-a-chatbot-on-wordpress-with-no-engineering-the-right-answer-is">4. A CMO wants a chatbot on WordPress with no engineering. The right answer is:</h3>
-<p>A. No, this requires a Tier 3 engagement.
-B. Yes, paste a few script tags and a custom element.
-C. Yes, but only after a four-week React build.
+<p>A. No, this requires a Tier 3 engagement.<br>
+B. Yes, paste a few script tags and a custom element.<br>
+C. Yes, but only after a four-week React build.<br>
 D. Yes, but only via iframe embed.</p>
 <hr>
 <h3 id="build-02-quiz--5-the-widgets-are-the-wrong-choice-when">5. The widgets are the wrong choice when:</h3>
-<p>A. The customer is small.
-B. The corpus has fewer than 100 documents.
-C. The customer requires EU residency.
+<p>A. The customer is small.<br>
+B. The corpus has fewer than 100 documents.<br>
+C. The customer requires EU residency.<br>
 D. Different audiences need different prompt voices.</p>
 <hr>
 <details class="answer-key"><summary>Reveal answer key</summary>
@@ -3059,33 +3065,33 @@ After updating, restart the dev server if needed and tell me to refresh.
 </blockquote>
 <hr>
 <h3 id="build-03-quiz--1-to-serve-two-audiences-prospect-member-over-one-kb-you-should-use">1. To serve two audiences (prospect, member) over one KB, you should use:</h3>
-<p>A. Two KBs routed by auth state
-B. One KB, two prompt configurations
-C. Two LLM endpoints, one cheap and one premium
+<p>A. Two KBs routed by auth state<br>
+B. One KB, two prompt configurations<br>
+C. Two LLM endpoints, one cheap and one premium<br>
 D. Two ARAG service accounts</p>
 <hr>
 <h3 id="build-03-quiz--2-the-two-placeholders-arag-substitutes-inside-promptuser-are">2. The two placeholders ARAG substitutes inside <code>prompt.user</code> are:</h3>
-<p>A. <code>${context}</code> and <code>${query}</code>
-B. <code>{context}</code> and <code>{question}</code>
-C. <code>&lt;&lt;context&gt;&gt;</code> and <code>&lt;&lt;question&gt;&gt;</code>
+<p>A. <code>${context}</code> and <code>${query}</code><br>
+B. <code>{context}</code> and <code>{question}</code><br>
+C. <code>&lt;&lt;context&gt;&gt;</code> and <code>&lt;&lt;question&gt;&gt;</code><br>
 D. <code>[CTX]</code> and <code>[Q]</code></p>
 <hr>
 <h3 id="build-03-quiz--3-to-enforce-stop-after-the-cta-link-in-production-you-must">3. To enforce &quot;stop after the CTA link,&quot; in production you must:</h3>
-<p>A. Increase <code>max_tokens</code> so the model can obey
-B. Switch to a smaller, more compliant model
-C. Truncate the streamed response in code after the link
+<p>A. Increase <code>max_tokens</code> so the model can obey<br>
+B. Switch to a smaller, more compliant model<br>
+C. Truncate the streamed response in code after the link<br>
 D. Re-run the query if the model writes past the link</p>
 <hr>
 <h3 id="build-03-quiz--4-streaming-chunks-from-ask-arrive-as">4. Streaming chunks from <code>/ask</code> arrive as:</h3>
-<p>A. SSE-formatted lines
-B. NDJSON objects, one per line
-C. Length-prefixed binary frames
+<p>A. SSE-formatted lines<br>
+B. NDJSON objects, one per line<br>
+C. Length-prefixed binary frames<br>
 D. WebSocket text frames</p>
 <hr>
 <h3 id="build-03-quiz--5-a-query-prefix-like-respond-in-french-should-be-added">5. A query prefix like &quot;Respond in French:&quot; should be added:</h3>
-<p>A. To <code>prompt.system</code>
-B. To <code>prompt.user</code>
-C. Concatenated onto the raw query string
+<p>A. To <code>prompt.system</code><br>
+B. To <code>prompt.user</code><br>
+C. Concatenated onto the raw query string<br>
 D. As a separate <code>language</code> body parameter</p>
 <hr>
 <details class="answer-key"><summary>Reveal answer key</summary>
@@ -3591,33 +3597,33 @@ check the request your client is currently building).
 </blockquote>
 <hr>
 <h3 id="build-04-quiz--1-to-answer-in-french-the-change-to-your-ask-call-is">1. To answer in French, the change to your <code>/ask</code> call is:</h3>
-<p>A. Add <code>lang: &quot;fr&quot;</code> to the body
-B. Switch to a French-trained LLM
-C. Prepend &quot;Respond in French:&quot; to the query
+<p>A. Add <code>lang: &quot;fr&quot;</code> to the body<br>
+B. Switch to a French-trained LLM<br>
+C. Prepend &quot;Respond in French:&quot; to the query<br>
 D. Provision a French-language KB</p>
 <hr>
 <h3 id="build-04-quiz--2-a-query-prefix-goes">2. A query prefix goes:</h3>
-<p>A. Into <code>prompt.system</code>
-B. Into <code>prompt.user</code> as part of the template
-C. Concatenated onto the raw query string
+<p>A. Into <code>prompt.system</code><br>
+B. Into <code>prompt.user</code> as part of the template<br>
+C. Concatenated onto the raw query string<br>
 D. As a separate <code>prefix</code> body parameter</p>
 <hr>
 <h3 id="build-04-quiz--3-resource-scoped-chat-ask-about-this-pdf-is-implemented-as">3. Resource-scoped chat (&quot;ask about this PDF&quot;) is implemented as:</h3>
-<p>A. A new <code>/ask-resource/{id}</code> endpoint
-B. A filter restricting <code>/find</code> to one resource id
-C. A prefix naming the resource in the user query
+<p>A. A new <code>/ask-resource/{id}</code> endpoint<br>
+B. A filter restricting <code>/find</code> to one resource id<br>
+C. A prefix naming the resource in the user query<br>
 D. A separate per-resource KB</p>
 <hr>
 <h3 id="build-04-quiz--4-multilingual-answers-require">4. Multilingual answers require:</h3>
-<p>A. A separate KB per language
-B. A separate embedding model per language
-C. Just the prefix; the LLM handles translation
+<p>A. A separate KB per language<br>
+B. A separate embedding model per language<br>
+C. Just the prefix; the LLM handles translation<br>
 D. A <code>language</code> parameter on the body</p>
 <hr>
 <h3 id="build-04-quiz--5-to-make-a-user-segment-influence-answer-framing-use">5. To make a user segment influence answer framing, use:</h3>
-<p>A. N prompt configurations, one per segment
-B. A query prefix naming the user's segment
-C. Multiple KBs filtered by segment
+<p>A. N prompt configurations, one per segment<br>
+B. A query prefix naming the user's segment<br>
+C. Multiple KBs filtered by segment<br>
 D. A custom model trained per segment</p>
 <hr>
 <details class="answer-key"><summary>Reveal answer key</summary>
@@ -4458,33 +4464,33 @@ ES modules.
 </blockquote>
 <hr>
 <h3 id="build-05-quiz--1-which-body-field-binds-output-to-a-json-schema">1. Which body field binds output to a JSON Schema?</h3>
-<p>A. <code>output_schema</code>
-B. <code>answer_json_schema</code>
-C. <code>response_format</code>
+<p>A. <code>output_schema</code><br>
+B. <code>answer_json_schema</code><br>
+C. <code>response_format</code><br>
 D. <code>json_mode</code></p>
 <hr>
 <h3 id="build-05-quiz--2-every-object-schema-passed-to-arag-must-include">2. Every <code>object</code> schema passed to ARAG must include:</h3>
-<p>A. <code>strict: true</code>
-B. <code>additionalProperties: false</code> at every level
-C. <code>$schema: &quot;draft-2020-12&quot;</code>
+<p>A. <code>strict: true</code><br>
+B. <code>additionalProperties: false</code> at every level<br>
+C. <code>$schema: &quot;draft-2020-12&quot;</code><br>
 D. <code>mode: &quot;structured&quot;</code></p>
 <hr>
 <h3 id="build-05-quiz--3-the-first-response-shape-the-wrapper-checks-is">3. The first response shape the wrapper checks is:</h3>
-<p>A. <code>data.item.object</code>
-B. <code>data.answer_json</code>
-C. Text with embedded JSON
+<p>A. <code>data.item.object</code><br>
+B. <code>data.answer_json</code><br>
+C. Text with embedded JSON<br>
 D. <code>data.choices[0].message.content</code></p>
 <hr>
 <h3 id="build-05-quiz--4-in-a-mixed-shape-schema-optional-per-item-fields-should-be">4. In a mixed-shape schema, optional-per-item fields should be:</h3>
-<p>A. Optional, so the model returns null
-B. Required at schema level; filter in code
-C. Split into two separate schemas
+<p>A. Optional, so the model returns null<br>
+B. Required at schema level; filter in code<br>
+C. Split into two separate schemas<br>
 D. Inferred via JSON Schema <code>anyOf</code></p>
 <hr>
 <h3 id="build-05-quiz--5-use-answerjsonschema-over-streaming--regex-when">5. Use <code>answer_json_schema</code> over streaming + regex when:</h3>
-<p>A. The next consumer is code, not a human reader
-B. The corpus is large
-C. The LLM is GPT-4
+<p>A. The next consumer is code, not a human reader<br>
+B. The corpus is large<br>
+C. The LLM is GPT-4<br>
 D. The customer is enterprise</p>
 <hr>
 <details class="answer-key"><summary>Reveal answer key</summary>
@@ -5301,33 +5307,33 @@ X-NUCLIA-SERVICEACCOUNT: Bearer {NUCLIA_API_KEY}.
 </blockquote>
 <hr>
 <h3 id="build-06-quiz--1-arags-three-named-data-augmentation-agents-are">1. ARAG's three named data-augmentation agents are:</h3>
-<p>A. Embedder, Retriever, Reranker
-B. Generator, Labeller, Graph
-C. Indexer, Classifier, Linker
+<p>A. Embedder, Retriever, Reranker<br>
+B. Generator, Labeller, Graph<br>
+C. Indexer, Classifier, Linker<br>
 D. Chunker, Tagger, Mapper</p>
 <hr>
 <h3 id="build-06-quiz--2-search-isnt-finding-things-even-when-the-answer-is-in-the-corpus-points-to">2. &quot;Search isn't finding things even when the answer is in the corpus&quot; points to:</h3>
-<p>A. The Labeller agent
-B. The Graph agent
-C. The Generator agent
+<p>A. The Labeller agent<br>
+B. The Graph agent<br>
+C. The Generator agent<br>
 D. A new BYO-LLM endpoint</p>
 <hr>
 <h3 id="build-06-quiz--3-users-need-to-filter-results-by-content-type-region-audience-points-to">3. &quot;Users need to filter results by content type, region, audience&quot; points to:</h3>
-<p>A. The Labeller agent
-B. The Generator agent
-C. The Graph agent
+<p>A. The Labeller agent<br>
+B. The Generator agent<br>
+C. The Graph agent<br>
 D. The composite-RAG pattern</p>
 <hr>
 <h3 id="build-06-quiz--4-surface-connections-between-concepts-no-single-document-contains-points-to">4. &quot;Surface connections between concepts no single document contains&quot; points to:</h3>
-<p>A. The Labeller agent
-B. The Generator agent
-C. The Graph agent
+<p>A. The Labeller agent<br>
+B. The Generator agent<br>
+C. The Graph agent<br>
 D. Re-indexing the corpus</p>
 <hr>
 <h3 id="build-06-quiz--5-the-labeller-agent-supports-which-two-modes">5. The Labeller agent supports which two modes?</h3>
-<p>A. Synchronous and asynchronous
-B. Rule-based and model-based
-C. Eager and lazy
+<p>A. Synchronous and asynchronous<br>
+B. Rule-based and model-based<br>
+C. Eager and lazy<br>
 D. Server-side and client-side</p>
 <hr>
 <details class="answer-key"><summary>Reveal answer key</summary>
@@ -5851,33 +5857,33 @@ Use plain fetch. No SDK.
 </blockquote>
 <hr>
 <h3 id="build-07-quiz--1-to-filter-find-to-pdfs-only-the-filters-array-contains">1. To filter <code>/find</code> to PDFs only, the <code>filters</code> array contains:</h3>
-<p>A. <code>[&quot;pdf&quot;]</code>
-B. <code>[&quot;/icon/application/pdf&quot;]</code>
-C. <code>[&quot;mime:application/pdf&quot;]</code>
+<p>A. <code>[&quot;pdf&quot;]</code><br>
+B. <code>[&quot;/icon/application/pdf&quot;]</code><br>
+C. <code>[&quot;mime:application/pdf&quot;]</code><br>
 D. <code>[&quot;type:pdf&quot;]</code></p>
 <hr>
 <h3 id="build-07-quiz--2-a-label-path-filter-looks-like">2. A label-path filter looks like:</h3>
-<p>A. <code>audience=legal-team</code>
-B. <code>/classification.labels/audience/legal-team</code>
-C. <code>labels[audience]=legal-team</code>
+<p>A. <code>audience=legal-team</code><br>
+B. <code>/classification.labels/audience/legal-team</code><br>
+C. <code>labels[audience]=legal-team</code><br>
 D. <code>tags:audience:legal-team</code></p>
 <hr>
 <h3 id="build-07-quiz--3-the-right-number-of-labels-per-labelset-is">3. The right number of labels per labelset is:</h3>
-<p>A. As many as the content requires, no cap
-B. Exactly 4
-C. 5–9
+<p>A. As many as the content requires, no cap<br>
+B. Exactly 4<br>
+C. 5–9<br>
 D. 20–30</p>
 <hr>
 <h3 id="build-07-quiz--4-filtering-for-iconvideo-iconaudio-returns">4. Filtering for <code>[&quot;/icon/video&quot;, &quot;/icon/audio&quot;]</code> returns:</h3>
-<p>A. Documents that are both video AND audio
-B. Documents that are video OR audio
-C. Documents tagged with both labels
+<p>A. Documents that are both video AND audio<br>
+B. Documents that are video OR audio<br>
+C. Documents tagged with both labels<br>
 D. An error — icon paths cannot combine</p>
 <hr>
 <h3 id="build-07-quiz--5-to-let-users-filter-8000-pages-400-pdfs-200-videos-by-type">5. To let users filter 8,000 pages, 400 PDFs, 200 videos by type:</h3>
-<p>A. Spin up three separate KBs and route between them
-B. One <code>filters</code> array with three <code>/icon/*</code> paths
-C. Train a model classifier per content type
+<p>A. Spin up three separate KBs and route between them<br>
+B. One <code>filters</code> array with three <code>/icon/*</code> paths<br>
+C. Train a model classifier per content type<br>
 D. Filter via URL routing before calling ARAG</p>
 <hr>
 <details class="answer-key"><summary>Reveal answer key</summary>
@@ -6582,33 +6588,33 @@ graph-only demo punchline.)
 </blockquote>
 <hr>
 <h3 id="build-08-quiz--1-the-single-most-important-filter-in-every-arag-graph-query-is">1. The single most important filter in every ARAG graph query is:</h3>
-<p>A. <code>{ &quot;exclude_ner&quot;: true }</code>
-B. <code>{ &quot;filter&quot;: &quot;custom&quot; }</code>
-C. <code>{ &quot;prop&quot;: &quot;generated&quot;, &quot;by&quot;: &quot;data-augmentation&quot; }</code>
+<p>A. <code>{ &quot;exclude_ner&quot;: true }</code><br>
+B. <code>{ &quot;filter&quot;: &quot;custom&quot; }</code><br>
+C. <code>{ &quot;prop&quot;: &quot;generated&quot;, &quot;by&quot;: &quot;data-augmentation&quot; }</code><br>
 D. <code>{ &quot;source&quot;: &quot;agent&quot; }</code></p>
 <hr>
 <h3 id="build-08-quiz--2-a-good-arag-entityrelation-schema-has-roughly">2. A good ARAG entity/relation schema has roughly:</h3>
-<p>A. 3–5 entity types and 3–5 relation types
-B. 8–15 entity types and 8–15 relation types
-C. 50+ entity types
+<p>A. 3–5 entity types and 3–5 relation types<br>
+B. 8–15 entity types and 8–15 relation types<br>
+C. 50+ entity types<br>
 D. As many types as the LLM identifies</p>
 <hr>
 <h3 id="build-08-quiz--3-undirected-true-on-a-path-query-does-what">3. <code>undirected: true</code> on a path query does what?</h3>
-<p>A. Returns paths in random order
-B. Returns paths in both directions from the source
-C. Bypasses the data-augmentation filter
+<p>A. Returns paths in random order<br>
+B. Returns paths in both directions from the source<br>
+C. Bypasses the data-augmentation filter<br>
 D. Returns unranked results</p>
 <hr>
 <h3 id="build-08-quiz--4-to-bridge-a-clicked-graph-entity-to-documents-that-mention-it">4. To bridge a clicked graph entity to documents that mention it:</h3>
-<p>A. A second <code>/graph</code> query with <code>prop: &quot;resource&quot;</code>
-B. <code>/find</code> with hybrid features using the entity value
-C. A <code>/catalog</code> query filtered by entity name
+<p>A. A second <code>/graph</code> query with <code>prop: &quot;resource&quot;</code><br>
+B. <code>/find</code> with hybrid features using the entity value<br>
+C. A <code>/catalog</code> query filtered by entity name<br>
 D. A <code>/resource</code> lookup</p>
 <hr>
 <h3 id="build-08-quiz--5-which-investigators-ran-trials-on-compound-x-and-compound-y-is">5. &quot;Which investigators ran trials on COMPOUND-X AND COMPOUND-Y?&quot; is:</h3>
-<p>A. A single-shot <code>/ask</code> problem
-B. A <code>/find</code> with hybrid retrieval problem
-C. A <code>/graph</code> traversal problem
+<p>A. A single-shot <code>/ask</code> problem<br>
+B. A <code>/find</code> with hybrid retrieval problem<br>
+C. A <code>/graph</code> traversal problem<br>
 D. A schema-constrained generation problem</p>
 <hr>
 <details class="answer-key"><summary>Reveal answer key</summary>
@@ -7137,33 +7143,33 @@ except for example field values.
 </blockquote>
 <hr>
 <h3 id="build-09-quiz--1-field-engineering-aligns-which-two-contracts">1. Field engineering aligns which two contracts?</h3>
-<p>A. Schema and classifier.
-B. Content fields and prompt instructions.
-C. Auth and observability.
+<p>A. Schema and classifier.<br>
+B. Content fields and prompt instructions.<br>
+C. Auth and observability.<br>
 D. Retrieval and generation.</p>
 <hr>
 <h3 id="build-09-quiz--2-how-does-the-model-consume-a-calltoaction-field">2. How does the model consume a <code>callToAction</code> field?</h3>
-<p>A. As a special body parameter on <code>/ask</code>.
-B. Auto-detected by field name.
-C. Inside <code>{context}</code>, referenced by the prompt.
+<p>A. As a special body parameter on <code>/ask</code>.<br>
+B. Auto-detected by field name.<br>
+C. Inside <code>{context}</code>, referenced by the prompt.<br>
 D. Via a built-in widget renderer.</p>
 <hr>
 <h3 id="build-09-quiz--3-how-do-you-ab-test-a-cta-without-a-code-deploy">3. How do you A/B test a CTA without a code deploy?</h3>
-<p>A. Switch to a different LLM.
-B. Edit the field value in the dashboard.
-C. Modify the front-end prompt config.
+<p>A. Switch to a different LLM.<br>
+B. Edit the field value in the dashboard.<br>
+C. Modify the front-end prompt config.<br>
 D. Recompile the React app.</p>
 <hr>
 <h3 id="build-09-quiz--4-searchresultdisplay-is-typically-stored-as">4. <code>searchResultDisplay</code> is typically stored as:</h3>
-<p>A. A flag enabling search results.
-B. A JSON object stored as a string field.
-C. A boolean visibility setting.
+<p>A. A flag enabling search results.<br>
+B. A JSON object stored as a string field.<br>
+C. A boolean visibility setting.<br>
 D. A list of supported icons.</p>
 <hr>
 <h3 id="build-09-quiz--5-the-commercial-pitch-for-field-engineering-is">5. The commercial pitch for field engineering is:</h3>
-<p>A. One-off implementation work.
-B. Hosting fees for field definitions.
-C. Recurring content-engineering retainer.
+<p>A. One-off implementation work.<br>
+B. Hosting fees for field definitions.<br>
+C. Recurring content-engineering retainer.<br>
 D. A percentage of conversion uplift.</p>
 <hr>
 <details class="answer-key"><summary>Reveal answer key</summary>
@@ -7708,33 +7714,33 @@ Two factors:
 </blockquote>
 <hr>
 <h3 id="build-10-quiz--1-composite-rag-in-three-words">1. Composite RAG, in three words:</h3>
-<p>A. Embed, search, answer.
-B. Generate, evaluate, augment.
-C. Retrieve, rerank, return.
+<p>A. Embed, search, answer.<br>
+B. Generate, evaluate, augment.<br>
+C. Retrieve, rerank, return.<br>
 D. Index, augment, deploy.</p>
 <hr>
 <h3 id="build-10-quiz--2-the-maximum-recommended-retry-depth-is">2. The maximum recommended retry depth is:</h3>
-<p>A. Unlimited.
-B. 1 retry.
-C. 5 retries.
+<p>A. Unlimited.<br>
+B. 1 retry.<br>
+C. 5 retries.<br>
 D. Until confidence &gt; 0.9.</p>
 <hr>
 <h3 id="build-10-quiz--3-typical-latency-cost-of-composite-vs-single-shot">3. Typical latency cost of composite vs single-shot:</h3>
-<p>A. Same.
-B. 1.5–2x.
-C. 0.5x (faster).
+<p>A. Same.<br>
+B. 1.5–2x.<br>
+C. 0.5x (faster).<br>
 D. 5–10x.</p>
 <hr>
 <h3 id="build-10-quiz--4-the-boundary-between-composite-rag-and-true-agentic-is">4. The boundary between composite RAG and true agentic is:</h3>
-<p>A. The number of LLM calls.
-B. The latency budget.
-C. Who decides the next step: model or programmer.
+<p>A. The number of LLM calls.<br>
+B. The latency budget.<br>
+C. Who decides the next step: model or programmer.<br>
 D. Whether the response is streamed.</p>
 <hr>
 <h3 id="build-10-quiz--5-the-right-reframe-for-composite-costs-2x-in-tokens">5. The right reframe for &quot;composite costs 2x in tokens&quot;:</h3>
-<p>A. It produces better answers on every query.
-B. Selective composition — only fires when single-shot fails.
-C. It's bundled in the enterprise tier.
+<p>A. It produces better answers on every query.<br>
+B. Selective composition — only fires when single-shot fails.<br>
+C. It's bundled in the enterprise tier.<br>
 D. Switch to a more expensive model instead.</p>
 <hr>
 <details class="answer-key"><summary>Reveal answer key</summary>
@@ -8308,33 +8314,33 @@ For each item, tick when verified for the customer's environment.
 </blockquote>
 <hr>
 <h3 id="build-11-quiz--1-arag-data-residency-is-configured">1. ARAG data residency is configured:</h3>
-<p>A. Per service-account JWT.
-B. Per partner organisation.
-C. Per KB, at provisioning time.
+<p>A. Per service-account JWT.<br>
+B. Per partner organisation.<br>
+C. Per KB, at provisioning time.<br>
 D. Per HTTP request.</p>
 <hr>
 <h3 id="build-11-quiz--2-the-default-rate-limit-on-an-arag-service-account-is">2. The default rate limit on an ARAG service account is:</h3>
-<p>A. 600 req/min.
-B. 1200 req/min.
-C. 2400 req/min.
+<p>A. 600 req/min.<br>
+B. 1200 req/min.<br>
+C. 2400 req/min.<br>
 D. Unlimited.</p>
 <hr>
 <h3 id="build-11-quiz--3-byo-llm-is-configured">3. BYO-LLM is configured:</h3>
-<p>A. Globally across all KBs.
-B. Per HTTP request.
-C. Per KB, in generative-model settings.
+<p>A. Globally across all KBs.<br>
+B. Per HTTP request.<br>
+C. Per KB, in generative-model settings.<br>
 D. By the Progress Agentic RAG ops team only.</p>
 <hr>
 <h3 id="build-11-quiz--4-what-does-byo-llm-let-the-customer-point-the-kb-at">4. What does BYO-LLM let the customer point the KB at?</h3>
-<p>A. Their own LLM tenant.
-B. Their database.
-C. Their CDN.
+<p>A. Their own LLM tenant.<br>
+B. Their database.<br>
+C. Their CDN.<br>
 D. Their dashboard.</p>
 <hr>
 <h3 id="build-11-quiz--5-the-key-observability-metric-for-retrieval-quality-regression-is">5. The key observability metric for retrieval-quality regression is:</h3>
-<p>A. p99 latency.
-B. Citation rate on <code>/ask</code> responses.
-C. Total request volume.
+<p>A. p99 latency.<br>
+B. Citation rate on <code>/ask</code> responses.<br>
+C. Total request volume.<br>
 D. Average answer length.</p>
 <hr>
 <details class="answer-key"><summary>Reveal answer key</summary>
@@ -8812,33 +8818,33 @@ Requesting review-board sign-off to start Build 13.
 </blockquote>
 <hr>
 <h3 id="build-12-quiz--1-the-capstone-vibe-codes-against">1. The capstone vibe-codes against:</h3>
-<p>A. A new ARAG SDK from Progress.
-B. The 8 master prompts you write in Build 12.
-C. A starter template partners rebrand.
+<p>A. A new ARAG SDK from Progress.<br>
+B. The 8 master prompts you write in Build 12.<br>
+C. A starter template partners rebrand.<br>
 D. A fixed framework Progress maintains.</p>
 <hr>
 <h3 id="build-12-quiz--2-the-two-capstone-variants-differ-in">2. The two capstone variants differ in:</h3>
-<p>A. The underlying ARAG architecture.
-B. The buyer, corpus, and demo script.
-C. The capstone duration.
+<p>A. The underlying ARAG architecture.<br>
+B. The buyer, corpus, and demo script.<br>
+C. The capstone duration.<br>
 D. The price band.</p>
 <hr>
 <h3 id="build-12-quiz--3-before-vibe-coding-the-capstone-you-must">3. Before vibe-coding the capstone you must:</h3>
-<p>A. Have all six demo surfaces deployed.
-B. Pass the final exam and get review-board sign-off.
-C. Sign a customer.
+<p>A. Have all six demo surfaces deployed.<br>
+B. Pass the final exam and get review-board sign-off.<br>
+C. Sign a customer.<br>
 D. Provision a separate KB per surface.</p>
 <hr>
 <h3 id="build-12-quiz--4-the-25-minute-customer-demo-opens-with">4. The 25-minute customer demo opens with:</h3>
-<p>A. A long backstory on the AI industry.
-B. The first workflow demo.
-C. Hero + residency badge + live ingested-corpus stats.
+<p>A. A long backstory on the AI industry.<br>
+B. The first workflow demo.<br>
+C. Hero + residency badge + live ingested-corpus stats.<br>
 D. The pricing slide.</p>
 <hr>
 <h3 id="build-12-quiz--5-a-master-prompt-should-be">5. A &quot;master prompt&quot; should be:</h3>
-<p>A. A one-line bullet.
-B. 200–500 words with goal, context, and verification.
-C. A full pseudocode implementation.
+<p>A. A one-line bullet.<br>
+B. 200–500 words with goal, context, and verification.<br>
+C. A full pseudocode implementation.<br>
 D. A reference to an external spec doc.</p>
 <hr>
 <details class="answer-key"><summary>Reveal answer key</summary>
@@ -8865,123 +8871,123 @@ D. A reference to an external spec doc.</p>
 </blockquote>
 <hr>
 <h3 id="final-exam--1-the-auth-header-on-every-arag-api-request-is">1. The auth header on every ARAG API request is:</h3>
-<p>A. <code>Authorization: Bearer &lt;jwt&gt;</code>
-B. <code>X-NUCLIA-SERVICEACCOUNT: Bearer &lt;jwt&gt;</code>
-C. <code>X-API-Key: &lt;key&gt;</code>
+<p>A. <code>Authorization: Bearer &lt;jwt&gt;</code><br>
+B. <code>X-NUCLIA-SERVICEACCOUNT: Bearer &lt;jwt&gt;</code><br>
+C. <code>X-API-Key: &lt;key&gt;</code><br>
 D. <code>Cookie: session=...</code></p>
 <hr>
 <h3 id="final-exam--2-the-vibe-coding-mental-model-for-this-course-says">2. The vibe-coding mental model for this course says:</h3>
-<p>A. The AI does design and implementation; you observe.
-B. You design and verify; the AI writes the code.
-C. You hand-write production code; AI writes demos.
+<p>A. The AI does design and implementation; you observe.<br>
+B. You design and verify; the AI writes the code.<br>
+C. You hand-write production code; AI writes demos.<br>
 D. The AI is only used for documentation.</p>
 <hr>
 <h3 id="final-exam--3-a-customer-wants-ai-to-generate-a-structured-form-letter-with-fixed-fields-this-is">3. A customer wants AI to generate a structured form letter with fixed fields. This is:</h3>
-<p>A. P1 — semantic search
-B. P2 — free-form chat
-C. P3 — schema-constrained generation
+<p>A. P1 — semantic search<br>
+B. P2 — free-form chat<br>
+C. P3 — schema-constrained generation<br>
 D. P5 — secure media</p>
 <hr>
 <h3 id="final-exam--4-a-customer-wants-to-traverse-judge-smith--cited-precedents-this-is">4. A customer wants to traverse &quot;Judge Smith → cited precedents.&quot; This is:</h3>
-<p>A. P1 — <code>/find</code> for &quot;Judge Smith&quot;
-B. P2 — <code>/ask</code> with a Judge Smith prompt
-C. P4 — <code>/graph</code> traversal
+<p>A. P1 — <code>/find</code> for &quot;Judge Smith&quot;<br>
+B. P2 — <code>/ask</code> with a Judge Smith prompt<br>
+C. P4 — <code>/graph</code> traversal<br>
 D. P5 — <code>/resource</code> for the judge's bio</p>
 <hr>
 <h3 id="final-exam--5-the-progress-agentic-rag-widget-library-ships-as">5. The Progress Agentic RAG widget library ships as:</h3>
-<p>A. A React component package on npm
-B. Standard Web Components from a CDN script
-C. A jQuery plugin
+<p>A. A React component package on npm<br>
+B. Standard Web Components from a CDN script<br>
+C. A jQuery plugin<br>
 D. An iframe embed</p>
 <hr>
 <h3 id="final-exam--6-to-serve-two-audiences-prospect-member-over-one-kb-you-should-use">6. To serve two audiences (prospect, member) over one KB, you should use:</h3>
-<p>A. Two KBs routed by auth state
-B. One KB, two prompt configurations
-C. Two LLM endpoints, one cheap and one premium
+<p>A. Two KBs routed by auth state<br>
+B. One KB, two prompt configurations<br>
+C. Two LLM endpoints, one cheap and one premium<br>
 D. Two ARAG service accounts</p>
 <hr>
 <h3 id="final-exam--7-to-answer-in-french-the-change-to-your-ask-call-is">7. To answer in French, the change to your <code>/ask</code> call is:</h3>
-<p>A. Add <code>lang: &quot;fr&quot;</code> to the body
-B. Switch to a French-trained LLM
-C. Prepend &quot;Respond in French:&quot; to the query
+<p>A. Add <code>lang: &quot;fr&quot;</code> to the body<br>
+B. Switch to a French-trained LLM<br>
+C. Prepend &quot;Respond in French:&quot; to the query<br>
 D. Provision a French-language KB</p>
 <hr>
 <h3 id="final-exam--8-which-body-field-binds-output-to-a-json-schema">8. Which body field binds output to a JSON Schema?</h3>
-<p>A. <code>output_schema</code>
-B. <code>answer_json_schema</code>
-C. <code>response_format</code>
+<p>A. <code>output_schema</code><br>
+B. <code>answer_json_schema</code><br>
+C. <code>response_format</code><br>
 D. <code>json_mode</code></p>
 <hr>
 <h3 id="final-exam--9-every-object-schema-passed-to-arag-must-include">9. Every <code>object</code> schema passed to ARAG must include:</h3>
-<p>A. <code>strict: true</code>
-B. <code>additionalProperties: false</code> at every level
-C. <code>$schema: &quot;draft-2020-12&quot;</code>
+<p>A. <code>strict: true</code><br>
+B. <code>additionalProperties: false</code> at every level<br>
+C. <code>$schema: &quot;draft-2020-12&quot;</code><br>
 D. <code>mode: &quot;structured&quot;</code></p>
 <hr>
 <h3 id="final-exam--10-arags-three-named-data-augmentation-agents-are">10. ARAG's three named data-augmentation agents are:</h3>
-<p>A. Embedder, Retriever, Reranker
-B. Generator, Labeller, Graph
-C. Indexer, Classifier, Linker
+<p>A. Embedder, Retriever, Reranker<br>
+B. Generator, Labeller, Graph<br>
+C. Indexer, Classifier, Linker<br>
 D. Chunker, Tagger, Mapper</p>
 <hr>
 <h3 id="final-exam--11-search-isnt-finding-things-even-when-the-answer-is-in-the-corpus-points-to">11. &quot;Search isn't finding things even when the answer is in the corpus&quot; points to:</h3>
-<p>A. The Labeller agent
-B. The Graph agent
-C. The Generator agent
+<p>A. The Labeller agent<br>
+B. The Graph agent<br>
+C. The Generator agent<br>
 D. A new BYO-LLM endpoint</p>
 <hr>
 <h3 id="final-exam--12-to-filter-find-to-pdfs-only-the-filters-array-contains">12. To filter <code>/find</code> to PDFs only, the <code>filters</code> array contains:</h3>
-<p>A. <code>[&quot;pdf&quot;]</code>
-B. <code>[&quot;/icon/application/pdf&quot;]</code>
-C. <code>[&quot;mime:application/pdf&quot;]</code>
+<p>A. <code>[&quot;pdf&quot;]</code><br>
+B. <code>[&quot;/icon/application/pdf&quot;]</code><br>
+C. <code>[&quot;mime:application/pdf&quot;]</code><br>
 D. <code>[&quot;type:pdf&quot;]</code></p>
 <hr>
 <h3 id="final-exam--13-the-single-most-important-filter-in-every-arag-graph-query-is">13. The single most important filter in every ARAG graph query is:</h3>
-<p>A. <code>{ &quot;exclude_ner&quot;: true }</code>
-B. <code>{ &quot;filter&quot;: &quot;custom&quot; }</code>
-C. <code>{ &quot;prop&quot;: &quot;generated&quot;, &quot;by&quot;: &quot;data-augmentation&quot; }</code>
+<p>A. <code>{ &quot;exclude_ner&quot;: true }</code><br>
+B. <code>{ &quot;filter&quot;: &quot;custom&quot; }</code><br>
+C. <code>{ &quot;prop&quot;: &quot;generated&quot;, &quot;by&quot;: &quot;data-augmentation&quot; }</code><br>
 D. <code>{ &quot;source&quot;: &quot;agent&quot; }</code></p>
 <hr>
 <h3 id="final-exam--14-how-do-you-ab-test-a-cta-without-a-code-deploy">14. How do you A/B test a CTA without a code deploy?</h3>
-<p>A. Switch to a different LLM.
-B. Edit the field value in the dashboard.
-C. Modify the front-end prompt config.
+<p>A. Switch to a different LLM.<br>
+B. Edit the field value in the dashboard.<br>
+C. Modify the front-end prompt config.<br>
 D. Recompile the React app.</p>
 <hr>
 <h3 id="final-exam--15-composite-rag-in-three-words">15. Composite RAG, in three words:</h3>
-<p>A. Embed, search, answer.
-B. Generate, evaluate, augment.
-C. Retrieve, rerank, return.
+<p>A. Embed, search, answer.<br>
+B. Generate, evaluate, augment.<br>
+C. Retrieve, rerank, return.<br>
 D. Index, augment, deploy.</p>
 <hr>
 <h3 id="final-exam--16-the-boundary-between-composite-rag-and-true-agentic-is">16. The boundary between composite RAG and true agentic is:</h3>
-<p>A. The number of LLM calls.
-B. The latency budget.
-C. Who decides the next step: model or programmer.
+<p>A. The number of LLM calls.<br>
+B. The latency budget.<br>
+C. Who decides the next step: model or programmer.<br>
 D. Whether the response is streamed.</p>
 <hr>
 <h3 id="final-exam--17-arag-data-residency-is-configured">17. ARAG data residency is configured:</h3>
-<p>A. Per service-account JWT.
-B. Per partner organisation.
-C. Per KB, at provisioning time.
+<p>A. Per service-account JWT.<br>
+B. Per partner organisation.<br>
+C. Per KB, at provisioning time.<br>
 D. Per HTTP request.</p>
 <hr>
 <h3 id="final-exam--18-what-does-byo-llm-let-the-customer-point-the-kb-at">18. What does BYO-LLM let the customer point the KB at?</h3>
-<p>A. Their own LLM tenant.
-B. Their database.
-C. Their CDN.
+<p>A. Their own LLM tenant.<br>
+B. Their database.<br>
+C. Their CDN.<br>
 D. Their dashboard.</p>
 <hr>
 <h3 id="final-exam--19-the-key-observability-metric-for-retrieval-quality-regression-is">19. The key observability metric for retrieval-quality regression is:</h3>
-<p>A. p99 latency.
-B. Citation rate on <code>/ask</code> responses.
-C. Total request volume.
+<p>A. p99 latency.<br>
+B. Citation rate on <code>/ask</code> responses.<br>
+C. Total request volume.<br>
 D. Average answer length.</p>
 <hr>
 <h3 id="final-exam--20-a-master-prompt-should-be">20. A &quot;master prompt&quot; should be:</h3>
-<p>A. A one-line bullet.
-B. 200–500 words with goal, context, and verification.
-C. A full pseudocode implementation.
+<p>A. A one-line bullet.<br>
+B. 200–500 words with goal, context, and verification.<br>
+C. A full pseudocode implementation.<br>
 D. A reference to an external spec doc.</p>
 <hr>
 <details class="answer-key"><summary>Reveal answer key</summary>
