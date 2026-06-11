@@ -397,14 +397,46 @@ function rewriteLinks(html, page) {
   });
 }
 
-// Quizzes + final exam: wrap everything from "## Answer key" down in <details>.
+// Quizzes + final exam become runnable: options turn into radio groups, a
+// "Check my answers" button grades against the answer key (parsed from the
+// "## Answer key" section at build time) and reports the score against the
+// quiz's pass mark. The static reveal-the-key <details> stays as a fallback.
 function renderQuiz(md, prefix) {
   const m = md.match(/^## Answer key\s*$/m);
   if (!m) return renderMarkdown(md, prefix);
   const head = md.slice(0, m.index);
   const tail = md.slice(m.index + m[0].length);
+
+  const keyMap = new Map([...tail.matchAll(/(\d+)\.\s*([A-D])\b/g)].map((k) => [+k[1], k[2]]));
+  const pass = +(tail.match(/(\d+)\+\s*correct/)?.[1] ?? 0);
+
+  // The options paragraph renders as "<p>A. …<br>\nB. …<br>\nC. …</p>" —
+  // rebuild each into a radio fieldset, numbered in document order.
+  let qNum = 0;
+  const body = renderMarkdown(head, prefix).replace(/<p>(A\. [\s\S]*?)<\/p>/g, (m0, inner) => {
+    const parts = inner.split(/<br>\n(?=[A-D]\. )/);
+    if (parts.length < 2) return m0;
+    qNum++;
+    const answer = keyMap.get(qNum) ?? '';
+    const opts = parts
+      .map((p) => {
+        const letter = p[0];
+        const text = p.slice(3).replace(/<br>\n?$/, '');
+        return `<label data-letter="${letter}"><input type="radio" name="${prefix}-q${qNum}"><span class="opt">${letter}.</span> <span>${text}</span></label>`;
+      })
+      .join('\n');
+    return `<fieldset class="quiz-q" data-answer="${answer}">\n${opts}\n</fieldset>`;
+  });
+  if (qNum !== keyMap.size) {
+    console.warn(`WARNING ${prefix}: ${qNum} option blocks vs ${keyMap.size} answer-key entries`);
+  }
+
   return (
-    renderMarkdown(head, prefix) +
+    body +
+    `<div class="quiz-controls">
+<button type="button" class="button quiz-check" data-pass="${pass}">Check my answers</button>
+<p class="quiz-result" hidden></p>
+</div>\n` +
     '<details class="answer-key"><summary>Reveal answer key</summary>\n' +
     renderMarkdown(tail, prefix) +
     '</details>\n'
@@ -584,6 +616,44 @@ const ROUTER = `
   });
   window.addEventListener('popstate', route);
   route();
+
+  // Quiz grading: mark each answered question, score against the pass mark.
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('button.quiz-check');
+    if (!btn) return;
+    const scope = btn.closest('section.page');
+    const questions = scope.querySelectorAll('fieldset.quiz-q');
+    let right = 0;
+    let answered = 0;
+    questions.forEach((fs) => {
+      fs.classList.remove('correct', 'wrong');
+      fs.querySelectorAll('label').forEach((l) => l.classList.remove('is-answer'));
+      const sel = fs.querySelector('input:checked');
+      if (!sel) return;
+      answered++;
+      const ok = sel.closest('label').dataset.letter === fs.dataset.answer;
+      if (ok) right++;
+      fs.classList.add(ok ? 'correct' : 'wrong');
+      if (!ok) {
+        const good = fs.querySelector('label[data-letter="' + fs.dataset.answer + '"]');
+        if (good) good.classList.add('is-answer');
+      }
+    });
+    const total = questions.length;
+    const pass = +btn.dataset.pass || 0;
+    const out = scope.querySelector('.quiz-result');
+    out.hidden = false;
+    out.classList.remove('pass', 'fail');
+    if (answered < total) {
+      out.textContent = 'Answered ' + answered + ' of ' + total + ' \\u2014 answer every question, then check again.';
+    } else if (right >= pass) {
+      out.classList.add('pass');
+      out.textContent = 'Score ' + right + '/' + total + ' \\u2014 pass! (' + pass + '+ needed)';
+    } else {
+      out.classList.add('fail');
+      out.textContent = 'Score ' + right + '/' + total + ' \\u2014 below the pass mark (' + pass + '+ needed). Review the lesson and try again.';
+    }
+  });
 })();
 `;
 

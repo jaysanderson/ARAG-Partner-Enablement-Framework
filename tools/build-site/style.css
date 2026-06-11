@@ -149,6 +149,35 @@ th, td { border: 1px solid var(--line); padding: 0.45rem 0.7rem; text-align: lef
 th { background: var(--wash); }
 tbody tr:nth-child(even) { background: #fbfcfd; }
 
+/* ---------- interactive quiz ---------- */
+
+fieldset.quiz-q {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.45rem 0.7rem;
+  margin: 0.9rem 0;
+}
+fieldset.quiz-q label {
+  display: flex;
+  gap: 0.55rem;
+  align-items: baseline;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+fieldset.quiz-q label:hover { background: var(--wash); }
+fieldset.quiz-q input[type="radio"] { accent-color: var(--accent); margin: 0; }
+fieldset.quiz-q .opt { font-weight: 700; color: var(--ink-soft); }
+fieldset.quiz-q.correct { border-color: var(--accent); background: #f2faf6; }
+fieldset.quiz-q.wrong { border-color: #c92a2a; background: #fff5f5; }
+fieldset.quiz-q.wrong label.is-answer { background: #e6f4ec; outline: 1px dashed var(--accent); }
+
+.quiz-controls { margin: 1.5rem 0 1rem; }
+button.button { border: none; cursor: pointer; font-family: inherit; font-size: 1rem; }
+.quiz-result { font-weight: 700; }
+.quiz-result.pass { color: var(--accent-ink); }
+.quiz-result.fail { color: #c92a2a; }
+
 /* ---------- quiz answer key ---------- */
 
 details.answer-key {

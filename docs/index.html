@@ -156,6 +156,35 @@ th, td { border: 1px solid var(--line); padding: 0.45rem 0.7rem; text-align: lef
 th { background: var(--wash); }
 tbody tr:nth-child(even) { background: #fbfcfd; }
 
+/* ---------- interactive quiz ---------- */
+
+fieldset.quiz-q {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.45rem 0.7rem;
+  margin: 0.9rem 0;
+}
+fieldset.quiz-q label {
+  display: flex;
+  gap: 0.55rem;
+  align-items: baseline;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+fieldset.quiz-q label:hover { background: var(--wash); }
+fieldset.quiz-q input[type="radio"] { accent-color: var(--accent); margin: 0; }
+fieldset.quiz-q .opt { font-weight: 700; color: var(--ink-soft); }
+fieldset.quiz-q.correct { border-color: var(--accent); background: #f2faf6; }
+fieldset.quiz-q.wrong { border-color: #c92a2a; background: #fff5f5; }
+fieldset.quiz-q.wrong label.is-answer { background: #e6f4ec; outline: 1px dashed var(--accent); }
+
+.quiz-controls { margin: 1.5rem 0 1rem; }
+button.button { border: none; cursor: pointer; font-family: inherit; font-size: 1rem; }
+.quiz-result { font-weight: 700; }
+.quiz-result.pass { color: var(--accent-ink); }
+.quiz-result.fail { color: #c92a2a; }
+
 /* ---------- quiz answer key ---------- */
 
 details.answer-key {
@@ -1312,35 +1341,49 @@ console.log(<span class="hljs-string">'Unique resource IDs:'</span>, uniqueRids)
 </blockquote>
 <hr>
 <h3 id="build-00-quiz--1-the-auth-header-on-every-arag-api-request-is">1. The auth header on every ARAG API request is:</h3>
-<p>A. <code>Authorization: Bearer &lt;jwt&gt;</code><br>
-B. <code>X-NUCLIA-SERVICEACCOUNT: Bearer &lt;jwt&gt;</code><br>
-C. <code>X-API-Key: &lt;key&gt;</code><br>
-D. <code>Cookie: session=...</code></p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-00-quiz-q1"><span class="opt">A.</span> <span><code>Authorization: Bearer &lt;jwt&gt;</code></span></label>
+<label data-letter="B"><input type="radio" name="build-00-quiz-q1"><span class="opt">B.</span> <span><code>X-NUCLIA-SERVICEACCOUNT: Bearer &lt;jwt&gt;</code></span></label>
+<label data-letter="C"><input type="radio" name="build-00-quiz-q1"><span class="opt">C.</span> <span><code>X-API-Key: &lt;key&gt;</code></span></label>
+<label data-letter="D"><input type="radio" name="build-00-quiz-q1"><span class="opt">D.</span> <span><code>Cookie: session=...</code></span></label>
+</fieldset>
 <hr>
 <h3 id="build-00-quiz--2-the-two-endpoints-you-used-in-build-0-are">2. The two endpoints you used in Build 0 are:</h3>
-<p>A. <code>/search</code> and <code>/chat</code><br>
-B. <code>/embed</code> and <code>/generate</code><br>
-C. <code>/find</code> and <code>/ask</code><br>
-D. <code>/retrieve</code> and <code>/answer</code></p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-00-quiz-q2"><span class="opt">A.</span> <span><code>/search</code> and <code>/chat</code></span></label>
+<label data-letter="B"><input type="radio" name="build-00-quiz-q2"><span class="opt">B.</span> <span><code>/embed</code> and <code>/generate</code></span></label>
+<label data-letter="C"><input type="radio" name="build-00-quiz-q2"><span class="opt">C.</span> <span><code>/find</code> and <code>/ask</code></span></label>
+<label data-letter="D"><input type="radio" name="build-00-quiz-q2"><span class="opt">D.</span> <span><code>/retrieve</code> and <code>/answer</code></span></label>
+</fieldset>
 <hr>
 <h3 id="build-00-quiz--3-a-streaming-ask-response-is-delivered-as">3. A streaming <code>/ask</code> response is delivered as:</h3>
-<p>A. A single JSON blob<br>
-B. NDJSON, one JSON object per line<br>
-C. Server-Sent Events<br>
-D. WebSocket frames</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-00-quiz-q3"><span class="opt">A.</span> <span>A single JSON blob</span></label>
+<label data-letter="B"><input type="radio" name="build-00-quiz-q3"><span class="opt">B.</span> <span>NDJSON, one JSON object per line</span></label>
+<label data-letter="C"><input type="radio" name="build-00-quiz-q3"><span class="opt">C.</span> <span>Server-Sent Events</span></label>
+<label data-letter="D"><input type="radio" name="build-00-quiz-q3"><span class="opt">D.</span> <span>WebSocket frames</span></label>
+</fieldset>
 <hr>
 <h3 id="build-00-quiz--4-two-ask-body-parameters-you-should-set-on-most-calls">4. Two <code>/ask</code> body parameters you should set on most calls:</h3>
-<p>A. <code>temperature</code> and <code>top_p</code><br>
-B. <code>prefer_markdown</code> and <code>rephrase</code><br>
-C. <code>stream</code> and <code>cache</code><br>
-D. <code>verify_citations</code> and <code>max_retries</code></p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-00-quiz-q4"><span class="opt">A.</span> <span><code>temperature</code> and <code>top_p</code></span></label>
+<label data-letter="B"><input type="radio" name="build-00-quiz-q4"><span class="opt">B.</span> <span><code>prefer_markdown</code> and <code>rephrase</code></span></label>
+<label data-letter="C"><input type="radio" name="build-00-quiz-q4"><span class="opt">C.</span> <span><code>stream</code> and <code>cache</code></span></label>
+<label data-letter="D"><input type="radio" name="build-00-quiz-q4"><span class="opt">D.</span> <span><code>verify_citations</code> and <code>max_retries</code></span></label>
+</fieldset>
 <hr>
 <h3 id="build-00-quiz--5-the-vibe-coding-mental-model-for-this-course-says">5. The vibe-coding mental model for this course says:</h3>
-<p>A. The AI does design and implementation; you observe.<br>
-B. You design and verify; the AI writes the code.<br>
-C. You hand-write production code; AI writes demos.<br>
-D. The AI is only used for documentation.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-00-quiz-q5"><span class="opt">A.</span> <span>The AI does design and implementation; you observe.</span></label>
+<label data-letter="B"><input type="radio" name="build-00-quiz-q5"><span class="opt">B.</span> <span>You design and verify; the AI writes the code.</span></label>
+<label data-letter="C"><input type="radio" name="build-00-quiz-q5"><span class="opt">C.</span> <span>You hand-write production code; AI writes demos.</span></label>
+<label data-letter="D"><input type="radio" name="build-00-quiz-q5"><span class="opt">D.</span> <span>The AI is only used for documentation.</span></label>
+</fieldset>
 <hr>
+<div class="quiz-controls">
+<button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
+<p class="quiz-result" hidden></p>
+</div>
 <details class="answer-key"><summary>Reveal answer key</summary>
 <ol>
 <li>B · 2. C · 3. B · 4. B · 5. B</li>
@@ -2043,35 +2086,49 @@ Resource title: &quot;Onboarding Guide&quot;, extracted_text length: 4129 chars
 </blockquote>
 <hr>
 <h3 id="build-01-quiz--1-which-primitive-returns-paragraph-level-matches-with-scores">1. Which primitive returns paragraph-level matches with scores?</h3>
-<p>A. P2 — <code>/ask</code><br>
-B. P1 — <code>/find</code><br>
-C. P3 — <code>/ask</code> with <code>answer_json_schema</code><br>
-D. P4 — <code>/graph</code></p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-01-quiz-q1"><span class="opt">A.</span> <span>P2 — <code>/ask</code></span></label>
+<label data-letter="B"><input type="radio" name="build-01-quiz-q1"><span class="opt">B.</span> <span>P1 — <code>/find</code></span></label>
+<label data-letter="C"><input type="radio" name="build-01-quiz-q1"><span class="opt">C.</span> <span>P3 — <code>/ask</code> with <code>answer_json_schema</code></span></label>
+<label data-letter="D"><input type="radio" name="build-01-quiz-q1"><span class="opt">D.</span> <span>P4 — <code>/graph</code></span></label>
+</fieldset>
 <hr>
 <h3 id="build-01-quiz--2-the-two-placeholders-arag-substitutes-inside-promptuser-are">2. The two placeholders ARAG substitutes inside <code>prompt.user</code> are:</h3>
-<p>A. <code>{retrieval}</code> and <code>{query}</code><br>
-B. <code>{context}</code> and <code>{question}</code><br>
-C. <code>${context}</code> and <code>${question}</code><br>
-D. <code>&lt;&lt;context&gt;&gt;</code> and <code>&lt;&lt;question&gt;&gt;</code></p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-01-quiz-q2"><span class="opt">A.</span> <span><code>{retrieval}</code> and <code>{query}</code></span></label>
+<label data-letter="B"><input type="radio" name="build-01-quiz-q2"><span class="opt">B.</span> <span><code>{context}</code> and <code>{question}</code></span></label>
+<label data-letter="C"><input type="radio" name="build-01-quiz-q2"><span class="opt">C.</span> <span><code>${context}</code> and <code>${question}</code></span></label>
+<label data-letter="D"><input type="radio" name="build-01-quiz-q2"><span class="opt">D.</span> <span><code>&lt;&lt;context&gt;&gt;</code> and <code>&lt;&lt;question&gt;&gt;</code></span></label>
+</fieldset>
 <hr>
 <h3 id="build-01-quiz--3-a-customer-wants-ai-to-generate-a-structured-form-letter-with-fixed-fields-this-is">3. A customer wants AI to generate a structured form letter with fixed fields. This is:</h3>
-<p>A. P1 — semantic search<br>
-B. P2 — free-form chat<br>
-C. P3 — schema-constrained generation<br>
-D. P5 — secure media</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-01-quiz-q3"><span class="opt">A.</span> <span>P1 — semantic search</span></label>
+<label data-letter="B"><input type="radio" name="build-01-quiz-q3"><span class="opt">B.</span> <span>P2 — free-form chat</span></label>
+<label data-letter="C"><input type="radio" name="build-01-quiz-q3"><span class="opt">C.</span> <span>P3 — schema-constrained generation</span></label>
+<label data-letter="D"><input type="radio" name="build-01-quiz-q3"><span class="opt">D.</span> <span>P5 — secure media</span></label>
+</fieldset>
 <hr>
 <h3 id="build-01-quiz--4-a-customer-wants-to-traverse-judge-smith--cited-precedents-this-is">4. A customer wants to traverse &quot;Judge Smith → cited precedents.&quot; This is:</h3>
-<p>A. P1 — <code>/find</code> for &quot;Judge Smith&quot;<br>
-B. P2 — <code>/ask</code> with a Judge Smith prompt<br>
-C. P4 — <code>/graph</code> traversal<br>
-D. P5 — <code>/resource</code> for the judge's bio</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-01-quiz-q4"><span class="opt">A.</span> <span>P1 — <code>/find</code> for &quot;Judge Smith&quot;</span></label>
+<label data-letter="B"><input type="radio" name="build-01-quiz-q4"><span class="opt">B.</span> <span>P2 — <code>/ask</code> with a Judge Smith prompt</span></label>
+<label data-letter="C"><input type="radio" name="build-01-quiz-q4"><span class="opt">C.</span> <span>P4 — <code>/graph</code> traversal</span></label>
+<label data-letter="D"><input type="radio" name="build-01-quiz-q4"><span class="opt">D.</span> <span>P5 — <code>/resource</code> for the judge's bio</span></label>
+</fieldset>
 <hr>
 <h3 id="build-01-quiz--5-hybrid-retrieval-is-invoked-by-setting-which-body-field-on-find">5. Hybrid retrieval is invoked by setting which body field on <code>/find</code>?</h3>
-<p>A. <code>mode: &quot;hybrid&quot;</code><br>
-B. <code>features: [&quot;keyword&quot;, &quot;semantic&quot;]</code><br>
-C. <code>retrieval_type: &quot;both&quot;</code><br>
-D. <code>query_strategy: &quot;fuzzy_and_dense&quot;</code></p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-01-quiz-q5"><span class="opt">A.</span> <span><code>mode: &quot;hybrid&quot;</code></span></label>
+<label data-letter="B"><input type="radio" name="build-01-quiz-q5"><span class="opt">B.</span> <span><code>features: [&quot;keyword&quot;, &quot;semantic&quot;]</code></span></label>
+<label data-letter="C"><input type="radio" name="build-01-quiz-q5"><span class="opt">C.</span> <span><code>retrieval_type: &quot;both&quot;</code></span></label>
+<label data-letter="D"><input type="radio" name="build-01-quiz-q5"><span class="opt">D.</span> <span><code>query_strategy: &quot;fuzzy_and_dense&quot;</code></span></label>
+</fieldset>
 <hr>
+<div class="quiz-controls">
+<button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
+<p class="quiz-result" hidden></p>
+</div>
 <details class="answer-key"><summary>Reveal answer key</summary>
 <ol>
 <li>B · 2. B · 3. C · 4. C · 5. B</li>
@@ -2507,35 +2564,49 @@ D. <code>query_strategy: &quot;fuzzy_and_dense&quot;</code></p>
 </blockquote>
 <hr>
 <h3 id="build-02-quiz--1-the-progress-agentic-rag-widget-library-ships-as">1. The Progress Agentic RAG widget library ships as:</h3>
-<p>A. A React component package on npm<br>
-B. Standard Web Components from a CDN script<br>
-C. A jQuery plugin<br>
-D. An iframe embed</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-02-quiz-q1"><span class="opt">A.</span> <span>A React component package on npm</span></label>
+<label data-letter="B"><input type="radio" name="build-02-quiz-q1"><span class="opt">B.</span> <span>Standard Web Components from a CDN script</span></label>
+<label data-letter="C"><input type="radio" name="build-02-quiz-q1"><span class="opt">C.</span> <span>A jQuery plugin</span></label>
+<label data-letter="D"><input type="radio" name="build-02-quiz-q1"><span class="opt">D.</span> <span>An iframe embed</span></label>
+</fieldset>
 <hr>
 <h3 id="build-02-quiz--2-to-restrict-a-nuclia-search-bar-to-videos-only-the-attribute-is">2. To restrict a <code>&lt;nuclia-search-bar&gt;</code> to videos only, the attribute is:</h3>
-<p>A. <code>content-type=&quot;video&quot;</code><br>
-B. <code>filter=&quot;video&quot;</code><br>
-C. <code>filters='[&quot;/icon/video&quot;]'</code><br>
-D. <code>restrict=&quot;application/video&quot;</code></p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-02-quiz-q2"><span class="opt">A.</span> <span><code>content-type=&quot;video&quot;</code></span></label>
+<label data-letter="B"><input type="radio" name="build-02-quiz-q2"><span class="opt">B.</span> <span><code>filter=&quot;video&quot;</code></span></label>
+<label data-letter="C"><input type="radio" name="build-02-quiz-q2"><span class="opt">C.</span> <span><code>filters='[&quot;/icon/video&quot;]'</code></span></label>
+<label data-letter="D"><input type="radio" name="build-02-quiz-q2"><span class="opt">D.</span> <span><code>restrict=&quot;application/video&quot;</code></span></label>
+</fieldset>
 <hr>
 <h3 id="build-02-quiz--3-the-progress-agentic-rag-widget-configurators-three-panes-are">3. The Progress Agentic RAG widget configurator's three panes are:</h3>
-<p>A. Editor, terminal, browser<br>
-B. Configuration, live preview, generated code<br>
-C. Search, chat, analytics<br>
-D. Filters, deploy, logs</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-02-quiz-q3"><span class="opt">A.</span> <span>Editor, terminal, browser</span></label>
+<label data-letter="B"><input type="radio" name="build-02-quiz-q3"><span class="opt">B.</span> <span>Configuration, live preview, generated code</span></label>
+<label data-letter="C"><input type="radio" name="build-02-quiz-q3"><span class="opt">C.</span> <span>Search, chat, analytics</span></label>
+<label data-letter="D"><input type="radio" name="build-02-quiz-q3"><span class="opt">D.</span> <span>Filters, deploy, logs</span></label>
+</fieldset>
 <hr>
 <h3 id="build-02-quiz--4-a-cmo-wants-a-chatbot-on-wordpress-with-no-engineering-the-right-answer-is">4. A CMO wants a chatbot on WordPress with no engineering. The right answer is:</h3>
-<p>A. No, this requires a Tier 3 engagement.<br>
-B. Yes, paste a few script tags and a custom element.<br>
-C. Yes, but only after a four-week React build.<br>
-D. Yes, but only via iframe embed.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-02-quiz-q4"><span class="opt">A.</span> <span>No, this requires a Tier 3 engagement.</span></label>
+<label data-letter="B"><input type="radio" name="build-02-quiz-q4"><span class="opt">B.</span> <span>Yes, paste a few script tags and a custom element.</span></label>
+<label data-letter="C"><input type="radio" name="build-02-quiz-q4"><span class="opt">C.</span> <span>Yes, but only after a four-week React build.</span></label>
+<label data-letter="D"><input type="radio" name="build-02-quiz-q4"><span class="opt">D.</span> <span>Yes, but only via iframe embed.</span></label>
+</fieldset>
 <hr>
 <h3 id="build-02-quiz--5-the-widgets-are-the-wrong-choice-when">5. The widgets are the wrong choice when:</h3>
-<p>A. The customer is small.<br>
-B. The corpus has fewer than 100 documents.<br>
-C. The customer requires EU residency.<br>
-D. Different audiences need different prompt voices.</p>
+<fieldset class="quiz-q" data-answer="D">
+<label data-letter="A"><input type="radio" name="build-02-quiz-q5"><span class="opt">A.</span> <span>The customer is small.</span></label>
+<label data-letter="B"><input type="radio" name="build-02-quiz-q5"><span class="opt">B.</span> <span>The corpus has fewer than 100 documents.</span></label>
+<label data-letter="C"><input type="radio" name="build-02-quiz-q5"><span class="opt">C.</span> <span>The customer requires EU residency.</span></label>
+<label data-letter="D"><input type="radio" name="build-02-quiz-q5"><span class="opt">D.</span> <span>Different audiences need different prompt voices.</span></label>
+</fieldset>
 <hr>
+<div class="quiz-controls">
+<button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
+<p class="quiz-result" hidden></p>
+</div>
 <details class="answer-key"><summary>Reveal answer key</summary>
 <ol>
 <li>B · 2. C · 3. B · 4. B · 5. D</li>
@@ -3068,35 +3139,49 @@ After updating, restart the dev server if needed and tell me to refresh.
 </blockquote>
 <hr>
 <h3 id="build-03-quiz--1-to-serve-two-audiences-prospect-member-over-one-kb-you-should-use">1. To serve two audiences (prospect, member) over one KB, you should use:</h3>
-<p>A. Two KBs routed by auth state<br>
-B. One KB, two prompt configurations<br>
-C. Two LLM endpoints, one cheap and one premium<br>
-D. Two ARAG service accounts</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-03-quiz-q1"><span class="opt">A.</span> <span>Two KBs routed by auth state</span></label>
+<label data-letter="B"><input type="radio" name="build-03-quiz-q1"><span class="opt">B.</span> <span>One KB, two prompt configurations</span></label>
+<label data-letter="C"><input type="radio" name="build-03-quiz-q1"><span class="opt">C.</span> <span>Two LLM endpoints, one cheap and one premium</span></label>
+<label data-letter="D"><input type="radio" name="build-03-quiz-q1"><span class="opt">D.</span> <span>Two ARAG service accounts</span></label>
+</fieldset>
 <hr>
 <h3 id="build-03-quiz--2-the-two-placeholders-arag-substitutes-inside-promptuser-are">2. The two placeholders ARAG substitutes inside <code>prompt.user</code> are:</h3>
-<p>A. <code>${context}</code> and <code>${query}</code><br>
-B. <code>{context}</code> and <code>{question}</code><br>
-C. <code>&lt;&lt;context&gt;&gt;</code> and <code>&lt;&lt;question&gt;&gt;</code><br>
-D. <code>[CTX]</code> and <code>[Q]</code></p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-03-quiz-q2"><span class="opt">A.</span> <span><code>${context}</code> and <code>${query}</code></span></label>
+<label data-letter="B"><input type="radio" name="build-03-quiz-q2"><span class="opt">B.</span> <span><code>{context}</code> and <code>{question}</code></span></label>
+<label data-letter="C"><input type="radio" name="build-03-quiz-q2"><span class="opt">C.</span> <span><code>&lt;&lt;context&gt;&gt;</code> and <code>&lt;&lt;question&gt;&gt;</code></span></label>
+<label data-letter="D"><input type="radio" name="build-03-quiz-q2"><span class="opt">D.</span> <span><code>[CTX]</code> and <code>[Q]</code></span></label>
+</fieldset>
 <hr>
 <h3 id="build-03-quiz--3-to-enforce-stop-after-the-cta-link-in-production-you-must">3. To enforce &quot;stop after the CTA link,&quot; in production you must:</h3>
-<p>A. Increase <code>max_tokens</code> so the model can obey<br>
-B. Switch to a smaller, more compliant model<br>
-C. Truncate the streamed response in code after the link<br>
-D. Re-run the query if the model writes past the link</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-03-quiz-q3"><span class="opt">A.</span> <span>Increase <code>max_tokens</code> so the model can obey</span></label>
+<label data-letter="B"><input type="radio" name="build-03-quiz-q3"><span class="opt">B.</span> <span>Switch to a smaller, more compliant model</span></label>
+<label data-letter="C"><input type="radio" name="build-03-quiz-q3"><span class="opt">C.</span> <span>Truncate the streamed response in code after the link</span></label>
+<label data-letter="D"><input type="radio" name="build-03-quiz-q3"><span class="opt">D.</span> <span>Re-run the query if the model writes past the link</span></label>
+</fieldset>
 <hr>
 <h3 id="build-03-quiz--4-streaming-chunks-from-ask-arrive-as">4. Streaming chunks from <code>/ask</code> arrive as:</h3>
-<p>A. SSE-formatted lines<br>
-B. NDJSON objects, one per line<br>
-C. Length-prefixed binary frames<br>
-D. WebSocket text frames</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-03-quiz-q4"><span class="opt">A.</span> <span>SSE-formatted lines</span></label>
+<label data-letter="B"><input type="radio" name="build-03-quiz-q4"><span class="opt">B.</span> <span>NDJSON objects, one per line</span></label>
+<label data-letter="C"><input type="radio" name="build-03-quiz-q4"><span class="opt">C.</span> <span>Length-prefixed binary frames</span></label>
+<label data-letter="D"><input type="radio" name="build-03-quiz-q4"><span class="opt">D.</span> <span>WebSocket text frames</span></label>
+</fieldset>
 <hr>
 <h3 id="build-03-quiz--5-a-query-prefix-like-respond-in-french-should-be-added">5. A query prefix like &quot;Respond in French:&quot; should be added:</h3>
-<p>A. To <code>prompt.system</code><br>
-B. To <code>prompt.user</code><br>
-C. Concatenated onto the raw query string<br>
-D. As a separate <code>language</code> body parameter</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-03-quiz-q5"><span class="opt">A.</span> <span>To <code>prompt.system</code></span></label>
+<label data-letter="B"><input type="radio" name="build-03-quiz-q5"><span class="opt">B.</span> <span>To <code>prompt.user</code></span></label>
+<label data-letter="C"><input type="radio" name="build-03-quiz-q5"><span class="opt">C.</span> <span>Concatenated onto the raw query string</span></label>
+<label data-letter="D"><input type="radio" name="build-03-quiz-q5"><span class="opt">D.</span> <span>As a separate <code>language</code> body parameter</span></label>
+</fieldset>
 <hr>
+<div class="quiz-controls">
+<button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
+<p class="quiz-result" hidden></p>
+</div>
 <details class="answer-key"><summary>Reveal answer key</summary>
 <ol>
 <li>B · 2. B · 3. C · 4. B · 5. C</li>
@@ -3600,35 +3685,49 @@ check the request your client is currently building).
 </blockquote>
 <hr>
 <h3 id="build-04-quiz--1-to-answer-in-french-the-change-to-your-ask-call-is">1. To answer in French, the change to your <code>/ask</code> call is:</h3>
-<p>A. Add <code>lang: &quot;fr&quot;</code> to the body<br>
-B. Switch to a French-trained LLM<br>
-C. Prepend &quot;Respond in French:&quot; to the query<br>
-D. Provision a French-language KB</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-04-quiz-q1"><span class="opt">A.</span> <span>Add <code>lang: &quot;fr&quot;</code> to the body</span></label>
+<label data-letter="B"><input type="radio" name="build-04-quiz-q1"><span class="opt">B.</span> <span>Switch to a French-trained LLM</span></label>
+<label data-letter="C"><input type="radio" name="build-04-quiz-q1"><span class="opt">C.</span> <span>Prepend &quot;Respond in French:&quot; to the query</span></label>
+<label data-letter="D"><input type="radio" name="build-04-quiz-q1"><span class="opt">D.</span> <span>Provision a French-language KB</span></label>
+</fieldset>
 <hr>
 <h3 id="build-04-quiz--2-a-query-prefix-goes">2. A query prefix goes:</h3>
-<p>A. Into <code>prompt.system</code><br>
-B. Into <code>prompt.user</code> as part of the template<br>
-C. Concatenated onto the raw query string<br>
-D. As a separate <code>prefix</code> body parameter</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-04-quiz-q2"><span class="opt">A.</span> <span>Into <code>prompt.system</code></span></label>
+<label data-letter="B"><input type="radio" name="build-04-quiz-q2"><span class="opt">B.</span> <span>Into <code>prompt.user</code> as part of the template</span></label>
+<label data-letter="C"><input type="radio" name="build-04-quiz-q2"><span class="opt">C.</span> <span>Concatenated onto the raw query string</span></label>
+<label data-letter="D"><input type="radio" name="build-04-quiz-q2"><span class="opt">D.</span> <span>As a separate <code>prefix</code> body parameter</span></label>
+</fieldset>
 <hr>
 <h3 id="build-04-quiz--3-resource-scoped-chat-ask-about-this-pdf-is-implemented-as">3. Resource-scoped chat (&quot;ask about this PDF&quot;) is implemented as:</h3>
-<p>A. A new <code>/ask-resource/{id}</code> endpoint<br>
-B. A filter restricting <code>/find</code> to one resource id<br>
-C. A prefix naming the resource in the user query<br>
-D. A separate per-resource KB</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-04-quiz-q3"><span class="opt">A.</span> <span>A new <code>/ask-resource/{id}</code> endpoint</span></label>
+<label data-letter="B"><input type="radio" name="build-04-quiz-q3"><span class="opt">B.</span> <span>A filter restricting <code>/find</code> to one resource id</span></label>
+<label data-letter="C"><input type="radio" name="build-04-quiz-q3"><span class="opt">C.</span> <span>A prefix naming the resource in the user query</span></label>
+<label data-letter="D"><input type="radio" name="build-04-quiz-q3"><span class="opt">D.</span> <span>A separate per-resource KB</span></label>
+</fieldset>
 <hr>
 <h3 id="build-04-quiz--4-multilingual-answers-require">4. Multilingual answers require:</h3>
-<p>A. A separate KB per language<br>
-B. A separate embedding model per language<br>
-C. Just the prefix; the LLM handles translation<br>
-D. A <code>language</code> parameter on the body</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-04-quiz-q4"><span class="opt">A.</span> <span>A separate KB per language</span></label>
+<label data-letter="B"><input type="radio" name="build-04-quiz-q4"><span class="opt">B.</span> <span>A separate embedding model per language</span></label>
+<label data-letter="C"><input type="radio" name="build-04-quiz-q4"><span class="opt">C.</span> <span>Just the prefix; the LLM handles translation</span></label>
+<label data-letter="D"><input type="radio" name="build-04-quiz-q4"><span class="opt">D.</span> <span>A <code>language</code> parameter on the body</span></label>
+</fieldset>
 <hr>
 <h3 id="build-04-quiz--5-to-make-a-user-segment-influence-answer-framing-use">5. To make a user segment influence answer framing, use:</h3>
-<p>A. N prompt configurations, one per segment<br>
-B. A query prefix naming the user's segment<br>
-C. Multiple KBs filtered by segment<br>
-D. A custom model trained per segment</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-04-quiz-q5"><span class="opt">A.</span> <span>N prompt configurations, one per segment</span></label>
+<label data-letter="B"><input type="radio" name="build-04-quiz-q5"><span class="opt">B.</span> <span>A query prefix naming the user's segment</span></label>
+<label data-letter="C"><input type="radio" name="build-04-quiz-q5"><span class="opt">C.</span> <span>Multiple KBs filtered by segment</span></label>
+<label data-letter="D"><input type="radio" name="build-04-quiz-q5"><span class="opt">D.</span> <span>A custom model trained per segment</span></label>
+</fieldset>
 <hr>
+<div class="quiz-controls">
+<button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
+<p class="quiz-result" hidden></p>
+</div>
 <details class="answer-key"><summary>Reveal answer key</summary>
 <ol>
 <li>C · 2. C · 3. C · 4. C · 5. B</li>
@@ -4467,35 +4566,49 @@ ES modules.
 </blockquote>
 <hr>
 <h3 id="build-05-quiz--1-which-body-field-binds-output-to-a-json-schema">1. Which body field binds output to a JSON Schema?</h3>
-<p>A. <code>output_schema</code><br>
-B. <code>answer_json_schema</code><br>
-C. <code>response_format</code><br>
-D. <code>json_mode</code></p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-05-quiz-q1"><span class="opt">A.</span> <span><code>output_schema</code></span></label>
+<label data-letter="B"><input type="radio" name="build-05-quiz-q1"><span class="opt">B.</span> <span><code>answer_json_schema</code></span></label>
+<label data-letter="C"><input type="radio" name="build-05-quiz-q1"><span class="opt">C.</span> <span><code>response_format</code></span></label>
+<label data-letter="D"><input type="radio" name="build-05-quiz-q1"><span class="opt">D.</span> <span><code>json_mode</code></span></label>
+</fieldset>
 <hr>
 <h3 id="build-05-quiz--2-every-object-schema-passed-to-arag-must-include">2. Every <code>object</code> schema passed to ARAG must include:</h3>
-<p>A. <code>strict: true</code><br>
-B. <code>additionalProperties: false</code> at every level<br>
-C. <code>$schema: &quot;draft-2020-12&quot;</code><br>
-D. <code>mode: &quot;structured&quot;</code></p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-05-quiz-q2"><span class="opt">A.</span> <span><code>strict: true</code></span></label>
+<label data-letter="B"><input type="radio" name="build-05-quiz-q2"><span class="opt">B.</span> <span><code>additionalProperties: false</code> at every level</span></label>
+<label data-letter="C"><input type="radio" name="build-05-quiz-q2"><span class="opt">C.</span> <span><code>$schema: &quot;draft-2020-12&quot;</code></span></label>
+<label data-letter="D"><input type="radio" name="build-05-quiz-q2"><span class="opt">D.</span> <span><code>mode: &quot;structured&quot;</code></span></label>
+</fieldset>
 <hr>
 <h3 id="build-05-quiz--3-the-first-response-shape-the-wrapper-checks-is">3. The first response shape the wrapper checks is:</h3>
-<p>A. <code>data.item.object</code><br>
-B. <code>data.answer_json</code><br>
-C. Text with embedded JSON<br>
-D. <code>data.choices[0].message.content</code></p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-05-quiz-q3"><span class="opt">A.</span> <span><code>data.item.object</code></span></label>
+<label data-letter="B"><input type="radio" name="build-05-quiz-q3"><span class="opt">B.</span> <span><code>data.answer_json</code></span></label>
+<label data-letter="C"><input type="radio" name="build-05-quiz-q3"><span class="opt">C.</span> <span>Text with embedded JSON</span></label>
+<label data-letter="D"><input type="radio" name="build-05-quiz-q3"><span class="opt">D.</span> <span><code>data.choices[0].message.content</code></span></label>
+</fieldset>
 <hr>
 <h3 id="build-05-quiz--4-in-a-mixed-shape-schema-optional-per-item-fields-should-be">4. In a mixed-shape schema, optional-per-item fields should be:</h3>
-<p>A. Optional, so the model returns null<br>
-B. Required at schema level; filter in code<br>
-C. Split into two separate schemas<br>
-D. Inferred via JSON Schema <code>anyOf</code></p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-05-quiz-q4"><span class="opt">A.</span> <span>Optional, so the model returns null</span></label>
+<label data-letter="B"><input type="radio" name="build-05-quiz-q4"><span class="opt">B.</span> <span>Required at schema level; filter in code</span></label>
+<label data-letter="C"><input type="radio" name="build-05-quiz-q4"><span class="opt">C.</span> <span>Split into two separate schemas</span></label>
+<label data-letter="D"><input type="radio" name="build-05-quiz-q4"><span class="opt">D.</span> <span>Inferred via JSON Schema <code>anyOf</code></span></label>
+</fieldset>
 <hr>
 <h3 id="build-05-quiz--5-use-answerjsonschema-over-streaming--regex-when">5. Use <code>answer_json_schema</code> over streaming + regex when:</h3>
-<p>A. The next consumer is code, not a human reader<br>
-B. The corpus is large<br>
-C. The LLM is GPT-4<br>
-D. The customer is enterprise</p>
+<fieldset class="quiz-q" data-answer="A">
+<label data-letter="A"><input type="radio" name="build-05-quiz-q5"><span class="opt">A.</span> <span>The next consumer is code, not a human reader</span></label>
+<label data-letter="B"><input type="radio" name="build-05-quiz-q5"><span class="opt">B.</span> <span>The corpus is large</span></label>
+<label data-letter="C"><input type="radio" name="build-05-quiz-q5"><span class="opt">C.</span> <span>The LLM is GPT-4</span></label>
+<label data-letter="D"><input type="radio" name="build-05-quiz-q5"><span class="opt">D.</span> <span>The customer is enterprise</span></label>
+</fieldset>
 <hr>
+<div class="quiz-controls">
+<button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
+<p class="quiz-result" hidden></p>
+</div>
 <details class="answer-key"><summary>Reveal answer key</summary>
 <ol>
 <li>B · 2. B · 3. B · 4. B · 5. A</li>
@@ -5310,35 +5423,49 @@ X-NUCLIA-SERVICEACCOUNT: Bearer {NUCLIA_API_KEY}.
 </blockquote>
 <hr>
 <h3 id="build-06-quiz--1-arags-three-named-data-augmentation-agents-are">1. ARAG's three named data-augmentation agents are:</h3>
-<p>A. Embedder, Retriever, Reranker<br>
-B. Generator, Labeller, Graph<br>
-C. Indexer, Classifier, Linker<br>
-D. Chunker, Tagger, Mapper</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-06-quiz-q1"><span class="opt">A.</span> <span>Embedder, Retriever, Reranker</span></label>
+<label data-letter="B"><input type="radio" name="build-06-quiz-q1"><span class="opt">B.</span> <span>Generator, Labeller, Graph</span></label>
+<label data-letter="C"><input type="radio" name="build-06-quiz-q1"><span class="opt">C.</span> <span>Indexer, Classifier, Linker</span></label>
+<label data-letter="D"><input type="radio" name="build-06-quiz-q1"><span class="opt">D.</span> <span>Chunker, Tagger, Mapper</span></label>
+</fieldset>
 <hr>
 <h3 id="build-06-quiz--2-search-isnt-finding-things-even-when-the-answer-is-in-the-corpus-points-to">2. &quot;Search isn't finding things even when the answer is in the corpus&quot; points to:</h3>
-<p>A. The Labeller agent<br>
-B. The Graph agent<br>
-C. The Generator agent<br>
-D. A new BYO-LLM endpoint</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-06-quiz-q2"><span class="opt">A.</span> <span>The Labeller agent</span></label>
+<label data-letter="B"><input type="radio" name="build-06-quiz-q2"><span class="opt">B.</span> <span>The Graph agent</span></label>
+<label data-letter="C"><input type="radio" name="build-06-quiz-q2"><span class="opt">C.</span> <span>The Generator agent</span></label>
+<label data-letter="D"><input type="radio" name="build-06-quiz-q2"><span class="opt">D.</span> <span>A new BYO-LLM endpoint</span></label>
+</fieldset>
 <hr>
 <h3 id="build-06-quiz--3-users-need-to-filter-results-by-content-type-region-audience-points-to">3. &quot;Users need to filter results by content type, region, audience&quot; points to:</h3>
-<p>A. The Labeller agent<br>
-B. The Generator agent<br>
-C. The Graph agent<br>
-D. The composite-RAG pattern</p>
+<fieldset class="quiz-q" data-answer="A">
+<label data-letter="A"><input type="radio" name="build-06-quiz-q3"><span class="opt">A.</span> <span>The Labeller agent</span></label>
+<label data-letter="B"><input type="radio" name="build-06-quiz-q3"><span class="opt">B.</span> <span>The Generator agent</span></label>
+<label data-letter="C"><input type="radio" name="build-06-quiz-q3"><span class="opt">C.</span> <span>The Graph agent</span></label>
+<label data-letter="D"><input type="radio" name="build-06-quiz-q3"><span class="opt">D.</span> <span>The composite-RAG pattern</span></label>
+</fieldset>
 <hr>
 <h3 id="build-06-quiz--4-surface-connections-between-concepts-no-single-document-contains-points-to">4. &quot;Surface connections between concepts no single document contains&quot; points to:</h3>
-<p>A. The Labeller agent<br>
-B. The Generator agent<br>
-C. The Graph agent<br>
-D. Re-indexing the corpus</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-06-quiz-q4"><span class="opt">A.</span> <span>The Labeller agent</span></label>
+<label data-letter="B"><input type="radio" name="build-06-quiz-q4"><span class="opt">B.</span> <span>The Generator agent</span></label>
+<label data-letter="C"><input type="radio" name="build-06-quiz-q4"><span class="opt">C.</span> <span>The Graph agent</span></label>
+<label data-letter="D"><input type="radio" name="build-06-quiz-q4"><span class="opt">D.</span> <span>Re-indexing the corpus</span></label>
+</fieldset>
 <hr>
 <h3 id="build-06-quiz--5-the-labeller-agent-supports-which-two-modes">5. The Labeller agent supports which two modes?</h3>
-<p>A. Synchronous and asynchronous<br>
-B. Rule-based and model-based<br>
-C. Eager and lazy<br>
-D. Server-side and client-side</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-06-quiz-q5"><span class="opt">A.</span> <span>Synchronous and asynchronous</span></label>
+<label data-letter="B"><input type="radio" name="build-06-quiz-q5"><span class="opt">B.</span> <span>Rule-based and model-based</span></label>
+<label data-letter="C"><input type="radio" name="build-06-quiz-q5"><span class="opt">C.</span> <span>Eager and lazy</span></label>
+<label data-letter="D"><input type="radio" name="build-06-quiz-q5"><span class="opt">D.</span> <span>Server-side and client-side</span></label>
+</fieldset>
 <hr>
+<div class="quiz-controls">
+<button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
+<p class="quiz-result" hidden></p>
+</div>
 <details class="answer-key"><summary>Reveal answer key</summary>
 <ol>
 <li>B · 2. C · 3. A · 4. C · 5. B</li>
@@ -5860,35 +5987,49 @@ Use plain fetch. No SDK.
 </blockquote>
 <hr>
 <h3 id="build-07-quiz--1-to-filter-find-to-pdfs-only-the-filters-array-contains">1. To filter <code>/find</code> to PDFs only, the <code>filters</code> array contains:</h3>
-<p>A. <code>[&quot;pdf&quot;]</code><br>
-B. <code>[&quot;/icon/application/pdf&quot;]</code><br>
-C. <code>[&quot;mime:application/pdf&quot;]</code><br>
-D. <code>[&quot;type:pdf&quot;]</code></p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-07-quiz-q1"><span class="opt">A.</span> <span><code>[&quot;pdf&quot;]</code></span></label>
+<label data-letter="B"><input type="radio" name="build-07-quiz-q1"><span class="opt">B.</span> <span><code>[&quot;/icon/application/pdf&quot;]</code></span></label>
+<label data-letter="C"><input type="radio" name="build-07-quiz-q1"><span class="opt">C.</span> <span><code>[&quot;mime:application/pdf&quot;]</code></span></label>
+<label data-letter="D"><input type="radio" name="build-07-quiz-q1"><span class="opt">D.</span> <span><code>[&quot;type:pdf&quot;]</code></span></label>
+</fieldset>
 <hr>
 <h3 id="build-07-quiz--2-a-label-path-filter-looks-like">2. A label-path filter looks like:</h3>
-<p>A. <code>audience=legal-team</code><br>
-B. <code>/classification.labels/audience/legal-team</code><br>
-C. <code>labels[audience]=legal-team</code><br>
-D. <code>tags:audience:legal-team</code></p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-07-quiz-q2"><span class="opt">A.</span> <span><code>audience=legal-team</code></span></label>
+<label data-letter="B"><input type="radio" name="build-07-quiz-q2"><span class="opt">B.</span> <span><code>/classification.labels/audience/legal-team</code></span></label>
+<label data-letter="C"><input type="radio" name="build-07-quiz-q2"><span class="opt">C.</span> <span><code>labels[audience]=legal-team</code></span></label>
+<label data-letter="D"><input type="radio" name="build-07-quiz-q2"><span class="opt">D.</span> <span><code>tags:audience:legal-team</code></span></label>
+</fieldset>
 <hr>
 <h3 id="build-07-quiz--3-the-right-number-of-labels-per-labelset-is">3. The right number of labels per labelset is:</h3>
-<p>A. As many as the content requires, no cap<br>
-B. Exactly 4<br>
-C. 5–9<br>
-D. 20–30</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-07-quiz-q3"><span class="opt">A.</span> <span>As many as the content requires, no cap</span></label>
+<label data-letter="B"><input type="radio" name="build-07-quiz-q3"><span class="opt">B.</span> <span>Exactly 4</span></label>
+<label data-letter="C"><input type="radio" name="build-07-quiz-q3"><span class="opt">C.</span> <span>5–9</span></label>
+<label data-letter="D"><input type="radio" name="build-07-quiz-q3"><span class="opt">D.</span> <span>20–30</span></label>
+</fieldset>
 <hr>
 <h3 id="build-07-quiz--4-filtering-for-iconvideo-iconaudio-returns">4. Filtering for <code>[&quot;/icon/video&quot;, &quot;/icon/audio&quot;]</code> returns:</h3>
-<p>A. Documents that are both video AND audio<br>
-B. Documents that are video OR audio<br>
-C. Documents tagged with both labels<br>
-D. An error — icon paths cannot combine</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-07-quiz-q4"><span class="opt">A.</span> <span>Documents that are both video AND audio</span></label>
+<label data-letter="B"><input type="radio" name="build-07-quiz-q4"><span class="opt">B.</span> <span>Documents that are video OR audio</span></label>
+<label data-letter="C"><input type="radio" name="build-07-quiz-q4"><span class="opt">C.</span> <span>Documents tagged with both labels</span></label>
+<label data-letter="D"><input type="radio" name="build-07-quiz-q4"><span class="opt">D.</span> <span>An error — icon paths cannot combine</span></label>
+</fieldset>
 <hr>
 <h3 id="build-07-quiz--5-to-let-users-filter-8000-pages-400-pdfs-200-videos-by-type">5. To let users filter 8,000 pages, 400 PDFs, 200 videos by type:</h3>
-<p>A. Spin up three separate KBs and route between them<br>
-B. One <code>filters</code> array with three <code>/icon/*</code> paths<br>
-C. Train a model classifier per content type<br>
-D. Filter via URL routing before calling ARAG</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-07-quiz-q5"><span class="opt">A.</span> <span>Spin up three separate KBs and route between them</span></label>
+<label data-letter="B"><input type="radio" name="build-07-quiz-q5"><span class="opt">B.</span> <span>One <code>filters</code> array with three <code>/icon/*</code> paths</span></label>
+<label data-letter="C"><input type="radio" name="build-07-quiz-q5"><span class="opt">C.</span> <span>Train a model classifier per content type</span></label>
+<label data-letter="D"><input type="radio" name="build-07-quiz-q5"><span class="opt">D.</span> <span>Filter via URL routing before calling ARAG</span></label>
+</fieldset>
 <hr>
+<div class="quiz-controls">
+<button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
+<p class="quiz-result" hidden></p>
+</div>
 <details class="answer-key"><summary>Reveal answer key</summary>
 <ol>
 <li>B · 2. B · 3. C · 4. B · 5. B</li>
@@ -6591,35 +6732,49 @@ graph-only demo punchline.)
 </blockquote>
 <hr>
 <h3 id="build-08-quiz--1-the-single-most-important-filter-in-every-arag-graph-query-is">1. The single most important filter in every ARAG graph query is:</h3>
-<p>A. <code>{ &quot;exclude_ner&quot;: true }</code><br>
-B. <code>{ &quot;filter&quot;: &quot;custom&quot; }</code><br>
-C. <code>{ &quot;prop&quot;: &quot;generated&quot;, &quot;by&quot;: &quot;data-augmentation&quot; }</code><br>
-D. <code>{ &quot;source&quot;: &quot;agent&quot; }</code></p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-08-quiz-q1"><span class="opt">A.</span> <span><code>{ &quot;exclude_ner&quot;: true }</code></span></label>
+<label data-letter="B"><input type="radio" name="build-08-quiz-q1"><span class="opt">B.</span> <span><code>{ &quot;filter&quot;: &quot;custom&quot; }</code></span></label>
+<label data-letter="C"><input type="radio" name="build-08-quiz-q1"><span class="opt">C.</span> <span><code>{ &quot;prop&quot;: &quot;generated&quot;, &quot;by&quot;: &quot;data-augmentation&quot; }</code></span></label>
+<label data-letter="D"><input type="radio" name="build-08-quiz-q1"><span class="opt">D.</span> <span><code>{ &quot;source&quot;: &quot;agent&quot; }</code></span></label>
+</fieldset>
 <hr>
 <h3 id="build-08-quiz--2-a-good-arag-entityrelation-schema-has-roughly">2. A good ARAG entity/relation schema has roughly:</h3>
-<p>A. 3–5 entity types and 3–5 relation types<br>
-B. 8–15 entity types and 8–15 relation types<br>
-C. 50+ entity types<br>
-D. As many types as the LLM identifies</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-08-quiz-q2"><span class="opt">A.</span> <span>3–5 entity types and 3–5 relation types</span></label>
+<label data-letter="B"><input type="radio" name="build-08-quiz-q2"><span class="opt">B.</span> <span>8–15 entity types and 8–15 relation types</span></label>
+<label data-letter="C"><input type="radio" name="build-08-quiz-q2"><span class="opt">C.</span> <span>50+ entity types</span></label>
+<label data-letter="D"><input type="radio" name="build-08-quiz-q2"><span class="opt">D.</span> <span>As many types as the LLM identifies</span></label>
+</fieldset>
 <hr>
 <h3 id="build-08-quiz--3-undirected-true-on-a-path-query-does-what">3. <code>undirected: true</code> on a path query does what?</h3>
-<p>A. Returns paths in random order<br>
-B. Returns paths in both directions from the source<br>
-C. Bypasses the data-augmentation filter<br>
-D. Returns unranked results</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-08-quiz-q3"><span class="opt">A.</span> <span>Returns paths in random order</span></label>
+<label data-letter="B"><input type="radio" name="build-08-quiz-q3"><span class="opt">B.</span> <span>Returns paths in both directions from the source</span></label>
+<label data-letter="C"><input type="radio" name="build-08-quiz-q3"><span class="opt">C.</span> <span>Bypasses the data-augmentation filter</span></label>
+<label data-letter="D"><input type="radio" name="build-08-quiz-q3"><span class="opt">D.</span> <span>Returns unranked results</span></label>
+</fieldset>
 <hr>
 <h3 id="build-08-quiz--4-to-bridge-a-clicked-graph-entity-to-documents-that-mention-it">4. To bridge a clicked graph entity to documents that mention it:</h3>
-<p>A. A second <code>/graph</code> query with <code>prop: &quot;resource&quot;</code><br>
-B. <code>/find</code> with hybrid features using the entity value<br>
-C. A <code>/catalog</code> query filtered by entity name<br>
-D. A <code>/resource</code> lookup</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-08-quiz-q4"><span class="opt">A.</span> <span>A second <code>/graph</code> query with <code>prop: &quot;resource&quot;</code></span></label>
+<label data-letter="B"><input type="radio" name="build-08-quiz-q4"><span class="opt">B.</span> <span><code>/find</code> with hybrid features using the entity value</span></label>
+<label data-letter="C"><input type="radio" name="build-08-quiz-q4"><span class="opt">C.</span> <span>A <code>/catalog</code> query filtered by entity name</span></label>
+<label data-letter="D"><input type="radio" name="build-08-quiz-q4"><span class="opt">D.</span> <span>A <code>/resource</code> lookup</span></label>
+</fieldset>
 <hr>
 <h3 id="build-08-quiz--5-which-investigators-ran-trials-on-compound-x-and-compound-y-is">5. &quot;Which investigators ran trials on COMPOUND-X AND COMPOUND-Y?&quot; is:</h3>
-<p>A. A single-shot <code>/ask</code> problem<br>
-B. A <code>/find</code> with hybrid retrieval problem<br>
-C. A <code>/graph</code> traversal problem<br>
-D. A schema-constrained generation problem</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-08-quiz-q5"><span class="opt">A.</span> <span>A single-shot <code>/ask</code> problem</span></label>
+<label data-letter="B"><input type="radio" name="build-08-quiz-q5"><span class="opt">B.</span> <span>A <code>/find</code> with hybrid retrieval problem</span></label>
+<label data-letter="C"><input type="radio" name="build-08-quiz-q5"><span class="opt">C.</span> <span>A <code>/graph</code> traversal problem</span></label>
+<label data-letter="D"><input type="radio" name="build-08-quiz-q5"><span class="opt">D.</span> <span>A schema-constrained generation problem</span></label>
+</fieldset>
 <hr>
+<div class="quiz-controls">
+<button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
+<p class="quiz-result" hidden></p>
+</div>
 <details class="answer-key"><summary>Reveal answer key</summary>
 <ol>
 <li>C · 2. B · 3. B · 4. B · 5. C</li>
@@ -7146,35 +7301,49 @@ except for example field values.
 </blockquote>
 <hr>
 <h3 id="build-09-quiz--1-field-engineering-aligns-which-two-contracts">1. Field engineering aligns which two contracts?</h3>
-<p>A. Schema and classifier.<br>
-B. Content fields and prompt instructions.<br>
-C. Auth and observability.<br>
-D. Retrieval and generation.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-09-quiz-q1"><span class="opt">A.</span> <span>Schema and classifier.</span></label>
+<label data-letter="B"><input type="radio" name="build-09-quiz-q1"><span class="opt">B.</span> <span>Content fields and prompt instructions.</span></label>
+<label data-letter="C"><input type="radio" name="build-09-quiz-q1"><span class="opt">C.</span> <span>Auth and observability.</span></label>
+<label data-letter="D"><input type="radio" name="build-09-quiz-q1"><span class="opt">D.</span> <span>Retrieval and generation.</span></label>
+</fieldset>
 <hr>
 <h3 id="build-09-quiz--2-how-does-the-model-consume-a-calltoaction-field">2. How does the model consume a <code>callToAction</code> field?</h3>
-<p>A. As a special body parameter on <code>/ask</code>.<br>
-B. Auto-detected by field name.<br>
-C. Inside <code>{context}</code>, referenced by the prompt.<br>
-D. Via a built-in widget renderer.</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-09-quiz-q2"><span class="opt">A.</span> <span>As a special body parameter on <code>/ask</code>.</span></label>
+<label data-letter="B"><input type="radio" name="build-09-quiz-q2"><span class="opt">B.</span> <span>Auto-detected by field name.</span></label>
+<label data-letter="C"><input type="radio" name="build-09-quiz-q2"><span class="opt">C.</span> <span>Inside <code>{context}</code>, referenced by the prompt.</span></label>
+<label data-letter="D"><input type="radio" name="build-09-quiz-q2"><span class="opt">D.</span> <span>Via a built-in widget renderer.</span></label>
+</fieldset>
 <hr>
 <h3 id="build-09-quiz--3-how-do-you-ab-test-a-cta-without-a-code-deploy">3. How do you A/B test a CTA without a code deploy?</h3>
-<p>A. Switch to a different LLM.<br>
-B. Edit the field value in the dashboard.<br>
-C. Modify the front-end prompt config.<br>
-D. Recompile the React app.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-09-quiz-q3"><span class="opt">A.</span> <span>Switch to a different LLM.</span></label>
+<label data-letter="B"><input type="radio" name="build-09-quiz-q3"><span class="opt">B.</span> <span>Edit the field value in the dashboard.</span></label>
+<label data-letter="C"><input type="radio" name="build-09-quiz-q3"><span class="opt">C.</span> <span>Modify the front-end prompt config.</span></label>
+<label data-letter="D"><input type="radio" name="build-09-quiz-q3"><span class="opt">D.</span> <span>Recompile the React app.</span></label>
+</fieldset>
 <hr>
 <h3 id="build-09-quiz--4-searchresultdisplay-is-typically-stored-as">4. <code>searchResultDisplay</code> is typically stored as:</h3>
-<p>A. A flag enabling search results.<br>
-B. A JSON object stored as a string field.<br>
-C. A boolean visibility setting.<br>
-D. A list of supported icons.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-09-quiz-q4"><span class="opt">A.</span> <span>A flag enabling search results.</span></label>
+<label data-letter="B"><input type="radio" name="build-09-quiz-q4"><span class="opt">B.</span> <span>A JSON object stored as a string field.</span></label>
+<label data-letter="C"><input type="radio" name="build-09-quiz-q4"><span class="opt">C.</span> <span>A boolean visibility setting.</span></label>
+<label data-letter="D"><input type="radio" name="build-09-quiz-q4"><span class="opt">D.</span> <span>A list of supported icons.</span></label>
+</fieldset>
 <hr>
 <h3 id="build-09-quiz--5-the-commercial-pitch-for-field-engineering-is">5. The commercial pitch for field engineering is:</h3>
-<p>A. One-off implementation work.<br>
-B. Hosting fees for field definitions.<br>
-C. Recurring content-engineering retainer.<br>
-D. A percentage of conversion uplift.</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-09-quiz-q5"><span class="opt">A.</span> <span>One-off implementation work.</span></label>
+<label data-letter="B"><input type="radio" name="build-09-quiz-q5"><span class="opt">B.</span> <span>Hosting fees for field definitions.</span></label>
+<label data-letter="C"><input type="radio" name="build-09-quiz-q5"><span class="opt">C.</span> <span>Recurring content-engineering retainer.</span></label>
+<label data-letter="D"><input type="radio" name="build-09-quiz-q5"><span class="opt">D.</span> <span>A percentage of conversion uplift.</span></label>
+</fieldset>
 <hr>
+<div class="quiz-controls">
+<button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
+<p class="quiz-result" hidden></p>
+</div>
 <details class="answer-key"><summary>Reveal answer key</summary>
 <ol>
 <li>B · 2. C · 3. B · 4. B · 5. C</li>
@@ -7717,35 +7886,49 @@ Two factors:
 </blockquote>
 <hr>
 <h3 id="build-10-quiz--1-composite-rag-in-three-words">1. Composite RAG, in three words:</h3>
-<p>A. Embed, search, answer.<br>
-B. Generate, evaluate, augment.<br>
-C. Retrieve, rerank, return.<br>
-D. Index, augment, deploy.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-10-quiz-q1"><span class="opt">A.</span> <span>Embed, search, answer.</span></label>
+<label data-letter="B"><input type="radio" name="build-10-quiz-q1"><span class="opt">B.</span> <span>Generate, evaluate, augment.</span></label>
+<label data-letter="C"><input type="radio" name="build-10-quiz-q1"><span class="opt">C.</span> <span>Retrieve, rerank, return.</span></label>
+<label data-letter="D"><input type="radio" name="build-10-quiz-q1"><span class="opt">D.</span> <span>Index, augment, deploy.</span></label>
+</fieldset>
 <hr>
 <h3 id="build-10-quiz--2-the-maximum-recommended-retry-depth-is">2. The maximum recommended retry depth is:</h3>
-<p>A. Unlimited.<br>
-B. 1 retry.<br>
-C. 5 retries.<br>
-D. Until confidence &gt; 0.9.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-10-quiz-q2"><span class="opt">A.</span> <span>Unlimited.</span></label>
+<label data-letter="B"><input type="radio" name="build-10-quiz-q2"><span class="opt">B.</span> <span>1 retry.</span></label>
+<label data-letter="C"><input type="radio" name="build-10-quiz-q2"><span class="opt">C.</span> <span>5 retries.</span></label>
+<label data-letter="D"><input type="radio" name="build-10-quiz-q2"><span class="opt">D.</span> <span>Until confidence &gt; 0.9.</span></label>
+</fieldset>
 <hr>
 <h3 id="build-10-quiz--3-typical-latency-cost-of-composite-vs-single-shot">3. Typical latency cost of composite vs single-shot:</h3>
-<p>A. Same.<br>
-B. 1.5–2x.<br>
-C. 0.5x (faster).<br>
-D. 5–10x.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-10-quiz-q3"><span class="opt">A.</span> <span>Same.</span></label>
+<label data-letter="B"><input type="radio" name="build-10-quiz-q3"><span class="opt">B.</span> <span>1.5–2x.</span></label>
+<label data-letter="C"><input type="radio" name="build-10-quiz-q3"><span class="opt">C.</span> <span>0.5x (faster).</span></label>
+<label data-letter="D"><input type="radio" name="build-10-quiz-q3"><span class="opt">D.</span> <span>5–10x.</span></label>
+</fieldset>
 <hr>
 <h3 id="build-10-quiz--4-the-boundary-between-composite-rag-and-true-agentic-is">4. The boundary between composite RAG and true agentic is:</h3>
-<p>A. The number of LLM calls.<br>
-B. The latency budget.<br>
-C. Who decides the next step: model or programmer.<br>
-D. Whether the response is streamed.</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-10-quiz-q4"><span class="opt">A.</span> <span>The number of LLM calls.</span></label>
+<label data-letter="B"><input type="radio" name="build-10-quiz-q4"><span class="opt">B.</span> <span>The latency budget.</span></label>
+<label data-letter="C"><input type="radio" name="build-10-quiz-q4"><span class="opt">C.</span> <span>Who decides the next step: model or programmer.</span></label>
+<label data-letter="D"><input type="radio" name="build-10-quiz-q4"><span class="opt">D.</span> <span>Whether the response is streamed.</span></label>
+</fieldset>
 <hr>
 <h3 id="build-10-quiz--5-the-right-reframe-for-composite-costs-2x-in-tokens">5. The right reframe for &quot;composite costs 2x in tokens&quot;:</h3>
-<p>A. It produces better answers on every query.<br>
-B. Selective composition — only fires when single-shot fails.<br>
-C. It's bundled in the enterprise tier.<br>
-D. Switch to a more expensive model instead.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-10-quiz-q5"><span class="opt">A.</span> <span>It produces better answers on every query.</span></label>
+<label data-letter="B"><input type="radio" name="build-10-quiz-q5"><span class="opt">B.</span> <span>Selective composition — only fires when single-shot fails.</span></label>
+<label data-letter="C"><input type="radio" name="build-10-quiz-q5"><span class="opt">C.</span> <span>It's bundled in the enterprise tier.</span></label>
+<label data-letter="D"><input type="radio" name="build-10-quiz-q5"><span class="opt">D.</span> <span>Switch to a more expensive model instead.</span></label>
+</fieldset>
 <hr>
+<div class="quiz-controls">
+<button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
+<p class="quiz-result" hidden></p>
+</div>
 <details class="answer-key"><summary>Reveal answer key</summary>
 <ol>
 <li>B · 2. B · 3. B · 4. C · 5. B</li>
@@ -8317,35 +8500,49 @@ For each item, tick when verified for the customer's environment.
 </blockquote>
 <hr>
 <h3 id="build-11-quiz--1-arag-data-residency-is-configured">1. ARAG data residency is configured:</h3>
-<p>A. Per service-account JWT.<br>
-B. Per partner organisation.<br>
-C. Per KB, at provisioning time.<br>
-D. Per HTTP request.</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-11-quiz-q1"><span class="opt">A.</span> <span>Per service-account JWT.</span></label>
+<label data-letter="B"><input type="radio" name="build-11-quiz-q1"><span class="opt">B.</span> <span>Per partner organisation.</span></label>
+<label data-letter="C"><input type="radio" name="build-11-quiz-q1"><span class="opt">C.</span> <span>Per KB, at provisioning time.</span></label>
+<label data-letter="D"><input type="radio" name="build-11-quiz-q1"><span class="opt">D.</span> <span>Per HTTP request.</span></label>
+</fieldset>
 <hr>
 <h3 id="build-11-quiz--2-the-default-rate-limit-on-an-arag-service-account-is">2. The default rate limit on an ARAG service account is:</h3>
-<p>A. 600 req/min.<br>
-B. 1200 req/min.<br>
-C. 2400 req/min.<br>
-D. Unlimited.</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-11-quiz-q2"><span class="opt">A.</span> <span>600 req/min.</span></label>
+<label data-letter="B"><input type="radio" name="build-11-quiz-q2"><span class="opt">B.</span> <span>1200 req/min.</span></label>
+<label data-letter="C"><input type="radio" name="build-11-quiz-q2"><span class="opt">C.</span> <span>2400 req/min.</span></label>
+<label data-letter="D"><input type="radio" name="build-11-quiz-q2"><span class="opt">D.</span> <span>Unlimited.</span></label>
+</fieldset>
 <hr>
 <h3 id="build-11-quiz--3-byo-llm-is-configured">3. BYO-LLM is configured:</h3>
-<p>A. Globally across all KBs.<br>
-B. Per HTTP request.<br>
-C. Per KB, in generative-model settings.<br>
-D. By the Progress Agentic RAG ops team only.</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-11-quiz-q3"><span class="opt">A.</span> <span>Globally across all KBs.</span></label>
+<label data-letter="B"><input type="radio" name="build-11-quiz-q3"><span class="opt">B.</span> <span>Per HTTP request.</span></label>
+<label data-letter="C"><input type="radio" name="build-11-quiz-q3"><span class="opt">C.</span> <span>Per KB, in generative-model settings.</span></label>
+<label data-letter="D"><input type="radio" name="build-11-quiz-q3"><span class="opt">D.</span> <span>By the Progress Agentic RAG ops team only.</span></label>
+</fieldset>
 <hr>
 <h3 id="build-11-quiz--4-what-does-byo-llm-let-the-customer-point-the-kb-at">4. What does BYO-LLM let the customer point the KB at?</h3>
-<p>A. Their own LLM tenant.<br>
-B. Their database.<br>
-C. Their CDN.<br>
-D. Their dashboard.</p>
+<fieldset class="quiz-q" data-answer="A">
+<label data-letter="A"><input type="radio" name="build-11-quiz-q4"><span class="opt">A.</span> <span>Their own LLM tenant.</span></label>
+<label data-letter="B"><input type="radio" name="build-11-quiz-q4"><span class="opt">B.</span> <span>Their database.</span></label>
+<label data-letter="C"><input type="radio" name="build-11-quiz-q4"><span class="opt">C.</span> <span>Their CDN.</span></label>
+<label data-letter="D"><input type="radio" name="build-11-quiz-q4"><span class="opt">D.</span> <span>Their dashboard.</span></label>
+</fieldset>
 <hr>
 <h3 id="build-11-quiz--5-the-key-observability-metric-for-retrieval-quality-regression-is">5. The key observability metric for retrieval-quality regression is:</h3>
-<p>A. p99 latency.<br>
-B. Citation rate on <code>/ask</code> responses.<br>
-C. Total request volume.<br>
-D. Average answer length.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-11-quiz-q5"><span class="opt">A.</span> <span>p99 latency.</span></label>
+<label data-letter="B"><input type="radio" name="build-11-quiz-q5"><span class="opt">B.</span> <span>Citation rate on <code>/ask</code> responses.</span></label>
+<label data-letter="C"><input type="radio" name="build-11-quiz-q5"><span class="opt">C.</span> <span>Total request volume.</span></label>
+<label data-letter="D"><input type="radio" name="build-11-quiz-q5"><span class="opt">D.</span> <span>Average answer length.</span></label>
+</fieldset>
 <hr>
+<div class="quiz-controls">
+<button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
+<p class="quiz-result" hidden></p>
+</div>
 <details class="answer-key"><summary>Reveal answer key</summary>
 <ol>
 <li>C · 2. C · 3. C · 4. A · 5. B</li>
@@ -8821,35 +9018,49 @@ Requesting review-board sign-off to start Build 13.
 </blockquote>
 <hr>
 <h3 id="build-12-quiz--1-the-capstone-vibe-codes-against">1. The capstone vibe-codes against:</h3>
-<p>A. A new ARAG SDK from Progress.<br>
-B. The 8 master prompts you write in Build 12.<br>
-C. A starter template partners rebrand.<br>
-D. A fixed framework Progress maintains.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-12-quiz-q1"><span class="opt">A.</span> <span>A new ARAG SDK from Progress.</span></label>
+<label data-letter="B"><input type="radio" name="build-12-quiz-q1"><span class="opt">B.</span> <span>The 8 master prompts you write in Build 12.</span></label>
+<label data-letter="C"><input type="radio" name="build-12-quiz-q1"><span class="opt">C.</span> <span>A starter template partners rebrand.</span></label>
+<label data-letter="D"><input type="radio" name="build-12-quiz-q1"><span class="opt">D.</span> <span>A fixed framework Progress maintains.</span></label>
+</fieldset>
 <hr>
 <h3 id="build-12-quiz--2-the-two-capstone-variants-differ-in">2. The two capstone variants differ in:</h3>
-<p>A. The underlying ARAG architecture.<br>
-B. The buyer, corpus, and demo script.<br>
-C. The capstone duration.<br>
-D. The price band.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-12-quiz-q2"><span class="opt">A.</span> <span>The underlying ARAG architecture.</span></label>
+<label data-letter="B"><input type="radio" name="build-12-quiz-q2"><span class="opt">B.</span> <span>The buyer, corpus, and demo script.</span></label>
+<label data-letter="C"><input type="radio" name="build-12-quiz-q2"><span class="opt">C.</span> <span>The capstone duration.</span></label>
+<label data-letter="D"><input type="radio" name="build-12-quiz-q2"><span class="opt">D.</span> <span>The price band.</span></label>
+</fieldset>
 <hr>
 <h3 id="build-12-quiz--3-before-vibe-coding-the-capstone-you-must">3. Before vibe-coding the capstone you must:</h3>
-<p>A. Have all six demo surfaces deployed.<br>
-B. Pass the final exam and get review-board sign-off.<br>
-C. Sign a customer.<br>
-D. Provision a separate KB per surface.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-12-quiz-q3"><span class="opt">A.</span> <span>Have all six demo surfaces deployed.</span></label>
+<label data-letter="B"><input type="radio" name="build-12-quiz-q3"><span class="opt">B.</span> <span>Pass the final exam and get review-board sign-off.</span></label>
+<label data-letter="C"><input type="radio" name="build-12-quiz-q3"><span class="opt">C.</span> <span>Sign a customer.</span></label>
+<label data-letter="D"><input type="radio" name="build-12-quiz-q3"><span class="opt">D.</span> <span>Provision a separate KB per surface.</span></label>
+</fieldset>
 <hr>
 <h3 id="build-12-quiz--4-the-25-minute-customer-demo-opens-with">4. The 25-minute customer demo opens with:</h3>
-<p>A. A long backstory on the AI industry.<br>
-B. The first workflow demo.<br>
-C. Hero + residency badge + live ingested-corpus stats.<br>
-D. The pricing slide.</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="build-12-quiz-q4"><span class="opt">A.</span> <span>A long backstory on the AI industry.</span></label>
+<label data-letter="B"><input type="radio" name="build-12-quiz-q4"><span class="opt">B.</span> <span>The first workflow demo.</span></label>
+<label data-letter="C"><input type="radio" name="build-12-quiz-q4"><span class="opt">C.</span> <span>Hero + residency badge + live ingested-corpus stats.</span></label>
+<label data-letter="D"><input type="radio" name="build-12-quiz-q4"><span class="opt">D.</span> <span>The pricing slide.</span></label>
+</fieldset>
 <hr>
 <h3 id="build-12-quiz--5-a-master-prompt-should-be">5. A &quot;master prompt&quot; should be:</h3>
-<p>A. A one-line bullet.<br>
-B. 200–500 words with goal, context, and verification.<br>
-C. A full pseudocode implementation.<br>
-D. A reference to an external spec doc.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="build-12-quiz-q5"><span class="opt">A.</span> <span>A one-line bullet.</span></label>
+<label data-letter="B"><input type="radio" name="build-12-quiz-q5"><span class="opt">B.</span> <span>200–500 words with goal, context, and verification.</span></label>
+<label data-letter="C"><input type="radio" name="build-12-quiz-q5"><span class="opt">C.</span> <span>A full pseudocode implementation.</span></label>
+<label data-letter="D"><input type="radio" name="build-12-quiz-q5"><span class="opt">D.</span> <span>A reference to an external spec doc.</span></label>
+</fieldset>
 <hr>
+<div class="quiz-controls">
+<button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
+<p class="quiz-result" hidden></p>
+</div>
 <details class="answer-key"><summary>Reveal answer key</summary>
 <ol>
 <li>B · 2. B · 3. B · 4. C · 5. B</li>
@@ -8874,125 +9085,169 @@ D. A reference to an external spec doc.</p>
 </blockquote>
 <hr>
 <h3 id="final-exam--1-the-auth-header-on-every-arag-api-request-is">1. The auth header on every ARAG API request is:</h3>
-<p>A. <code>Authorization: Bearer &lt;jwt&gt;</code><br>
-B. <code>X-NUCLIA-SERVICEACCOUNT: Bearer &lt;jwt&gt;</code><br>
-C. <code>X-API-Key: &lt;key&gt;</code><br>
-D. <code>Cookie: session=...</code></p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="final-exam-q1"><span class="opt">A.</span> <span><code>Authorization: Bearer &lt;jwt&gt;</code></span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q1"><span class="opt">B.</span> <span><code>X-NUCLIA-SERVICEACCOUNT: Bearer &lt;jwt&gt;</code></span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q1"><span class="opt">C.</span> <span><code>X-API-Key: &lt;key&gt;</code></span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q1"><span class="opt">D.</span> <span><code>Cookie: session=...</code></span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--2-the-vibe-coding-mental-model-for-this-course-says">2. The vibe-coding mental model for this course says:</h3>
-<p>A. The AI does design and implementation; you observe.<br>
-B. You design and verify; the AI writes the code.<br>
-C. You hand-write production code; AI writes demos.<br>
-D. The AI is only used for documentation.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="final-exam-q2"><span class="opt">A.</span> <span>The AI does design and implementation; you observe.</span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q2"><span class="opt">B.</span> <span>You design and verify; the AI writes the code.</span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q2"><span class="opt">C.</span> <span>You hand-write production code; AI writes demos.</span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q2"><span class="opt">D.</span> <span>The AI is only used for documentation.</span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--3-a-customer-wants-ai-to-generate-a-structured-form-letter-with-fixed-fields-this-is">3. A customer wants AI to generate a structured form letter with fixed fields. This is:</h3>
-<p>A. P1 — semantic search<br>
-B. P2 — free-form chat<br>
-C. P3 — schema-constrained generation<br>
-D. P5 — secure media</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="final-exam-q3"><span class="opt">A.</span> <span>P1 — semantic search</span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q3"><span class="opt">B.</span> <span>P2 — free-form chat</span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q3"><span class="opt">C.</span> <span>P3 — schema-constrained generation</span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q3"><span class="opt">D.</span> <span>P5 — secure media</span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--4-a-customer-wants-to-traverse-judge-smith--cited-precedents-this-is">4. A customer wants to traverse &quot;Judge Smith → cited precedents.&quot; This is:</h3>
-<p>A. P1 — <code>/find</code> for &quot;Judge Smith&quot;<br>
-B. P2 — <code>/ask</code> with a Judge Smith prompt<br>
-C. P4 — <code>/graph</code> traversal<br>
-D. P5 — <code>/resource</code> for the judge's bio</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="final-exam-q4"><span class="opt">A.</span> <span>P1 — <code>/find</code> for &quot;Judge Smith&quot;</span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q4"><span class="opt">B.</span> <span>P2 — <code>/ask</code> with a Judge Smith prompt</span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q4"><span class="opt">C.</span> <span>P4 — <code>/graph</code> traversal</span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q4"><span class="opt">D.</span> <span>P5 — <code>/resource</code> for the judge's bio</span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--5-the-progress-agentic-rag-widget-library-ships-as">5. The Progress Agentic RAG widget library ships as:</h3>
-<p>A. A React component package on npm<br>
-B. Standard Web Components from a CDN script<br>
-C. A jQuery plugin<br>
-D. An iframe embed</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="final-exam-q5"><span class="opt">A.</span> <span>A React component package on npm</span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q5"><span class="opt">B.</span> <span>Standard Web Components from a CDN script</span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q5"><span class="opt">C.</span> <span>A jQuery plugin</span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q5"><span class="opt">D.</span> <span>An iframe embed</span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--6-to-serve-two-audiences-prospect-member-over-one-kb-you-should-use">6. To serve two audiences (prospect, member) over one KB, you should use:</h3>
-<p>A. Two KBs routed by auth state<br>
-B. One KB, two prompt configurations<br>
-C. Two LLM endpoints, one cheap and one premium<br>
-D. Two ARAG service accounts</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="final-exam-q6"><span class="opt">A.</span> <span>Two KBs routed by auth state</span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q6"><span class="opt">B.</span> <span>One KB, two prompt configurations</span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q6"><span class="opt">C.</span> <span>Two LLM endpoints, one cheap and one premium</span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q6"><span class="opt">D.</span> <span>Two ARAG service accounts</span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--7-to-answer-in-french-the-change-to-your-ask-call-is">7. To answer in French, the change to your <code>/ask</code> call is:</h3>
-<p>A. Add <code>lang: &quot;fr&quot;</code> to the body<br>
-B. Switch to a French-trained LLM<br>
-C. Prepend &quot;Respond in French:&quot; to the query<br>
-D. Provision a French-language KB</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="final-exam-q7"><span class="opt">A.</span> <span>Add <code>lang: &quot;fr&quot;</code> to the body</span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q7"><span class="opt">B.</span> <span>Switch to a French-trained LLM</span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q7"><span class="opt">C.</span> <span>Prepend &quot;Respond in French:&quot; to the query</span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q7"><span class="opt">D.</span> <span>Provision a French-language KB</span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--8-which-body-field-binds-output-to-a-json-schema">8. Which body field binds output to a JSON Schema?</h3>
-<p>A. <code>output_schema</code><br>
-B. <code>answer_json_schema</code><br>
-C. <code>response_format</code><br>
-D. <code>json_mode</code></p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="final-exam-q8"><span class="opt">A.</span> <span><code>output_schema</code></span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q8"><span class="opt">B.</span> <span><code>answer_json_schema</code></span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q8"><span class="opt">C.</span> <span><code>response_format</code></span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q8"><span class="opt">D.</span> <span><code>json_mode</code></span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--9-every-object-schema-passed-to-arag-must-include">9. Every <code>object</code> schema passed to ARAG must include:</h3>
-<p>A. <code>strict: true</code><br>
-B. <code>additionalProperties: false</code> at every level<br>
-C. <code>$schema: &quot;draft-2020-12&quot;</code><br>
-D. <code>mode: &quot;structured&quot;</code></p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="final-exam-q9"><span class="opt">A.</span> <span><code>strict: true</code></span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q9"><span class="opt">B.</span> <span><code>additionalProperties: false</code> at every level</span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q9"><span class="opt">C.</span> <span><code>$schema: &quot;draft-2020-12&quot;</code></span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q9"><span class="opt">D.</span> <span><code>mode: &quot;structured&quot;</code></span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--10-arags-three-named-data-augmentation-agents-are">10. ARAG's three named data-augmentation agents are:</h3>
-<p>A. Embedder, Retriever, Reranker<br>
-B. Generator, Labeller, Graph<br>
-C. Indexer, Classifier, Linker<br>
-D. Chunker, Tagger, Mapper</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="final-exam-q10"><span class="opt">A.</span> <span>Embedder, Retriever, Reranker</span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q10"><span class="opt">B.</span> <span>Generator, Labeller, Graph</span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q10"><span class="opt">C.</span> <span>Indexer, Classifier, Linker</span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q10"><span class="opt">D.</span> <span>Chunker, Tagger, Mapper</span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--11-search-isnt-finding-things-even-when-the-answer-is-in-the-corpus-points-to">11. &quot;Search isn't finding things even when the answer is in the corpus&quot; points to:</h3>
-<p>A. The Labeller agent<br>
-B. The Graph agent<br>
-C. The Generator agent<br>
-D. A new BYO-LLM endpoint</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="final-exam-q11"><span class="opt">A.</span> <span>The Labeller agent</span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q11"><span class="opt">B.</span> <span>The Graph agent</span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q11"><span class="opt">C.</span> <span>The Generator agent</span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q11"><span class="opt">D.</span> <span>A new BYO-LLM endpoint</span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--12-to-filter-find-to-pdfs-only-the-filters-array-contains">12. To filter <code>/find</code> to PDFs only, the <code>filters</code> array contains:</h3>
-<p>A. <code>[&quot;pdf&quot;]</code><br>
-B. <code>[&quot;/icon/application/pdf&quot;]</code><br>
-C. <code>[&quot;mime:application/pdf&quot;]</code><br>
-D. <code>[&quot;type:pdf&quot;]</code></p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="final-exam-q12"><span class="opt">A.</span> <span><code>[&quot;pdf&quot;]</code></span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q12"><span class="opt">B.</span> <span><code>[&quot;/icon/application/pdf&quot;]</code></span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q12"><span class="opt">C.</span> <span><code>[&quot;mime:application/pdf&quot;]</code></span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q12"><span class="opt">D.</span> <span><code>[&quot;type:pdf&quot;]</code></span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--13-the-single-most-important-filter-in-every-arag-graph-query-is">13. The single most important filter in every ARAG graph query is:</h3>
-<p>A. <code>{ &quot;exclude_ner&quot;: true }</code><br>
-B. <code>{ &quot;filter&quot;: &quot;custom&quot; }</code><br>
-C. <code>{ &quot;prop&quot;: &quot;generated&quot;, &quot;by&quot;: &quot;data-augmentation&quot; }</code><br>
-D. <code>{ &quot;source&quot;: &quot;agent&quot; }</code></p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="final-exam-q13"><span class="opt">A.</span> <span><code>{ &quot;exclude_ner&quot;: true }</code></span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q13"><span class="opt">B.</span> <span><code>{ &quot;filter&quot;: &quot;custom&quot; }</code></span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q13"><span class="opt">C.</span> <span><code>{ &quot;prop&quot;: &quot;generated&quot;, &quot;by&quot;: &quot;data-augmentation&quot; }</code></span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q13"><span class="opt">D.</span> <span><code>{ &quot;source&quot;: &quot;agent&quot; }</code></span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--14-how-do-you-ab-test-a-cta-without-a-code-deploy">14. How do you A/B test a CTA without a code deploy?</h3>
-<p>A. Switch to a different LLM.<br>
-B. Edit the field value in the dashboard.<br>
-C. Modify the front-end prompt config.<br>
-D. Recompile the React app.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="final-exam-q14"><span class="opt">A.</span> <span>Switch to a different LLM.</span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q14"><span class="opt">B.</span> <span>Edit the field value in the dashboard.</span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q14"><span class="opt">C.</span> <span>Modify the front-end prompt config.</span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q14"><span class="opt">D.</span> <span>Recompile the React app.</span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--15-composite-rag-in-three-words">15. Composite RAG, in three words:</h3>
-<p>A. Embed, search, answer.<br>
-B. Generate, evaluate, augment.<br>
-C. Retrieve, rerank, return.<br>
-D. Index, augment, deploy.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="final-exam-q15"><span class="opt">A.</span> <span>Embed, search, answer.</span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q15"><span class="opt">B.</span> <span>Generate, evaluate, augment.</span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q15"><span class="opt">C.</span> <span>Retrieve, rerank, return.</span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q15"><span class="opt">D.</span> <span>Index, augment, deploy.</span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--16-the-boundary-between-composite-rag-and-true-agentic-is">16. The boundary between composite RAG and true agentic is:</h3>
-<p>A. The number of LLM calls.<br>
-B. The latency budget.<br>
-C. Who decides the next step: model or programmer.<br>
-D. Whether the response is streamed.</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="final-exam-q16"><span class="opt">A.</span> <span>The number of LLM calls.</span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q16"><span class="opt">B.</span> <span>The latency budget.</span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q16"><span class="opt">C.</span> <span>Who decides the next step: model or programmer.</span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q16"><span class="opt">D.</span> <span>Whether the response is streamed.</span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--17-arag-data-residency-is-configured">17. ARAG data residency is configured:</h3>
-<p>A. Per service-account JWT.<br>
-B. Per partner organisation.<br>
-C. Per KB, at provisioning time.<br>
-D. Per HTTP request.</p>
+<fieldset class="quiz-q" data-answer="C">
+<label data-letter="A"><input type="radio" name="final-exam-q17"><span class="opt">A.</span> <span>Per service-account JWT.</span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q17"><span class="opt">B.</span> <span>Per partner organisation.</span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q17"><span class="opt">C.</span> <span>Per KB, at provisioning time.</span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q17"><span class="opt">D.</span> <span>Per HTTP request.</span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--18-what-does-byo-llm-let-the-customer-point-the-kb-at">18. What does BYO-LLM let the customer point the KB at?</h3>
-<p>A. Their own LLM tenant.<br>
-B. Their database.<br>
-C. Their CDN.<br>
-D. Their dashboard.</p>
+<fieldset class="quiz-q" data-answer="A">
+<label data-letter="A"><input type="radio" name="final-exam-q18"><span class="opt">A.</span> <span>Their own LLM tenant.</span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q18"><span class="opt">B.</span> <span>Their database.</span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q18"><span class="opt">C.</span> <span>Their CDN.</span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q18"><span class="opt">D.</span> <span>Their dashboard.</span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--19-the-key-observability-metric-for-retrieval-quality-regression-is">19. The key observability metric for retrieval-quality regression is:</h3>
-<p>A. p99 latency.<br>
-B. Citation rate on <code>/ask</code> responses.<br>
-C. Total request volume.<br>
-D. Average answer length.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="final-exam-q19"><span class="opt">A.</span> <span>p99 latency.</span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q19"><span class="opt">B.</span> <span>Citation rate on <code>/ask</code> responses.</span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q19"><span class="opt">C.</span> <span>Total request volume.</span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q19"><span class="opt">D.</span> <span>Average answer length.</span></label>
+</fieldset>
 <hr>
 <h3 id="final-exam--20-a-master-prompt-should-be">20. A &quot;master prompt&quot; should be:</h3>
-<p>A. A one-line bullet.<br>
-B. 200–500 words with goal, context, and verification.<br>
-C. A full pseudocode implementation.<br>
-D. A reference to an external spec doc.</p>
+<fieldset class="quiz-q" data-answer="B">
+<label data-letter="A"><input type="radio" name="final-exam-q20"><span class="opt">A.</span> <span>A one-line bullet.</span></label>
+<label data-letter="B"><input type="radio" name="final-exam-q20"><span class="opt">B.</span> <span>200–500 words with goal, context, and verification.</span></label>
+<label data-letter="C"><input type="radio" name="final-exam-q20"><span class="opt">C.</span> <span>A full pseudocode implementation.</span></label>
+<label data-letter="D"><input type="radio" name="final-exam-q20"><span class="opt">D.</span> <span>A reference to an external spec doc.</span></label>
+</fieldset>
 <hr>
+<div class="quiz-controls">
+<button type="button" class="button quiz-check" data-pass="16">Check my answers</button>
+<p class="quiz-result" hidden></p>
+</div>
 <details class="answer-key"><summary>Reveal answer key</summary>
 <ol>
 <li>B · 2. B · 3. C · 4. C · 5. B · 6. B · 7. C · 8. B · 9. B · 10. B</li>
@@ -10121,6 +10376,44 @@ D. A reference to an external spec doc.</p>
   });
   window.addEventListener('popstate', route);
   route();
+
+  // Quiz grading: mark each answered question, score against the pass mark.
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('button.quiz-check');
+    if (!btn) return;
+    const scope = btn.closest('section.page');
+    const questions = scope.querySelectorAll('fieldset.quiz-q');
+    let right = 0;
+    let answered = 0;
+    questions.forEach((fs) => {
+      fs.classList.remove('correct', 'wrong');
+      fs.querySelectorAll('label').forEach((l) => l.classList.remove('is-answer'));
+      const sel = fs.querySelector('input:checked');
+      if (!sel) return;
+      answered++;
+      const ok = sel.closest('label').dataset.letter === fs.dataset.answer;
+      if (ok) right++;
+      fs.classList.add(ok ? 'correct' : 'wrong');
+      if (!ok) {
+        const good = fs.querySelector('label[data-letter="' + fs.dataset.answer + '"]');
+        if (good) good.classList.add('is-answer');
+      }
+    });
+    const total = questions.length;
+    const pass = +btn.dataset.pass || 0;
+    const out = scope.querySelector('.quiz-result');
+    out.hidden = false;
+    out.classList.remove('pass', 'fail');
+    if (answered < total) {
+      out.textContent = 'Answered ' + answered + ' of ' + total + ' \u2014 answer every question, then check again.';
+    } else if (right >= pass) {
+      out.classList.add('pass');
+      out.textContent = 'Score ' + right + '/' + total + ' \u2014 pass! (' + pass + '+ needed)';
+    } else {
+      out.classList.add('fail');
+      out.textContent = 'Score ' + right + '/' + total + ' \u2014 below the pass mark (' + pass + '+ needed). Review the lesson and try again.';
+    }
+  });
 })();
 </script>
 </body>

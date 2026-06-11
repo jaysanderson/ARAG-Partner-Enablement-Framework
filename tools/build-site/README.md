@@ -12,13 +12,17 @@ this tool is build-time only and ships nothing to the browser.
   any static host — it works the same everywhere, no server needed.
 - **Behaves like a single-page app** — only one course page is visible at a
   time; clicking any link swaps the page (landing at the top, with the browser
-  tab title updating), and back/forward walks your page history. This is a
-  ~30-line inline hash router — the only JavaScript in the file. With
+  tab title updating), and back/forward walks your page history. All
+  JavaScript is one small inline script (hash router + quiz grading). With
   JavaScript disabled the file degrades to one scrolling document. Printing
   renders the whole course; note that browser find-in-page only searches the
   currently open page.
-- Quiz answer keys use native `<details>`/`<summary>` (no scoring, no
-  persistence).
+- **Quizzes are runnable**: options are radio buttons, "Check my answers"
+  marks each question, shows the correct answer on misses, and scores against
+  the quiz's real pass mark (parsed from its answer key at build time —
+  4/5 per build, 16/20 on the final exam). No persistence; a reload resets.
+  The static "Reveal answer key" `<details>` stays as a fallback.
+- Targets modern browsers (Chrome, Edge, Safari, Firefox).
 - Code blocks are syntax-highlighted at build time (classes baked into the
   HTML, palette in the inlined CSS).
 - Navigation is derived from the folder structure: a landing section with an
