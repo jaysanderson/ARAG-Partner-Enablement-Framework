@@ -10382,51 +10382,55 @@ Requesting review-board sign-off to start Build 13.
   window.addEventListener('popstate', route);
   route();
 
-  // Quiz grading: mark each answered question, score against the pass mark.
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('button.quiz-check');
-    if (!btn) return;
-    const scope = btn.closest('section.page');
-    const questions = scope.querySelectorAll('fieldset.quiz-q');
-    let right = 0;
-    let answered = 0;
-    questions.forEach((fs) => {
-      fs.classList.remove('correct', 'wrong');
-      fs.querySelectorAll('label').forEach((l) => l.classList.remove('is-answer'));
-      const sel = fs.querySelector('input:checked');
-      if (!sel) return;
-      answered++;
-      const ok = sel.closest('label').dataset.letter === fs.dataset.answer;
-      if (ok) right++;
-      fs.classList.add(ok ? 'correct' : 'wrong');
-      if (!ok) {
-        const good = fs.querySelector('label[data-letter="' + fs.dataset.answer + '"]');
-        if (good) good.classList.add('is-answer');
-      }
-    });
-    const total = questions.length;
-    const pass = +btn.dataset.pass || 0;
-    if (lms && scope.id === 'final-exam' && answered === total) {
-      lms.LMSSetValue('cmi.core.score.min', '0');
-      lms.LMSSetValue('cmi.core.score.max', String(total));
-      lms.LMSSetValue('cmi.core.score.raw', String(right));
-      if (right >= pass) lms.LMSSetValue('cmi.core.lesson_status', 'passed');
-      lms.LMSCommit('');
-    }
-    const out = scope.querySelector('.quiz-result');
-    out.hidden = false;
-    out.classList.remove('pass', 'fail');
-    if (answered < total) {
-      out.textContent = 'Answered ' + answered + ' of ' + total + ' \u2014 answer every question, then check again.';
-    } else if (right >= pass) {
-      out.classList.add('pass');
-      out.textContent = 'Score ' + right + '/' + total + ' \u2014 pass! (' + pass + '+ needed)';
-    } else {
-      out.classList.add('fail');
-      out.textContent = 'Score ' + right + '/' + total + ' \u2014 below the pass mark (' + pass + '+ needed). Review the lesson and try again.';
+  // LMS hook for the shared quiz grader: report the final exam.
+  window.__reportQuiz = (scope, right, answered, total, pass) => {
+    if (!lms || scope.id !== 'final-exam' || answered < total) return;
+    lms.LMSSetValue('cmi.core.score.min', '0');
+    lms.LMSSetValue('cmi.core.score.max', String(total));
+    lms.LMSSetValue('cmi.core.score.raw', String(right));
+    if (right >= pass) lms.LMSSetValue('cmi.core.lesson_status', 'passed');
+    lms.LMSCommit('');
+  };
+})();
+
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('button.quiz-check');
+  if (!btn) return;
+  const scope = btn.closest('section.page') ?? document.body;
+  const questions = scope.querySelectorAll('fieldset.quiz-q');
+  let right = 0;
+  let answered = 0;
+  questions.forEach((fs) => {
+    fs.classList.remove('correct', 'wrong');
+    fs.querySelectorAll('label').forEach((l) => l.classList.remove('is-answer'));
+    const sel = fs.querySelector('input:checked');
+    if (!sel) return;
+    answered++;
+    const ok = sel.closest('label').dataset.letter === fs.dataset.answer;
+    if (ok) right++;
+    fs.classList.add(ok ? 'correct' : 'wrong');
+    if (!ok) {
+      const good = fs.querySelector('label[data-letter="' + fs.dataset.answer + '"]');
+      if (good) good.classList.add('is-answer');
     }
   });
-})();
+  const total = questions.length;
+  const pass = +btn.dataset.pass || 0;
+  if (window.__reportQuiz) window.__reportQuiz(scope, right, answered, total, pass);
+  const out = scope.querySelector('.quiz-result');
+  out.hidden = false;
+  out.classList.remove('pass', 'fail');
+  if (answered < total) {
+    out.textContent = 'Answered ' + answered + ' of ' + total + ' \u2014 answer every question, then check again.';
+  } else if (right >= pass) {
+    out.classList.add('pass');
+    out.textContent = 'Score ' + right + '/' + total + ' \u2014 pass! (' + pass + '+ needed)';
+  } else {
+    out.classList.add('fail');
+    out.textContent = 'Score ' + right + '/' + total + ' \u2014 below the pass mark (' + pass + '+ needed). Review the lesson and try again.';
+  }
+});
 </script>
 </body>
 </html>

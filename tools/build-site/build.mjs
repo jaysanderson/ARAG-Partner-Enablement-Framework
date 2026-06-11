@@ -649,51 +649,59 @@ const ROUTER = `
   window.addEventListener('popstate', route);
   route();
 
-  // Quiz grading: mark each answered question, score against the pass mark.
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('button.quiz-check');
-    if (!btn) return;
-    const scope = btn.closest('section.page');
-    const questions = scope.querySelectorAll('fieldset.quiz-q');
-    let right = 0;
-    let answered = 0;
-    questions.forEach((fs) => {
-      fs.classList.remove('correct', 'wrong');
-      fs.querySelectorAll('label').forEach((l) => l.classList.remove('is-answer'));
-      const sel = fs.querySelector('input:checked');
-      if (!sel) return;
-      answered++;
-      const ok = sel.closest('label').dataset.letter === fs.dataset.answer;
-      if (ok) right++;
-      fs.classList.add(ok ? 'correct' : 'wrong');
-      if (!ok) {
-        const good = fs.querySelector('label[data-letter="' + fs.dataset.answer + '"]');
-        if (good) good.classList.add('is-answer');
-      }
-    });
-    const total = questions.length;
-    const pass = +btn.dataset.pass || 0;
-    if (lms && scope.id === 'final-exam' && answered === total) {
-      lms.LMSSetValue('cmi.core.score.min', '0');
-      lms.LMSSetValue('cmi.core.score.max', String(total));
-      lms.LMSSetValue('cmi.core.score.raw', String(right));
-      if (right >= pass) lms.LMSSetValue('cmi.core.lesson_status', 'passed');
-      lms.LMSCommit('');
-    }
-    const out = scope.querySelector('.quiz-result');
-    out.hidden = false;
-    out.classList.remove('pass', 'fail');
-    if (answered < total) {
-      out.textContent = 'Answered ' + answered + ' of ' + total + ' \\u2014 answer every question, then check again.';
-    } else if (right >= pass) {
-      out.classList.add('pass');
-      out.textContent = 'Score ' + right + '/' + total + ' \\u2014 pass! (' + pass + '+ needed)';
-    } else {
-      out.classList.add('fail');
-      out.textContent = 'Score ' + right + '/' + total + ' \\u2014 below the pass mark (' + pass + '+ needed). Review the lesson and try again.';
+  // LMS hook for the shared quiz grader: report the final exam.
+  window.__reportQuiz = (scope, right, answered, total, pass) => {
+    if (!lms || scope.id !== 'final-exam' || answered < total) return;
+    lms.LMSSetValue('cmi.core.score.min', '0');
+    lms.LMSSetValue('cmi.core.score.max', String(total));
+    lms.LMSSetValue('cmi.core.score.raw', String(right));
+    if (right >= pass) lms.LMSSetValue('cmi.core.lesson_status', 'passed');
+    lms.LMSCommit('');
+  };
+})();
+`;
+
+// Quiz grading (shared by the web build and every quiz SCO in the SCORM
+// package): mark each answered question, score against the pass mark, then
+// hand the result to window.__reportQuiz for LMS reporting if defined.
+const GRADER = `
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('button.quiz-check');
+  if (!btn) return;
+  const scope = btn.closest('section.page') ?? document.body;
+  const questions = scope.querySelectorAll('fieldset.quiz-q');
+  let right = 0;
+  let answered = 0;
+  questions.forEach((fs) => {
+    fs.classList.remove('correct', 'wrong');
+    fs.querySelectorAll('label').forEach((l) => l.classList.remove('is-answer'));
+    const sel = fs.querySelector('input:checked');
+    if (!sel) return;
+    answered++;
+    const ok = sel.closest('label').dataset.letter === fs.dataset.answer;
+    if (ok) right++;
+    fs.classList.add(ok ? 'correct' : 'wrong');
+    if (!ok) {
+      const good = fs.querySelector('label[data-letter="' + fs.dataset.answer + '"]');
+      if (good) good.classList.add('is-answer');
     }
   });
-})();
+  const total = questions.length;
+  const pass = +btn.dataset.pass || 0;
+  if (window.__reportQuiz) window.__reportQuiz(scope, right, answered, total, pass);
+  const out = scope.querySelector('.quiz-result');
+  out.hidden = false;
+  out.classList.remove('pass', 'fail');
+  if (answered < total) {
+    out.textContent = 'Answered ' + answered + ' of ' + total + ' \\u2014 answer every question, then check again.';
+  } else if (right >= pass) {
+    out.classList.add('pass');
+    out.textContent = 'Score ' + right + '/' + total + ' \\u2014 pass! (' + pass + '+ needed)';
+  } else {
+    out.classList.add('fail');
+    out.textContent = 'Score ' + right + '/' + total + ' \\u2014 below the pass mark (' + pass + '+ needed). Review the lesson and try again.';
+  }
+});
 `;
 
 const doc = `<!doctype html>
@@ -714,19 +722,68 @@ ${sections}
 <footer class="site-footer">
   <p>Developer Foundations · Progress Agentic RAG Partner Enablement Framework</p>
 </footer>
-<script>${ROUTER}</script>
+<script>${ROUTER}
+${GRADER}</script>
 </body>
 </html>
 `;
 
 // ---------------------------------------------------------------------------
-// SCORM 1.2 package — single SCO wrapping the same index.html, plus the
-// imsmanifest.xml an LMS needs. The page's inline SCORM glue reports status,
-// bookmarks the current page, and posts the final-exam score (pass = 80%).
+// SCORM 1.2 package — the standard multi-SCO format LMSes expect: the manifest
+// carries the full course tree (the LMS renders it as the course menu), every
+// course page is its own SCO launched by the LMS, content pages report
+// completed-on-view, and each quiz reports its own score and passed/failed.
 // ---------------------------------------------------------------------------
 
-const SCORM_MANIFEST = `<?xml version="1.0" encoding="UTF-8"?>
-<manifest identifier="com.progress.arag.developer-foundations" version="1.0"
+const xmlEsc = (s) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+// Friendly menu titles per page (the LMS tree supplies the context, so child
+// items use short labels under their build's parent folder).
+function scormTitle(page) {
+  if (page.kind === 'landing') return 'Welcome';
+  if (page.id === 'overview') return 'Course overview';
+  if (page.id === 'vibe-coding-guide') return 'Vibe-coding guide';
+  if (page.kind === 'capstone') return 'Capstone brief';
+  if (page.id.endsWith('-atlas')) return 'Atlas Operations (Enterprise)';
+  if (page.id.endsWith('-aurora')) return 'Aurora Concierge (Customer Experience)';
+  if (page.partLabel) return page.partLabel; // Overview / Lesson / Walkthrough / Quiz
+  return page.title;
+}
+
+function scormManifest() {
+  const itemXml = (page, indent) => {
+    const mastery = page.kind === 'quiz' ? `\n${indent}  <adlcp:masteryscore>80</adlcp:masteryscore>` : '';
+    return `${indent}<item identifier="item-${page.id}" identifierref="res-${page.id}" isvisible="true">\n${indent}  <title>${xmlEsc(scormTitle(page))}</title>${mastery}\n${indent}</item>`;
+  };
+
+  const groupXml = (meta) => {
+    const children = order.filter((p) => p.build === meta.dir);
+    return `      <item identifier="item-grp-${meta.id}" isvisible="true">\n        <title>${xmlEsc(meta.title)}</title>\n${children.map((c) => itemXml(c, '        ')).join('\n')}\n      </item>`;
+  };
+
+  // Menu order: course-level pages, each build as a folder of SCOs, the final
+  // exam, then the capstone folder last.
+  const items = [
+    itemXml(bySrc('README.md'), '      '),
+    itemXml(bySrc('OVERVIEW.md'), '      '),
+    itemXml(bySrc('vibe-coding-guide.md'), '      '),
+    ...buildMeta.filter((m) => !m.isCapstone).map(groupXml),
+    itemXml(bySrc('final-exam.md'), '      '),
+    ...buildMeta.filter((m) => m.isCapstone).map(groupXml),
+  ];
+
+  const resources = order
+    .map(
+      (p) => `    <resource identifier="res-${p.id}" type="webcontent" adlcp:scormtype="sco" href="${p.id}.html">
+      <file href="${p.id}.html"/>
+      <dependency identifierref="res-common"/>
+    </resource>`,
+    )
+    .join('\n');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="com.progress.arag.developer-foundations" version="1.2"
     xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
     xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -738,19 +795,100 @@ const SCORM_MANIFEST = `<?xml version="1.0" encoding="UTF-8"?>
   <organizations default="org-developer-foundations">
     <organization identifier="org-developer-foundations">
       <title>Developer Foundations · Progress Agentic RAG</title>
-      <item identifier="item-course" identifierref="res-course" isvisible="true">
-        <title>Developer Foundations</title>
-        <adlcp:masteryscore>80</adlcp:masteryscore>
-      </item>
+${items.join('\n')}
     </organization>
   </organizations>
   <resources>
-    <resource identifier="res-course" type="webcontent" adlcp:scormtype="sco" href="index.html">
-      <file href="index.html"/>
+${resources}
+    <resource identifier="res-common" type="webcontent" adlcp:scormtype="asset">
+      <file href="style.css"/>
+      <file href="scorm.js"/>
     </resource>
   </resources>
 </manifest>
 `;
+}
+
+// Per-SCO runtime: standard API discovery; content pages complete on view,
+// quiz pages report their own score and passed/failed via the shared grader.
+const SCORM_JS = `
+(() => {
+  const find = (win) => {
+    for (let i = 0; i < 10 && win; i++) {
+      try { if (win.API) return win.API; } catch { return null; }
+      if (win.parent === win) break;
+      win = win.parent;
+    }
+    return null;
+  };
+  let api = null;
+  try { api = find(window) ?? (window.opener ? find(window.opener) : null); } catch { api = null; }
+  if (api) {
+    api.LMSInitialize('');
+    window.addEventListener('beforeunload', () => api.LMSFinish(''));
+    if (document.body.dataset.scoKind === 'quiz') {
+      const st = api.LMSGetValue('cmi.core.lesson_status');
+      if (st === 'not attempted' || st === '') api.LMSSetValue('cmi.core.lesson_status', 'incomplete');
+    } else {
+      api.LMSSetValue('cmi.core.lesson_status', 'completed');
+    }
+    api.LMSCommit('');
+  }
+  window.__reportQuiz = (scope, right, answered, total, pass) => {
+    if (!api || answered < total) return;
+    api.LMSSetValue('cmi.core.score.min', '0');
+    api.LMSSetValue('cmi.core.score.max', String(total));
+    api.LMSSetValue('cmi.core.score.raw', String(right));
+    api.LMSSetValue('cmi.core.lesson_status', right >= pass ? 'passed' : 'failed');
+    api.LMSCommit('');
+  };
+})();
+${GRADER}`;
+
+// In a multi-SCO package the LMS menu is the navigation: cross-page links
+// become plain text; same-page heading anchors keep working.
+function scormUnlink(html, page) {
+  return html.replace(/<a\s+href="([^"]*)"([^>]*)>([\s\S]*?)<\/a>/g, (m, href, attrs, inner) => {
+    if (/^(https?:|mailto:)/.test(href)) return m;
+    if (href.startsWith('#')) return `<a href="#${page.id}--${href.slice(1)}">${inner}</a>`;
+    return inner;
+  });
+}
+
+const SUBMIT_BLOCK_SCORM = SUBMIT_BLOCK
+  .replace('<a href="#final-exam">final exam</a>', '<strong>final exam</strong> (in the course menu)')
+  .replace('<a href="#build-13-atlas">Atlas Operations</a>', '<strong>Atlas Operations</strong>')
+  .replace('<a href="#build-13-aurora">Aurora Concierge</a>', '<strong>Aurora Concierge</strong>');
+
+function scormPage(page) {
+  let body;
+  if (page.kind === 'landing') {
+    body = scormUnlink(renderMarkdown(read('README.md'), page.id), page);
+  } else if (page.kind === 'quiz') {
+    body = scormUnlink(renderQuiz(read(page.src), page.id), page);
+  } else if (page.kind === 'capstone') {
+    body = scormUnlink(renderMarkdown(read(page.src), page.id), page) + SUBMIT_BLOCK_SCORM;
+  } else {
+    body = scormUnlink(renderMarkdown(read(page.src), page.id), page);
+  }
+  const kind = page.kind === 'quiz' ? 'quiz' : 'content';
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${escapeHtml(page.title)} · Developer Foundations</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="sco" data-sco-kind="${kind}">
+<main>
+${body}
+</main>
+<script src="scorm.js"></script>
+</body>
+</html>
+`;
+}
 
 // Minimal ZIP writer (deflate via node:zlib) — keeps the build dependency-free.
 function buildZip(entries) {
@@ -817,12 +955,14 @@ const schemaEntries = fs
   .map((f) => ({ name: f, data: fs.readFileSync(path.join(SCHEMA_DIR, f)) }));
 
 const zip = buildZip([
-  { name: 'imsmanifest.xml', data: Buffer.from(SCORM_MANIFEST, 'utf8') },
+  { name: 'imsmanifest.xml', data: Buffer.from(scormManifest(), 'utf8') },
   ...schemaEntries,
-  { name: 'index.html', data: Buffer.from(doc, 'utf8') },
+  { name: 'style.css', data: Buffer.from(css, 'utf8') },
+  { name: 'scorm.js', data: Buffer.from(SCORM_JS, 'utf8') },
+  ...order.map((p) => ({ name: `${p.id}.html`, data: Buffer.from(scormPage(p), 'utf8') })),
 ]);
 fs.writeFileSync(path.join(OUT, 'developer-foundations-scorm12.zip'), zip);
 
 const kb = Math.round(Buffer.byteLength(doc) / 1024);
 console.log(`Built ${order.length} sections into one file → docs/index.html (${kb} KB)`);
-console.log(`SCORM 1.2 package → docs/developer-foundations-scorm12.zip (${Math.round(zip.length / 1024)} KB)`);
+console.log(`SCORM 1.2 multi-SCO package (${order.length} SCOs) → docs/developer-foundations-scorm12.zip (${Math.round(zip.length / 1024)} KB)`);
