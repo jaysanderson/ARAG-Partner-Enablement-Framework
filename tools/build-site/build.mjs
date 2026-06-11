@@ -570,8 +570,8 @@ const SUBMIT_BLOCK = `
 // Build
 // ---------------------------------------------------------------------------
 
-const sections = order
-  .map((page) => {
+const sectionHtml = new Map(
+  order.map((page) => {
     let body;
     if (page.kind === 'landing') {
       body = landingBody(page);
@@ -582,9 +582,26 @@ const sections = order
     } else {
       body = rewriteLinks(renderMarkdown(read(page.src), page.id), page);
     }
-    return sectionShell(page, body);
-  })
-  .join('\n');
+    return [page.id, sectionShell(page, body)];
+  }),
+);
+
+// For per-build packages: prune links that point at pages outside the
+// package — pager entries disappear, prose links fall back to plain text.
+function subsetClean(html, idSet) {
+  html = html.replace(/<nav class="pager">([\s\S]*?)<\/nav>/g, (m, inner) => {
+    const cleaned = inner.replace(/<a[^>]*href="#([a-z0-9-]+?)(?:--[^"]*)?"[^>]*>[\s\S]*?<\/a>/g, (a, id) =>
+      idSet.has(id) ? a : '',
+    );
+    return cleaned.includes('<a') ? `<nav class="pager">${cleaned}</nav>` : '';
+  });
+  html = html.replace(/<a([^>]*)href="#([a-z0-9-]+?)(--[^"]*)?"([^>]*)>([\s\S]*?)<\/a>/g, (m, pre, id, frag, post, inner) => {
+    if (idSet.has(id)) return m;
+    if (/class="[^"]*toc-link/.test(pre + post)) return ''; // dead "Contents ↑" chrome
+    return inner;
+  });
+  return html;
+}
 
 const css = fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8');
 
@@ -611,14 +628,40 @@ function sidebarNav() {
   );
 }
 
+// Sidebar for a single-build / single-page package: just that package's pages.
+function sidebarFor(pkg) {
+  if (!pkg.pages || pkg.pages.length === order.length) return sidebarNav();
+  const link = (id, label) => `<a href="#${id}">${escapeHtml(label)}</a>`;
+  const labelFor = (p) => {
+    if (p.id.endsWith('-atlas')) return 'Atlas Operations';
+    if (p.id.endsWith('-aurora')) return 'Aurora Concierge';
+    if (p.partLabel && p.partLabel !== 'Overview') return p.partLabel;
+    if (p.kind === 'capstone') return 'Capstone brief';
+    return p.title;
+  };
+  const head = pkg.pages[0];
+  const subs = pkg.pages.slice(1).map((p) => link(p.id, labelFor(p))).join('');
+  return (
+    '<nav class="sidebar">' +
+    '<p class="brand">Developer Foundations</p>' +
+    `<div class="grp">${link(head.id, pkg.title)}${subs ? `<div class="sub">${subs}</div>` : ''}</div>` +
+    '</nav>'
+  );
+}
+
 // Hash router: shows the section the URL hash points at (or contains), hides
 // the rest, scrolls to the right place, and keeps the document title in sync.
 // Link clicks are intercepted and routed via pushState so the browser never
 // performs its own fragment scroll (no race with ours); back/forward arrives
 // through popstate. Browser history works as page history.
-const ROUTER = `
+// The inline router/driver script, parameterised per package: which section
+// is "home", which quiz (if any) reports to the LMS, and whether the package
+// is content-only (completes on launch).
+const routerScript = ({ defaultId, examId, completeOnLaunch }) => `
 (() => {
   history.scrollRestoration = 'manual';
+  const DEFAULT_PAGE = ${JSON.stringify(defaultId)};
+  const EXAM_ID = ${JSON.stringify(examId ?? null)};
 
   // SCORM driver glue: inside the package, this page runs in the content
   // frame of scormdriver/indexAPI.html, which exposes the Rustici driver API
@@ -632,6 +675,7 @@ const ROUTER = `
     } catch {}
     return null;
   })();
+  ${completeOnLaunch ? 'if (driver) { driver.SetReachedEnd(); driver.CommitData(); }' : ''}
 
   // Fallback SCORM 1.2 glue for running this single file as a bare SCO
   // (no driver): talk to the LMS API directly. No-op in a plain browser.
@@ -661,7 +705,7 @@ const ROUTER = `
   const route = () => {
     const hash = decodeURIComponent(location.hash.slice(1));
     const target = hash ? document.getElementById(hash) : null;
-    const page = target?.closest('section.page') ?? document.getElementById('home');
+    const page = target?.closest('section.page') ?? document.getElementById(DEFAULT_PAGE);
     document.querySelectorAll('section.page.current').forEach((s) => s.classList.remove('current'));
     page.classList.add('current');
     document.querySelectorAll('.sidebar a.active').forEach((a) => a.classList.remove('active'));
@@ -688,9 +732,9 @@ const ROUTER = `
   window.addEventListener('popstate', route);
   route();
 
-  // LMS hook for the shared quiz grader: report the final exam.
+  // LMS hook for the shared quiz grader: report the package's gate quiz.
   window.__reportQuiz = (scope, right, answered, total, pass) => {
-    if (scope.id !== 'final-exam' || answered < total) return;
+    if (!EXAM_ID || scope.id !== EXAM_ID || answered < total) return;
     if (driver) {
       // The Rustici driver's SetScore expects a percentage (it derives
       // cmi.score.scaled by dividing by 100).
@@ -756,12 +800,22 @@ document.addEventListener('click', (e) => {
 });
 `;
 
-const doc = `<!doctype html>
+function docFor(pkg) {
+  const isFull = pkg.pages.length === order.length;
+  const idSet = new Set(pkg.pages.map((p) => p.id));
+  let sections = pkg.pages.map((p) => sectionHtml.get(p.id)).join('\n');
+  if (!isFull) sections = subsetClean(sections, idSet);
+  const router = routerScript({
+    defaultId: pkg.pages[0].id,
+    examId: pkg.examId ?? null,
+    completeOnLaunch: !!pkg.completeOnLaunch,
+  });
+  return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Developer Foundations · Progress Agentic RAG Partner Course</title>
+<title>${escapeHtml(pkg.title)} · Progress Agentic RAG Partner Course</title>
 <style>
 ${css}
 </style>
@@ -769,7 +823,7 @@ ${css}
 </head>
 <body>
 <div class="layout">
-${sidebarNav()}
+${sidebarFor(pkg)}
 <div class="content">
 <main>
 ${sections}
@@ -779,11 +833,52 @@ ${sections}
 </footer>
 </div>
 </div>
-<script>${ROUTER}
+<script>${router}
 ${GRADER}</script>
 </body>
 </html>
 `;
+}
+
+// Package definitions: the full course, one per build, the capstone, and the
+// final exam — each becomes its own SCORM zip in docs/scorm/.
+const FULL_PKG = {
+  slug: 'developer-foundations',
+  title: 'Developer Foundations',
+  description: 'The on-ramp course for partners building on Progress Agentic RAG: thirteen builds plus a capstone.',
+  pages: order,
+  examId: 'final-exam',
+};
+const packages = [
+  FULL_PKG,
+  ...buildMeta
+    .filter((b) => !b.isCapstone)
+    .map((b) => ({
+      slug: b.dir,
+      title: b.title,
+      description: `${b.title} — Developer Foundations, the Progress Agentic RAG partner course.`,
+      pages: order.filter((p) => p.build === b.dir),
+      examId: `${b.id}-quiz`,
+    })),
+  ...buildMeta
+    .filter((b) => b.isCapstone)
+    .map((b) => ({
+      slug: b.dir,
+      title: b.title,
+      description: `${b.title} — Developer Foundations, the Progress Agentic RAG partner course.`,
+      pages: order.filter((p) => p.build === b.dir),
+      completeOnLaunch: true,
+    })),
+  {
+    slug: 'final-exam',
+    title: 'Developer Foundations — Final Exam',
+    description: 'Final exam for the Developer Foundations partner course. 20 questions, pass mark 16.',
+    pages: order.filter((p) => p.src === 'final-exam.md'),
+    examId: 'final-exam',
+  },
+];
+
+const doc = docFor(FULL_PKG);
 
 // ---------------------------------------------------------------------------
 // SCORM 1.2 package — the standard multi-SCO format LMSes expect: the manifest
@@ -813,16 +908,19 @@ function templateFiles() {
   return files;
 }
 
-function scormManifest(driverFiles) {
+const xmlEsc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+function scormManifest(driverFiles, pkg) {
   const fileList = [
     ...driverFiles.filter((f) => f.name.startsWith('scormdriver/')).map((f) => f.name),
     'scormcontent/index.html',
   ]
     .map((f) => `      <file href="${f}" />`)
     .join('\n');
+  const title = xmlEsc(pkg.title);
 
   return `<?xml version="1.0" standalone="no" ?>
-<manifest identifier="com.progress.arag.developer-foundations" version="1.3"
+<manifest identifier="com.progress.arag.${pkg.slug}" version="1.3"
   xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3"
@@ -841,9 +939,9 @@ function scormManifest(driverFiles) {
   </metadata>
   <organizations default="B0">
     <organization identifier="B0" adlseq:objectivesGlobalToSystem="false">
-      <title>Developer Foundations</title>
+      <title>${title}</title>
       <item identifier="i1" identifierref="r1" isvisible="true">
-        <title>Developer Foundations</title>
+        <title>${title}</title>
         <adlcp:dataFromLMS>dataFromLMS</adlcp:dataFromLMS>
 
         <imsss:sequencing>
@@ -865,6 +963,14 @@ ${fileList}
   </resources>
 </manifest>
 `;
+}
+
+// Per-package metadata.xml: the template file with the title/description
+// strings swapped.
+function metadataFor(templateMeta, pkg) {
+  return templateMeta
+    .replace(/(<title>\s*<string language="en-US">)[^<]*(<\/string>)/, `$1${xmlEsc(pkg.title)}$2`)
+    .replace(/(<description>\s*<string language="en-US">)[^<]*(<\/string>)/, `$1${xmlEsc(pkg.description)}$2`);
 }
 
 // Minimal ZIP writer (deflate via node:zlib) — keeps the build dependency-free.
@@ -925,15 +1031,25 @@ fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
 
 // scorm-template/ carries the reference package root verbatim (xsds, dtds,
 // metadata.xml, ScormEnginePackageProperties.xsd, scormdriver/) — everything
-// except the generated manifest and the course content.
-const driverFiles = templateFiles();
-const zip = buildZip([
-  { name: 'imsmanifest.xml', data: Buffer.from(scormManifest(driverFiles), 'utf8') },
-  ...driverFiles,
-  { name: 'scormcontent/index.html', data: Buffer.from(doc, 'utf8') },
-]);
-fs.writeFileSync(path.join(OUT, 'developer-foundations-scorm2004_4.zip'), zip);
+// except the generated manifest, per-package metadata, and the content.
+const allTemplateFiles = templateFiles();
+const templateMeta = allTemplateFiles.find((f) => f.name === 'metadata.xml').data.toString('utf8');
+const driverFiles = allTemplateFiles.filter((f) => f.name !== 'metadata.xml');
+
+fs.mkdirSync(path.join(OUT, 'scorm'), { recursive: true });
+for (const pkg of packages) {
+  const pkgDoc = pkg === FULL_PKG ? doc : docFor(pkg);
+  const zip = buildZip([
+    { name: 'imsmanifest.xml', data: Buffer.from(scormManifest(driverFiles, pkg), 'utf8') },
+    { name: 'metadata.xml', data: Buffer.from(metadataFor(templateMeta, pkg), 'utf8') },
+    ...driverFiles,
+    { name: 'scormcontent/index.html', data: Buffer.from(pkgDoc, 'utf8') },
+  ]);
+  const file = `scorm/${pkg.slug}-scorm2004_4.zip`;
+  fs.writeFileSync(path.join(OUT, file), zip);
+  console.log(`  SCORM → docs/${file} (${Math.round(zip.length / 1024)} KB)`);
+}
 
 const kb = Math.round(Buffer.byteLength(doc) / 1024);
 console.log(`Built ${order.length} sections into one file → docs/index.html (${kb} KB)`);
-console.log(`SCORM 2004 4th Ed package (Rustici-driver layout) → docs/developer-foundations-scorm2004_4.zip (${Math.round(zip.length / 1024)} KB)`);
+console.log(`${packages.length} SCORM 2004 4th Ed packages → docs/scorm/`);

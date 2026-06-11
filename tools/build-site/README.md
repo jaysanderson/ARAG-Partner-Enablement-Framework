@@ -34,9 +34,19 @@ this tool is build-time only and ships nothing to the browser.
 
 ## SCORM package (for LMS import)
 
-The build also emits **`docs/developer-foundations-scorm2004_4.zip`** — a
-SCORM 2004 4th Edition package in the same layout as Progress's
-authoring-tool exports (Articulate Rise / Rustici SCORM driver):
+The build emits **a folder of SCORM 2004 4th Edition packages** into
+`docs/scorm/`, all in the same layout as Progress's authoring-tool exports
+(Articulate Rise / Rustici SCORM driver):
+
+- `developer-foundations-scorm2004_4.zip` — the full course
+- `build-00-…` through `build-12-…` — **one package per build** (that build's
+  Overview / Lesson / Walkthrough / Quiz; the build quiz reports its score
+  and passed/failed at 4/5)
+- `build-13-capstone-…` — the capstone brief + both variants (completes on
+  launch; no quiz)
+- `final-exam-…` — the 20-question exam on its own (pass 16+)
+
+Every package shares the structure:
 
 ```
 imsmanifest.xml, metadata.xml, *.xsd     (package root)

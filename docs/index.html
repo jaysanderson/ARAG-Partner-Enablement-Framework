@@ -10381,6 +10381,8 @@ Requesting review-board sign-off to start Build 13.
 <script>
 (() => {
   history.scrollRestoration = 'manual';
+  const DEFAULT_PAGE = "home";
+  const EXAM_ID = "final-exam";
 
   // SCORM driver glue: inside the package, this page runs in the content
   // frame of scormdriver/indexAPI.html, which exposes the Rustici driver API
@@ -10394,6 +10396,7 @@ Requesting review-board sign-off to start Build 13.
     } catch {}
     return null;
   })();
+  
 
   // Fallback SCORM 1.2 glue for running this single file as a bare SCO
   // (no driver): talk to the LMS API directly. No-op in a plain browser.
@@ -10423,7 +10426,7 @@ Requesting review-board sign-off to start Build 13.
   const route = () => {
     const hash = decodeURIComponent(location.hash.slice(1));
     const target = hash ? document.getElementById(hash) : null;
-    const page = target?.closest('section.page') ?? document.getElementById('home');
+    const page = target?.closest('section.page') ?? document.getElementById(DEFAULT_PAGE);
     document.querySelectorAll('section.page.current').forEach((s) => s.classList.remove('current'));
     page.classList.add('current');
     document.querySelectorAll('.sidebar a.active').forEach((a) => a.classList.remove('active'));
@@ -10450,9 +10453,9 @@ Requesting review-board sign-off to start Build 13.
   window.addEventListener('popstate', route);
   route();
 
-  // LMS hook for the shared quiz grader: report the final exam.
+  // LMS hook for the shared quiz grader: report the package's gate quiz.
   window.__reportQuiz = (scope, right, answered, total, pass) => {
-    if (scope.id !== 'final-exam' || answered < total) return;
+    if (!EXAM_ID || scope.id !== EXAM_ID || answered < total) return;
     if (driver) {
       // The Rustici driver's SetScore expects a percentage (it derives
       // cmi.score.scaled by dividing by 100).
