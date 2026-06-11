@@ -10099,25 +10099,23 @@ D. A reference to an external spec doc.</p>
   <p>Developer Foundations · Progress Agentic RAG Partner Enablement Framework</p>
 </footer>
 <script>
-(function () {
-  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  function route() {
-    var hash = decodeURIComponent(location.hash.slice(1));
-    var target = hash ? document.getElementById(hash) : null;
-    var page = (target && target.closest('section.page')) || document.getElementById('home');
-    var open = document.querySelectorAll('section.page.current');
-    for (var i = 0; i < open.length; i++) open[i].classList.remove('current');
+(() => {
+  history.scrollRestoration = 'manual';
+  const route = () => {
+    const hash = decodeURIComponent(location.hash.slice(1));
+    const target = hash ? document.getElementById(hash) : null;
+    const page = target?.closest('section.page') ?? document.getElementById('home');
+    document.querySelectorAll('section.page.current').forEach((s) => s.classList.remove('current'));
     page.classList.add('current');
     if (target && target !== page) target.scrollIntoView();
     else window.scrollTo(0, 0);
-    var h1 = page.querySelector('h1');
-    document.title = (h1 ? h1.textContent : 'Developer Foundations') + ' \u00b7 Developer Foundations';
-  }
-  document.addEventListener('click', function (e) {
-    var a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    document.title = (page.querySelector('h1')?.textContent ?? 'Developer Foundations') + ' \u00b7 Developer Foundations';
+  };
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest?.('a[href^="#"]');
     if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     e.preventDefault();
-    var href = a.getAttribute('href');
+    const href = a.getAttribute('href');
     if (href !== location.hash) history.pushState(null, '', href);
     route();
   });
