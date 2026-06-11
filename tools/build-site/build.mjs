@@ -376,8 +376,7 @@ for (const p of pages) {
 }
 srcToId.set('', 'home');
 
-// Rewrite repo-relative links to in-document #anchors; unlink targets that
-// are not published (video scripts, corpus files, framework root).
+// Rewrite repo-relative links to in-document #anchors; unlink targets that// are not published (corpus files, framework root).
 function rewriteLinks(html, page) {
   const srcDir = path.posix.dirname(page.src) === '.' ? '' : path.posix.dirname(page.src);
   return html.replace(/<a\s+href="([^"]*)"([^>]*)>([\s\S]*?)<\/a>/g, (m, href, attrs, inner) => {
@@ -392,7 +391,7 @@ function rewriteLinks(html, page) {
       (resolved.endsWith('/')
         ? srcToId.get(resolved + 'README.md')
         : srcToId.get(resolved + '/README.md') ?? srcToId.get(resolved + '/'));
-    if (!id) return inner; // unpublished (video-script.md, corpus/, assets/…)
+    if (!id) return inner; // unpublished (corpus/, assets/…)
     return `<a href="#${frag ? `${id}--${frag.slice(1)}` : id}">${inner}</a>`;
   });
 }

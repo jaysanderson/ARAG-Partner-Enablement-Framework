@@ -1,6 +1,6 @@
 # Build 1 — Lesson: The Five Primitives
 
-> Read time: 15 minutes. Companion to the 15-minute [video](video-script.md).
+> Read time: 15 minutes.
 
 ## Why this is Build 1
 

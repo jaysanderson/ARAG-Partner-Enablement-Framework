@@ -12,7 +12,7 @@ Three production-readiness artefacts:
 2. **A rate-limit-aware client** — code that handles 429s, retries with backoff, coalesces duplicate requests.
 3. **An observability dashboard spec** — the widgets, the alarms, the targets.
 
-Plus a `production-checklist.md` and a 3-minute "platform-grade" pitch video.
+Plus a `production-checklist.md`.
 
 > BYO-LLM is **taught** in this Build's [`lesson.md`](1-lesson.md#byo-llm-bring-your-own-llm) and reviewed by quiz, but it is **not a walkthrough deliverable** — you don't ship a `byo-llm-config.md` or a toggle here. See Step 3 below + the lesson's [*When BYO-LLM doesn't fit: clean descope*](1-lesson.md#when-byo-llm-doesnt-fit-clean-descope) section for why.
 

@@ -1,6 +1,6 @@
 # Build 6 — Lesson: Data-Augmentation Agents
 
-> Read time: 10 minutes. Companion to the 10-minute [video](video-script.md).
+> Read time: 10 minutes.
 
 ## Why partners learn this Build
 

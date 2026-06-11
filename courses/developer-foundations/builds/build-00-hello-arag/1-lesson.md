@@ -1,6 +1,6 @@
 # Build 0 — Lesson: Hello ARAG
 
-> Read time: 12 minutes. Companion to the 12-minute [video](video-script.md). Either is sufficient; the video is the recommended path.
+> Read time: 12 minutes.
 
 ## Why you start here
 

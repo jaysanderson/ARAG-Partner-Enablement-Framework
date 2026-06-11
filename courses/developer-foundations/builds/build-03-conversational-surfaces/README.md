@@ -10,14 +10,12 @@
 | **Tier mapped to** | Tier 2 |
 | **Prerequisite** | [Build 2 — Drop-in Widgets](../build-02-drop-in-widgets/) |
 | **Estimated effort** | 3 hours focused |
-| **Video length** | 12 minutes |
 
 ## Start here
 
 1. **[lesson.md](1-lesson.md)** — prompt anatomy, two-voice pattern, CTA post-processing.
-2. **[video-script.md](video-script.md)** — 12-minute live build with AI assistance.
-3. **[walkthrough.md](2-walkthrough.md)** — vibe-code a React chat with persona toggle.
-4. **[quiz.md](3-quiz.md)** — 5 multiple-choice. Open-book. Pass = 4/5.
+2. **[walkthrough.md](2-walkthrough.md)** — vibe-code a React chat with persona toggle.
+3. **[quiz.md](3-quiz.md)** — 5 multiple-choice. Open-book. Pass = 4/5.
 
 ## What you can do after this Build
 

@@ -1,6 +1,6 @@
 # Build 2 — Lesson: Drop-in Widgets
 
-> Read time: 8 minutes. Companion to the 7-minute [video](video-script.md).
+> Read time: 8 minutes.
 
 ## Why this is in the course
 

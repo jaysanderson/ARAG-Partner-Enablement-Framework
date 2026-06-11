@@ -12,14 +12,12 @@
 | **Tier mapped to** | Tier 4 prep (Builds 7 and 8 are where they come alive) |
 | **Prerequisite** | [Build 5](../build-05-structured-outputs/) |
 | **Estimated effort** | 2 hours focused |
-| **Video length** | 10 minutes |
 
 ## Start here
 
 1. **[lesson.md](1-lesson.md)** — the three agents as a family; what each does; when to reach for each.
-2. **[video-script.md](video-script.md)** — 10-minute panoramic tour.
-3. **[walkthrough.md](2-walkthrough.md)** — configure one of each in the dashboard against your sandbox.
-4. **[quiz.md](3-quiz.md)** — 6 MC + 1 short answer.
+2. **[walkthrough.md](2-walkthrough.md)** — configure one of each in the dashboard against your sandbox.
+3. **[quiz.md](3-quiz.md)** — 6 MC + 1 short answer.
 
 ## What you can do after this Build
 

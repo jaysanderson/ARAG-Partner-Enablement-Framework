@@ -46,7 +46,7 @@ That last one is the bar. The capstone is the deliverable a partner walks into a
 
 Each build follows the same rhythm so the cognitive load stays predictable:
 
-1. **Read or watch the lesson.** Ten to fifteen minutes of conceptual setup. What does this primitive return? What customer problem does it solve? What's the API surface? Each lesson has both a written version and a recorded video — pick whichever works for you. The video is the canonical surface; the markdown is the searchable transcript.
+1. **Read the lesson.** Ten to fifteen minutes of conceptual setup. What does this primitive return? What customer problem does it solve? What's the API surface?
 
 2. **Work the walkthrough.** One to three hours of hands-on building. You'll provision things in the Progress Agentic RAG dashboard, run curl commands against your Knowledge Box, brief an AI coding assistant to build a component, run it, verify the output, fix anything broken. Every walkthrough ends with a working artefact you save to your local project folder.
 
@@ -74,7 +74,7 @@ If you can dedicate roughly an evening every other day (90–120 minutes per ses
 
 For Progress partner organisations: nothing additional. The course is included in your partner programme. Your Progress Agentic RAG sandbox credentials are provided as part of partner onboarding; every build runs against that sandbox at no incremental cost.
 
-For non-partner technical evaluators: you'll need a Progress Agentic RAG account to do the builds. The free tier covers Builds 0 through 5; from Build 6 onward (data-augmentation agents, graph extraction, the capstone) you'll either need to be inside a partner org or convert to a paid plan. The lesson reading and video watching are free regardless.
+For non-partner technical evaluators: you'll need a Progress Agentic RAG account to do the builds. The free tier covers Builds 0 through 5; from Build 6 onward (data-augmentation agents, graph extraction, the capstone) you'll either need to be inside a partner org or convert to a paid plan. The lesson reading is free regardless.
 
 ## Frequently asked questions
 

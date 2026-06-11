@@ -1,6 +1,6 @@
 # Build 9 — Lesson: Field Engineering
 
-> Read time: 10 minutes. Companion to the 10-minute [video](video-script.md).
+> Read time: 10 minutes.
 
 ## Why this is the recurring-revenue Build
 

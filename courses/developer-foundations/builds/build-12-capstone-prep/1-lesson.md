@@ -1,6 +1,6 @@
 # Build 12 — Lesson: Capstone Prep
 
-> Read time: 15 minutes. Companion to the 15-minute [video](video-script.md).
+> Read time: 15 minutes.
 >
 > This is the synthesis Build. Everything from Builds 0–10 composes here.
 

@@ -1,6 +1,6 @@
 # Build 4 — Lesson: Multilingual & Voice Switching
 
-> Read time: 8 minutes. Companion to the 8-minute [video](video-script.md).
+> Read time: 8 minutes.
 
 ## Why this Build exists
 

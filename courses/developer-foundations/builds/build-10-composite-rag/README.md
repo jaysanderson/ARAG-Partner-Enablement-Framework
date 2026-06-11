@@ -12,14 +12,12 @@
 | **Tier mapped to** | Tier 3–4 bridge |
 | **Prerequisite** | [Build 8](../build-09-field-engineering/) |
 | **Estimated effort** | 2.5 hours focused |
-| **Video length** | 10 minutes |
 
 ## Start here
 
 1. **[lesson.md](1-lesson.md)** — generate → evaluate → augment recipe; agentic boundary.
-2. **[video-script.md](video-script.md)** — 10-minute live build.
-3. **[walkthrough.md](2-walkthrough.md)** — vibe-code a retry-on-low-citations flow.
-4. **[quiz.md](3-quiz.md)** — 5 MC + 1 short answer.
+2. **[walkthrough.md](2-walkthrough.md)** — vibe-code a retry-on-low-citations flow.
+3. **[quiz.md](3-quiz.md)** — 5 MC + 1 short answer.
 
 ## What you can do after this Build
 

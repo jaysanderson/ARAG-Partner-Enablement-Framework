@@ -1,6 +1,6 @@
 # Build 0 — Walkthrough: Hello ARAG
 
-> Estimated time: 2–3 hours focused. Read the [lesson](1-lesson.md) (or watch the [video](video-script.md)) first.
+> Estimated time: 2–3 hours focused. Read the [lesson](1-lesson.md) first.
 >
 > **New to terminals, Node.js, or curl?** That's fine. We explain every command. If anything's confusing, paste it into your AI assistant and ask *"what does this do?"* — that's a legitimate part of vibe coding.
 

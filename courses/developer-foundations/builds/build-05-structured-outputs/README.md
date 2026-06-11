@@ -12,14 +12,12 @@
 | **Tier mapped to** | Tier 3 |
 | **Prerequisite** | [Build 4](../build-04-multilingual-and-voice/) |
 | **Estimated effort** | 3 hours focused |
-| **Video length** | 12 minutes |
 
 ## Start here
 
 1. **[lesson.md](1-lesson.md)** — `answer_json_schema`, strict-mode rules, three response shapes, schema-permissive-code-strict.
-2. **[video-script.md](video-script.md)** — 12-minute live build of three schemas.
-3. **[walkthrough.md](2-walkthrough.md)** — vibe-code FAQ generator + taxonomy generator + comparison-table generator.
-4. **[quiz.md](3-quiz.md)** — 6 MC + 1 short answer.
+2. **[walkthrough.md](2-walkthrough.md)** — vibe-code FAQ generator + taxonomy generator + comparison-table generator.
+3. **[quiz.md](3-quiz.md)** — 6 MC + 1 short answer.
 
 ## What you can do after this Build
 

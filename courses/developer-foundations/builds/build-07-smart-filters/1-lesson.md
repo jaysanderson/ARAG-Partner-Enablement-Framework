@@ -1,6 +1,6 @@
 # Build 7 — Lesson: Smart Filters & Labelsets
 
-> Read time: 8 minutes. Companion to the 8-minute [video](video-script.md).
+> Read time: 8 minutes.
 
 ## Why partners learn this
 

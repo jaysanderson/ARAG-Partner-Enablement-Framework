@@ -29,9 +29,8 @@ this tool is build-time only and ships nothing to the browser.
   ordered topic index, per-build Overview / Lesson / Walkthrough / Quiz
   sections with prev/next links, the final exam, then the capstone brief as
   the final section. All navigation is in-page `#anchors`.
-- **Not published:** `video-script.md` files, corpus folders, and anything
-  outside the course. Links to unpublished files are rendered as plain text so
-  the file has no dead links.
+- **Not published:** corpus folders and anything outside the course. Links to
+  unpublished files are rendered as plain text so the file has no dead links.
 
 ## Rebuild (after any content change)
 

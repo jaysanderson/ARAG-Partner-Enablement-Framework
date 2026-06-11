@@ -1,6 +1,6 @@
 # Build 11 — Lesson: Production Readiness
 
-> Read time: 10 minutes. Companion to the 10-minute [video](video-script.md).
+> Read time: 10 minutes.
 
 ## Why this Build is mostly conceptual
 

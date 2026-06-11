@@ -1,6 +1,6 @@
 # Build 8 — Lesson: Knowledge Graph 101
 
-> Read time: 12 minutes. Companion to the 12-minute [video](video-script.md).
+> Read time: 12 minutes.
 
 ## Why this is the Tier 4 surface
 

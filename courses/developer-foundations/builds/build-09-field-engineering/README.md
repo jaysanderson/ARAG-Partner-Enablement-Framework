@@ -12,14 +12,12 @@
 | **Tier mapped to** | Tier 2–3 |
 | **Prerequisite** | [Build 7](../build-08-knowledge-graph/) |
 | **Estimated effort** | 2 hours focused |
-| **Video length** | 10 minutes |
 
 ## Start here
 
 1. **[lesson.md](1-lesson.md)** — what field engineering is, how the model picks fields from `{context}`, the recurring-revenue commercial frame.
-2. **[video-script.md](video-script.md)** — 10-minute live build.
-3. **[walkthrough.md](2-walkthrough.md)** — add three custom fields to your KB, wire the prompt + front-end to consume them.
-4. **[quiz.md](3-quiz.md)** — 5 MC + 1 short answer.
+2. **[walkthrough.md](2-walkthrough.md)** — add three custom fields to your KB, wire the prompt + front-end to consume them.
+3. **[quiz.md](3-quiz.md)** — 5 MC + 1 short answer.
 
 ## What you can do after this Build
 

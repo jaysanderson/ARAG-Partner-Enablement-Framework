@@ -12,14 +12,12 @@
 | **Tier mapped to** | Tier 4 |
 | **Prerequisite** | [Build 6](../build-07-smart-filters/) |
 | **Estimated effort** | 3 hours focused |
-| **Video length** | 12 minutes |
 
 ## Start here
 
 1. **[lesson.md](1-lesson.md)** — what the graph is, the `{by: 'data-augmentation'}` filter, three graph endpoints.
-2. **[video-script.md](video-script.md)** — 12-minute live build of a graph navigation UI.
-3. **[walkthrough.md](2-walkthrough.md)** — design an entity/relation schema for one vertical, vibe-code a graph viewer.
-4. **[quiz.md](3-quiz.md)** — 6 MC + 1 short answer.
+2. **[walkthrough.md](2-walkthrough.md)** — design an entity/relation schema for one vertical, vibe-code a graph viewer.
+3. **[quiz.md](3-quiz.md)** — 6 MC + 1 short answer.
 
 ## What you can do after this Build
 

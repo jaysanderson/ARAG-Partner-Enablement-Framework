@@ -6,7 +6,7 @@
 > **Prerequisites:** None. This is the on-ramp.
 > **Total time:** 25–40 hours per individual, spread over 4–8 weeks
 > **Format:** 13 short Builds covering the platform's full breadth + 1 capstone
-> **Status:** Shipped (curriculum, rubrics, video scripts). Per-build assets still on the backlog — see `assets/README.md`.
+> **Status:** Shipped (curriculum, rubrics). Per-build assets still on the backlog — see `assets/README.md`.
 
 ---
 
@@ -37,33 +37,32 @@ Read [`vibe-coding-guide.md`](vibe-coding-guide.md) before starting Build 0 — 
 
 ## 3. Course progression
 
-Each Build ships with five files, numbered in the order a student follows them:
+Each Build ships with four files, numbered in the order a student follows them:
 
 - `README.md` — at-a-glance + start-here pointers
 - `1-lesson.md` — concept + API + value (read this first)
 - `2-walkthrough.md` — the vibe-coded exercise (1–3 hours of work)
 - `3-quiz.md` — 5 multiple-choice (pass = 4/5)
-- `video-script.md` — production-ready talk track + shot list for the video version of the lesson
 
-The video version of each lesson is the canonical learning surface — most partners watch the video, do the walkthrough, then take the quiz. The markdown lesson is the searchable transcript.
+Most partners read the lesson, do the walkthrough, then sit the quiz.
 
-| # | Title | Capability | Effort | Tier | Video |
-|---|---|---|---|---|---|
-| **0** | [Hello ARAG](builds/build-00-hello-arag/) | Provision a KB, make first calls, set up vibe-coding | 2–3 hrs | Tier 1 | 12 min |
-| **1** | [The Five Primitives](builds/build-01-five-primitives/) | Tour of `/find`, `/ask`, `/ask`+schema, `/graph`, `/resource` | 2 hrs | Tier 1 | 15 min |
-| **2** | [Drop-in Widgets](builds/build-02-drop-in-widgets/) | Branded `<nuclia-search-bar>`, `<nuclia-chat>` on a real site | 1.5 hrs | Tier 1 | 8 min |
-| **3** | [Conversational Surfaces](builds/build-03-conversational-surfaces/) | Vibe-coded chat UI with two prompt modes (prospect / member) | 3 hrs | Tier 2 | 12 min |
-| **4** | [Multilingual & Voice Switching](builds/build-04-multilingual-and-voice/) | Query prefixes for language, persona, resource scoping | 1.5 hrs | Tier 2 | 8 min |
-| **5** | [Structured Outputs](builds/build-05-structured-outputs/) | `answer_json_schema` workflows: FAQ, taxonomy, comparison | 3 hrs | Tier 3 | 12 min |
-| **6** | [Data-Augmentation Agents](builds/build-06-data-augmentation-agents/) | Generator, Labeller, Graph agents — the three ingest-time enrichment patterns | 2 hrs | Tier 4 prep | 10 min |
-| **7** | [Smart Filters & Labelsets](builds/build-07-smart-filters/) | Content-type + label-based filtering UI (powered by Build 6's labeller) | 2 hrs | Tier 1–2 | 8 min |
-| **8** | [Knowledge Graph 101](builds/build-08-knowledge-graph/) | Typed graph navigation (powered by Build 6's graph agent) | 3 hrs | Tier 4 | 12 min |
-| **9** | [Field Engineering](builds/build-09-field-engineering/) | Custom fields (`callToAction`, `searchResultDisplay`) drive AI behaviour | 2 hrs | Tier 2–3 | 10 min |
-| **10** | [Composite RAG](builds/build-10-composite-rag/) | Chain calls; retry-on-low-confidence flow | 2.5 hrs | Tier 3–4 | 10 min |
-| **11** | [Production Readiness](builds/build-11-production-readiness/) | Residency, BYO-LLM, rate limits, observability — CTO conversations | 2 hrs | Tier 4 | 10 min |
-| **12** | [Capstone Prep](builds/build-12-capstone-prep/) | Plan and prompt the capstone vibe-code session | 2 hrs | All | 15 min |
-| **— Final exam —** | [final-exam.md](final-exam.md) | 20 MC, open-book, pass = 16/20 (80%) | 30 min | — | — |
-| **13** | [The Capstone](builds/build-13-capstone/) | Ship a wow build: [Atlas Operations](builds/build-13-capstone/atlas-operations/) (Enterprise) or [Aurora Concierge](builds/build-13-capstone/aurora-concierge/) (CX) | 4–8 wks | All | — |
+| # | Title | Capability | Effort | Tier |
+|---|---|---|---|---|
+| **0** | [Hello ARAG](builds/build-00-hello-arag/) | Provision a KB, make first calls, set up vibe-coding | 2–3 hrs | Tier 1 |
+| **1** | [The Five Primitives](builds/build-01-five-primitives/) | Tour of `/find`, `/ask`, `/ask`+schema, `/graph`, `/resource` | 2 hrs | Tier 1 |
+| **2** | [Drop-in Widgets](builds/build-02-drop-in-widgets/) | Branded `<nuclia-search-bar>`, `<nuclia-chat>` on a real site | 1.5 hrs | Tier 1 |
+| **3** | [Conversational Surfaces](builds/build-03-conversational-surfaces/) | Vibe-coded chat UI with two prompt modes (prospect / member) | 3 hrs | Tier 2 |
+| **4** | [Multilingual & Voice Switching](builds/build-04-multilingual-and-voice/) | Query prefixes for language, persona, resource scoping | 1.5 hrs | Tier 2 |
+| **5** | [Structured Outputs](builds/build-05-structured-outputs/) | `answer_json_schema` workflows: FAQ, taxonomy, comparison | 3 hrs | Tier 3 |
+| **6** | [Data-Augmentation Agents](builds/build-06-data-augmentation-agents/) | Generator, Labeller, Graph agents — the three ingest-time enrichment patterns | 2 hrs | Tier 4 prep |
+| **7** | [Smart Filters & Labelsets](builds/build-07-smart-filters/) | Content-type + label-based filtering UI (powered by Build 6's labeller) | 2 hrs | Tier 1–2 |
+| **8** | [Knowledge Graph 101](builds/build-08-knowledge-graph/) | Typed graph navigation (powered by Build 6's graph agent) | 3 hrs | Tier 4 |
+| **9** | [Field Engineering](builds/build-09-field-engineering/) | Custom fields (`callToAction`, `searchResultDisplay`) drive AI behaviour | 2 hrs | Tier 2–3 |
+| **10** | [Composite RAG](builds/build-10-composite-rag/) | Chain calls; retry-on-low-confidence flow | 2.5 hrs | Tier 3–4 |
+| **11** | [Production Readiness](builds/build-11-production-readiness/) | Residency, BYO-LLM, rate limits, observability — CTO conversations | 2 hrs | Tier 4 |
+| **12** | [Capstone Prep](builds/build-12-capstone-prep/) | Plan and prompt the capstone vibe-code session | 2 hrs | All |
+| **— Final exam —** | [final-exam.md](final-exam.md) | 20 MC, open-book, pass = 16/20 (80%) | 30 min | — |
+| **13** | [The Capstone](builds/build-13-capstone/) | Ship a wow build: [Atlas Operations](builds/build-13-capstone/atlas-operations/) (Enterprise) or [Aurora Concierge](builds/build-13-capstone/aurora-concierge/) (CX) | 4–8 wks | All |
 
 Total course effort: ~27–42 hours of focused work for Builds 0–12, plus the 4–8 week capstone.
 

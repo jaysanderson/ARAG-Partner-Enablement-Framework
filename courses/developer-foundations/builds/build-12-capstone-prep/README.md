@@ -12,14 +12,12 @@
 | **Tier mapped to** | All tiers (the synthesis) |
 | **Prerequisite** | Builds 0–10 + the final exam |
 | **Estimated effort** | 2 hours focused |
-| **Video length** | 15 minutes |
 
 ## Start here
 
 1. **[lesson.md](1-lesson.md)** — capstone variant choice, the master prompt set, the 25-minute demo arc.
-2. **[video-script.md](video-script.md)** — 15-minute live planning session.
-3. **[walkthrough.md](2-walkthrough.md)** — write the planning doc, pick the variant, draft the 8 master prompts.
-4. **[quiz.md](3-quiz.md)** — 5 multiple-choice. Pass = 4/5.
+2. **[walkthrough.md](2-walkthrough.md)** — write the planning doc, pick the variant, draft the 8 master prompts.
+3. **[quiz.md](3-quiz.md)** — 5 multiple-choice. Pass = 4/5.
 
 ## What you can do after this Build
 

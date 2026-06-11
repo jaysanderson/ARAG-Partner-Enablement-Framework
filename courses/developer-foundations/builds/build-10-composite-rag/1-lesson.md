@@ -1,6 +1,6 @@
 # Build 10 — Lesson: Composite RAG
 
-> Read time: 10 minutes. Companion to the 10-minute [video](video-script.md).
+> Read time: 10 minutes.
 
 ## Why partners learn this
 

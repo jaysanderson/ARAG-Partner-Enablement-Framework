@@ -1,6 +1,6 @@
 # Build 5 — Lesson: Structured Outputs
 
-> Read time: 12 minutes. Companion to the 12-minute [video](video-script.md).
+> Read time: 12 minutes.
 >
 > **This is the most important Build in Foundations.** Tier 3 deals open here.
 

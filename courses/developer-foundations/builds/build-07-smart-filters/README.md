@@ -10,14 +10,12 @@
 | **Tier mapped to** | Tier 1–2 |
 | **Prerequisite** | [Build 5](../build-05-structured-outputs/) |
 | **Estimated effort** | 2 hours focused |
-| **Video length** | 8 minutes |
 
 ## Start here
 
 1. **[lesson.md](1-lesson.md)** — `filters` array, icon-path filters, label-path filters, labelset discovery.
-2. **[video-script.md](video-script.md)** — 8-minute live build.
-3. **[walkthrough.md](2-walkthrough.md)** — design a labelset + wire a filterable search UI.
-4. **[quiz.md](3-quiz.md)** — 5 MC + 1 short answer.
+2. **[walkthrough.md](2-walkthrough.md)** — design a labelset + wire a filterable search UI.
+3. **[quiz.md](3-quiz.md)** — 5 MC + 1 short answer.
 
 ## What you can do after this Build
 

@@ -1,6 +1,6 @@
 # Build 3 — Lesson: Conversational Surfaces
 
-> Read time: 12 minutes. Companion to the 12-minute [video](video-script.md).
+> Read time: 12 minutes.
 
 ## Why this is in the course
 
