@@ -588,6 +588,29 @@ const sections = order
 
 const css = fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8');
 
+// Persistent course-menu sidebar (the player chrome an LMS learner expects).
+// The router highlights the link of the page currently on screen.
+function sidebarNav() {
+  const link = (id, label) => `<a href="#${id}">${escapeHtml(label)}</a>`;
+  const group = (b) => {
+    const subs = b.isCapstone
+      ? link(`${b.id}-atlas`, 'Atlas Operations') + link(`${b.id}-aurora`, 'Aurora Concierge')
+      : link(`${b.id}-lesson`, 'Lesson') + link(`${b.id}-walkthrough`, 'Walkthrough') + link(`${b.id}-quiz`, 'Quiz');
+    return `<div class="grp">${link(b.id, b.title)}<div class="sub">${subs}</div></div>`;
+  };
+  return (
+    '<nav class="sidebar">' +
+    '<p class="brand">Developer Foundations</p>' +
+    link('home', 'Welcome') +
+    link('overview', 'Course overview') +
+    link('vibe-coding-guide', 'Vibe-coding guide') +
+    buildMeta.filter((b) => !b.isCapstone).map(group).join('') +
+    `<div class="grp">${link('final-exam', 'Final Exam')}</div>` +
+    buildMeta.filter((b) => b.isCapstone).map(group).join('') +
+    '</nav>'
+  );
+}
+
 // Hash router: shows the section the URL hash points at (or contains), hides
 // the rest, scrolls to the right place, and keeps the document title in sync.
 // Link clicks are intercepted and routed via pushState so the browser never
@@ -597,9 +620,22 @@ const ROUTER = `
 (() => {
   history.scrollRestoration = 'manual';
 
-  // SCORM 1.2 glue: when launched from an LMS, report status, score on the
-  // final exam, and bookmark the current page. No-op in a plain browser.
-  const lms = (() => {
+  // SCORM driver glue: inside the package, this page runs in the content
+  // frame of scormdriver/indexAPI.html, which exposes the Rustici driver API
+  // on the parent window. The driver owns all LMS communication; we hand it
+  // bookmarks and exam results. Resume is driver-native: it relaunches
+  // index.html with the bookmarked #hash appended.
+  const driver = (() => {
+    try {
+      const p = window.parent;
+      if (p && p !== window && typeof p.SetBookmark === 'function' && typeof p.SetReachedEnd === 'function') return p;
+    } catch {}
+    return null;
+  })();
+
+  // Fallback SCORM 1.2 glue for running this single file as a bare SCO
+  // (no driver): talk to the LMS API directly. No-op in a plain browser.
+  const lms = driver ? null : (() => {
     const find = (win) => {
       for (let i = 0; i < 10 && win; i++) {
         try { if (win.API) return win.API; } catch { return null; }
@@ -628,10 +664,13 @@ const ROUTER = `
     const page = target?.closest('section.page') ?? document.getElementById('home');
     document.querySelectorAll('section.page.current').forEach((s) => s.classList.remove('current'));
     page.classList.add('current');
+    document.querySelectorAll('.sidebar a.active').forEach((a) => a.classList.remove('active'));
+    document.querySelector(".sidebar a[href='#" + page.id + "']")?.classList.add('active');
     if (target && target !== page) target.scrollIntoView();
     else window.scrollTo(0, 0);
     document.title = (page.querySelector('h1')?.textContent ?? 'Developer Foundations') + ' \\u00b7 Developer Foundations';
-    if (lms) lms.LMSSetValue('cmi.core.lesson_location', location.hash);
+    if (driver) driver.SetBookmark('index.html' + location.hash);
+    else if (lms) lms.LMSSetValue('cmi.core.lesson_location', location.hash);
   };
   document.addEventListener('click', (e) => {
     const a = e.target.closest?.('a[href^="#"]');
@@ -651,12 +690,23 @@ const ROUTER = `
 
   // LMS hook for the shared quiz grader: report the final exam.
   window.__reportQuiz = (scope, right, answered, total, pass) => {
-    if (!lms || scope.id !== 'final-exam' || answered < total) return;
-    lms.LMSSetValue('cmi.core.score.min', '0');
-    lms.LMSSetValue('cmi.core.score.max', String(total));
-    lms.LMSSetValue('cmi.core.score.raw', String(right));
-    if (right >= pass) lms.LMSSetValue('cmi.core.lesson_status', 'passed');
-    lms.LMSCommit('');
+    if (scope.id !== 'final-exam' || answered < total) return;
+    if (driver) {
+      driver.SetScore(right, total, 0);
+      if (right >= pass) {
+        driver.SetPassed();
+        driver.SetReachedEnd();
+      } else {
+        driver.SetFailed();
+      }
+      driver.CommitData();
+    } else if (lms) {
+      lms.LMSSetValue('cmi.core.score.min', '0');
+      lms.LMSSetValue('cmi.core.score.max', String(total));
+      lms.LMSSetValue('cmi.core.score.raw', String(right));
+      if (right >= pass) lms.LMSSetValue('cmi.core.lesson_status', 'passed');
+      lms.LMSCommit('');
+    }
   };
 })();
 `;
@@ -716,12 +766,17 @@ ${css}
 <noscript><style>section.page { display: block !important; }</style></noscript>
 </head>
 <body>
+<div class="layout">
+${sidebarNav()}
+<div class="content">
 <main>
 ${sections}
 </main>
 <footer class="site-footer">
   <p>Developer Foundations · Progress Agentic RAG Partner Enablement Framework</p>
 </footer>
+</div>
+</div>
 <script>${ROUTER}
 ${GRADER}</script>
 </body>
@@ -735,158 +790,62 @@ ${GRADER}</script>
 // completed-on-view, and each quiz reports its own score and passed/failed.
 // ---------------------------------------------------------------------------
 
-const xmlEsc = (s) =>
-  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+// Package layout mirrors a Rustici-driver export (e.g. Articulate Rise):
+//   imsmanifest.xml + metadata.xml + xsds at root,
+//   scormdriver/  — the vendored SCORM driver; the SCO launch point,
+//   scormcontent/index.html — the whole course (with its own sidebar menu).
+// The driver owns all LMS communication; the content hands it bookmarks and
+// exam results via parent.SetBookmark / SetScore / SetPassed / SetReachedEnd.
+const TEMPLATE_DIR = path.join(__dirname, 'scorm-template');
 
-// Friendly menu titles per page (the LMS tree supplies the context, so child
-// items use short labels under their build's parent folder).
-function scormTitle(page) {
-  if (page.kind === 'landing') return 'Welcome';
-  if (page.id === 'overview') return 'Course overview';
-  if (page.id === 'vibe-coding-guide') return 'Vibe-coding guide';
-  if (page.kind === 'capstone') return 'Capstone brief';
-  if (page.id.endsWith('-atlas')) return 'Atlas Operations (Enterprise)';
-  if (page.id.endsWith('-aurora')) return 'Aurora Concierge (Customer Experience)';
-  if (page.partLabel) return page.partLabel; // Overview / Lesson / Walkthrough / Quiz
-  return page.title;
+function templateFiles() {
+  const files = [];
+  (function walk(dir, rel) {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      const abs = path.join(dir, e.name);
+      const r = rel ? `${rel}/${e.name}` : e.name;
+      if (e.isDirectory()) walk(abs, r);
+      else files.push({ name: r, data: fs.readFileSync(abs) });
+    }
+  })(TEMPLATE_DIR, '');
+  return files;
 }
 
-function scormManifest() {
-  const itemXml = (page, indent) => {
-    const mastery = page.kind === 'quiz' ? `\n${indent}  <adlcp:masteryscore>80</adlcp:masteryscore>` : '';
-    return `${indent}<item identifier="item-${page.id}" identifierref="res-${page.id}" isvisible="true">\n${indent}  <title>${xmlEsc(scormTitle(page))}</title>${mastery}\n${indent}</item>`;
-  };
-
-  const groupXml = (meta) => {
-    const children = order.filter((p) => p.build === meta.dir);
-    return `      <item identifier="item-grp-${meta.id}" isvisible="true">\n        <title>${xmlEsc(meta.title)}</title>\n${children.map((c) => itemXml(c, '        ')).join('\n')}\n      </item>`;
-  };
-
-  // Menu order: course-level pages, each build as a folder of SCOs, the final
-  // exam, then the capstone folder last.
-  const items = [
-    itemXml(bySrc('README.md'), '      '),
-    itemXml(bySrc('OVERVIEW.md'), '      '),
-    itemXml(bySrc('vibe-coding-guide.md'), '      '),
-    ...buildMeta.filter((m) => !m.isCapstone).map(groupXml),
-    itemXml(bySrc('final-exam.md'), '      '),
-    ...buildMeta.filter((m) => m.isCapstone).map(groupXml),
-  ];
-
-  const resources = order
-    .map(
-      (p) => `    <resource identifier="res-${p.id}" type="webcontent" adlcp:scormtype="sco" href="${p.id}.html">
-      <file href="${p.id}.html"/>
-      <dependency identifierref="res-common"/>
-    </resource>`,
-    )
+function scormManifest(driverFiles) {
+  const fileList = [
+    ...driverFiles.filter((f) => f.name.startsWith('scormdriver/')).map((f) => f.name),
+    'scormcontent/index.html',
+  ]
+    .map((f) => `      <file href="${f}" />`)
     .join('\n');
 
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<manifest identifier="com.progress.arag.developer-foundations" version="1.2"
-    xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
-    xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd">
+  return `<?xml version="1.0" ?>
+<manifest identifier="com.progress.arag.developer-foundations" version="1"
+  xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
+  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd
+                      http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd">
   <metadata>
     <schema>ADL SCORM</schema>
     <schemaversion>1.2</schemaversion>
+    <adlcp:location>metadata.xml</adlcp:location>
   </metadata>
-  <organizations default="org-developer-foundations">
-    <organization identifier="org-developer-foundations">
-      <title>Developer Foundations · Progress Agentic RAG</title>
-${items.join('\n')}
+  <organizations default="developer_foundations">
+      <organization identifier="developer_foundations">
+      <title>Developer Foundations</title>
+      <item identifier="i1" identifierref="r1" isvisible="true">
+        <title>Developer Foundations</title>
+        <adlcp:datafromlms>datafromlms</adlcp:datafromlms>
+      </item>
     </organization>
   </organizations>
   <resources>
-${resources}
-    <resource identifier="res-common" type="webcontent" adlcp:scormtype="asset">
-      <file href="style.css"/>
-      <file href="scorm.js"/>
+    <resource identifier="r1" type="webcontent" adlcp:scormtype="sco" href="scormdriver/indexAPI.html">
+${fileList}
     </resource>
   </resources>
 </manifest>
-`;
-}
-
-// Per-SCO runtime: standard API discovery; content pages complete on view,
-// quiz pages report their own score and passed/failed via the shared grader.
-const SCORM_JS = `
-(() => {
-  const find = (win) => {
-    for (let i = 0; i < 10 && win; i++) {
-      try { if (win.API) return win.API; } catch { return null; }
-      if (win.parent === win) break;
-      win = win.parent;
-    }
-    return null;
-  };
-  let api = null;
-  try { api = find(window) ?? (window.opener ? find(window.opener) : null); } catch { api = null; }
-  if (api) {
-    api.LMSInitialize('');
-    window.addEventListener('beforeunload', () => api.LMSFinish(''));
-    if (document.body.dataset.scoKind === 'quiz') {
-      const st = api.LMSGetValue('cmi.core.lesson_status');
-      if (st === 'not attempted' || st === '') api.LMSSetValue('cmi.core.lesson_status', 'incomplete');
-    } else {
-      api.LMSSetValue('cmi.core.lesson_status', 'completed');
-    }
-    api.LMSCommit('');
-  }
-  window.__reportQuiz = (scope, right, answered, total, pass) => {
-    if (!api || answered < total) return;
-    api.LMSSetValue('cmi.core.score.min', '0');
-    api.LMSSetValue('cmi.core.score.max', String(total));
-    api.LMSSetValue('cmi.core.score.raw', String(right));
-    api.LMSSetValue('cmi.core.lesson_status', right >= pass ? 'passed' : 'failed');
-    api.LMSCommit('');
-  };
-})();
-${GRADER}`;
-
-// In a multi-SCO package the LMS menu is the navigation: cross-page links
-// become plain text; same-page heading anchors keep working.
-function scormUnlink(html, page) {
-  return html.replace(/<a\s+href="([^"]*)"([^>]*)>([\s\S]*?)<\/a>/g, (m, href, attrs, inner) => {
-    if (/^(https?:|mailto:)/.test(href)) return m;
-    if (href.startsWith('#')) return `<a href="#${page.id}--${href.slice(1)}">${inner}</a>`;
-    return inner;
-  });
-}
-
-const SUBMIT_BLOCK_SCORM = SUBMIT_BLOCK
-  .replace('<a href="#final-exam">final exam</a>', '<strong>final exam</strong> (in the course menu)')
-  .replace('<a href="#build-13-atlas">Atlas Operations</a>', '<strong>Atlas Operations</strong>')
-  .replace('<a href="#build-13-aurora">Aurora Concierge</a>', '<strong>Aurora Concierge</strong>');
-
-function scormPage(page) {
-  let body;
-  if (page.kind === 'landing') {
-    body = scormUnlink(renderMarkdown(read('README.md'), page.id), page);
-  } else if (page.kind === 'quiz') {
-    body = scormUnlink(renderQuiz(read(page.src), page.id), page);
-  } else if (page.kind === 'capstone') {
-    body = scormUnlink(renderMarkdown(read(page.src), page.id), page) + SUBMIT_BLOCK_SCORM;
-  } else {
-    body = scormUnlink(renderMarkdown(read(page.src), page.id), page);
-  }
-  const kind = page.kind === 'quiz' ? 'quiz' : 'content';
-  return `<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${escapeHtml(page.title)} · Developer Foundations</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body class="sco" data-sco-kind="${kind}">
-<main>
-${body}
-</main>
-<script src="scorm.js"></script>
-</body>
-</html>
 `;
 }
 
@@ -946,23 +905,23 @@ fs.mkdirSync(OUT, { recursive: true });
 fs.writeFileSync(path.join(OUT, 'index.html'), doc);
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
 
-// The four standard SCORM 1.2 definition files (IMS/ADL schemas) belong at
-// the package root — strict LMS validators reject packages without them.
+// Root schema files, matching the reference package exactly (the reference
+// ships adlcp/ims_xml/imscp at root; imsmd is referenced but not shipped).
 const SCHEMA_DIR = path.join(__dirname, 'scorm-schemas');
-const schemaEntries = fs
-  .readdirSync(SCHEMA_DIR)
-  .filter((f) => f.endsWith('.xsd'))
-  .map((f) => ({ name: f, data: fs.readFileSync(path.join(SCHEMA_DIR, f)) }));
+const schemaEntries = ['adlcp_rootv1p2.xsd', 'ims_xml.xsd', 'imscp_rootv1p1p2.xsd'].map((f) => ({
+  name: f,
+  data: fs.readFileSync(path.join(SCHEMA_DIR, f)),
+}));
 
+const driverFiles = templateFiles(); // scormdriver/*, metadata.xml, ScormEnginePackageProperties.xsd
 const zip = buildZip([
-  { name: 'imsmanifest.xml', data: Buffer.from(scormManifest(), 'utf8') },
+  { name: 'imsmanifest.xml', data: Buffer.from(scormManifest(driverFiles), 'utf8') },
   ...schemaEntries,
-  { name: 'style.css', data: Buffer.from(css, 'utf8') },
-  { name: 'scorm.js', data: Buffer.from(SCORM_JS, 'utf8') },
-  ...order.map((p) => ({ name: `${p.id}.html`, data: Buffer.from(scormPage(p), 'utf8') })),
+  ...driverFiles,
+  { name: 'scormcontent/index.html', data: Buffer.from(doc, 'utf8') },
 ]);
 fs.writeFileSync(path.join(OUT, 'developer-foundations-scorm12.zip'), zip);
 
 const kb = Math.round(Buffer.byteLength(doc) / 1024);
 console.log(`Built ${order.length} sections into one file → docs/index.html (${kb} KB)`);
-console.log(`SCORM 1.2 multi-SCO package (${order.length} SCOs) → docs/developer-foundations-scorm12.zip (${Math.round(zip.length / 1024)} KB)`);
+console.log(`SCORM 1.2 package (Rustici-driver layout) → docs/developer-foundations-scorm12.zip (${Math.round(zip.length / 1024)} KB)`);

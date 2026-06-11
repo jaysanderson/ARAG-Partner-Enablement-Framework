@@ -34,26 +34,33 @@ this tool is build-time only and ships nothing to the browser.
 
 ## SCORM package (for LMS import)
 
-The build also emits **`docs/developer-foundations-scorm12.zip`** — a standard
-SCORM 1.2 **multi-SCO** package for Moodle, Cornerstone, Docebo, SCORM Cloud,
-and any other SCORM-1.2-compliant LMS:
+The build also emits **`docs/developer-foundations-scorm12.zip`** — a SCORM
+1.2 package in the same layout as Progress's authoring-tool exports
+(Articulate Rise / Rustici SCORM driver):
 
-- `imsmanifest.xml` carries the **full course tree** (Welcome, Course
-  overview, Vibe-coding guide, each Build as a folder of Overview / Lesson /
-  Walkthrough / Quiz, the Final exam, then the Capstone) — the LMS renders it
-  as the course menu and provides all navigation.
-- **Every course page is its own SCO** (59 of them, sharing one `style.css` +
-  `scorm.js` via a manifest dependency), so the LMS tracks per-item progress:
-  content pages report `completed` on view; each quiz reports its own score
-  (`cmi.core.score.raw`) and `passed`/`failed` against its 80% mastery score
-  (4/5 per build, 16/20 on the final exam).
-- Cross-page links inside SCOs are rendered as plain text (the LMS menu is the
-  navigation); the four standard IMS/ADL schema files ship at the package
-  root.
+```
+imsmanifest.xml, metadata.xml, *.xsd     (package root)
+scormdriver/                             (vendored Rustici driver — the SCO
+                                          launch point, indexAPI.html)
+scormcontent/index.html                  (the whole course, with its own
+                                          sidebar course menu)
+```
 
-The single-file `docs/index.html` remains the web/standalone version — its own
-inline SCORM glue (bookmarking + exam reporting) only matters if you wrap that
-one file as a SCO yourself.
+- The **driver owns all LMS communication** (API discovery, initialise,
+  commit, exit). The course hands it bookmarks and results via
+  `SetBookmark` / `SetScore` / `SetPassed` / `SetFailed` / `SetReachedEnd`.
+- **Resume** is driver-native: the bookmark is `index.html#<page>`, so a
+  relaunch reopens the learner's last page.
+- The **final exam** reports its score to the gradebook and sets
+  `passed` at 16+/20 (or `failed`), plus course completion via
+  `SetReachedEnd`.
+- The course UI shows a persistent **sidebar course menu** (all builds with
+  Lesson / Walkthrough / Quiz), so inside the LMS player it behaves like a
+  standard authored course, not a bare web page.
+
+The driver files under `tools/build-site/scorm-template/` were taken from a
+Progress (Corticon) Rise export and are reused verbatim apart from the content
+launch URL. `docs/index.html` is the same course for web/standalone use.
 
 ## Rebuild (after any content change)
 
