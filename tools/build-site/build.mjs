@@ -1023,9 +1023,136 @@ function buildZip(entries) {
   return Buffer.concat([...locals, cd, eocd]);
 }
 
+// ---------------------------------------------------------------------------
+// One-page course overview — a standalone, print-friendly handout
+// (docs/course-overview.html). The curriculum table is parsed from the course
+// README so it stays in sync; the facts come from the README frontmatter.
+// ---------------------------------------------------------------------------
+
+function onePager() {
+  const readme = read('README.md');
+  const block = readme.slice(readme.indexOf('## 3.'), readme.indexOf('## 4.'));
+  const cell = (md) => inline(md.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')); // drop links → text
+  const rows = block
+    .split('\n')
+    .filter((l) => /^\|\s*\*\*/.test(l))
+    .map((l) => l.replace(/^\|/, '').replace(/\|\s*$/, '').split('|').map((c) => c.trim()))
+    .map(([num, title, cap, effort, tier]) => {
+      const isExam = /final exam/i.test(num);
+      const n = num.replace(/\*\*/g, '').replace(/[—–-]/g, '').trim();
+      return { isExam, n, title: cell(title), cap: cell(cap), effort: cell(effort), tier: cell(tier) };
+    });
+
+  const tableRows = rows
+    .map((r) =>
+      r.isExam
+        ? `<tr class="exam"><td colspan="2">📝 ${r.n}</td><td>${r.cap}</td><td>${r.effort}</td><td></td></tr>`
+        : `<tr><td class="num">${r.n}</td><td class="bt">${r.title}</td><td>${r.cap}</td><td>${r.effort}</td><td>${r.tier}</td></tr>`,
+    )
+    .join('\n');
+
+  const facts = [
+    ['Certification', 'Developer Foundations Practitioner (12-month validity)'],
+    ['Time commitment', '25–40 focused hours, across 4–8 weeks'],
+    ['Format', '13 hands-on builds + a capstone — lesson, walkthrough, quiz each'],
+    ['Prerequisites', 'None — this is the on-ramp'],
+    ['Who it’s for', 'Partner developers, solution engineers & SE leads building on ARAG'],
+    ['Next step', 'Advanced Extraction & Retrieval Strategies (AE&RS Specialist)'],
+  ]
+    .map(([k, v]) => `<div class="fact"><dt>${k}</dt><dd>${v}</dd></div>`)
+    .join('\n');
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Developer Foundations — Course Overview</title>
+<style>
+  :root{--ink:#1f2430;--soft:#5a6372;--line:#e3e6ea;--wash:#f6f7f9;--accent:#0a7d4f;--accent-ink:#08613e}
+  *{box-sizing:border-box}
+  body{margin:0;color:var(--ink);background:#fff;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:14px;line-height:1.5}
+  .sheet{max-width:60rem;margin:0 auto;padding:2rem 2.25rem}
+  header.hero{border-bottom:3px solid var(--accent);padding-bottom:1rem;margin-bottom:1.25rem}
+  .eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);margin:0}
+  h1{font-size:2rem;line-height:1.1;margin:.25rem 0 .4rem}
+  .tagline{font-size:1.02rem;color:var(--soft);margin:0;max-width:46rem}
+  .facts{display:grid;grid-template-columns:1fr 1fr;gap:.5rem 1.5rem;margin:1.25rem 0 1.5rem}
+  .fact{display:flex;gap:.6rem;border-bottom:1px solid var(--line);padding-bottom:.4rem}
+  .fact dt{flex:0 0 8.5rem;margin:0;font-weight:700;color:var(--accent-ink);font-size:.82rem}
+  .fact dd{margin:0;color:var(--ink)}
+  h2{font-size:.95rem;text-transform:uppercase;letter-spacing:.05em;color:var(--soft);
+    border-top:1px solid var(--line);padding-top:.9rem;margin:1.4rem 0 .6rem}
+  p.lead{margin:.2rem 0 1rem;max-width:50rem}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th{text-align:left;color:var(--soft);font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;
+    border-bottom:2px solid var(--line);padding:.3rem .5rem}
+  td{padding:.32rem .5rem;border-bottom:1px solid var(--line);vertical-align:top}
+  td.num{font-weight:800;color:var(--accent-ink);width:1.6rem;text-align:center}
+  td.bt{font-weight:700;white-space:nowrap}
+  tr.exam td{background:var(--wash);font-weight:600;color:var(--accent-ink)}
+  code{background:var(--wash);border-radius:3px;padding:.05em .3em;font-size:.92em}
+  .outcomes{columns:2;column-gap:1.5rem;margin:.2rem 0 0;padding-left:1.1rem}
+  .outcomes li{margin:.15rem 0;break-inside:avoid}
+  footer{margin-top:1.5rem;border-top:1px solid var(--line);padding-top:.8rem;
+    font-size:.78rem;color:var(--soft);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+  a{color:var(--accent-ink)}
+  @media (max-width:640px){.facts,.outcomes{grid-template-columns:1fr;columns:1}}
+  @media print{.sheet{max-width:none;padding:0}@page{margin:1.4cm}}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="hero">
+    <p class="eyebrow">Progress Agentic RAG · Partner Enablement</p>
+    <h1>Developer Foundations</h1>
+    <p class="tagline">The on-ramp course for partners building on Progress Agentic RAG. By the end you can stand in front of a customer’s CTO and ship a working, multi-surface RAG application against their own content.</p>
+  </header>
+
+  <dl class="facts">${facts}</dl>
+
+  <h2>What it is</h2>
+  <p class="lead">A breadth-first, hands-on tour of the whole platform. You won’t hand-write much code — the course runs on <strong>vibe coding</strong>: you direct an AI assistant (Claude, Cursor, Copilot) to build each pattern, and your job is knowing what to ask for, briefing the right API surface, and verifying what comes back. The goal is <strong>fluency</strong> — a customer describes their content problem, you know which primitive solves it in thirty seconds, and ninety minutes later there’s a working demo on their corpus with citations they can click.</p>
+
+  <h2>The curriculum</h2>
+  <table>
+    <thead><tr><th>#</th><th>Build</th><th>What you’ll be able to do</th><th>Effort</th><th>Tier</th></tr></thead>
+    <tbody>
+${tableRows}
+    </tbody>
+  </table>
+
+  <h2>What a graduate can do, unsupervised</h2>
+  <ul class="outcomes">
+    <li>Name and explain the five ARAG primitives and the core endpoints (<code>/find</code>, <code>/ask</code>, <code>/graph</code>).</li>
+    <li>Provision a Knowledge Box, ingest content, and configure labelsets.</li>
+    <li>Vibe-code a working multi-surface chat UI in under 90 minutes.</li>
+    <li>Design and ship an <code>answer_json_schema</code> workflow against a customer KB.</li>
+    <li>Recognise a graph-shaped problem and scope a typed knowledge graph.</li>
+    <li>Drive AI behaviour through field engineering, not code deploys.</li>
+    <li>Hold the CTO conversation: residency, BYO-LLM, rate limits, observability.</li>
+    <li>Plan and run the 25-minute end-to-end capstone demo.</li>
+  </ul>
+
+  <h2>Certification</h2>
+  <p class="lead">Pass every per-build quiz (4/5), the final exam (16/20), and defend the Build 13 capstone live to a Progress-led review board to earn the <strong>Developer Foundations Practitioner</strong> certification (12-month validity). A partner organisation needs at least one Practitioner on staff to reach Authorized tier.</p>
+
+  <footer>
+    <span>Developer Foundations · Progress Agentic RAG Partner Enablement Framework</span>
+    <span>Take the course: open <code>index.html</code> or import the SCORM package into your LMS</span>
+  </footer>
+</div>
+</body>
+</html>
+`;
+}
+
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });
 fs.writeFileSync(path.join(OUT, 'index.html'), doc);
+fs.writeFileSync(path.join(OUT, 'course-overview.html'), onePager());
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
 
 // scorm-template/ carries the reference package root verbatim (xsds, dtds,
@@ -1051,4 +1178,5 @@ for (const pkg of packages) {
 
 const kb = Math.round(Buffer.byteLength(doc) / 1024);
 console.log(`Built ${order.length} sections into one file → docs/index.html (${kb} KB)`);
+console.log(`One-page overview → docs/course-overview.html`);
 console.log(`${packages.length} SCORM 2004 4th Ed packages → docs/scorm/`);
