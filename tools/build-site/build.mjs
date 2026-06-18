@@ -725,7 +725,6 @@ const routerScript = ({ defaultId, examId, completeOnLaunch }) => `
       if (href !== location.hash) history.pushState(null, '', href);
     } catch {
       location.hash = href; // sandboxed LMS players can refuse pushState
-      return;
     }
     route();
   });
