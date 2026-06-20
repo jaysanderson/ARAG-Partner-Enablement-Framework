@@ -70,7 +70,7 @@ function passesProductBlocklist(value: string): boolean {
 
 What partners say in the room shifts from *"flip the toggle to your tenant"* to *"BYO-LLM is a per-KB platform setting we'll wire in your tenant during the co-engineered POC — for today's demo we're on the platform default, with residency you can verify in this header."* You're still answering the lock-in objection, you're just answering it honestly: BYO-LLM is a platform capability you'll configure together, not a UI lever you ship pre-built.
 
-**See it in the capstone:** `Capstone-Atlas-Operations/src/lib/env.ts` (no `VITE_BYO_LLM_*` vars), `src/lib/graphClient.ts → BYO_VALUE_BLOCKLIST`, `src/pages/Ops.tsx` (no BYO-LLM tile in the observability strip). The Atlas Operations capstone descopes BYO-LLM exactly this way — and the demo is stronger for it.
+**See it in the capstone:** `src/lib/env.ts` (no `VITE_BYO_LLM_*` vars), `src/lib/graphClient.ts → BYO_VALUE_BLOCKLIST`, `src/pages/Ops.tsx` (no BYO-LLM tile in the observability strip). The Atlas Operations capstone descopes BYO-LLM exactly this way — and the demo is stronger for it.
 
 ## Rate limits
 
@@ -184,7 +184,7 @@ Two layers in one component: a CMO-readable explanation in plain English, and an
 
 **Common failure mode:** rendering the dev disclosure by default. Always opt-in; the raw filter JSON spooks non-technical viewers and clutters the UI for shoppers. The toggle stays collapsed until an admin asks for it.
 
-**See it in the capstone:** `Capstone-Aurora-Concierge/src/pages/ForYou.tsx` → `WhyAmISeeingThis` component + `showDevQuery` toggle.
+**See it in the capstone:** `src/pages/ForYou.tsx` → `WhyAmISeeingThis` component + `showDevQuery` toggle.
 
 ## What's next
 

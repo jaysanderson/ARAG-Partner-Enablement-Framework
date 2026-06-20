@@ -1,14 +1,14 @@
 # Capstone Example — Atlas Operations (Enterprise)
 
-> **Status:** Brief shipped + reference implementation shipped.
+> **Status:** Brief shipped.
 > **Role in the programme:** Build 13 capstone + flagship reference + strategic-account sales-room closer.
 > **Owner:** Progress GTM (programme); Progress Solution lead (build).
 > **Target ship:** End of 90-day rollout window (Day 90).
 > **Companion docs:** [`../../../../../README.md`](../../../../../README.md) (umbrella framework), [`../README.md`](../README.md) (Build 13 overview + variant chooser), [`../aurora-concierge/README.md`](../aurora-concierge/README.md) (the other variant).
 
-## Reference implementation
+## What you'll build
 
-The complete reference app is at **[github.com/jaysanderson/Capstone-Atlas-Operations](https://github.com/jaysanderson/Capstone-Atlas-Operations)** — a Vite + React + TypeScript + Tailwind chassis that scores 100% against this brief once provisioned against a populated Progress Agentic RAG KB. It includes:
+A Vite + React + TypeScript + Tailwind app that satisfies this brief once provisioned against a populated Progress Agentic RAG KB. It covers:
 
 - All five demo surfaces + landing + an `/ops` mock observability page.
 - All three Tier-3 workflows (Onboarding-Path, Battle-Card, Compliance-Trace).
@@ -17,7 +17,7 @@ The complete reference app is at **[github.com/jaysanderson/Capstone-Atlas-Opera
 - Seed and verification scripts.
 - Fly.io deploy config.
 
-See the repo's `README.md` for quick-start and `KB_SETUP.md` for the end-to-end ingest checklist.
+See [`corpus/README.md`](corpus/README.md) for the end-to-end ingest checklist.
 
 ---
 
@@ -27,7 +27,7 @@ The Partner Enablement Framework names two top-priority assets: the Agent Worksh
 
 1. **Capstone.** It's the final certification artefact for every track. An individual at Solution-4 or Deliver-4 must have shipped and demoed a capstone example against a real customer's corpus.
 2. **Sales-room closer.** It's the one thing a partner walks into a Fortune 500 CTO's office with that *cannot be reproduced* by a competitor's free trial. Atlas Operations is the proof that ARAG is a platform, not a chatbot.
-3. **Re-skin chassis.** Every partner customer demo starts with a fork of Atlas Operations. Partners customise the corpus, the entity schema, the branding, and the workflows — but the chassis ships in working condition. This is how the programme scales without every partner SE re-inventing the same demo from one capstone to the next.
+3. **Re-skin the build.** Every partner customer demo starts from the Atlas Operations build. Partners customise the corpus, the entity schema, the branding, and the workflows — but the architecture is proven. This is how the programme scales without every partner SE re-inventing the same demo from one capstone to the next.
 
 Foundations Builds 0–6 prove what ARAG *can do* across the individual patterns. Atlas Operations proves what an *enterprise platform built on ARAG* looks like in production, in one coherent product, against a recognisable enterprise corpus, with at least one custom data-augmentation agent live.
 
@@ -66,20 +66,15 @@ Atlas Operations runs on **one ARAG Knowledge Box** (`kb-atlas-operations`). Doc
 
 A query for "incident root cause" filtered to `business_unit:engineering` returns engineering incidents. A query for "policy" filtered to `business_unit:compliance` returns compliance policies. Cross-domain queries simply skip the filter. Same KB, same API, same auth token.
 
-Earlier iterations shipped with three labelsets (`business_unit` + `content_type` + `region`). Progress Agentic RAG's folder-name-as-labelset auto-detection during ingest is flat (one labelset name + a list of labels per ingest), so a drag-drop ingest can cleanly apply *one* labelset. The Foundations capstone scopes to that one — `business_unit` — to keep the partner-onboarding path no-code. Partners who want the extra labelsets back can apply them via the dashboard's labelset editor after ingest, or by running the optional seed script — both paths are documented in `Capstone-Atlas-Operations/corpus/README.md`.
+Earlier iterations shipped with three labelsets (`business_unit` + `content_type` + `region`). Progress Agentic RAG's folder-name-as-labelset auto-detection during ingest is flat (one labelset name + a list of labels per ingest), so a drag-drop ingest can cleanly apply *one* labelset. The Foundations capstone scopes to that one — `business_unit` — to keep the partner-onboarding path no-code. Partners who want the extra labelsets back can apply them via the dashboard's labelset editor after ingest, or by running the optional seed script — both paths are documented in [`corpus/README.md`](corpus/README.md).
 
 ### Where the corpus lives and how partners ingest it
 
-The seed corpus is available in **two places**:
-
-- **Canonical source:** [`Capstone-Atlas-Operations/corpus/business_unit/`](https://github.com/jaysanderson/Capstone-Atlas-Operations) on GitHub — alongside the runtime app code, the seed scripts, and the graph-agent spec. When a partner clones the capstone repo, the corpus comes with the code.
-- **Mirror in this framework:** [`./corpus/business_unit/`](corpus/business_unit/) — the same 320 markdown documents, kept in the framework so a partner can browse, download, or upload the corpus without cloning the capstone repo.
-
-Both copies are identical. The mirror is convenience; the canonical source is the capstone repo (where the seed scripts and runtime app also live).
+The seed corpus ships with this course at [`./corpus/business_unit/`](corpus/business_unit/) — 320 markdown documents, alongside the labelsets and anchor entities in [`corpus/README.md`](corpus/README.md).
 
 **The citizen-developer "Upload folder" ingest path** (primary):
 
-1. Partner clones `Capstone-Atlas-Operations`.
+1. Locate the `corpus/business_unit/` folder included with this course.
 2. Partner provisions an empty Knowledge Box in their Progress Agentic RAG dashboard (Step 1 of `corpus/README.md`).
 3. In the dashboard, partner opens the KB → **Resources** → **Upload** → **Upload folder**, picks the `corpus/business_unit/` folder, and enables the **"use folder names as label names"** option. Progress Agentic RAG applies `business_unit` as the labelset and the subfolder names (`hr`, `engineering`, etc.) as label values on every document.
 4. Done. No `npm`, no terminal, no `.env`.
@@ -112,7 +107,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 - Three custom Tier 3 workflows (schema-constrained generation) live and demo-ready.
 - One Tier 4 composite RAG flow live (the "incident root cause" workflow).
 - Rate-limit-aware client (documented; doesn't need stress-testing in the demo).
-- [Capstone-Atlas-Operations](https://github.com/jaysanderson/Capstone-Atlas-Operations) is the technical baseline — fork it, don't rebuild from zero. The repo is at `github.com/jaysanderson/Capstone-Atlas-Operations`.
+- Build it to the spec in this brief — the in-scope sections and the build plan below are your guide.
 - Re-skin playbook (Section 10) shipped alongside the build.
 - 25-minute demo script (Section 9) rehearsed by the build owner. Delivered live to the review board.
 
@@ -162,14 +157,14 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 ### 5.2 Frontend stack
 
-- **Framework:** Next.js 14 (App Router) or Vite + React 18 — choose whichever the build owner is fastest in. The `Capstone-Atlas-Operations` reference is Vite; staying consistent reduces fork cost.
+- **Framework:** Next.js 14 (App Router) or Vite + React 18 — choose whichever the build owner is fastest in. The Atlas Operations build uses Vite.
 - **Styling:** Tailwind CSS with a Atlas-Operations-specific palette (dark control-room aesthetic — slate-950 base, electric-blue and amber accents). Avoid the demo teal/navy palette so the two repos are visually distinct.
-- **Routing:** React Router v7 (matches `Capstone-Atlas-Operations`). Five top-level routes plus the landing page.
+- **Routing:** React Router v7. Five top-level routes plus the landing page.
 - **State:** React Context for the active KB, the demo "presenter mode" hotkeys, and (optionally) the language selector for the Concierge surface. No Redux, no Zustand — keep dependencies thin.
 
 ### 5.3 Backend stack
 
-- **ARAG only.** No custom backend. Atlas Operations talks directly to ARAG endpoints exactly the way `Capstone-Atlas-Operations` does. This is itself a demo point — *there is no middleware to maintain*.
+- **ARAG only.** No custom backend. Atlas Operations talks directly to ARAG endpoints. This is itself a demo point — *there is no middleware to maintain*.
 - **Generation backend:** Configured at the KB level via the Progress Agentic RAG dashboard. Not exposed in the demo UI (see Build 11 for when and how to surface BYO-LLM to a customer — descoped here so the demo only claims what it actually ships).
 
 ### 5.4 Data-augmentation agent — the typed graph
@@ -274,7 +269,7 @@ Total target: **8 weeks of focused work**, or **4 weeks at 2 FTE**. Phases can r
 
 ### Phase 3 — Build the chassis + Atlas Operations branding (Weeks 3–4)
 
-- Stand up a fresh Vite + React app in a private repo named `Capstone-Atlas-Operations`. Apply the Atlas design system (dark slate base, electric-blue and amber accents).
+- Stand up a fresh Vite + React app. Apply the Atlas design system (dark slate base, electric-blue and amber accents).
 - Wire the ARAG client wrapper (from Foundations Builds 0–6) into the chassis. Single env var: `NUCLIA_KB_ID=kb-atlas-operations`. All demo surfaces route through this one KB.
 - Build the static landing copy in the Atlas voice.
 - Wire the residency badge + live KB stats (resources, paragraphs, graph nodes) into the hero — these are the proof points the demo carries instead of a BYO-LLM toggle. The stats are read at page load via `/v1/kb/{id}/counters` and `/v1/kb/{id}/graph/nodes`.
@@ -316,7 +311,7 @@ Total target: **8 weeks of focused work**, or **4 weeks at 2 FTE**. Phases can r
 |---|---|---|
 | 1. Corpus + ingestion | 2 | Skill orchestration, anchor consistency editing, KB ingestion + labelset config |
 | 2. Graph agent | 1.5 | Agent design, schema tuning, full-corpus extraction run |
-| 3. Fork + reskin | 1 | Tailwind palette swap, landing page rewrite, residency badge + live KB stats in the hero |
+| 3. Chassis + reskin | 1 | App scaffold + Tailwind palette, landing page, residency badge + live KB stats in the hero |
 | 4. Workflows + composite RAG | 2 | Three schemas + UI for each, composite-RAG pipeline visualisation |
 | 5. Production readiness | 1 | Residency badge, observability panel, rate-limit-aware client |
 | 6. Demo + re-skin playbook | 0.5 | Script, rehearsal, (optional) recording, playbook |
@@ -432,7 +427,7 @@ This is the script the build owner rehearses to certification. Times are cumulat
 
 *[Return to landing page.]*
 
-> "What you've seen is one application built on one Knowledge Box, five business-unit labelsets, one extraction agent, all running in a single platform-resident region you can verify in our dashboard. Twenty-five minutes ago you couldn't have built this in five years. Today it's a fork of an open reference app, one labelset config, and an extraction agent your team configures.
+> "What you've seen is one application built on one Knowledge Box, five business-unit labelsets, one extraction agent, all running in a single platform-resident region you can verify in our dashboard. Twenty-five minutes ago you couldn't have built this in five years. Today it's a focused build against a proven spec, one labelset config, and an extraction agent your team configures.
 >
 > Three things you have right now that none of your other AI vendors offer:
 >
@@ -448,7 +443,7 @@ This is the script the build owner rehearses to certification. Times are cumulat
 
 ## 10. Re-Skin Playbook
 
-This section lives in the repo as a separate `RESKIN.md` once the build ships. Brief sketch here so partners know what they're signing up for.
+Capture the full version as a `RESKIN.md` alongside your build once it ships. Brief sketch here so partners know what they're signing up for.
 
 A partner takes Atlas Operations and re-points it at their customer's domain. The work is structured, time-boxed, and uses the same skills (`progress-kb-use-case-generator`, `arag-graph-agent`) that built the master.
 

@@ -42,7 +42,7 @@ We'll create three markdown files in here over the next 2 hours.
 
 ### 2a. Read both capstone briefs in full
 
-Open each in your editor (or in GitHub web view):
+Open each in your editor:
 
 - **[Atlas Operations](../build-13-capstone/atlas-operations/README.md)** — Enterprise / Operations buyer (CTO, CIO, Head of Infrastructure). Pitch: *"our ops team can't find anything fast enough; incidents take 4x as long as they should."*
 - **[Aurora Concierge](../build-13-capstone/aurora-concierge/README.md)** — CX / Digital buyer (CMO, Head of Digital, VP CX). Pitch: *"our customers ask the same questions over and over and our agents can't keep up."*

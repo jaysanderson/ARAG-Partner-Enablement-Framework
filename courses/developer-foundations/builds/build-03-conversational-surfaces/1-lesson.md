@@ -153,7 +153,7 @@ Two branches. The answer-chunks fire many times and feed the token-by-token UI. 
 
 **Common failure mode:** rendering citations from each citations event as it arrives — you'll flash partial state and confuse yourself debugging why "the citations keep changing." The server sends the citations event once per turn after retrieval settles. Wait for it once; assign once. Don't try to accumulate citations across events the way you accumulate answer text.
 
-**See it in the capstone:** `Capstone-Aurora-Concierge/src/components/FloatingChat.tsx` → `runQuery` (the for-await over `streamAsk`).
+**See it in the capstone:** `src/components/FloatingChat.tsx` → `runQuery` (the for-await over `streamAsk`).
 
 ## When the drop-in widget isn't enough — a 100-line React floating chat
 
@@ -207,7 +207,7 @@ Product card click handlers, hero CTAs, error pages — anywhere a "ask the conc
 
 **Common failure mode:** re-entering the `runQuery` loop while a previous stream is in-flight — the user clicks two prefill links in a row, you get two parallel for-awaits writing to the same `turns` array, and the UI thrashes. Guard with a `ref` + a `streaming` state flag, as shown above. Drop or queue the second call; don't run them concurrently.
 
-**See it in the capstone:** `Capstone-Aurora-Concierge/src/components/FloatingChat.tsx` (the full ~280-line reference implementation).
+**See it in the capstone:** `src/components/FloatingChat.tsx` (the full ~280-line version you'll build there).
 
 ## What's next
 

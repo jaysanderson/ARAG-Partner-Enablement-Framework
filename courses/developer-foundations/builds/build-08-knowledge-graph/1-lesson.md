@@ -198,7 +198,7 @@ async function queryPathsAround(node: { value: string; group: string }) {
 
 Common failure mode: shipping outbound-only, then clicking a competitor entity on a live customer call and watching the canvas stay empty. The fail is invisible until it happens in front of someone — `/graph` returns `{"paths": []}`, no error, no warning, just a blank UI. Run `queryPathsAround` against three leaf-looking entities in your corpus before you demo.
 
-**See it in the capstone:** `Capstone-Aurora-Concierge/src/lib/graphClient.ts` → `queryPaths`, `queryPathsTo`, `queryPathsAround`.
+**See it in the capstone:** `src/lib/graphClient.ts` → `queryPaths`, `queryPathsTo`, `queryPathsAround`.
 
 ## From entity selection to commerce — the back-link panel
 
@@ -229,7 +229,7 @@ The persona split is what turns the panel from a search-result list into a tiere
 
 Common failure mode: using `best_matches[i]` as the resource id. Those are *paragraph* references, not resource ids (see Build 0's citations section). Iterate the `resources` map directly — keys are the resource ids, values are the resource objects.
 
-**See it in the capstone:** `Capstone-Aurora-Concierge/src/lib/graphClient.ts` → `searchRelatedResources` and `Capstone-Aurora-Concierge/src/pages/JourneyGraph.tsx` → `splitPathsByPersona`.
+**See it in the capstone:** `src/lib/graphClient.ts` → `searchRelatedResources` and `src/pages/JourneyGraph.tsx` → `splitPathsByPersona`.
 
 ## What's next
 

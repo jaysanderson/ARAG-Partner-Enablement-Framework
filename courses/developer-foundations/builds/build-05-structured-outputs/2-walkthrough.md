@@ -569,10 +569,10 @@ If you see invented-looking slugs in the `Link:` line (e.g. `aurora-outfitters.c
 
 ### 6c. See it wired into a real app
 
-The Aurora capstone (which you'll fork in Build 13 — these paths are a forward reference for now) shows the same pattern at React-component scale:
+The Aurora capstone you'll build in Build 13 uses the same pattern at React-component scale — a reference shape worth keeping in mind:
 
-- [`Capstone-Aurora-Concierge/src/lib/askForJson.ts`](https://github.com/jaysanderson/Capstone-Aurora-Concierge) — the wrapper (same `{ result, resources }` return shape, same verbatim-id system prompt).
-- [`Capstone-Aurora-Concierge/src/pages/Personalize.tsx`](https://github.com/jaysanderson/Capstone-Aurora-Concierge) — `CitationLink` / `CitationInline` renderers that take a `citation_resource_id`, look up the title from `resources`, and emit a working `<a href="/p/{id}">{title}</a>`.
+- `src/lib/askForJson.ts` — the wrapper (same `{ result, resources }` return shape, same verbatim-id system prompt).
+- `src/pages/Personalize.tsx` — `CitationLink` / `CitationInline` renderers that take a `citation_resource_id`, look up the title from `resources`, and emit a working `<a href="/p/{id}">{title}</a>`.
 
 The plumbing you just wrote in `faq-generator.mjs` is the same plumbing. The capstone just dresses it up in JSX.
 

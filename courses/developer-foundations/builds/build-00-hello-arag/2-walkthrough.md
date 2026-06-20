@@ -23,9 +23,7 @@ node --version
 
 **Expected output:** something like `v20.11.0` or higher. If you see "command not found," Node didn't install correctly — reinstall from the link above.
 
-**The sample corpus you'll ingest** — clone the framework repo locally first; the corpus ships inside it at `courses/developer-foundations/builds/build-00-hello-arag/corpus/content_type/`. 37 outdoor-retail documents organised into seven subfolders (`product/`, `trail_guide/`, `gear_review/`, etc.) — the folder names will become labels in Progress Agentic RAG once you upload. Using the same corpus everyone else in the course uses means every query you try later behaves the way the lessons describe — your results will line up with the screenshots and example outputs in subsequent Builds.
-
-> **Don't have git installed?** See *Getting unstuck* at the bottom for a no-clone download alternative — but cloning is the path the rest of the course assumes.
+**The sample corpus you'll ingest** ships with this course — find the `build-00-hello-arag/corpus/content_type/` folder in your course materials. 37 outdoor-retail documents organised into seven subfolders (`product/`, `trail_guide/`, `gear_review/`, etc.) — the folder names will become labels in Progress Agentic RAG once you upload. Using the same corpus everyone else in the course uses means every query you try later behaves the way the lessons describe — your results will line up with the screenshots and example outputs in subsequent Builds.
 
 > **Why this corpus has folders.** Progress Agentic RAG can use folder names as **label names** during ingest — a feature that lets you drag one folder, get labels for free, and skip the per-document tagging step. You'll use that feature in Step 4. The same folder-name-as-labels workflow runs through every build past Build 0, including the capstone, so learn it once here.
 
@@ -437,8 +435,8 @@ If something doesn't work, see "Getting unstuck" below.
 - Paste both into your AI with: *"I ran [command] and got [error]. What's wrong?"*
 - The AI explains and proposes a fix. You apply it. Re-run.
 
-**I don't have git / can't clone the framework repo.**
-- Download just the `corpus/content_type/` folder using a tool like [download-directory.github.io](https://download-directory.github.io/) — paste the GitHub URL of the folder, get a ZIP, unzip, and use that folder for the Step 4 upload. The rest of the course assumes you have the repo locally — install git ([git-scm.com/downloads](https://git-scm.com/downloads)) and `git clone` it before Build 1 to avoid friction later.
+**I can't find the sample corpus.**
+- The `corpus/content_type/` folder ships with this course under `build-00-hello-arag/`. If your course was delivered as a single page or an LMS package, ask your programme lead for the corpus folder (or its ZIP) — you need the `content_type/` folder on disk for the Step 4 upload.
 
 ---
 

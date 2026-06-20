@@ -181,7 +181,7 @@ Two details worth noticing. First, the de-dup: a single resource can contribute 
 
 Common failure mode: the model occasionally returns plain markdown links **inside the answer body** (`[label](https://example.com/doc)`) instead of populating `retrieval_results`. When `best_matches` is empty but the answer renders, fall back to a one-paragraph HTML scan that mines `<a href="...">label</a>` from the rendered output and treats each unique URL as a citation. It's a belt-and-braces second source — never the primary path, but it stops the citation row from collapsing to zero on the rare run where the structured block goes missing.
 
-**See it in the capstone:** `Capstone-Aurora-Concierge/src/lib/ragClient.ts` → `extractCitations`, and `src/components/FloatingChat.tsx` → `deriveCitationsFromHtml`.
+**See it in the capstone:** `src/lib/ragClient.ts` → `extractCitations`, and `src/components/FloatingChat.tsx` → `deriveCitationsFromHtml`.
 
 ## What's next
 

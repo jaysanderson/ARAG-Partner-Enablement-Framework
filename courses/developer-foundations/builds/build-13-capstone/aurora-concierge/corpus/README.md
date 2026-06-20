@@ -1,12 +1,12 @@
 # Aurora Concierge Corpus
 
-> **Mirrored from [github.com/jaysanderson/Capstone-Aurora-Concierge](https://github.com/jaysanderson/Capstone-Aurora-Concierge) → `/corpus/`.** This copy lives in the framework so partners can browse the seed corpus, labelsets, anchor entities, and per-resource frontmatter without cloning the reference app repo. The canonical source is the capstone repo — if you spot a drift between this folder and the upstream, raise it against the capstone repo (where the seed scripts, the `populate:fields` script, and the runtime app also live).
+> The seed corpus, labelsets, anchor entities, and per-resource frontmatter for the Aurora Concierge capstone — everything you need to provision a Knowledge Box, bundled with this course.
 >
-> Everything you need to provision a Knowledge Box so the [Capstone-Aurora-Concierge](https://github.com/jaysanderson/Capstone-Aurora-Concierge) reference app works.
+> Everything you need to provision a Knowledge Box for the Aurora Concierge capstone.
 >
 > **TL;DR:** create a Knowledge Box → in the dashboard, use **Upload folder** with the **"use folder names as label names"** option on `corpus/content_type/` → PATCH custom fields (`callToAction`, `searchResultDisplay`, `videoInfo`) onto hero resources → register the journey-graph extraction agent → run the app.
 
-The app at `https://capstone-aurora-concierge.fly.dev/` (or your local `npm run dev`) reads from one Knowledge Box. This guide tells you how to seed it.
+Your Aurora Concierge app (your local `npm run dev`) reads from one Knowledge Box. This guide tells you how to seed it.
 
 ---
 
@@ -62,7 +62,7 @@ That's it — for the storefront, concierge, and journey-graph surfaces. No scri
 
 ### What the app does with the `content_type` labelset
 
-The reference app filters by `content_type` in several places: the `/storefront` chip filter, the `/journey-graph` colour palette, the concierge's product recommendations. Once the labelset is applied, the chip filter narrows results, the storefront cards group cleanly, and the concierge can scope to specific content types when asked.
+The Aurora Concierge app filters by `content_type` in several places: the `/storefront` chip filter, the `/journey-graph` colour palette, the concierge's product recommendations. Once the labelset is applied, the chip filter narrows results, the storefront cards group cleanly, and the concierge can scope to specific content types when asked.
 
 ### Important · for the full `/for-you` persona-flow demo, you also need `audience` and `region`
 

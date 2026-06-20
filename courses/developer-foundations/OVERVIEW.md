@@ -60,7 +60,7 @@ Three things make this different from a typical online course:
 
 **Every build runs against a real Knowledge Box.** Not a mocked sandbox, not a video of someone else's terminal. You provision your own Knowledge Box in Build 0, ingest the provided ten-document corpus, and every subsequent build runs against that same KB. By Build 8 the same KB has labelsets, custom fields, a graph extraction agent, and demonstrates every pattern the course teaches.
 
-**The capstone is real-shaped.** Build 13 isn't a toy. It's eight weeks for one strong full-stack engineer (four weeks at two FTE) to ship a multi-surface application that exercises every tier of the platform. The reference implementations — Atlas Operations (enterprise) and Aurora Concierge (CX/retail) — are real GitHub repos that score 100% against the brief once provisioned against a populated KB. Partners fork these and re-skin them per customer; the chassis is reused, the corpus and entity schema change.
+**The capstone is real-shaped.** Build 13 isn't a toy. It's eight weeks for one strong full-stack engineer (four weeks at two FTE) to ship a multi-surface application that exercises every tier of the platform. The course gives you two worked capstone briefs — Atlas Operations (enterprise) and Aurora Concierge (CX/retail) — each a complete build spec, down to surfaces, workflows, corpus, and graph schema. Partners build one to match their book of business and re-skin per customer; the architecture is reused, the corpus and entity schema change.
 
 ## Time and effort, honestly
 

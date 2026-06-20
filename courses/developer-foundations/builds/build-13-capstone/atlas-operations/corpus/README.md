@@ -1,12 +1,12 @@
 # Atlas Operations Corpus
 
-> **Mirrored from [github.com/jaysanderson/Capstone-Atlas-Operations](https://github.com/jaysanderson/Capstone-Atlas-Operations) → `/corpus/`.** This copy lives in the framework so partners can browse the seed corpus, labelsets, and anchor entities without cloning the reference app repo. The canonical source is the capstone repo — if you spot a drift between this folder and the upstream, raise it against the capstone repo (where the seed scripts and the runtime app also live).
+> The seed corpus, labelsets, and anchor entities for the Atlas Operations capstone — everything you need to provision a Knowledge Box, bundled with this course.
 >
-> Everything you need to provision a Knowledge Box so the [Capstone-Atlas-Operations](https://github.com/jaysanderson/Capstone-Atlas-Operations) reference app works.
+> Everything you need to provision a Knowledge Box for the Atlas Operations capstone.
 >
 > **TL;DR:** create a Knowledge Box → in the dashboard, use **Upload folder** with the **"use folder names as label names"** option on `corpus/business_unit/` → register the graph extraction agent → run the app. No scripts required.
 
-The app at `https://capstone-atlas-operations.fly.dev/` (or your local `npm run dev`) reads from one Knowledge Box. This guide tells you how to seed it.
+Your Atlas Operations app (your local `npm run dev`) reads from one Knowledge Box. This guide tells you how to seed it.
 
 ---
 
@@ -61,7 +61,7 @@ That's it. No scripts, no env vars, no terminal commands. Once ingest finishes, 
 
 ### What the app does with these labels
 
-The reference app uses `business_unit` to scope results to a specific BU on the search and concierge surfaces (e.g. *"engineering incidents only"*) and seeds the composite-RAG graph traversal from BU-specific seed entities. Without the labelset applied, those filter UIs surface every doc regardless of BU.
+The Atlas Operations app uses `business_unit` to scope results to a specific BU on the search and concierge surfaces (e.g. *"engineering incidents only"*) and seeds the composite-RAG graph traversal from BU-specific seed entities. Without the labelset applied, those filter UIs surface every doc regardless of BU.
 
 ### What about the other Atlas labelsets?
 
@@ -131,7 +131,7 @@ Brief targets: **≥200 nodes, ≥500 relations.** A bundled 320-doc corpus typi
 
 ## Step 4 · App-side expectations per route
 
-If the Knowledge Box matches the spec above (corpus ingested, graph agent registered), every route in `Capstone-Atlas-Operations` should render meaningful results.
+If the Knowledge Box matches the spec above (corpus ingested, graph agent registered), every route in your Atlas Operations build should render meaningful results.
 
 | Route | What it expects | What it shows when KB is empty |
 |---|---|---|

@@ -224,7 +224,7 @@ const SYSTEM =
 
 Common failure mode: ship the schema field, forget the system-prompt line. The model returns invented IDs that look real, every click 404s, and the demo dies on stage. Always pair the field with the discipline rule — they are one feature, not two.
 
-**See it in the capstone:** `Capstone-Aurora-Concierge/src/lib/askForJson.ts` (additionalProperties injector + verbatim-id system prompt) and `Capstone-Aurora-Concierge/src/pages/Personalize.tsx` → `CitationLink` / `CitationInline` renderers.
+**See it in the capstone:** `src/lib/askForJson.ts` (additionalProperties injector + verbatim-id system prompt) and `src/pages/Personalize.tsx` → `CitationLink` / `CitationInline` renderers.
 
 ## Common pitfalls
 

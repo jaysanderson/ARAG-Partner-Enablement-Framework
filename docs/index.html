@@ -524,7 +524,7 @@ mark.placeholder {
 <p>Three things make this different from a typical online course:</p>
 <p><strong>The AI does the writing.</strong> You're not retyping examples — you're learning to direct the AI to produce the same shape of code, then verifying it works. By Build 5 you'll have written maybe two hundred lines of code yourself and a few thousand lines via vibe-coding. The skill being trained is <em>direction and verification</em>, not memorisation of syntax.</p>
 <p><strong>Every build runs against a real Knowledge Box.</strong> Not a mocked sandbox, not a video of someone else's terminal. You provision your own Knowledge Box in Build 0, ingest the provided ten-document corpus, and every subsequent build runs against that same KB. By Build 8 the same KB has labelsets, custom fields, a graph extraction agent, and demonstrates every pattern the course teaches.</p>
-<p><strong>The capstone is real-shaped.</strong> Build 13 isn't a toy. It's eight weeks for one strong full-stack engineer (four weeks at two FTE) to ship a multi-surface application that exercises every tier of the platform. The reference implementations — Atlas Operations (enterprise) and Aurora Concierge (CX/retail) — are real GitHub repos that score 100% against the brief once provisioned against a populated KB. Partners fork these and re-skin them per customer; the chassis is reused, the corpus and entity schema change.</p>
+<p><strong>The capstone is real-shaped.</strong> Build 13 isn't a toy. It's eight weeks for one strong full-stack engineer (four weeks at two FTE) to ship a multi-surface application that exercises every tier of the platform. The course gives you two worked capstone briefs — Atlas Operations (enterprise) and Aurora Concierge (CX/retail) — each a complete build spec, down to surfaces, workflows, corpus, and graph schema. Partners build one to match their book of business and re-skin per customer; the architecture is reused, the corpus and entity schema change.</p>
 <h2 id="overview--time-and-effort-honestly">Time and effort, honestly</h2>
 <p>Twenty-five to forty hours of focused work, spread over four to eight weeks. That's Builds 0 through 12 plus the final exam. Most learners come in at the lower end if they have prior platform-API experience and pick up the upper end if they're still learning the vibe-coding loop.</p>
 <p>The capstone is a separate four to eight weeks on top of that, depending on whether you're working solo or with a teammate. Most partner organisations treat the capstone as a project in its own right — it's the asset that goes into the room with a Fortune 500 buyer, so it gets project-quality treatment.</p>
@@ -943,7 +943,7 @@ Body:
 </code></pre>
 <p>Two details worth noticing. First, the de-dup: a single resource can contribute three or four paragraphs to one answer, so naive iteration shows the same source four times. Second, the title cleanup: ARAG sometimes prefixes titles with markdown heading syntax (<code># Title</code>) — strip it before rendering, or your UI gets ugly hashes.</p>
 <p>Common failure mode: the model occasionally returns plain markdown links <strong>inside the answer body</strong> (<code>[label](https://example.com/doc)</code>) instead of populating <code>retrieval_results</code>. When <code>best_matches</code> is empty but the answer renders, fall back to a one-paragraph HTML scan that mines <code>&lt;a href=&quot;...&quot;&gt;label&lt;/a&gt;</code> from the rendered output and treats each unique URL as a citation. It's a belt-and-braces second source — never the primary path, but it stops the citation row from collapsing to zero on the rare run where the structured block goes missing.</p>
-<p><strong>See it in the capstone:</strong> <code>Capstone-Aurora-Concierge/src/lib/ragClient.ts</code> → <code>extractCitations</code>, and <code>src/components/FloatingChat.tsx</code> → <code>deriveCitationsFromHtml</code>.</p>
+<p><strong>See it in the capstone:</strong> <code>src/lib/ragClient.ts</code> → <code>extractCitations</code>, and <code>src/components/FloatingChat.tsx</code> → <code>deriveCitationsFromHtml</code>.</p>
 <h2 id="build-00-lesson--whats-next">What's next</h2>
 <p>Build 1 — <a href="#build-01">The Five Primitives</a> — extends today's <code>/find</code> and <code>/ask</code> into the full surface: <code>/ask</code> with schema constraints, <code>/graph</code> for typed knowledge graphs, <code>/resource</code> for media retrieval. After Build 1 you'll have seen every endpoint at least once.</p>
 
@@ -973,10 +973,7 @@ Body:
 <pre><code class="hljs language-bash">node --version
 </code></pre>
 <p><strong>Expected output:</strong> something like <code>v20.11.0</code> or higher. If you see &quot;command not found,&quot; Node didn't install correctly — reinstall from the link above.</p>
-<p><strong>The sample corpus you'll ingest</strong> — clone the framework repo locally first; the corpus ships inside it at <code>courses/developer-foundations/builds/build-00-hello-arag/corpus/content_type/</code>. 37 outdoor-retail documents organised into seven subfolders (<code>product/</code>, <code>trail_guide/</code>, <code>gear_review/</code>, etc.) — the folder names will become labels in Progress Agentic RAG once you upload. Using the same corpus everyone else in the course uses means every query you try later behaves the way the lessons describe — your results will line up with the screenshots and example outputs in subsequent Builds.</p>
-<blockquote>
-<p><strong>Don't have git installed?</strong> See <em>Getting unstuck</em> at the bottom for a no-clone download alternative — but cloning is the path the rest of the course assumes.</p>
-</blockquote>
+<p><strong>The sample corpus you'll ingest</strong> ships with this course — find the <code>build-00-hello-arag/corpus/content_type/</code> folder in your course materials. 37 outdoor-retail documents organised into seven subfolders (<code>product/</code>, <code>trail_guide/</code>, <code>gear_review/</code>, etc.) — the folder names will become labels in Progress Agentic RAG once you upload. Using the same corpus everyone else in the course uses means every query you try later behaves the way the lessons describe — your results will line up with the screenshots and example outputs in subsequent Builds.</p>
 <blockquote>
 <p><strong>Why this corpus has folders.</strong> Progress Agentic RAG can use folder names as <strong>label names</strong> during ingest — a feature that lets you drag one folder, get labels for free, and skip the per-document tagging step. You'll use that feature in Step 4. The same folder-name-as-labels workflow runs through every build past Build 0, including the capstone, so learn it once here.</p>
 </blockquote>
@@ -1312,9 +1309,9 @@ Use plain fetch. No SDK. No external HTTP library beyond what's built into Node.
 <li>Paste both into your AI with: <em>&quot;I ran [command] and got [error]. What's wrong?&quot;</em></li>
 <li>The AI explains and proposes a fix. You apply it. Re-run.</li>
 </ul>
-<p><strong>I don't have git / can't clone the framework repo.</strong></p>
+<p><strong>I can't find the sample corpus.</strong></p>
 <ul>
-<li>Download just the <code>corpus/content_type/</code> folder using a tool like <a href="https://download-directory.github.io/">download-directory.github.io</a> — paste the GitHub URL of the folder, get a ZIP, unzip, and use that folder for the Step 4 upload. The rest of the course assumes you have the repo locally — install git (<a href="https://git-scm.com/downloads">git-scm.com/downloads</a>) and <code>git clone</code> it before Build 1 to avoid friction later.</li>
+<li>The <code>corpus/content_type/</code> folder ships with this course under <code>build-00-hello-arag/</code>. If your course was delivered as a single page or an LMS package, ask your programme lead for the corpus folder (or its ZIP) — you need the <code>content_type/</code> folder on disk for the Step 4 upload.</li>
 </ul>
 <hr>
 <h2 id="build-00-walkthrough--step-10--render-the-citations-for-your-first-ask-answer-15-min">Step 10 — Render the citations for your first <code>/ask</code> answer (15 min)</h2>
@@ -2827,7 +2824,7 @@ Question: {question}
 </code></pre>
 <p>Two branches. The answer-chunks fire many times and feed the token-by-token UI. The citations event fires <strong>once</strong> per turn, after retrieval settles, and replaces the citations array in one assignment.</p>
 <p><strong>Common failure mode:</strong> rendering citations from each citations event as it arrives — you'll flash partial state and confuse yourself debugging why &quot;the citations keep changing.&quot; The server sends the citations event once per turn after retrieval settles. Wait for it once; assign once. Don't try to accumulate citations across events the way you accumulate answer text.</p>
-<p><strong>See it in the capstone:</strong> <code>Capstone-Aurora-Concierge/src/components/FloatingChat.tsx</code> → <code>runQuery</code> (the for-await over <code>streamAsk</code>).</p>
+<p><strong>See it in the capstone:</strong> <code>src/components/FloatingChat.tsx</code> → <code>runQuery</code> (the for-await over <code>streamAsk</code>).</p>
 <h2 id="build-03-lesson--when-the-drop-in-widget-isnt-enough--a-100-line-react-floating-chat">When the drop-in widget isn't enough — a 100-line React floating chat</h2>
 <p>Build 2's <code>&lt;nuclia-chat&gt;</code> drop-in is the right call until you need one of three things: (a) <strong>custom panel chrome</strong> — a per-customer brand wrapper, a &quot;concierge&quot; hero header, your own pill-CTA renderer; (b) <strong>cross-route prefill</strong> — one page deep-links a question into the chat on another page (&quot;click this product card → chat opens with 'tell me more about X'&quot;); or (c) <strong>per-persona styling on the floating chat button</strong> — the small round button anchored to a screen corner (sometimes called a <em>FAB</em>, short for &quot;floating action button&quot;) that opens the chat panel. Prospect gets a bright pulsing button, Member gets a quiet one. Past that, you graduate to a hand-rolled React panel. The recipe is short — the surface is small.</p>
 <p>API surface: <code>streamAsk</code> (you already wrote it) + a <code>CustomEvent</code> bus on <code>window</code> for cross-route prefill.</p>
@@ -2869,7 +2866,7 @@ Question: {question}
 </code></pre>
 <p>Product card click handlers, hero CTAs, error pages — anywhere a &quot;ask the concierge&quot; affordance lives — fire the same event. The chat opens, the question pre-fills, the stream starts. No router coupling. No prop drilling.</p>
 <p><strong>Common failure mode:</strong> re-entering the <code>runQuery</code> loop while a previous stream is in-flight — the user clicks two prefill links in a row, you get two parallel for-awaits writing to the same <code>turns</code> array, and the UI thrashes. Guard with a <code>ref</code> + a <code>streaming</code> state flag, as shown above. Drop or queue the second call; don't run them concurrently.</p>
-<p><strong>See it in the capstone:</strong> <code>Capstone-Aurora-Concierge/src/components/FloatingChat.tsx</code> (the full ~280-line reference implementation).</p>
+<p><strong>See it in the capstone:</strong> <code>src/components/FloatingChat.tsx</code> (the full ~280-line version you'll build there).</p>
 <h2 id="build-03-lesson--whats-next">What's next</h2>
 <p><a href="#build-04">Build 4 — Multilingual &amp; Voice Switching</a> — extend today's chat with language switching, persona scoping, and resource scoping. All implemented via query prefixes. The cheapest, highest-leverage extensions to a Tier 2 chat.</p>
 
@@ -3381,9 +3378,9 @@ streamAsk(finalQuery, promptConfig);
 <p>The decision rule: <strong>never gate sensitive content with prefix-only</strong> — a &quot;The user is a Prospect, do not show member content&quot; prefix is a suggestion the model can and will ignore on a bad day. Filter first (server enforces it), prefix second (model shapes voice), client-split only for visualisations where the user already has the right to the data and you're just collapsing it for the UI.</p>
 <p><strong>See it in the capstone:</strong></p>
 <ul>
-<li>prefix → <code>Capstone-Aurora-Concierge/src/lib/buildPrefix.ts</code></li>
-<li>filter → <code>Capstone-Aurora-Concierge/src/pages/Storefront.tsx</code> → <code>audienceFilter</code></li>
-<li>client-side → <code>Capstone-Aurora-Concierge/src/pages/JourneyGraph.tsx</code> → <code>splitPathsByPersona</code></li>
+<li>prefix → <code>src/lib/buildPrefix.ts</code></li>
+<li>filter → <code>src/pages/Storefront.tsx</code> → <code>audienceFilter</code></li>
+<li>client-side → <code>src/pages/JourneyGraph.tsx</code> → <code>splitPathsByPersona</code></li>
 </ul>
 <h2 id="build-04-lesson--whats-next">What's next</h2>
 <p><a href="#build-05">Build 5 — Structured Outputs</a> — the most important single Build in the course. <code>answer_json_schema</code> is where ARAG stops being a chatbot and becomes a programmable backend. Tier 3 unlocks.</p>
@@ -4014,7 +4011,7 @@ Body:
 <p><strong>ID discipline in system prompts.</strong> The &quot;verbatim, do NOT invent&quot; instruction is essential whenever your client builds deterministic click-throughs from a structured output. Without it, the model will helpfully fabricate plausible-looking ids like <code>aurora-helios-down-jacket</code> that 404 on click. The discipline is the difference between a CTA that works and a CTA that breaks in front of a CMO.</p>
 </blockquote>
 <p>Common failure mode: ship the schema field, forget the system-prompt line. The model returns invented IDs that look real, every click 404s, and the demo dies on stage. Always pair the field with the discipline rule — they are one feature, not two.</p>
-<p><strong>See it in the capstone:</strong> <code>Capstone-Aurora-Concierge/src/lib/askForJson.ts</code> (additionalProperties injector + verbatim-id system prompt) and <code>Capstone-Aurora-Concierge/src/pages/Personalize.tsx</code> → <code>CitationLink</code> / <code>CitationInline</code> renderers.</p>
+<p><strong>See it in the capstone:</strong> <code>src/lib/askForJson.ts</code> (additionalProperties injector + verbatim-id system prompt) and <code>src/pages/Personalize.tsx</code> → <code>CitationLink</code> / <code>CitationInline</code> renderers.</p>
 <h2 id="build-05-lesson--common-pitfalls">Common pitfalls</h2>
 <ul>
 <li><strong>Forgetting <code>additionalProperties: false</code>.</strong> The model returns garbage shapes; your code crashes. Inject it automatically.</li>
@@ -4512,10 +4509,10 @@ ES modules.
 </ul>
 <p>If you see invented-looking slugs in the <code>Link:</code> line (e.g. <code>aurora-outfitters.com/about-mara</code>), the verbatim-id discipline from Step 3 isn't biting hard enough — tighten the system-prompt clause and re-run.</p>
 <h3 id="build-05-walkthrough--6c-see-it-wired-into-a-real-app">6c. See it wired into a real app</h3>
-<p>The Aurora capstone (which you'll fork in Build 13 — these paths are a forward reference for now) shows the same pattern at React-component scale:</p>
+<p>The Aurora capstone you'll build in Build 13 uses the same pattern at React-component scale — a reference shape worth keeping in mind:</p>
 <ul>
-<li><a href="https://github.com/jaysanderson/Capstone-Aurora-Concierge"><code>Capstone-Aurora-Concierge/src/lib/askForJson.ts</code></a> — the wrapper (same <code>{ result, resources }</code> return shape, same verbatim-id system prompt).</li>
-<li><a href="https://github.com/jaysanderson/Capstone-Aurora-Concierge"><code>Capstone-Aurora-Concierge/src/pages/Personalize.tsx</code></a> — <code>CitationLink</code> / <code>CitationInline</code> renderers that take a <code>citation_resource_id</code>, look up the title from <code>resources</code>, and emit a working <code>&lt;a href=&quot;/p/{id}&quot;&gt;{title}&lt;/a&gt;</code>.</li>
+<li><code>src/lib/askForJson.ts</code> — the wrapper (same <code>{ result, resources }</code> return shape, same verbatim-id system prompt).</li>
+<li><code>src/pages/Personalize.tsx</code> — <code>CitationLink</code> / <code>CitationInline</code> renderers that take a <code>citation_resource_id</code>, look up the title from <code>resources</code>, and emit a working <code>&lt;a href=&quot;/p/{id}&quot;&gt;{title}&lt;/a&gt;</code>.</li>
 </ul>
 <p>The plumbing you just wrote in <code>faq-generator.mjs</code> is the same plumbing. The capstone just dresses it up in JSX.</p>
 <h3 id="build-05-walkthrough--6d-append-to-prompt-log">6d. Append to prompt log</h3>
@@ -6270,7 +6267,7 @@ Use plain fetch. No SDK.
 </code></pre>
 <p><code>queryPathsTo</code> is a near-clone of <code>queryPaths</code> with <code>source</code> swapped for <code>destination</code> in the path predicate. The dedupe key is the triple <code>source|relation|destination</code> — that's what makes a path unique, not the path object identity.</p>
 <p>Common failure mode: shipping outbound-only, then clicking a competitor entity on a live customer call and watching the canvas stay empty. The fail is invisible until it happens in front of someone — <code>/graph</code> returns <code>{&quot;paths&quot;: []}</code>, no error, no warning, just a blank UI. Run <code>queryPathsAround</code> against three leaf-looking entities in your corpus before you demo.</p>
-<p><strong>See it in the capstone:</strong> <code>Capstone-Aurora-Concierge/src/lib/graphClient.ts</code> → <code>queryPaths</code>, <code>queryPathsTo</code>, <code>queryPathsAround</code>.</p>
+<p><strong>See it in the capstone:</strong> <code>src/lib/graphClient.ts</code> → <code>queryPaths</code>, <code>queryPathsTo</code>, <code>queryPathsAround</code>.</p>
 <h2 id="build-08-lesson--from-entity-selection-to-commerce--the-back-link-panel">From entity selection to commerce — the back-link panel</h2>
 <p>A graph UI that only shows nodes and edges is a pretty diagram. A graph UI that, when you click a node, shows the cited resources you can BUY or READ next is a pipeline driver. The recipe is a hybrid <code>/find</code> on the entity's literal value, rendered in a persona-split side panel.</p>
 <p><code>/find</code> with <code>features: ['keyword', 'semantic']</code> is the right call here: keyword catches the literal entity string, semantic catches paraphrases and aliases. The entity value goes in as the query — no rewriting, no LLM in the loop.</p>
@@ -6293,7 +6290,7 @@ Use plain fetch. No SDK.
 </code></pre>
 <p>The persona split is what turns the panel from a search-result list into a tiered commerce surface. Prospects see products and guides — the things they can act on without an account. Members see the full back-link: ambassador content, endorsements, peer reviews.</p>
 <p>Common failure mode: using <code>best_matches[i]</code> as the resource id. Those are <em>paragraph</em> references, not resource ids (see Build 0's citations section). Iterate the <code>resources</code> map directly — keys are the resource ids, values are the resource objects.</p>
-<p><strong>See it in the capstone:</strong> <code>Capstone-Aurora-Concierge/src/lib/graphClient.ts</code> → <code>searchRelatedResources</code> and <code>Capstone-Aurora-Concierge/src/pages/JourneyGraph.tsx</code> → <code>splitPathsByPersona</code>.</p>
+<p><strong>See it in the capstone:</strong> <code>src/lib/graphClient.ts</code> → <code>searchRelatedResources</code> and <code>src/pages/JourneyGraph.tsx</code> → <code>splitPathsByPersona</code>.</p>
 <h2 id="build-08-lesson--whats-next">What's next</h2>
 <p><a href="#build-09">Build 9 — Field Engineering</a> — custom fields drive AI behaviour. The highest-leverage recurring-revenue lever in the entire framework.</p>
 
@@ -8075,7 +8072,7 @@ Two factors:
 }
 </code></pre>
 <p>What partners say in the room shifts from <em>&quot;flip the toggle to your tenant&quot;</em> to <em>&quot;BYO-LLM is a per-KB platform setting we'll wire in your tenant during the co-engineered POC — for today's demo we're on the platform default, with residency you can verify in this header.&quot;</em> You're still answering the lock-in objection, you're just answering it honestly: BYO-LLM is a platform capability you'll configure together, not a UI lever you ship pre-built.</p>
-<p><strong>See it in the capstone:</strong> <code>Capstone-Atlas-Operations/src/lib/env.ts</code> (no <code>VITE_BYO_LLM_*</code> vars), <code>src/lib/graphClient.ts → BYO_VALUE_BLOCKLIST</code>, <code>src/pages/Ops.tsx</code> (no BYO-LLM tile in the observability strip). The Atlas Operations capstone descopes BYO-LLM exactly this way — and the demo is stronger for it.</p>
+<p><strong>See it in the capstone:</strong> <code>src/lib/env.ts</code> (no <code>VITE_BYO_LLM_*</code> vars), <code>src/lib/graphClient.ts → BYO_VALUE_BLOCKLIST</code>, <code>src/pages/Ops.tsx</code> (no BYO-LLM tile in the observability strip). The Atlas Operations capstone descopes BYO-LLM exactly this way — and the demo is stronger for it.</p>
 <h2 id="build-11-lesson--rate-limits">Rate limits</h2>
 <p>ARAG's default rate limit is <strong>2400 requests per minute</strong> per service account. That's the published number; customers will ask, you'll answer.</p>
 <p>What counts:</p>
@@ -8172,7 +8169,7 @@ Two factors:
 </code></pre>
 <p>Two layers in one component: a CMO-readable explanation in plain English, and an admin/dev toggle that exposes the literal request body — same source of truth, two audiences. The plain-English half answers the shopper's &quot;why am I seeing this?&quot;; the dev toggle answers the security reviewer's &quot;show me the request.&quot;</p>
 <p><strong>Common failure mode:</strong> rendering the dev disclosure by default. Always opt-in; the raw filter JSON spooks non-technical viewers and clutters the UI for shoppers. The toggle stays collapsed until an admin asks for it.</p>
-<p><strong>See it in the capstone:</strong> <code>Capstone-Aurora-Concierge/src/pages/ForYou.tsx</code> → <code>WhyAmISeeingThis</code> component + <code>showDevQuery</code> toggle.</p>
+<p><strong>See it in the capstone:</strong> <code>src/pages/ForYou.tsx</code> → <code>WhyAmISeeingThis</code> component + <code>showDevQuery</code> toggle.</p>
 <h2 id="build-11-lesson--whats-next">What's next</h2>
 <p><a href="#build-12">Build 12 — Capstone Prep</a> — the synthesis Build. Where you plan the capstone, write the prompts, brief the AI session that will produce it.</p>
 
@@ -8788,7 +8785,7 @@ code .
 <hr>
 <h2 id="build-12-walkthrough--step-2--choose-your-variant-25-min">Step 2 — Choose your variant (25 min)</h2>
 <h3 id="build-12-walkthrough--2a-read-both-capstone-briefs-in-full">2a. Read both capstone briefs in full</h3>
-<p>Open each in your editor (or in GitHub web view):</p>
+<p>Open each in your editor:</p>
 <ul>
 <li><strong><a href="#build-13-atlas">Atlas Operations</a></strong> — Enterprise / Operations buyer (CTO, CIO, Head of Infrastructure). Pitch: <em>&quot;our ops team can't find anything fast enough; incidents take 4x as long as they should.&quot;</em></li>
 <li><strong><a href="#build-13-aurora">Aurora Concierge</a></strong> — CX / Digital buyer (CMO, Head of Digital, VP CX). Pitch: <em>&quot;our customers ask the same questions over and over and our agents can't keep up.&quot;</em></li>
@@ -9299,12 +9296,12 @@ Requesting review-board sign-off to start Build 13.
 <p>If you haven't passed the exam yet, do not start Build 13. Return to the lessons + walkthroughs for any Build whose quick quiz you didn't pass, then sit the final exam.</p>
 </blockquote>
 <h2 id="build-13--pick-your-variant">Pick your variant</h2>
-<p>Build 13 ships with two worked examples. Partners pick the one that matches their book of business; the second is built later if both customer segments are in play. Both share the same chassis, the same eight-week build plan, and the same re-skin playbook structure — they differ in corpus, graph schema, workflows, and demo buyer.</p>
+<p>Build 13 ships with two worked briefs. Partners pick the one that matches their book of business; the second is built later if both customer segments are in play. Both share the same architecture, the same eight-week build plan, and the same re-skin playbook structure — they differ in corpus, graph schema, workflows, and demo buyer.</p>
 <table>
-<thead><tr><th>Variant</th><th>Buyer</th><th>Persona corpus</th><th>Killer moment</th><th>Brief</th><th>Reference implementation</th></tr></thead>
+<thead><tr><th>Variant</th><th>Buyer</th><th>Persona corpus</th><th>Killer moment</th><th>Brief</th></tr></thead>
 <tbody>
-<tr><td><strong>Enterprise / Operations</strong></td><td>CTO, CIO, Chief Data Officer</td><td>Atlas Global Industries (industrial manufacturer, single KB + business-unit labelsets)</td><td>Composite-RAG incident root cause + cross-functional typed graph</td><td><a href="#build-13-atlas"><code>atlas-operations/</code></a></td><td><a href="https://github.com/jaysanderson/Capstone-Atlas-Operations">Capstone-Atlas-Operations</a></td></tr>
-<tr><td><strong>Customer Experience</strong></td><td>CMO, Head of Digital, Chief Customer Officer</td><td>Aurora Outfitters (D2C outdoor retailer, single KB + content-type labelsets)</td><td>Two-voice floating chat + content-engineered CTAs + abandoned-cart composite RAG</td><td><a href="#build-13-aurora"><code>aurora-concierge/</code></a></td><td><a href="https://github.com/jaysanderson/Capstone-Aurora-Concierge">Capstone-Aurora-Concierge</a></td></tr>
+<tr><td><strong>Enterprise / Operations</strong></td><td>CTO, CIO, Chief Data Officer</td><td>Atlas Global Industries (industrial manufacturer, single KB + business-unit labelsets)</td><td>Composite-RAG incident root cause + cross-functional typed graph</td><td><a href="#build-13-atlas"><code>atlas-operations/</code></a></td></tr>
+<tr><td><strong>Customer Experience</strong></td><td>CMO, Head of Digital, Chief Customer Officer</td><td>Aurora Outfitters (D2C outdoor retailer, single KB + content-type labelsets)</td><td>Two-voice floating chat + content-engineered CTAs + abandoned-cart composite RAG</td><td><a href="#build-13-aurora"><code>aurora-concierge/</code></a></td></tr>
 </tbody>
 </table>
 <h2 id="build-13--at-a-glance-applies-to-both-variants">At a glance (applies to both variants)</h2>
@@ -9326,25 +9323,24 @@ Requesting review-board sign-off to start Build 13.
 <li>At least one customer-specific data-augmentation agent in production.</li>
 <li>Org-level demo passes a Progress-led review board (delivered live).</li>
 </ol>
-<h2 id="build-13--asset-delivered">Asset delivered</h2>
-<p>The capstone reference build — the flagship asset of the entire programme. It is both the curriculum capstone and the sales-room closer.</p>
-<p>The two reference implementations linked above are the open-source chassis partners fork. Each ships with:</p>
+<h2 id="build-13--what-the-build-covers">What the build covers</h2>
+<p>The capstone is the flagship deliverable of the entire programme — both the curriculum capstone and the sales-room closer.</p>
+<p>Each variant brief is a complete build spec. The application you ship covers:</p>
 <ul>
-<li>Complete Vite + React + TypeScript + Tailwind app (5-6 routes, all client libraries).</li>
-<li>Synthetic corpus + anchor JSON + labelset schema.</li>
-<li>Seed scripts (<code>seed-kb.mjs</code>), field-engineering scripts (Aurora only), graph-agent spec (<code>graph-agent.py</code>).</li>
-<li>Demo script + re-skin playbook.</li>
-<li>Fly.io deploy config (<code>fly.toml</code> + <code>Dockerfile</code>).</li>
+<li>A Vite + React + TypeScript + Tailwind app (5-6 routes, all client libraries).</li>
+<li>The synthetic corpus + anchor entities + labelset schema (the corpus ships with this course).</li>
+<li>A seed approach + field-engineering (Aurora only) + a graph-extraction agent.</li>
+<li>A demo script + a re-skin playbook.</li>
+<li>Deploy config (e.g. <code>fly.toml</code> + <code>Dockerfile</code>).</li>
 </ul>
 <h3 id="build-13--corpus-ingest--no-scripts-required">Corpus ingest — no scripts required</h3>
-<p>Both capstones use Progress Agentic RAG's <strong>&quot;Upload folder&quot;</strong> dashboard option with the <strong>&quot;use folder names as label names&quot;</strong> toggle. The bundled corpus folders (<code>corpus/business_unit/</code> for Atlas, <code>corpus/content_type/</code> for Aurora) are pre-organised so a partner picks the folder in the dashboard's &quot;Upload folder&quot; picker, enables the folder-names-as-labels option, and Progress Agentic RAG applies the primary labelset automatically — no Node.js, no env vars, no terminal commands required for the basic path. The seed scripts are kept as an optional path for partners scaling beyond the bundled corpus or wanting to apply additional labelsets programmatically. Per-capstone instructions are in each reference repo's <code>corpus/README.md</code>.</p>
+<p>Both capstones use Progress Agentic RAG's <strong>&quot;Upload folder&quot;</strong> dashboard option with the <strong>&quot;use folder names as label names&quot;</strong> toggle. The bundled corpus folders (<code>corpus/business_unit/</code> for Atlas, <code>corpus/content_type/</code> for Aurora) are pre-organised so a partner picks the folder in the dashboard's &quot;Upload folder&quot; picker, enables the folder-names-as-labels option, and Progress Agentic RAG applies the primary labelset automatically — no Node.js, no env vars, no terminal commands required for the basic path. A seed script is an optional path for partners scaling beyond the bundled corpus or wanting to apply additional labelsets programmatically. Per-capstone ingest instructions are in each variant's <code>corpus/README.md</code>.</p>
 <hr>
 <h2 id="build-13--see-also">See also</h2>
 <ul>
 <li>Parent course: <a href="#home">Developer Foundations</a></li>
 <li>Previous build: <a href="#build-12">Build 12 — Capstone prep</a></li>
 <li>Variant briefs: <a href="#build-13-atlas">Atlas Operations</a> (Enterprise) • <a href="#build-13-aurora">Aurora Concierge</a> (CX)</li>
-<li>Reference implementations: <a href="https://github.com/jaysanderson/Capstone-Atlas-Operations">Capstone-Atlas-Operations</a> • <a href="https://github.com/jaysanderson/Capstone-Aurora-Concierge">Capstone-Aurora-Concierge</a></li>
 </ul>
 
 <!-- ======================================================================
@@ -9376,14 +9372,14 @@ Requesting review-board sign-off to start Build 13.
 </header>
 <h1 id="build-13-atlas--capstone-example--atlas-operations-enterprise">Capstone Example — Atlas Operations (Enterprise)</h1>
 <blockquote>
-<p><strong>Status:</strong> Brief shipped + reference implementation shipped.
+<p><strong>Status:</strong> Brief shipped.
 <strong>Role in the programme:</strong> Build 13 capstone + flagship reference + strategic-account sales-room closer.
 <strong>Owner:</strong> Progress GTM (programme); Progress Solution lead (build).
 <strong>Target ship:</strong> End of 90-day rollout window (Day 90).
 <strong>Companion docs:</strong> <code>../../../../../README.md</code> (umbrella framework), <a href="#build-13"><code>../README.md</code></a> (Build 13 overview + variant chooser), <a href="#build-13-aurora"><code>../aurora-concierge/README.md</code></a> (the other variant).</p>
 </blockquote>
-<h2 id="build-13-atlas--reference-implementation">Reference implementation</h2>
-<p>The complete reference app is at <strong><a href="https://github.com/jaysanderson/Capstone-Atlas-Operations">github.com/jaysanderson/Capstone-Atlas-Operations</a></strong> — a Vite + React + TypeScript + Tailwind chassis that scores 100% against this brief once provisioned against a populated Progress Agentic RAG KB. It includes:</p>
+<h2 id="build-13-atlas--what-youll-build">What you'll build</h2>
+<p>A Vite + React + TypeScript + Tailwind app that satisfies this brief once provisioned against a populated Progress Agentic RAG KB. It covers:</p>
 <ul>
 <li>All five demo surfaces + landing + an <code>/ops</code> mock observability page.</li>
 <li>All three Tier-3 workflows (Onboarding-Path, Battle-Card, Compliance-Trace).</li>
@@ -9392,14 +9388,14 @@ Requesting review-board sign-off to start Build 13.
 <li>Seed and verification scripts.</li>
 <li>Fly.io deploy config.</li>
 </ul>
-<p>See the repo's <code>README.md</code> for quick-start and <code>KB_SETUP.md</code> for the end-to-end ingest checklist.</p>
+<p>See <code>corpus/README.md</code> for the end-to-end ingest checklist.</p>
 <hr>
 <h2 id="build-13-atlas--1-why-atlas-operations-exists">1. Why Atlas Operations exists</h2>
 <p>The Partner Enablement Framework names two top-priority assets: the Agent Workshop (Build 3) and Atlas Operations (Build 7). Of the two, Atlas Operations carries more weight because it does three jobs at once:</p>
 <ol>
 <li><strong>Capstone.</strong> It's the final certification artefact for every track. An individual at Solution-4 or Deliver-4 must have shipped and demoed a capstone example against a real customer's corpus.</li>
 <li><strong>Sales-room closer.</strong> It's the one thing a partner walks into a Fortune 500 CTO's office with that <em>cannot be reproduced</em> by a competitor's free trial. Atlas Operations is the proof that ARAG is a platform, not a chatbot.</li>
-<li><strong>Re-skin chassis.</strong> Every partner customer demo starts with a fork of Atlas Operations. Partners customise the corpus, the entity schema, the branding, and the workflows — but the chassis ships in working condition. This is how the programme scales without every partner SE re-inventing the same demo from one capstone to the next.</li>
+<li><strong>Re-skin the build.</strong> Every partner customer demo starts from the Atlas Operations build. Partners customise the corpus, the entity schema, the branding, and the workflows — but the architecture is proven. This is how the programme scales without every partner SE re-inventing the same demo from one capstone to the next.</li>
 </ol>
 <p>Foundations Builds 0–6 prove what ARAG <em>can do</em> across the individual patterns. Atlas Operations proves what an <em>enterprise platform built on ARAG</em> looks like in production, in one coherent product, against a recognisable enterprise corpus, with at least one custom data-augmentation agent live.</p>
 <hr>
@@ -9430,17 +9426,12 @@ Requesting review-board sign-off to start Build 13.
 </tbody>
 </table>
 <p>A query for &quot;incident root cause&quot; filtered to <code>business_unit:engineering</code> returns engineering incidents. A query for &quot;policy&quot; filtered to <code>business_unit:compliance</code> returns compliance policies. Cross-domain queries simply skip the filter. Same KB, same API, same auth token.</p>
-<p>Earlier iterations shipped with three labelsets (<code>business_unit</code> + <code>content_type</code> + <code>region</code>). Progress Agentic RAG's folder-name-as-labelset auto-detection during ingest is flat (one labelset name + a list of labels per ingest), so a drag-drop ingest can cleanly apply <em>one</em> labelset. The Foundations capstone scopes to that one — <code>business_unit</code> — to keep the partner-onboarding path no-code. Partners who want the extra labelsets back can apply them via the dashboard's labelset editor after ingest, or by running the optional seed script — both paths are documented in <code>Capstone-Atlas-Operations/corpus/README.md</code>.</p>
+<p>Earlier iterations shipped with three labelsets (<code>business_unit</code> + <code>content_type</code> + <code>region</code>). Progress Agentic RAG's folder-name-as-labelset auto-detection during ingest is flat (one labelset name + a list of labels per ingest), so a drag-drop ingest can cleanly apply <em>one</em> labelset. The Foundations capstone scopes to that one — <code>business_unit</code> — to keep the partner-onboarding path no-code. Partners who want the extra labelsets back can apply them via the dashboard's labelset editor after ingest, or by running the optional seed script — both paths are documented in <code>corpus/README.md</code>.</p>
 <h3 id="build-13-atlas--where-the-corpus-lives-and-how-partners-ingest-it">Where the corpus lives and how partners ingest it</h3>
-<p>The seed corpus is available in <strong>two places</strong>:</p>
-<ul>
-<li><strong>Canonical source:</strong> <a href="https://github.com/jaysanderson/Capstone-Atlas-Operations"><code>Capstone-Atlas-Operations/corpus/business_unit/</code></a> on GitHub — alongside the runtime app code, the seed scripts, and the graph-agent spec. When a partner clones the capstone repo, the corpus comes with the code.</li>
-<li><strong>Mirror in this framework:</strong> <code>./corpus/business_unit/</code> — the same 320 markdown documents, kept in the framework so a partner can browse, download, or upload the corpus without cloning the capstone repo.</li>
-</ul>
-<p>Both copies are identical. The mirror is convenience; the canonical source is the capstone repo (where the seed scripts and runtime app also live).</p>
+<p>The seed corpus ships with this course at <code>./corpus/business_unit/</code> — 320 markdown documents, alongside the labelsets and anchor entities in <code>corpus/README.md</code>.</p>
 <p><strong>The citizen-developer &quot;Upload folder&quot; ingest path</strong> (primary):</p>
 <ol>
-<li>Partner clones <code>Capstone-Atlas-Operations</code>.</li>
+<li>Locate the <code>corpus/business_unit/</code> folder included with this course.</li>
 <li>Partner provisions an empty Knowledge Box in their Progress Agentic RAG dashboard (Step 1 of <code>corpus/README.md</code>).</li>
 <li>In the dashboard, partner opens the KB → <strong>Resources</strong> → <strong>Upload</strong> → <strong>Upload folder</strong>, picks the <code>corpus/business_unit/</code> folder, and enables the <strong>&quot;use folder names as label names&quot;</strong> option. Progress Agentic RAG applies <code>business_unit</code> as the labelset and the subfolder names (<code>hr</code>, <code>engineering</code>, etc.) as label values on every document.</li>
 <li>Done. No <code>npm</code>, no terminal, no <code>.env</code>.</li>
@@ -9467,7 +9458,7 @@ Requesting review-board sign-off to start Build 13.
 <li>Three custom Tier 3 workflows (schema-constrained generation) live and demo-ready.</li>
 <li>One Tier 4 composite RAG flow live (the &quot;incident root cause&quot; workflow).</li>
 <li>Rate-limit-aware client (documented; doesn't need stress-testing in the demo).</li>
-<li><a href="https://github.com/jaysanderson/Capstone-Atlas-Operations">Capstone-Atlas-Operations</a> is the technical baseline — fork it, don't rebuild from zero. The repo is at <code>github.com/jaysanderson/Capstone-Atlas-Operations</code>.</li>
+<li>Build it to the spec in this brief — the in-scope sections and the build plan below are your guide.</li>
 <li>Re-skin playbook (Section 10) shipped alongside the build.</li>
 <li>25-minute demo script (Section 9) rehearsed by the build owner. Delivered live to the review board.</li>
 </ul>
@@ -9513,14 +9504,14 @@ Requesting review-board sign-off to start Build 13.
 </blockquote>
 <h3 id="build-13-atlas--52-frontend-stack">5.2 Frontend stack</h3>
 <ul>
-<li><strong>Framework:</strong> Next.js 14 (App Router) or Vite + React 18 — choose whichever the build owner is fastest in. The <code>Capstone-Atlas-Operations</code> reference is Vite; staying consistent reduces fork cost.</li>
+<li><strong>Framework:</strong> Next.js 14 (App Router) or Vite + React 18 — choose whichever the build owner is fastest in. The Atlas Operations build uses Vite.</li>
 <li><strong>Styling:</strong> Tailwind CSS with a Atlas-Operations-specific palette (dark control-room aesthetic — slate-950 base, electric-blue and amber accents). Avoid the demo teal/navy palette so the two repos are visually distinct.</li>
-<li><strong>Routing:</strong> React Router v7 (matches <code>Capstone-Atlas-Operations</code>). Five top-level routes plus the landing page.</li>
+<li><strong>Routing:</strong> React Router v7. Five top-level routes plus the landing page.</li>
 <li><strong>State:</strong> React Context for the active KB, the demo &quot;presenter mode&quot; hotkeys, and (optionally) the language selector for the Concierge surface. No Redux, no Zustand — keep dependencies thin.</li>
 </ul>
 <h3 id="build-13-atlas--53-backend-stack">5.3 Backend stack</h3>
 <ul>
-<li><strong>ARAG only.</strong> No custom backend. Atlas Operations talks directly to ARAG endpoints exactly the way <code>Capstone-Atlas-Operations</code> does. This is itself a demo point — <em>there is no middleware to maintain</em>.</li>
+<li><strong>ARAG only.</strong> No custom backend. Atlas Operations talks directly to ARAG endpoints. This is itself a demo point — <em>there is no middleware to maintain</em>.</li>
 <li><strong>Generation backend:</strong> Configured at the KB level via the Progress Agentic RAG dashboard. Not exposed in the demo UI (see Build 11 for when and how to surface BYO-LLM to a customer — descoped here so the demo only claims what it actually ships).</li>
 </ul>
 <h3 id="build-13-atlas--54-data-augmentation-agent--the-typed-graph">5.4 Data-augmentation agent — the typed graph</h3>
@@ -9617,7 +9608,7 @@ Requesting review-board sign-off to start Build 13.
 </ul>
 <h3 id="build-13-atlas--phase-3--build-the-chassis--atlas-operations-branding-weeks-34">Phase 3 — Build the chassis + Atlas Operations branding (Weeks 3–4)</h3>
 <ul>
-<li>Stand up a fresh Vite + React app in a private repo named <code>Capstone-Atlas-Operations</code>. Apply the Atlas design system (dark slate base, electric-blue and amber accents).</li>
+<li>Stand up a fresh Vite + React app. Apply the Atlas design system (dark slate base, electric-blue and amber accents).</li>
 <li>Wire the ARAG client wrapper (from Foundations Builds 0–6) into the chassis. Single env var: <code>NUCLIA_KB_ID=kb-atlas-operations</code>. All demo surfaces route through this one KB.</li>
 <li>Build the static landing copy in the Atlas voice.</li>
 <li>Wire the residency badge + live KB stats (resources, paragraphs, graph nodes) into the hero — these are the proof points the demo carries instead of a BYO-LLM toggle. The stats are read at page load via <code>/v1/kb/{id}/counters</code> and <code>/v1/kb/{id}/graph/nodes</code>.</li>
@@ -9660,7 +9651,7 @@ Requesting review-board sign-off to start Build 13.
 <tbody>
 <tr><td>1. Corpus + ingestion</td><td>2</td><td>Skill orchestration, anchor consistency editing, KB ingestion + labelset config</td></tr>
 <tr><td>2. Graph agent</td><td>1.5</td><td>Agent design, schema tuning, full-corpus extraction run</td></tr>
-<tr><td>3. Fork + reskin</td><td>1</td><td>Tailwind palette swap, landing page rewrite, residency badge + live KB stats in the hero</td></tr>
+<tr><td>3. Chassis + reskin</td><td>1</td><td>App scaffold + Tailwind palette, landing page, residency badge + live KB stats in the hero</td></tr>
 <tr><td>4. Workflows + composite RAG</td><td>2</td><td>Three schemas + UI for each, composite-RAG pipeline visualisation</td></tr>
 <tr><td>5. Production readiness</td><td>1</td><td>Residency badge, observability panel, rate-limit-aware client</td></tr>
 <tr><td>6. Demo + re-skin playbook</td><td>0.5</td><td>Script, rehearsal, (optional) recording, playbook</td></tr>
@@ -9763,7 +9754,7 @@ Requesting review-board sign-off to start Build 13.
 <h3 id="build-13-atlas--2330--2500--close--invitation-90-sec">23:30 — 25:00 | Close + invitation (90 sec)</h3>
 <p><em>[Return to landing page.]</em></p>
 <blockquote>
-<p>&quot;What you've seen is one application built on one Knowledge Box, five business-unit labelsets, one extraction agent, all running in a single platform-resident region you can verify in our dashboard. Twenty-five minutes ago you couldn't have built this in five years. Today it's a fork of an open reference app, one labelset config, and an extraction agent your team configures.</p>
+<p>&quot;What you've seen is one application built on one Knowledge Box, five business-unit labelsets, one extraction agent, all running in a single platform-resident region you can verify in our dashboard. Twenty-five minutes ago you couldn't have built this in five years. Today it's a focused build against a proven spec, one labelset config, and an extraction agent your team configures.</p>
 <p>Three things you have right now that none of your other AI vendors offer:</p>
 <ol>
 <li>Residency you choose. EU or USA. Per Knowledge Box.</li>
@@ -9775,7 +9766,7 @@ Requesting review-board sign-off to start Build 13.
 <p><em>[End of 25-minute demo.]</em></p>
 <hr>
 <h2 id="build-13-atlas--10-re-skin-playbook">10. Re-Skin Playbook</h2>
-<p>This section lives in the repo as a separate <code>RESKIN.md</code> once the build ships. Brief sketch here so partners know what they're signing up for.</p>
+<p>Capture the full version as a <code>RESKIN.md</code> alongside your build once it ships. Brief sketch here so partners know what they're signing up for.</p>
 <p>A partner takes Atlas Operations and re-points it at their customer's domain. The work is structured, time-boxed, and uses the same skills (<code>progress-kb-use-case-generator</code>, <code>arag-graph-agent</code>) that built the master.</p>
 <h3 id="build-13-atlas--what-stays">What stays</h3>
 <ul>
@@ -9850,14 +9841,14 @@ Requesting review-board sign-off to start Build 13.
 </header>
 <h1 id="build-13-aurora--capstone-example--aurora-concierge-customer-experience">Capstone Example — Aurora Concierge (Customer Experience)</h1>
 <blockquote>
-<p><strong>Status:</strong> Brief shipped + reference implementation shipped.
+<p><strong>Status:</strong> Brief shipped.
 <strong>Role in the programme:</strong> Build 13 capstone, <strong>Variant B</strong> of two. The other variant — <code>../atlas-operations/README.md</code> — is the Enterprise / Internal Operations variant. Partners pick one based on their book of business and ship the second only when they've expanded into the other segment.
 <strong>Owner:</strong> Progress GTM (programme); Progress Solution lead (build).
 <strong>Target ship:</strong> End of 90-day rollout window (Day 90), in parallel with the Enterprise variant where partner bandwidth allows.
 <strong>When to pick this variant:</strong> When the partner's customers are CMOs, Heads of Digital, Chief Customer Officers, retail/D2C/B2C operators, content businesses, or anyone whose AI budget sits inside the customer-facing P&amp;L rather than IT.</p>
 </blockquote>
-<h2 id="build-13-aurora--reference-implementation">Reference implementation</h2>
-<p>The complete reference app is at <strong><a href="https://github.com/jaysanderson/Capstone-Aurora-Concierge">github.com/jaysanderson/Capstone-Aurora-Concierge</a></strong> — a Vite + React + TypeScript + Tailwind chassis that scores 100% against this brief once provisioned against a populated Progress Agentic RAG KB. It includes:</p>
+<h2 id="build-13-aurora--what-youll-build">What you'll build</h2>
+<p>A Vite + React + TypeScript + Tailwind app that satisfies this brief once provisioned against a populated Progress Agentic RAG KB. It covers:</p>
 <ul>
 <li>All six demo surfaces with the always-present two-voice floating chat.</li>
 <li>Multilingual language switcher in the global header.</li>
@@ -9868,7 +9859,7 @@ Requesting review-board sign-off to start Build 13.
 <li>Field-engineering script that PATCHes <code>callToAction</code>, <code>searchResultDisplay</code>, and <code>videoInfo</code> onto the 6 hero products and 3 ambassador videos.</li>
 <li>Fly.io deploy config.</li>
 </ul>
-<p>See the repo's <code>README.md</code> for quick-start and <code>KB_SETUP.md</code> for the end-to-end ingest + field-engineering checklist.</p>
+<p>See <code>corpus/README.md</code> for the end-to-end ingest + field-engineering checklist.</p>
 <hr>
 <h2 id="build-13-aurora--1-why-the-cx-variant-exists">1. Why the CX variant exists</h2>
 <p>The Enterprise capstone closes the room with a CTO. Aurora Concierge closes the room with a CMO. Different buyer, different language, different proof points — but the same chassis and the same five primitives underneath. Partners with a digital / commerce / content book of business were losing to point solutions (Algolia, Bloomreach, Klevu, Coveo, Yext) every time they led with the Enterprise variant. Those buyers don't want &quot;control room for unstructured knowledge&quot;; they want <strong>conversion, retention, and personalization</strong> that they can actually explain to their CFO.</p>
@@ -9910,15 +9901,10 @@ Requesting review-board sign-off to start Build 13.
 </table>
 <p>The Shopper-mode floating chat works against <code>content_type</code> alone (no audience filter required). The <code>/for-you</code> page composes audience + content_type + region filters from the active persona — Sara (Prospect, NORAM) sees a different set of cards from Mara (Trail Club Pro, EMEA). For the full persona-flow demo, partners apply the optional <code>audience</code> + <code>region</code> labelsets after the drag-drop ingest.</p>
 <h3 id="build-13-aurora--where-the-corpus-lives-and-how-partners-ingest-it">Where the corpus lives and how partners ingest it</h3>
-<p>The seed corpus is available in <strong>two places</strong>:</p>
-<ul>
-<li><strong>Canonical source:</strong> <a href="https://github.com/jaysanderson/Capstone-Aurora-Concierge"><code>Capstone-Aurora-Concierge/corpus/content_type/</code></a> on GitHub — alongside the runtime app code, the seed scripts, the <code>populate:fields</code> script, and the journey-graph spec.</li>
-<li><strong>Mirror in this framework:</strong> <code>./corpus/content_type/</code> — the same 37 markdown documents, kept in the framework so a partner can browse, download, or upload the corpus without cloning the capstone repo.</li>
-</ul>
-<p>Both copies are identical. The mirror is convenience; the canonical source is the capstone repo (where the seed scripts, <code>populate:fields</code>, and runtime app also live).</p>
+<p>The seed corpus ships with this course at <code>./corpus/content_type/</code> — 37 markdown documents, alongside the labelsets and anchor entities in <code>corpus/README.md</code>.</p>
 <p><strong>The citizen-developer &quot;Upload folder&quot; ingest path</strong> (primary):</p>
 <ol>
-<li>Partner clones <code>Capstone-Aurora-Concierge</code>.</li>
+<li>Locate the <code>corpus/content_type/</code> folder included with this course.</li>
 <li>Partner provisions an empty Knowledge Box in their Progress Agentic RAG dashboard.</li>
 <li>In the dashboard, partner opens the KB → <strong>Resources</strong> → <strong>Upload</strong> → <strong>Upload folder</strong>, picks the <code>corpus/content_type/</code> folder, and enables the <strong>&quot;use folder names as label names&quot;</strong> option. Progress Agentic RAG applies <code>content_type</code> as the labelset and the subfolder names (<code>product</code>, <code>trail_guide</code>, etc.) as label values on every document.</li>
 <li>Done for storefront + concierge + journey graph. <strong>For the full <code>/for-you</code> persona-flow demo</strong>, partner either (a) creates the <code>audience</code> and <code>region</code> labelsets in the dashboard's editor and bulk-tags resources by frontmatter values, or (b) runs the optional <code>npm run seed</code> script which applies all three labelsets programmatically.</li>
@@ -9948,7 +9934,7 @@ Requesting review-board sign-off to start Build 13.
 <li>Field-engineered CTAs front and centre — the demo presenter must point at where each call-to-action came from in the source content, because that's the content-engineering recurring-revenue pitch.</li>
 <li>Multilingual switch on the concierge surface — D2C buyers ask this in the first ten minutes.</li>
 <li>Floating chat with prospect vs Trail Club member voice — the conversion mechanic.</li>
-<li><a href="https://github.com/jaysanderson/Capstone-Aurora-Concierge">Capstone-Aurora-Concierge</a> fork as the technical baseline.</li>
+<li>Build it to the spec in this brief — the in-scope sections and the build plan below are your guide.</li>
 <li>Re-skin playbook shipped alongside the build.</li>
 <li>25-minute demo script (Section 9) rehearsed by the build owner. Delivered live to the review board.</li>
 </ul>
@@ -10000,7 +9986,7 @@ Requesting review-board sign-off to start Build 13.
 </blockquote>
 <h3 id="build-13-aurora--52-frontend-stack">5.2 Frontend stack</h3>
 <ul>
-<li><strong>Framework:</strong> Vite + React 18 (matches <code>Capstone-Aurora-Concierge</code>).</li>
+<li><strong>Framework:</strong> Vite + React 18.</li>
 <li><strong>Styling:</strong> Tailwind CSS. Aurora-themed palette — warm sandstone base, alpine-blue and rust accents, generous whitespace, photography-led hero. Designed to look like a real D2C site, not a SaaS dashboard.</li>
 <li><strong>Routing:</strong> React Router v7.</li>
 <li><strong>State:</strong> React Context for the active customer persona (Sara the prospect vs Mara the Trail Club Pro member), the floating-chat mode, and presenter-mode hotkeys.</li>
@@ -10107,7 +10093,7 @@ Requesting review-board sign-off to start Build 13.
 </ul>
 <h3 id="build-13-aurora--phase-3--build-the-chassis--aurora-re-skin-weeks-34">Phase 3 — Build the chassis + Aurora re-skin (Weeks 3–4)</h3>
 <ul>
-<li>Stand up a fresh Vite + React app in a private repo named <code>Capstone-Aurora-Concierge</code>. Apply the Aurora design system (sandstone + alpine-blue palette, generous whitespace, photography-led hero).</li>
+<li>Stand up a fresh Vite + React app. Apply the Aurora design system (sandstone + alpine-blue palette, generous whitespace, photography-led hero).</li>
 <li>Wire the ARAG client wrapper (from Foundations Builds 0–6) into the chassis. Single env var: <code>NUCLIA_KB_ID=kb-aurora-concierge</code>. All demo surfaces route through this one KB.</li>
 <li>Build the static landing copy in Aurora's voice (outdoor-adventure, technically credible, sustainability-forward).</li>
 <li>Configure the floating chat with two voices — Shopper (prospect) and Trail Club Member — using the prompt configurations from Foundations Build 2. Shopper voice: concise + one CTA from the corpus, then STOP. Member voice: detailed expert answer, multi-source citations.</li>
@@ -10153,7 +10139,7 @@ Requesting review-board sign-off to start Build 13.
 <tbody>
 <tr><td>1. Corpus + ingestion + field engineering</td><td>2</td><td>Skill orchestration, Aurora brand-voice tuning, manual population of CTA and searchResultDisplay fields on hero products</td></tr>
 <tr><td>2. Journey graph agent</td><td>1.5</td><td>Schema design, tuning, extraction across product + content + loyalty</td></tr>
-<tr><td>3. Fork + reskin + floating chat</td><td>1</td><td>Palette swap, photography-led hero, two-voice chat wiring, persona switcher</td></tr>
+<tr><td>3. Chassis + reskin + floating chat</td><td>1</td><td>App scaffold + palette, photography-led hero, two-voice chat wiring, persona switcher</td></tr>
 <tr><td>4. Workflows + composite RAG</td><td>2</td><td>Three schemas, abandoned-cart pipeline visualisation, fixture data for Sara</td></tr>
 <tr><td>5. Multilingual + production polish</td><td>1</td><td>Language switch, residency badge + live KB stats, observability panel</td></tr>
 <tr><td>6. Demo + re-skin playbook</td><td>0.5</td><td>Script, rehearsal, playbook</td></tr>

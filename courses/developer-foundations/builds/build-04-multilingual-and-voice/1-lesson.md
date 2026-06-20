@@ -134,9 +134,9 @@ const visible = paths.filter((p) =>
 The decision rule: **never gate sensitive content with prefix-only** — a "The user is a Prospect, do not show member content" prefix is a suggestion the model can and will ignore on a bad day. Filter first (server enforces it), prefix second (model shapes voice), client-split only for visualisations where the user already has the right to the data and you're just collapsing it for the UI.
 
 **See it in the capstone:**
-- prefix → `Capstone-Aurora-Concierge/src/lib/buildPrefix.ts`
-- filter → `Capstone-Aurora-Concierge/src/pages/Storefront.tsx` → `audienceFilter`
-- client-side → `Capstone-Aurora-Concierge/src/pages/JourneyGraph.tsx` → `splitPathsByPersona`
+- prefix → `src/lib/buildPrefix.ts`
+- filter → `src/pages/Storefront.tsx` → `audienceFilter`
+- client-side → `src/pages/JourneyGraph.tsx` → `splitPathsByPersona`
 
 ## What's next
 

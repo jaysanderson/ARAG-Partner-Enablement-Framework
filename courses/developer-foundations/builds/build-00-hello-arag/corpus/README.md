@@ -39,11 +39,11 @@ The Atlas `business_unit/` folder (320 documents across five enterprise business
 
 It's **not required** for Build 0 — pick whichever your time budget supports. The walkthrough's verification steps assume `content_type/`.
 
-## Canonical source
+## The two corpora
 
-Both corpora are mirrored from the capstone reference repos:
+Both corpora ship with this course:
 
-- `content_type/` ← [Capstone-Aurora-Concierge/corpus/content_type/](https://github.com/jaysanderson/Capstone-Aurora-Concierge/tree/main/corpus/content_type)
-- `business_unit/` ← [Capstone-Atlas-Operations/corpus/business_unit/](https://github.com/jaysanderson/Capstone-Atlas-Operations/tree/main/corpus/business_unit)
+- `content_type/` — the Aurora Outfitters (D2C outdoor retail) corpus, also used by the Aurora Concierge capstone.
+- `business_unit/` — the Atlas Global Industries (enterprise operations) corpus, also used by the Atlas Operations capstone.
 
-The mirror in Build 0 is for convenience — students get a working corpus the moment they clone the framework. If you spot drift, the canonical sources are the capstone repos.
+They're the same corpora the two Build 13 capstone briefs use, so the patterns you learn here carry straight through to the capstone.

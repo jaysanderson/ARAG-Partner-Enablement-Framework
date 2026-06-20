@@ -1,14 +1,14 @@
 # Capstone Example — Aurora Concierge (Customer Experience)
 
-> **Status:** Brief shipped + reference implementation shipped.
+> **Status:** Brief shipped.
 > **Role in the programme:** Build 13 capstone, **Variant B** of two. The other variant — `../atlas-operations/README.md` — is the Enterprise / Internal Operations variant. Partners pick one based on their book of business and ship the second only when they've expanded into the other segment.
 > **Owner:** Progress GTM (programme); Progress Solution lead (build).
 > **Target ship:** End of 90-day rollout window (Day 90), in parallel with the Enterprise variant where partner bandwidth allows.
 > **When to pick this variant:** When the partner's customers are CMOs, Heads of Digital, Chief Customer Officers, retail/D2C/B2C operators, content businesses, or anyone whose AI budget sits inside the customer-facing P&L rather than IT.
 
-## Reference implementation
+## What you'll build
 
-The complete reference app is at **[github.com/jaysanderson/Capstone-Aurora-Concierge](https://github.com/jaysanderson/Capstone-Aurora-Concierge)** — a Vite + React + TypeScript + Tailwind chassis that scores 100% against this brief once provisioned against a populated Progress Agentic RAG KB. It includes:
+A Vite + React + TypeScript + Tailwind app that satisfies this brief once provisioned against a populated Progress Agentic RAG KB. It covers:
 
 - All six demo surfaces with the always-present two-voice floating chat.
 - Multilingual language switcher in the global header.
@@ -19,7 +19,7 @@ The complete reference app is at **[github.com/jaysanderson/Capstone-Aurora-Conc
 - Field-engineering script that PATCHes `callToAction`, `searchResultDisplay`, and `videoInfo` onto the 6 hero products and 3 ambassador videos.
 - Fly.io deploy config.
 
-See the repo's `README.md` for quick-start and `KB_SETUP.md` for the end-to-end ingest + field-engineering checklist.
+See [`corpus/README.md`](corpus/README.md) for the end-to-end ingest + field-engineering checklist.
 
 ---
 
@@ -74,16 +74,11 @@ The Shopper-mode floating chat works against `content_type` alone (no audience f
 
 ### Where the corpus lives and how partners ingest it
 
-The seed corpus is available in **two places**:
-
-- **Canonical source:** [`Capstone-Aurora-Concierge/corpus/content_type/`](https://github.com/jaysanderson/Capstone-Aurora-Concierge) on GitHub — alongside the runtime app code, the seed scripts, the `populate:fields` script, and the journey-graph spec.
-- **Mirror in this framework:** [`./corpus/content_type/`](corpus/content_type/) — the same 37 markdown documents, kept in the framework so a partner can browse, download, or upload the corpus without cloning the capstone repo.
-
-Both copies are identical. The mirror is convenience; the canonical source is the capstone repo (where the seed scripts, `populate:fields`, and runtime app also live).
+The seed corpus ships with this course at [`./corpus/content_type/`](corpus/content_type/) — 37 markdown documents, alongside the labelsets and anchor entities in [`corpus/README.md`](corpus/README.md).
 
 **The citizen-developer "Upload folder" ingest path** (primary):
 
-1. Partner clones `Capstone-Aurora-Concierge`.
+1. Locate the `corpus/content_type/` folder included with this course.
 2. Partner provisions an empty Knowledge Box in their Progress Agentic RAG dashboard.
 3. In the dashboard, partner opens the KB → **Resources** → **Upload** → **Upload folder**, picks the `corpus/content_type/` folder, and enables the **"use folder names as label names"** option. Progress Agentic RAG applies `content_type` as the labelset and the subfolder names (`product`, `trail_guide`, etc.) as label values on every document.
 4. Done for storefront + concierge + journey graph. **For the full `/for-you` persona-flow demo**, partner either (a) creates the `audience` and `region` labelsets in the dashboard's editor and bulk-tags resources by frontmatter values, or (b) runs the optional `npm run seed` script which applies all three labelsets programmatically.
@@ -119,7 +114,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 - Field-engineered CTAs front and centre — the demo presenter must point at where each call-to-action came from in the source content, because that's the content-engineering recurring-revenue pitch.
 - Multilingual switch on the concierge surface — D2C buyers ask this in the first ten minutes.
 - Floating chat with prospect vs Trail Club member voice — the conversion mechanic.
-- [Capstone-Aurora-Concierge](https://github.com/jaysanderson/Capstone-Aurora-Concierge) fork as the technical baseline.
+- Build it to the spec in this brief — the in-scope sections and the build plan below are your guide.
 - Re-skin playbook shipped alongside the build.
 - 25-minute demo script (Section 9) rehearsed by the build owner. Delivered live to the review board.
 
@@ -175,7 +170,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 
 ### 5.2 Frontend stack
 
-- **Framework:** Vite + React 18 (matches `Capstone-Aurora-Concierge`).
+- **Framework:** Vite + React 18.
 - **Styling:** Tailwind CSS. Aurora-themed palette — warm sandstone base, alpine-blue and rust accents, generous whitespace, photography-led hero. Designed to look like a real D2C site, not a SaaS dashboard.
 - **Routing:** React Router v7.
 - **State:** React Context for the active customer persona (Sara the prospect vs Mara the Trail Club Pro member), the floating-chat mode, and presenter-mode hotkeys.
@@ -290,7 +285,7 @@ Same overall shape as the Enterprise variant. Effort estimates are nearly identi
 
 ### Phase 3 — Build the chassis + Aurora re-skin (Weeks 3–4)
 
-- Stand up a fresh Vite + React app in a private repo named `Capstone-Aurora-Concierge`. Apply the Aurora design system (sandstone + alpine-blue palette, generous whitespace, photography-led hero).
+- Stand up a fresh Vite + React app. Apply the Aurora design system (sandstone + alpine-blue palette, generous whitespace, photography-led hero).
 - Wire the ARAG client wrapper (from Foundations Builds 0–6) into the chassis. Single env var: `NUCLIA_KB_ID=kb-aurora-concierge`. All demo surfaces route through this one KB.
 - Build the static landing copy in Aurora's voice (outdoor-adventure, technically credible, sustainability-forward).
 - Configure the floating chat with two voices — Shopper (prospect) and Trail Club Member — using the prompt configurations from Foundations Build 2. Shopper voice: concise + one CTA from the corpus, then STOP. Member voice: detailed expert answer, multi-source citations.
@@ -335,7 +330,7 @@ Same overall shape as the Enterprise variant. Effort estimates are nearly identi
 |---|---|---|
 | 1. Corpus + ingestion + field engineering | 2 | Skill orchestration, Aurora brand-voice tuning, manual population of CTA and searchResultDisplay fields on hero products |
 | 2. Journey graph agent | 1.5 | Schema design, tuning, extraction across product + content + loyalty |
-| 3. Fork + reskin + floating chat | 1 | Palette swap, photography-led hero, two-voice chat wiring, persona switcher |
+| 3. Chassis + reskin + floating chat | 1 | App scaffold + palette, photography-led hero, two-voice chat wiring, persona switcher |
 | 4. Workflows + composite RAG | 2 | Three schemas, abandoned-cart pipeline visualisation, fixture data for Sara |
 | 5. Multilingual + production polish | 1 | Language switch, residency badge + live KB stats, observability panel |
 | 6. Demo + re-skin playbook | 0.5 | Script, rehearsal, playbook |
