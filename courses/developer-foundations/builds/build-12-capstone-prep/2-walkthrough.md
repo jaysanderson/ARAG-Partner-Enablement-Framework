@@ -28,9 +28,9 @@ This is a writing Build. No terminals, no `curl`, no Node. Just markdown.
 ## Step 1 — Set up your capstone-prep folder (5 min)
 
 ```bash
-cd ~/Desktop
-mkdir foundations-build-12
-cd foundations-build-12
+cd ~/Desktop/developer-foundations
+mkdir build-12
+cd build-12
 code .
 ```
 

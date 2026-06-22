@@ -36,29 +36,29 @@ Before you turn anything on, you want a **"before" snapshot**. That way you can 
 
 You need a folder on your machine to save notes and screenshots. Make it however your OS likes:
 
-- **Any OS (file manager):** create a new folder on your Desktop called `foundations-build-6`. Inside it, drop a copy of the `.env` file from your `foundations-build-0` folder so credentials are at hand. Open the folder in your editor of choice.
+- **Any OS (file manager):** inside your `~/Desktop/developer-foundations` course folder, create a new folder called `build-6`. Inside it, drop a copy of the `.env` file from your `build-0` folder so credentials are at hand. Open the folder in your editor of choice.
 - **macOS / Linux terminal:**
   ```bash
-  cd ~/Desktop
-  mkdir foundations-build-6
-  cd foundations-build-6
-  cp ../foundations-build-0/.env .
+  cd ~/Desktop/developer-foundations
+  mkdir build-6
+  cd build-6
+  cp ../build-0/.env .
   code .
   ```
 - **Windows PowerShell:**
   ```powershell
-  cd $HOME\Desktop
-  mkdir foundations-build-6
-  cd foundations-build-6
-  Copy-Item ..\foundations-build-0\.env .
+  cd $HOME\Desktop\developer-foundations
+  mkdir build-6
+  cd build-6
+  Copy-Item ..\build-0\.env .
   code .
   ```
 - **Windows Command Prompt (cmd):**
   ```bat
-  cd %USERPROFILE%\Desktop
-  mkdir foundations-build-6
-  cd foundations-build-6
-  copy ..\foundations-build-0\.env .
+  cd %USERPROFILE%\Desktop\developer-foundations
+  mkdir build-6
+  cd build-6
+  copy ..\build-0\.env .
   code .
   ```
 

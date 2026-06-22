@@ -44,9 +44,9 @@ The 5 queries that scored worst become your **hard queries** — the ones compos
 In a new Build 10 folder:
 
 ```bash
-cd ~/Desktop
-mkdir foundations-build-10
-cd foundations-build-10
+cd ~/Desktop/developer-foundations
+mkdir build-10
+cd build-10
 ```
 
 Create `hard-queries.md`:
@@ -72,7 +72,7 @@ You can either extend Build 3 (recommended) or scaffold fresh.
 ### Option A — Extend Build 3 (recommended)
 
 ```bash
-cd ~/Desktop/foundations-build-3
+cd ~/Desktop/developer-foundations/build-3
 npm run dev
 ```
 
@@ -81,9 +81,9 @@ Confirm Build 3 still works. Stop the dev server.
 ### Option B — Fresh project
 
 ```bash
-cd ~/Desktop
-npm create vite@latest foundations-build-10 -- --template react-ts
-cd foundations-build-10
+cd ~/Desktop/developer-foundations
+npm create vite@latest build-10 -- --template react-ts
+cd build-10
 npm install
 ```
 

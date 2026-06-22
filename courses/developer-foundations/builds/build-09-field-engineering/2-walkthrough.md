@@ -142,7 +142,7 @@ Now the AI starts using your fields.
 ### 5a. Open your existing chat project
 
 ```bash
-cd ~/Desktop/foundations-build-3   # or whichever has your MultiSurfaceChat
+cd ~/Desktop/developer-foundations/build-3   # or whichever has your MultiSurfaceChat
 npm run dev
 ```
 

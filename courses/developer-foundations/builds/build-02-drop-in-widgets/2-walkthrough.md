@@ -26,7 +26,7 @@ A local `index.html` file on your Desktop running a Progress Agentic RAG widget 
 
 ## Step 1 — Create your local file (5 min)
 
-Open VS Code (or any text editor). **File → New File**. Save it into `~/Desktop/foundations-build-2/` (create the folder if it doesn't exist) as `index.html`. Paste this minimal skeleton in and save:
+Open VS Code (or any text editor). **File → New File**. Save it into `~/Desktop/developer-foundations/build-2/` (create the folder if it doesn't exist) as `index.html`. Paste this minimal skeleton in and save:
 
 ```html
 <!doctype html>
@@ -158,7 +158,7 @@ Now ship it locally.
 2. Switch to VS Code and open the `index.html` you created in Step 1.
 3. Find the comment line `<!-- The Progress Agentic RAG widget embed code will be pasted here in Step 6. -->`.
 4. Replace that comment with the snippet from your clipboard. Save.
-5. Open Finder, navigate to `~/Desktop/foundations-build-2/`, and **double-click `index.html`**. Your default browser opens the file.
+5. Open Finder, navigate to `~/Desktop/developer-foundations/build-2/`, and **double-click `index.html`**. Your default browser opens the file.
 
 **You should see:**
 

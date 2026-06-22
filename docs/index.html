@@ -1023,23 +1023,26 @@ Body:
 <p><strong>If the dashboard doesn't show a service-account JWT:</strong> create one. In your KB settings there's an &quot;API Keys&quot; or &quot;Service Accounts&quot; section with a &quot;Create&quot; button. Make one with read+write permissions.</p>
 <hr>
 <h2 id="build-00-walkthrough--step-3--set-up-your-working-folder-5-min">Step 3 — Set up your working folder (5 min)</h2>
-<p>Open your terminal. Pick a location for your course work:</p>
+<p>Open your terminal. First make <strong>one folder for the whole course</strong>, then a folder for this Build inside it:</p>
 <pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop
-mkdir foundations-build-0
-<span class="hljs-keyword">cd</span> foundations-build-0
+mkdir developer-foundations
+<span class="hljs-keyword">cd</span> developer-foundations
+mkdir build-0
+<span class="hljs-keyword">cd</span> build-0
 </code></pre>
 <p><strong>What that did:</strong></p>
 <ul>
 <li><code>cd ~/Desktop</code> — moved into your Desktop folder.</li>
-<li><code>mkdir foundations-build-0</code> — made a new folder called <code>foundations-build-0</code>.</li>
-<li><code>cd foundations-build-0</code> — moved into it.</li>
+<li><code>mkdir developer-foundations</code> — made the <strong>course folder</strong>. Every Build you do lives inside this one folder, so your Desktop stays tidy. You only create this once, here in Build 0.</li>
+<li><code>cd developer-foundations</code> — moved into the course folder.</li>
+<li><code>mkdir build-0</code> / <code>cd build-0</code> — made this Build's folder and moved into it.</li>
 </ul>
-<p>You're now &quot;inside&quot; the folder. Anything you create from here lands inside.</p>
-<p>Now create a file called <code>.env</code> (the dot at the front is important) using your text editor — not the terminal. Open VS Code, then <strong>File → New File</strong>. Save it (Cmd/Ctrl + S) into the <code>foundations-build-0</code> folder you just created. Name it exactly <code>.env</code> — including the leading dot, with no extension after it. VS Code may warn that filenames starting with a dot are hidden — that's normal, accept it.</p>
+<p>You're now &quot;inside&quot; <code>~/Desktop/developer-foundations/build-0</code>. Anything you create from here lands inside. Every later Build makes its own <code>build-N</code> folder next to this one, all under <code>developer-foundations</code>.</p>
+<p>Now create a file called <code>.env</code> (the dot at the front is important) using your text editor — not the terminal. Open VS Code, then <strong>File → New File</strong>. Save it (Cmd/Ctrl + S) into the <code>build-0</code> folder you just created. Name it exactly <code>.env</code> — including the leading dot, with no extension after it. VS Code may warn that filenames starting with a dot are hidden — that's normal, accept it.</p>
 <blockquote>
 <p><strong>Why a text editor and not <code>touch .env</code> in the terminal?</strong> Two reasons. First, you're going to paste secrets into this file in a moment — opening it in the editor where you'll work on it is one fewer step and one fewer place where the credentials could end up. Second, the terminal has its own gotchas around hidden filenames (the file looks like it doesn't exist when you <code>ls</code>, and <code>cat .env</code> shows nothing helpful), and Build 0 isn't the right time to fight that. The text editor shows you the file plainly.</p>
 </blockquote>
-<p>If your editor isn't VS Code, the same flow works: New File → Save As → name it <code>.env</code> → save into the <code>foundations-build-0</code> folder. If <code>.env</code> looks hidden in the editor's file tree, press <code>Cmd+Shift+.</code> on macOS (or enable &quot;Show hidden files&quot; in your editor's settings).</p>
+<p>If your editor isn't VS Code, the same flow works: New File → Save As → name it <code>.env</code> → save into the <code>build-0</code> folder. If <code>.env</code> looks hidden in the editor's file tree, press <code>Cmd+Shift+.</code> on macOS (or enable &quot;Show hidden files&quot; in your editor's settings).</p>
 <p>With the empty <code>.env</code> file open in front of you, paste this in, <strong>replacing the placeholder values with the three credentials from Step 2</strong>:</p>
 <pre><code class="hljs language-bash">NUCLIA_API_URL=https://aws-eu-1.rag.progress.cloud/api/v1
 NUCLIA_KB_ID=paste-your-kb-uuid-here
@@ -1089,7 +1092,7 @@ NUCLIA_API_KEY=paste-your-jwt-here
 <p>Whatever fits your content. Write it down.</p>
 <h3 id="build-00-walkthrough--5b-build-your-scratch-curl-in-vs-code">5b. Build your scratch curl in VS Code</h3>
 <p>Don't try to edit a 5-line curl command directly in the terminal — especially not with a 500+ character JWT in the middle of it. One stray character and the call silently breaks in a way that's hard to debug. Instead, you'll keep a <strong>scratch file</strong> in VS Code with your working command, do all the placeholder replacement there with Find &amp; Replace, then copy the finished command into the terminal.</p>
-<p>In VS Code, <strong>File → New File</strong>. Save it (Cmd/Ctrl + S) into your <code>foundations-build-0</code> folder as <code>scratch.sh</code>. Then paste this template in <strong>exactly as-is</strong> — do not edit anything yet:</p>
+<p>In VS Code, <strong>File → New File</strong>. Save it (Cmd/Ctrl + S) into your <code>build-0</code> folder as <code>scratch.sh</code>. Then paste this template in <strong>exactly as-is</strong> — do not edit anything yet:</p>
 <pre><code class="hljs language-bash">curl -s -X POST \
   -H <span class="hljs-string">&quot;X-NUCLIA-SERVICEACCOUNT: Bearer YOUR_JWT_HERE&quot;</span> \
   -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
@@ -1196,7 +1199,7 @@ NUCLIA_API_KEY=paste-your-jwt-here
 <h2 id="build-00-walkthrough--step-8--vibe-code-your-first-arag-client-30-min">Step 8 — Vibe-code your first ARAG client (30 min)</h2>
 <p>Now the fun part. We'll get the AI to write a small Node.js script that does what step 7's <code>curl</code> did, in a more reusable way.</p>
 <h3 id="build-00-walkthrough--8a-initialise-the-node-project">8a. Initialise the Node project</h3>
-<p>Back in your terminal, <strong>make sure you're still in <code>~/Desktop/foundations-build-0</code></strong> (run <code>pwd</code> to check — it should print the folder path).</p>
+<p>Back in your terminal, <strong>make sure you're still in <code>~/Desktop/developer-foundations/build-0</code></strong> (run <code>pwd</code> to check — it should print the folder path).</p>
 <p>Then:</p>
 <pre><code class="hljs language-bash">npm init -y
 npm install dotenv
@@ -1283,7 +1286,7 @@ Use plain fetch. No SDK. No external HTTP library beyond what's built into Node.
 <p>Create a file <code>prompt-log.md</code> in your project folder. Paste the brief you used, plus the AI's final working code. This is required for review-board sign-off and will save you hours later when you need a similar component.</p>
 <hr>
 <h2 id="build-00-walkthrough--step-9--run-your-script-10-min">Step 9 — Run your script (10 min)</h2>
-<p>In your terminal, still in <code>~/Desktop/foundations-build-0</code>:</p>
+<p>In your terminal, still in <code>~/Desktop/developer-foundations/build-0</code>:</p>
 <pre><code class="hljs language-bash">node ask.mjs <span class="hljs-string">&quot;your question here&quot;</span>
 </code></pre>
 <p><em>(No-npm path: <code>node --env-file=.env ask.mjs &quot;your question here&quot;</code>.)</em></p>
@@ -2021,14 +2024,14 @@ console.log(<span class="hljs-string">'Unique resource IDs:'</span>, uniqueRids)
 <p>Time to glue all five primitives behind a single tool. Same vibe-coding loop from Build 0: brief → read → run → iterate.</p>
 <h3 id="build-01-walkthrough--10a-make-sure-youre-in-the-right-folder">10a. Make sure you're in the right folder</h3>
 <p>In your terminal:</p>
-<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/foundations-build-0
+<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/developer-foundations/build-0
 pwd
 </code></pre>
-<p>The <code>pwd</code> (print working directory) should show your <code>foundations-build-0</code> path. If you'd rather keep Build 1 separate, create a sibling folder:</p>
-<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop
-mkdir foundations-build-1
-<span class="hljs-keyword">cd</span> foundations-build-1
-cp ../foundations-build-0/.env .
+<p>The <code>pwd</code> (print working directory) should show your <code>build-0</code> path. If you'd rather keep Build 1 separate, create a sibling folder:</p>
+<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/developer-foundations
+mkdir build-1
+<span class="hljs-keyword">cd</span> build-1
+cp ../build-0/.env .
 npm init -y
 npm install dotenv
 </code></pre>
@@ -2428,7 +2431,7 @@ Resource title: &quot;Onboarding Guide&quot;, extracted_text length: 4129 chars
 </ul>
 <hr>
 <h2 id="build-02-walkthrough--step-1--create-your-local-file-5-min">Step 1 — Create your local file (5 min)</h2>
-<p>Open VS Code (or any text editor). <strong>File → New File</strong>. Save it into <code>~/Desktop/foundations-build-2/</code> (create the folder if it doesn't exist) as <code>index.html</code>. Paste this minimal skeleton in and save:</p>
+<p>Open VS Code (or any text editor). <strong>File → New File</strong>. Save it into <code>~/Desktop/developer-foundations/build-2/</code> (create the folder if it doesn't exist) as <code>index.html</code>. Paste this minimal skeleton in and save:</p>
 <pre><code class="hljs language-html">&lt;!doctype html<span class="hljs-keyword">&gt;</span>
 <span class="hljs-keyword">&lt;html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span><span class="hljs-keyword">&gt;</span>
 <span class="hljs-keyword">&lt;head</span><span class="hljs-keyword">&gt;</span>
@@ -2533,7 +2536,7 @@ Resource title: &quot;Onboarding Guide&quot;, extracted_text length: 4129 chars
 <li>Switch to VS Code and open the <code>index.html</code> you created in Step 1.</li>
 <li>Find the comment line <code>&lt;!-- The Progress Agentic RAG widget embed code will be pasted here in Step 6. --&gt;</code>.</li>
 <li>Replace that comment with the snippet from your clipboard. Save.</li>
-<li>Open Finder, navigate to <code>~/Desktop/foundations-build-2/</code>, and <strong>double-click <code>index.html</code></strong>. Your default browser opens the file.</li>
+<li>Open Finder, navigate to <code>~/Desktop/developer-foundations/build-2/</code>, and <strong>double-click <code>index.html</code></strong>. Your default browser opens the file.</li>
 </ol>
 <p><strong>You should see:</strong></p>
 <ul>
@@ -2960,14 +2963,15 @@ Question: {question}
 <h2 id="build-03-walkthrough--step-2--vibe-code-the-whole-app-in-one-brief-40-min">Step 2 — Vibe-code the whole app in one brief (40 min)</h2>
 <p>This is the meaty step — but most of it is &quot;paste and watch&quot;. You give the AI one comprehensive brief; the AI scaffolds a fresh Vite + React + TypeScript project, installs and configures Tailwind, writes the ARAG client (<code>ragClient.ts</code>), writes the multi-voice chat component (<code>MultiSurfaceChat.tsx</code>), and wires the app together. The brief is long because it's specific — don't paraphrase it.</p>
 <p>Open your AI assistant. Paste this brief <strong>verbatim</strong>:</p>
-<pre><code>Build me a Vite + React + TypeScript app called `foundations-build-3` in
-~/Desktop that demonstrates a multi-surface chat experience against a
-Progress Agentic RAG (ARAG / Progress Agentic RAG) Knowledge Box.
+<pre><code>Build me a Vite + React + TypeScript app called `build-3` in
+~/Desktop/developer-foundations (my course folder) that demonstrates a
+multi-surface chat experience against a Progress Agentic RAG (ARAG /
+Progress Agentic RAG) Knowledge Box.
 
 PROJECT SETUP:
-1. Scaffold a fresh Vite + React + TS project (`npm create vite@latest
-   foundations-build-3 -- --template react-ts`), `cd` into it,
-   `npm install`.
+1. From ~/Desktop/developer-foundations, scaffold a fresh Vite + React +
+   TS project (`npm create vite@latest build-3 -- --template react-ts`),
+   `cd` into it, `npm install`.
 2. Install and configure Tailwind CSS end-to-end:
    - Install tailwindcss + postcss + autoprefixer as dev dependencies.
    - Run `npx tailwindcss init -p` to create config files.
@@ -3082,7 +3086,7 @@ and what goes in each.
 <p>Send the brief. Watch the AI work (Claude Code / Cursor) or paste through the AI's emitted commands one at a time (ChatGPT / Claude.ai web).</p>
 <p><strong>Roughly what should happen:</strong></p>
 <ol>
-<li>The AI scaffolds <code>foundations-build-3/</code> with Vite.</li>
+<li>The AI scaffolds <code>build-3/</code> with Vite.</li>
 <li>Installs all dependencies (including Tailwind + postcss + autoprefixer).</li>
 <li>Generates <code>tailwind.config.js</code>, <code>postcss.config.js</code>, edits <code>src/index.css</code>.</li>
 <li>Writes <code>src/lib/ragClient.ts</code> with the streaming-NDJSON parser.</li>
@@ -3096,7 +3100,7 @@ and what goes in each.
 <p>Copy the entire error message + the command that produced it. Paste both back into the same chat: <em>&quot;I ran [command] and got [error]. Fix.&quot;</em> The AI iterates. This is the four-step vibe-coding loop from the <a href="#vibe-coding-guide--the-four-step-loop-this-is-the-whole-course">vibe-coding guide</a> — brief, read, run, iterate.</p>
 <h3 id="build-03-walkthrough--no-npm-alternative--single-file-build">No-npm alternative — single-file build</h3>
 <p>If <code>npm install</code> is blocked on your machine (see the <a href="#vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">vibe-coding guide</a>), build this as <strong>one self-contained <code>index.html</code></strong> instead — no Vite, no install. Same chat experience, same <code>streamAsk</code> + two-voice logic.</p>
-<p>Make a folder and an empty <code>index.html</code> (<code>mkdir ~/Desktop/foundations-build-3 &amp;&amp; cd $_</code> then create <code>index.html</code> in your editor). Then paste this brief instead of the one above:</p>
+<p>Make a folder and an empty <code>index.html</code> (<code>mkdir -p ~/Desktop/developer-foundations/build-3 &amp;&amp; cd $_</code> then create <code>index.html</code> in your editor). Then paste this brief instead of the one above:</p>
 <pre><code>Build a SINGLE self-contained index.html — no build step, no npm — that
 demonstrates a multi-surface chat against a Progress Agentic RAG Knowledge Box.
 Open-in-the-browser only.
@@ -3129,7 +3133,7 @@ Then implement EXACTLY the same behaviour as the npm brief above:
 <p><strong>Run it:</strong> open <code>index.html</code> in your browser. If the browser blocks the API call from a <code>file://</code> page (CORS), serve the folder with any static server you already have — e.g. <code>python3 -m http.server 8000</code>, then visit <code>http://localhost:8000</code>. Paste your credentials into the <code>CONFIG</code> object (same three values as Step 3 below), reload, and you're done — skip the <code>.env</code> / <code>npm run dev</code> steps.</p>
 <hr>
 <h2 id="build-03-walkthrough--step-3--paste-your-credentials-into-env-3-min">Step 3 — Paste your credentials into <code>.env</code> (3 min)</h2>
-<p>Open the <code>.env</code> file the AI created at the root of the <code>foundations-build-3</code> folder. Replace the three <code>PASTE_*</code> placeholder values with your real credentials from Build 0:</p>
+<p>Open the <code>.env</code> file the AI created at the root of the <code>build-3</code> folder. Replace the three <code>PASTE_*</code> placeholder values with your real credentials from Build 0:</p>
 <pre><code class="hljs language-bash">VITE_NUCLIA_API_URL=https://aws-eu-1.rag.progress.cloud/api/v1
 VITE_NUCLIA_KB_ID=&lt;your KB UUID here&gt;
 VITE_NUCLIA_API_KEY=&lt;your service-account JWT here&gt;
@@ -3201,7 +3205,7 @@ After updating, restart the dev server if needed and tell me to refresh.
 <hr>
 <h2 id="build-03-walkthrough--verification-checklist">Verification checklist</h2>
 <ul>
-<li>[ ] <code>foundations-build-3/</code> exists on your Desktop. <code>npm run dev</code> runs and the app loads at localhost.</li>
+<li>[ ] <code>build-3/</code> exists inside your <code>~/Desktop/developer-foundations</code> folder. <code>npm run dev</code> runs and the app loads at localhost.</li>
 <li>[ ] <code>.env</code> has your three real credentials (not the <code>PASTE_*</code> placeholders).</li>
 <li>[ ] <strong>Prospect mode</strong>: answer is 3 sentences max + a pill-styled CTA button at the end.</li>
 <li>[ ] <strong>Member mode</strong>: detailed answer + citation chips. No pill button.</li>
@@ -3486,7 +3490,7 @@ streamAsk(finalQuery, promptConfig);
 <p>This Build sells itself in customer demos. &quot;Show us multilingual&quot; and &quot;show us audience targeting&quot; are two questions you'll hear in every Tier-2 conversation.</p>
 <h2 id="build-04-walkthrough--what-youll-need-open">What you'll need open</h2>
 <ul>
-<li><strong>Your Build 3 project folder</strong> (<code>foundations-build-3</code>).</li>
+<li><strong>Your Build 3 project folder</strong> (<code>build-3</code>).</li>
 <li><strong>Your terminal</strong>.</li>
 <li><strong>Your editor</strong> (VS Code).</li>
 <li><strong>Your AI assistant</strong>.</li>
@@ -3496,7 +3500,7 @@ streamAsk(finalQuery, promptConfig);
 <hr>
 <h2 id="build-04-walkthrough--step-1--re-open-the-build-3-project-5-min">Step 1 — Re-open the Build 3 project (5 min)</h2>
 <p>In your terminal:</p>
-<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/foundations-build-3
+<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/developer-foundations/build-3
 npm run dev
 </code></pre>
 <p><strong>You should see:</strong> the same Build 3 chat UI at <code>http://localhost:5173/</code>. Send a test query in each persona mode (Prospect, Member). Confirm both still work.</p>
@@ -4138,9 +4142,9 @@ Body:
 <p>You can extend Build 3's project or start fresh. <strong>We recommend starting fresh</strong> — these are CLI scripts, not React components, and a clean Node project is simpler.</p>
 <hr>
 <h2 id="build-05-walkthrough--step-1--set-up-a-fresh-project-5-min">Step 1 — Set up a fresh project (5 min)</h2>
-<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop
-mkdir foundations-build-5
-<span class="hljs-keyword">cd</span> foundations-build-5
+<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/developer-foundations
+mkdir build-5
+<span class="hljs-keyword">cd</span> build-5
 npm init -y
 npm install dotenv
 </code></pre>
@@ -4151,10 +4155,10 @@ npm install dotenv
 <li>Installed <code>dotenv</code> so Node can read your <code>.env</code> file.</li>
 </ul>
 <blockquote>
-<p><strong>No-npm path</strong> (see the <a href="#vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">vibe-coding guide</a>). Skip <code>npm init</code>/<code>npm install</code> — just <code>mkdir foundations-build-5 &amp;&amp; cd foundations-build-5</code>. Run every script in this Build with <code>--env-file</code>, e.g. <code>node --env-file=.env faq-generator.mjs &quot;onboarding&quot;</code>. When you brief the AI for <code>askForJson</code> (Step 2), tell it to read <code>process.env.NUCLIA_*</code> directly — <strong>do not import dotenv</strong>.</p>
+<p><strong>No-npm path</strong> (see the <a href="#vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">vibe-coding guide</a>). Skip <code>npm init</code>/<code>npm install</code> — just <code>mkdir -p ~/Desktop/developer-foundations/build-5 &amp;&amp; cd $_</code>. Run every script in this Build with <code>--env-file</code>, e.g. <code>node --env-file=.env faq-generator.mjs &quot;onboarding&quot;</code>. When you brief the AI for <code>askForJson</code> (Step 2), tell it to read <code>process.env.NUCLIA_*</code> directly — <strong>do not import dotenv</strong>.</p>
 </blockquote>
 <p>Copy your <code>.env</code> from Build 0:</p>
-<pre><code class="hljs language-bash">cp ../foundations-build-0/.env .
+<pre><code class="hljs language-bash">cp ../build-0/.env .
 </code></pre>
 <p>(If your Build 0 folder is named differently, adjust the path.)</p>
 <p>Open the project in VS Code:</p>
@@ -4655,7 +4659,7 @@ ES modules.
 </ul>
 <p><strong>&quot;Cannot find module 'dotenv'.&quot;</strong></p>
 <ul>
-<li>Run <code>npm install dotenv</code> from the project folder. Make sure your <code>pwd</code> ends in <code>foundations-build-5</code>.</li>
+<li>Run <code>npm install dotenv</code> from the project folder. Make sure your <code>pwd</code> ends in <code>build-5</code>.</li>
 </ul>
 <p><strong>Schema validation rejected by the API.</strong></p>
 <ul>
@@ -4915,26 +4919,26 @@ ES modules.
 <h3 id="build-06-walkthrough--1a-set-up-the-build-6-folder">1a. Set up the Build 6 folder</h3>
 <p>You need a folder on your machine to save notes and screenshots. Make it however your OS likes:</p>
 <ul>
-<li><strong>Any OS (file manager):</strong> create a new folder on your Desktop called <code>foundations-build-6</code>. Inside it, drop a copy of the <code>.env</code> file from your <code>foundations-build-0</code> folder so credentials are at hand. Open the folder in your editor of choice.</li>
+<li><strong>Any OS (file manager):</strong> inside your <code>~/Desktop/developer-foundations</code> course folder, create a new folder called <code>build-6</code>. Inside it, drop a copy of the <code>.env</code> file from your <code>build-0</code> folder so credentials are at hand. Open the folder in your editor of choice.</li>
 <li><strong>macOS / Linux terminal:</strong>
-<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop
-mkdir foundations-build-6
-<span class="hljs-keyword">cd</span> foundations-build-6
-cp ../foundations-build-0/.env .
+<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/developer-foundations
+mkdir build-6
+<span class="hljs-keyword">cd</span> build-6
+cp ../build-0/.env .
 code .
 </code></pre></li>
 <li><strong>Windows PowerShell:</strong>
-<pre><code class="hljs language-powershell">cd $HOME\Desktop
-mkdir foundations-build-6
-cd foundations-build-6
-Copy-Item ..\foundations-build-0\.env .
+<pre><code class="hljs language-powershell">cd $HOME\Desktop\developer-foundations
+mkdir build-6
+cd build-6
+Copy-Item ..\build-0\.env .
 code .
 </code></pre></li>
 <li><strong>Windows Command Prompt (cmd):</strong>
-<pre><code class="hljs language-bat">cd %USERPROFILE%\Desktop
-mkdir foundations-build-6
-cd foundations-build-6
-copy ..\foundations-build-0\.env .
+<pre><code class="hljs language-bat">cd %USERPROFILE%\Desktop\developer-foundations
+mkdir build-6
+cd build-6
+copy ..\build-0\.env .
 code .
 </code></pre></li>
 </ul>
@@ -5891,13 +5895,13 @@ curl -s -H <span class="hljs-string">&quot;X-NUCLIA-SERVICEACCOUNT: Bearer $NUCL
 <hr>
 <h2 id="build-07-walkthrough--step-4--extend-the-react-project-10-min">Step 4 — Extend the React project (10 min)</h2>
 <p>If you want to extend Build 3:</p>
-<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/foundations-build-3
+<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/developer-foundations/build-3
 npm run dev
 </code></pre>
 <p>Or scaffold a fresh project for Build 7:</p>
-<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop
-npm create vite@latest foundations-build-7 -- --template react-ts
-<span class="hljs-keyword">cd</span> foundations-build-7
+<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/developer-foundations
+npm create vite@latest build-7 -- --template react-ts
+<span class="hljs-keyword">cd</span> build-7
 npm install
 </code></pre>
 <p>You don't install styling tooling by hand — the AI picks and configures it as part of the SearchPage brief in Step 5, same citizen-developer pattern as Build 3.</p>
@@ -6447,9 +6451,9 @@ curl -s -X POST \
 <hr>
 <h2 id="build-08-walkthrough--step-2--set-up-the-build-8-project-10-min">Step 2 — Set up the Build 8 project (10 min)</h2>
 <p>You can extend Build 3 or scaffold fresh. We recommend fresh for this Build because the graph viewer is a substantial component.</p>
-<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop
-npm create vite@latest foundations-build-8 -- --template react-ts
-<span class="hljs-keyword">cd</span> foundations-build-8
+<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/developer-foundations
+npm create vite@latest build-8 -- --template react-ts
+<span class="hljs-keyword">cd</span> build-8
 npm install
 </code></pre>
 <p>You don't install Tailwind by hand for Build 8 — the AI does it as part of the graph-viewer brief in Step 3, the same citizen-developer pattern Build 3 uses.</p>
@@ -7167,7 +7171,7 @@ curl -s \
 <h2 id="build-09-walkthrough--step-5--update-the-prompt-to-use-calltoaction-25-min">Step 5 — Update the prompt to use <code>callToAction</code> (25 min)</h2>
 <p>Now the AI starts using your fields.</p>
 <h3 id="build-09-walkthrough--5a-open-your-existing-chat-project">5a. Open your existing chat project</h3>
-<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/foundations-build-3   <span class="hljs-comment"># or whichever has your MultiSurfaceChat</span>
+<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/developer-foundations/build-3   <span class="hljs-comment"># or whichever has your MultiSurfaceChat</span>
 npm run dev
 </code></pre>
 <p>Confirm the chat still works.</p>
@@ -7672,9 +7676,9 @@ except for example field values.
 <h3 id="build-10-walkthrough--1b-pick-the-5-worst">1b. Pick the 5 worst</h3>
 <p>The 5 queries that scored worst become your <strong>hard queries</strong> — the ones composite needs to beat.</p>
 <p>In a new Build 10 folder:</p>
-<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop
-mkdir foundations-build-10
-<span class="hljs-keyword">cd</span> foundations-build-10
+<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/developer-foundations
+mkdir build-10
+<span class="hljs-keyword">cd</span> build-10
 </code></pre>
 <p>Create <code>hard-queries.md</code>:</p>
 <pre><code class="hljs language-markdown"># 5 hard queries
@@ -7690,14 +7694,14 @@ mkdir foundations-build-10
 <h2 id="build-10-walkthrough--step-2--set-up-the-project-10-min">Step 2 — Set up the project (10 min)</h2>
 <p>You can either extend Build 3 (recommended) or scaffold fresh.</p>
 <h3 id="build-10-walkthrough--option-a--extend-build-3-recommended">Option A — Extend Build 3 (recommended)</h3>
-<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/foundations-build-3
+<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/developer-foundations/build-3
 npm run dev
 </code></pre>
 <p>Confirm Build 3 still works. Stop the dev server.</p>
 <h3 id="build-10-walkthrough--option-b--fresh-project">Option B — Fresh project</h3>
-<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop
-npm create vite@latest foundations-build-10 -- --template react-ts
-<span class="hljs-keyword">cd</span> foundations-build-10
+<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/developer-foundations
+npm create vite@latest build-10 -- --template react-ts
+<span class="hljs-keyword">cd</span> build-10
 npm install
 </code></pre>
 <p>You don't install Tailwind by hand — the AI handles it as part of the comparison-page brief (Step 4), same citizen-developer pattern as Build 3.</p>
@@ -8296,18 +8300,18 @@ Two factors:
 </ul>
 <hr>
 <h2 id="build-11-walkthrough--step-1--set-up-your-project-folder-5-min">Step 1 — Set up your project folder (5 min)</h2>
-<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop
-mkdir foundations-build-11
-<span class="hljs-keyword">cd</span> foundations-build-11
+<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/developer-foundations
+mkdir build-11
+<span class="hljs-keyword">cd</span> build-11
 code .
 </code></pre>
 <p>This Build is mostly markdown artefacts + one code file. Light Node setup is fine:</p>
 <pre><code class="hljs language-bash">npm init -y
 npm install dotenv
-cp ../foundations-build-0/.env .
+cp ../build-0/.env .
 </code></pre>
 <blockquote>
-<p><strong>No-npm path</strong> (see the <a href="#vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">vibe-coding guide</a>). Skip <code>npm init</code>/<code>npm install</code> — just <code>cp ../foundations-build-0/.env .</code>. Run the rate-limited client with <code>node --env-file=.env src/lib/rateLimitedRagClient.mjs</code>, and brief the AI to read <code>process.env.NUCLIA_*</code> directly (no dotenv import).</p>
+<p><strong>No-npm path</strong> (see the <a href="#vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">vibe-coding guide</a>). Skip <code>npm init</code>/<code>npm install</code> — just <code>cp ../build-0/.env .</code>. Run the rate-limited client with <code>node --env-file=.env src/lib/rateLimitedRagClient.mjs</code>, and brief the AI to read <code>process.env.NUCLIA_*</code> directly (no dotenv import).</p>
 </blockquote>
 <hr>
 <h2 id="build-11-walkthrough--step-2--write-the-residency-statement-20-min">Step 2 — Write the residency statement (20 min)</h2>
@@ -8871,9 +8875,9 @@ Verification:
 <p>This is a writing Build. No terminals, no <code>curl</code>, no Node. Just markdown.</p>
 <hr>
 <h2 id="build-12-walkthrough--step-1--set-up-your-capstone-prep-folder-5-min">Step 1 — Set up your capstone-prep folder (5 min)</h2>
-<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop
-mkdir foundations-build-12
-<span class="hljs-keyword">cd</span> foundations-build-12
+<pre><code class="hljs language-bash"><span class="hljs-keyword">cd</span> ~/Desktop/developer-foundations
+mkdir build-12
+<span class="hljs-keyword">cd</span> build-12
 code .
 </code></pre>
 <p>We'll create three markdown files in here over the next 2 hours.</p>

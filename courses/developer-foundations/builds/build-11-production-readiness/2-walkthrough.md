@@ -26,9 +26,9 @@ Plus a `production-checklist.md`.
 ## Step 1 — Set up your project folder (5 min)
 
 ```bash
-cd ~/Desktop
-mkdir foundations-build-11
-cd foundations-build-11
+cd ~/Desktop/developer-foundations
+mkdir build-11
+cd build-11
 code .
 ```
 
@@ -37,10 +37,10 @@ This Build is mostly markdown artefacts + one code file. Light Node setup is fin
 ```bash
 npm init -y
 npm install dotenv
-cp ../foundations-build-0/.env .
+cp ../build-0/.env .
 ```
 
-> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `cp ../foundations-build-0/.env .`. Run the rate-limited client with `node --env-file=.env src/lib/rateLimitedRagClient.mjs`, and brief the AI to read `process.env.NUCLIA_*` directly (no dotenv import).
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `cp ../build-0/.env .`. Run the rate-limited client with `node --env-file=.env src/lib/rateLimitedRagClient.mjs`, and brief the AI to read `process.env.NUCLIA_*` directly (no dotenv import).
 
 ---
 

@@ -31,9 +31,9 @@ You can extend Build 3's project or start fresh. **We recommend starting fresh**
 ## Step 1 — Set up a fresh project (5 min)
 
 ```bash
-cd ~/Desktop
-mkdir foundations-build-5
-cd foundations-build-5
+cd ~/Desktop/developer-foundations
+mkdir build-5
+cd build-5
 npm init -y
 npm install dotenv
 ```
@@ -43,12 +43,12 @@ npm install dotenv
 - `npm init -y` initialised `package.json`.
 - Installed `dotenv` so Node can read your `.env` file.
 
-> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `mkdir foundations-build-5 && cd foundations-build-5`. Run every script in this Build with `--env-file`, e.g. `node --env-file=.env faq-generator.mjs "onboarding"`. When you brief the AI for `askForJson` (Step 2), tell it to read `process.env.NUCLIA_*` directly — **do not import dotenv**.
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `mkdir -p ~/Desktop/developer-foundations/build-5 && cd $_`. Run every script in this Build with `--env-file`, e.g. `node --env-file=.env faq-generator.mjs "onboarding"`. When you brief the AI for `askForJson` (Step 2), tell it to read `process.env.NUCLIA_*` directly — **do not import dotenv**.
 
 Copy your `.env` from Build 0:
 
 ```bash
-cp ../foundations-build-0/.env .
+cp ../build-0/.env .
 ```
 
 (If your Build 0 folder is named differently, adjust the path.)
@@ -658,7 +658,7 @@ Then take the [Build 5 quiz](3-quiz.md). Pass → start [Build 6](../build-06-da
 - Your corpus is too small. With <20 documents, the model can struggle to find "6-8 distinct domains." Either ingest more docs or accept a smaller result.
 
 **"Cannot find module 'dotenv'."**
-- Run `npm install dotenv` from the project folder. Make sure your `pwd` ends in `foundations-build-5`.
+- Run `npm install dotenv` from the project folder. Make sure your `pwd` ends in `build-5`.
 
 **Schema validation rejected by the API.**
 - The schema's `name` field is missing or contains illegal characters (use snake_case, no spaces). Or a nested object is missing `additionalProperties: false` — verify the injector is recursive.

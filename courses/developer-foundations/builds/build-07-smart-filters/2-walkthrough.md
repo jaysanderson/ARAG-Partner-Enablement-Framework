@@ -205,16 +205,16 @@ Append the three result counts (3a, 3b, 3c) to `labelset-design.md` so reviewers
 If you want to extend Build 3:
 
 ```bash
-cd ~/Desktop/foundations-build-3
+cd ~/Desktop/developer-foundations/build-3
 npm run dev
 ```
 
 Or scaffold a fresh project for Build 7:
 
 ```bash
-cd ~/Desktop
-npm create vite@latest foundations-build-7 -- --template react-ts
-cd foundations-build-7
+cd ~/Desktop/developer-foundations
+npm create vite@latest build-7 -- --template react-ts
+cd build-7
 npm install
 ```
 

@@ -63,26 +63,29 @@ Copy all three somewhere safe — a sticky note app, an encrypted notes app, any
 
 ## Step 3 — Set up your working folder (5 min)
 
-Open your terminal. Pick a location for your course work:
+Open your terminal. First make **one folder for the whole course**, then a folder for this Build inside it:
 
 ```bash
 cd ~/Desktop
-mkdir foundations-build-0
-cd foundations-build-0
+mkdir developer-foundations
+cd developer-foundations
+mkdir build-0
+cd build-0
 ```
 
 **What that did:**
 - `cd ~/Desktop` — moved into your Desktop folder.
-- `mkdir foundations-build-0` — made a new folder called `foundations-build-0`.
-- `cd foundations-build-0` — moved into it.
+- `mkdir developer-foundations` — made the **course folder**. Every Build you do lives inside this one folder, so your Desktop stays tidy. You only create this once, here in Build 0.
+- `cd developer-foundations` — moved into the course folder.
+- `mkdir build-0` / `cd build-0` — made this Build's folder and moved into it.
 
-You're now "inside" the folder. Anything you create from here lands inside.
+You're now "inside" `~/Desktop/developer-foundations/build-0`. Anything you create from here lands inside. Every later Build makes its own `build-N` folder next to this one, all under `developer-foundations`.
 
-Now create a file called `.env` (the dot at the front is important) using your text editor — not the terminal. Open VS Code, then **File → New File**. Save it (Cmd/Ctrl + S) into the `foundations-build-0` folder you just created. Name it exactly `.env` — including the leading dot, with no extension after it. VS Code may warn that filenames starting with a dot are hidden — that's normal, accept it.
+Now create a file called `.env` (the dot at the front is important) using your text editor — not the terminal. Open VS Code, then **File → New File**. Save it (Cmd/Ctrl + S) into the `build-0` folder you just created. Name it exactly `.env` — including the leading dot, with no extension after it. VS Code may warn that filenames starting with a dot are hidden — that's normal, accept it.
 
 > **Why a text editor and not `touch .env` in the terminal?** Two reasons. First, you're going to paste secrets into this file in a moment — opening it in the editor where you'll work on it is one fewer step and one fewer place where the credentials could end up. Second, the terminal has its own gotchas around hidden filenames (the file looks like it doesn't exist when you `ls`, and `cat .env` shows nothing helpful), and Build 0 isn't the right time to fight that. The text editor shows you the file plainly.
 
-If your editor isn't VS Code, the same flow works: New File → Save As → name it `.env` → save into the `foundations-build-0` folder. If `.env` looks hidden in the editor's file tree, press `Cmd+Shift+.` on macOS (or enable "Show hidden files" in your editor's settings).
+If your editor isn't VS Code, the same flow works: New File → Save As → name it `.env` → save into the `build-0` folder. If `.env` looks hidden in the editor's file tree, press `Cmd+Shift+.` on macOS (or enable "Show hidden files" in your editor's settings).
 
 With the empty `.env` file open in front of you, paste this in, **replacing the placeholder values with the three credentials from Step 2**:
 
@@ -144,7 +147,7 @@ Whatever fits your content. Write it down.
 
 Don't try to edit a 5-line curl command directly in the terminal — especially not with a 500+ character JWT in the middle of it. One stray character and the call silently breaks in a way that's hard to debug. Instead, you'll keep a **scratch file** in VS Code with your working command, do all the placeholder replacement there with Find & Replace, then copy the finished command into the terminal.
 
-In VS Code, **File → New File**. Save it (Cmd/Ctrl + S) into your `foundations-build-0` folder as `scratch.sh`. Then paste this template in **exactly as-is** — do not edit anything yet:
+In VS Code, **File → New File**. Save it (Cmd/Ctrl + S) into your `build-0` folder as `scratch.sh`. Then paste this template in **exactly as-is** — do not edit anything yet:
 
 ```bash
 curl -s -X POST \
@@ -285,7 +288,7 @@ Now the fun part. We'll get the AI to write a small Node.js script that does wha
 
 ### 8a. Initialise the Node project
 
-Back in your terminal, **make sure you're still in `~/Desktop/foundations-build-0`** (run `pwd` to check — it should print the folder path).
+Back in your terminal, **make sure you're still in `~/Desktop/developer-foundations/build-0`** (run `pwd` to check — it should print the folder path).
 
 Then:
 
@@ -387,7 +390,7 @@ Create a file `prompt-log.md` in your project folder. Paste the brief you used, 
 
 ## Step 9 — Run your script (10 min)
 
-In your terminal, still in `~/Desktop/foundations-build-0`:
+In your terminal, still in `~/Desktop/developer-foundations/build-0`:
 
 ```bash
 node ask.mjs "your question here"

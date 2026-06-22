@@ -46,14 +46,15 @@ This is the meaty step — but most of it is "paste and watch". You give the AI 
 Open your AI assistant. Paste this brief **verbatim**:
 
 ```
-Build me a Vite + React + TypeScript app called `foundations-build-3` in
-~/Desktop that demonstrates a multi-surface chat experience against a
-Progress Agentic RAG (ARAG / Progress Agentic RAG) Knowledge Box.
+Build me a Vite + React + TypeScript app called `build-3` in
+~/Desktop/developer-foundations (my course folder) that demonstrates a
+multi-surface chat experience against a Progress Agentic RAG (ARAG /
+Progress Agentic RAG) Knowledge Box.
 
 PROJECT SETUP:
-1. Scaffold a fresh Vite + React + TS project (`npm create vite@latest
-   foundations-build-3 -- --template react-ts`), `cd` into it,
-   `npm install`.
+1. From ~/Desktop/developer-foundations, scaffold a fresh Vite + React +
+   TS project (`npm create vite@latest build-3 -- --template react-ts`),
+   `cd` into it, `npm install`.
 2. Install and configure Tailwind CSS end-to-end:
    - Install tailwindcss + postcss + autoprefixer as dev dependencies.
    - Run `npx tailwindcss init -p` to create config files.
@@ -170,7 +171,7 @@ Send the brief. Watch the AI work (Claude Code / Cursor) or paste through the AI
 
 **Roughly what should happen:**
 
-1. The AI scaffolds `foundations-build-3/` with Vite.
+1. The AI scaffolds `build-3/` with Vite.
 2. Installs all dependencies (including Tailwind + postcss + autoprefixer).
 3. Generates `tailwind.config.js`, `postcss.config.js`, edits `src/index.css`.
 4. Writes `src/lib/ragClient.ts` with the streaming-NDJSON parser.
@@ -189,7 +190,7 @@ Copy the entire error message + the command that produced it. Paste both back in
 
 If `npm install` is blocked on your machine (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)), build this as **one self-contained `index.html`** instead — no Vite, no install. Same chat experience, same `streamAsk` + two-voice logic.
 
-Make a folder and an empty `index.html` (`mkdir ~/Desktop/foundations-build-3 && cd $_` then create `index.html` in your editor). Then paste this brief instead of the one above:
+Make a folder and an empty `index.html` (`mkdir -p ~/Desktop/developer-foundations/build-3 && cd $_` then create `index.html` in your editor). Then paste this brief instead of the one above:
 
 ```
 Build a SINGLE self-contained index.html — no build step, no npm — that
@@ -228,7 +229,7 @@ Then implement EXACTLY the same behaviour as the npm brief above:
 
 ## Step 3 — Paste your credentials into `.env` (3 min)
 
-Open the `.env` file the AI created at the root of the `foundations-build-3` folder. Replace the three `PASTE_*` placeholder values with your real credentials from Build 0:
+Open the `.env` file the AI created at the root of the `build-3` folder. Replace the three `PASTE_*` placeholder values with your real credentials from Build 0:
 
 ```bash
 VITE_NUCLIA_API_URL=https://aws-eu-1.rag.progress.cloud/api/v1
@@ -328,7 +329,7 @@ This is the institutional knowledge for the next partner who has to ship a simil
 
 ## Verification checklist
 
-- [ ] `foundations-build-3/` exists on your Desktop. `npm run dev` runs and the app loads at localhost.
+- [ ] `build-3/` exists inside your `~/Desktop/developer-foundations` folder. `npm run dev` runs and the app loads at localhost.
 - [ ] `.env` has your three real credentials (not the `PASTE_*` placeholders).
 - [ ] **Prospect mode**: answer is 3 sentences max + a pill-styled CTA button at the end.
 - [ ] **Member mode**: detailed answer + citation chips. No pill button.

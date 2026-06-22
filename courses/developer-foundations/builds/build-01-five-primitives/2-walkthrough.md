@@ -437,17 +437,17 @@ Time to glue all five primitives behind a single tool. Same vibe-coding loop fro
 In your terminal:
 
 ```bash
-cd ~/Desktop/foundations-build-0
+cd ~/Desktop/developer-foundations/build-0
 pwd
 ```
 
-The `pwd` (print working directory) should show your `foundations-build-0` path. If you'd rather keep Build 1 separate, create a sibling folder:
+The `pwd` (print working directory) should show your `build-0` path. If you'd rather keep Build 1 separate, create a sibling folder:
 
 ```bash
-cd ~/Desktop
-mkdir foundations-build-1
-cd foundations-build-1
-cp ../foundations-build-0/.env .
+cd ~/Desktop/developer-foundations
+mkdir build-1
+cd build-1
+cp ../build-0/.env .
 npm init -y
 npm install dotenv
 ```

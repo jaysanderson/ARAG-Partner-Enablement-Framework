@@ -18,7 +18,7 @@ This Build sells itself in customer demos. "Show us multilingual" and "show us a
 
 ## What you'll need open
 
-- **Your Build 3 project folder** (`foundations-build-3`).
+- **Your Build 3 project folder** (`build-3`).
 - **Your terminal**.
 - **Your editor** (VS Code).
 - **Your AI assistant**.
@@ -33,7 +33,7 @@ If Build 3 isn't working, **fix that first**. Build 4 layers on top.
 In your terminal:
 
 ```bash
-cd ~/Desktop/foundations-build-3
+cd ~/Desktop/developer-foundations/build-3
 npm run dev
 ```
 

@@ -78,9 +78,9 @@ curl -s -X POST \
 You can extend Build 3 or scaffold fresh. We recommend fresh for this Build because the graph viewer is a substantial component.
 
 ```bash
-cd ~/Desktop
-npm create vite@latest foundations-build-8 -- --template react-ts
-cd foundations-build-8
+cd ~/Desktop/developer-foundations
+npm create vite@latest build-8 -- --template react-ts
+cd build-8
 npm install
 ```
 
