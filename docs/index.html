@@ -685,6 +685,25 @@ mark.placeholder {
 <li><code>git</code> commands when you save your work.</li>
 </ul>
 <p>That's the floor. Everything else — dependency installs, config edits, file scaffolding — is the AI's job. If a walkthrough ever has you editing <code>tailwind.config.js</code> or running <code>npm install -D ...</code> by hand, <strong>that's a bug</strong>. Paste the step into your AI and ask it to do that work for you instead.</p>
+<h2 id="vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">npm or no-npm? (pick the path that fits your machine)</h2>
+<p>Some partners work in locked-down environments where <code>npm install</code> is blocked — the npm registry is firewalled, or IT won't let you install packages. <strong>Every project Build in this course offers two setup paths</strong>, and the one you pick changes only the <em>setup and run</em> steps. The thing you actually vibe-code — the API calls, the components, the schemas — is identical on both paths.</p>
+<p>Each walkthrough shows both. Pick one and stick with it:</p>
+<table>
+<thead><tr><th></th><th><strong>npm path</strong> (default)</th><th><strong>no-npm path</strong> (locked-down friendly)</th></tr></thead>
+<tbody>
+<tr><td><strong>Script Builds</strong> (0, 1, 5, 11)</td><td><code>npm init</code> + <code>npm install dotenv</code>, then <code>node script.mjs</code></td><td>No install. Run <code>node --env-file=.env script.mjs</code> — Node reads your <code>.env</code> itself (Node 20.6+).</td></tr>
+<tr><td><strong>UI Builds</strong> (3, 4, 7, 8, 9, 10)</td><td><code>npm create vite</code> + <code>npm install</code> + <code>npm run dev</code></td><td>One self-contained <code>index.html</code> — React + Tailwind loaded from a CDN, no build step. Open it in your browser.</td></tr>
+</tbody>
+</table>
+<p>Two things make this work:</p>
+<ol>
+<li><strong>Scripts don't need a package for env vars.</strong> Modern Node reads a <code>.env</code> file natively with the <code>--env-file</code> flag, so the only third-party package the scripts ever used (<code>dotenv</code>) isn't needed. Same <code>process.env.NUCLIA_*</code> values, no install. <em>(The no-npm path still uses <strong>Node</strong> — that's the runtime, a single installer from nodejs.org, not the npm registry. If you can install Node but can't reach the package registry, this path is for you.)</em></li>
+<li><strong>UIs don't need a bundler.</strong> React and Tailwind both load straight from a CDN (<code>esm.sh</code>, <code>cdn.tailwindcss.com</code>) into a plain HTML file — the same idea as the drop-in widgets in Build 2. The AI writes one <code>index.html</code>; you open it in a browser. No Vite, no <code>npm run dev</code>. If the browser blocks the API call from a <code>file://</code> page, serve the folder with any static server you already have (e.g. <code>python3 -m http.server</code>).</li>
+</ol>
+<p><strong>Which should you choose?</strong> If <code>npm install</code> works on your machine, use the npm path — it's the industry-standard workflow and what you'll use in real customer engagements. If installs are blocked, the no-npm path gets you the exact same result with zero package installs. Either path satisfies the Build and its quiz.</p>
+<blockquote>
+<p><strong>Build 13 (the capstone) is npm-only.</strong> It's a full production-grade application (Vite + React + a deploy pipeline), so it assumes a normal dev environment. The no-npm paths are for Builds 0–11, where the goal is learning the primitive, not shipping a production app.</p>
+</blockquote>
 <h2 id="vibe-coding-guide--four-ai-failure-modes-to-watch-for">Four AI failure modes to watch for</h2>
 <p>These are the four ways AI assistants reliably go wrong on ARAG tasks. Spot them every time.</p>
 <h3 id="vibe-coding-guide--1-the-ai-invents-an-sdk-that-doesnt-exist">1. The AI invents an SDK that doesn't exist</h3>
@@ -1188,6 +1207,9 @@ npm install dotenv
 <li><code>npm install dotenv</code> installed the <code>dotenv</code> package, which lets Node.js read your <code>.env</code> file automatically.</li>
 </ul>
 <p><strong>You should see:</strong> a <code>package.json</code> file appears in your folder, plus a <code>node_modules</code> folder (which holds installed packages). Both can be ignored — Node manages them.</p>
+<blockquote>
+<p><strong>No-npm path</strong> (locked-down environment — see the <a href="#vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">vibe-coding guide</a>). <strong>Skip both commands above</strong> — no <code>npm init</code>, no install. You just need your <code>.env</code> in this folder. When you run the script in Step 9, pass <code>--env-file</code> so Node reads <code>.env</code> itself: <code>node --env-file=.env ask.mjs &quot;your question&quot;</code>. In the brief below, change requirement 1 to <em>&quot;Read NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY from <code>process.env</code> (do <strong>not</strong> use dotenv — they're loaded via <code>node --env-file=.env</code>). Exit with a clear error if any are missing.&quot;</em></p>
+</blockquote>
 <h3 id="build-00-walkthrough--8b-brief-your-ai">8b. Brief your AI</h3>
 <p>Open your AI coding assistant (Claude Code, Cursor, ChatGPT, Claude.ai — whichever you picked in the vibe-coding guide).</p>
 <p>Copy this brief and paste it in. <strong>Don't edit it.</strong> It's specific on purpose — and it includes a &quot;verify the API before coding&quot; instruction up front so the AI can't guess the response shape:</p>
@@ -1264,6 +1286,7 @@ Use plain fetch. No SDK. No external HTTP library beyond what's built into Node.
 <p>In your terminal, still in <code>~/Desktop/foundations-build-0</code>:</p>
 <pre><code class="hljs language-bash">node ask.mjs <span class="hljs-string">&quot;your question here&quot;</span>
 </code></pre>
+<p><em>(No-npm path: <code>node --env-file=.env ask.mjs &quot;your question here&quot;</code>.)</em></p>
 <p><strong>You should see:</strong></p>
 <ul>
 <li>Your question reflected back (optional, depending on how the AI implemented it).</li>
@@ -1993,6 +2016,9 @@ npm init -y
 npm install dotenv
 </code></pre>
 <p><strong>What that did:</strong> created a fresh project folder, copied your <code>.env</code> over, initialised <code>package.json</code>, installed <code>dotenv</code>.</p>
+<blockquote>
+<p><strong>No-npm path</strong> (see the <a href="#vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">vibe-coding guide</a>). Skip <code>npm init</code>/<code>npm install</code> — just <code>mkdir</code> the folder and <code>cp</code> the <code>.env</code> in. Run each command in Step 10e with <code>--env-file</code>, e.g. <code>node --env-file=.env primitives-demo.mjs find &quot;your question&quot;</code>. Brief the AI to read <code>process.env.NUCLIA_*</code> directly (no dotenv import).</p>
+</blockquote>
 <h3 id="build-01-walkthrough--10b-brief-your-ai">10b. Brief your AI</h3>
 <p>Open your AI. Paste this <strong>exactly</strong> — don't edit:</p>
 <pre><code>Write a Node.js CLI tool called primitives-demo.mjs (ES modules / import syntax).
@@ -2039,6 +2065,7 @@ node primitives-demo.mjs ask-schema <span class="hljs-string">&quot;anything&quo
 node primitives-demo.mjs graph <span class="hljs-string">&quot;anything&quot;</span>
 node primitives-demo.mjs resource &lt;paste-resource-id-from-find&gt;
 </code></pre>
+<p><em>(No-npm path: add <code>--env-file=.env</code> after <code>node</code> on each line, e.g. <code>node --env-file=.env primitives-demo.mjs find &quot;your question&quot;</code>.)</em></p>
 <p><strong>You should see:</strong> one line per primitive, e.g.:</p>
 <pre><code>5 resources, top score 0.84
 Answer (287 chars), 4 citations
@@ -3050,6 +3077,39 @@ and what goes in each.
 <p>If you used ChatGPT / Claude.ai web, you'll have done that work via copy-paste — same end state.</p>
 <h3 id="build-03-walkthrough--if-the-ais-output-errors">If the AI's output errors</h3>
 <p>Copy the entire error message + the command that produced it. Paste both back into the same chat: <em>&quot;I ran [command] and got [error]. Fix.&quot;</em> The AI iterates. This is the four-step vibe-coding loop from the <a href="#vibe-coding-guide--the-four-step-loop-this-is-the-whole-course">vibe-coding guide</a> — brief, read, run, iterate.</p>
+<h3 id="build-03-walkthrough--no-npm-alternative--single-file-build">No-npm alternative — single-file build</h3>
+<p>If <code>npm install</code> is blocked on your machine (see the <a href="#vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">vibe-coding guide</a>), build this as <strong>one self-contained <code>index.html</code></strong> instead — no Vite, no install. Same chat experience, same <code>streamAsk</code> + two-voice logic.</p>
+<p>Make a folder and an empty <code>index.html</code> (<code>mkdir ~/Desktop/foundations-build-3 &amp;&amp; cd $_</code> then create <code>index.html</code> in your editor). Then paste this brief instead of the one above:</p>
+<pre><code>Build a SINGLE self-contained index.html — no build step, no npm — that
+demonstrates a multi-surface chat against a Progress Agentic RAG Knowledge Box.
+Open-in-the-browser only.
+
+SETUP (all inside the one HTML file):
+- Load React 18 + ReactDOM from a CDN as ES modules from esm.sh
+  (https://esm.sh/react@18 and https://esm.sh/react-dom@18/client).
+- Load Tailwind from https://cdn.tailwindcss.com (script tag).
+- Put all app code in one &lt;script type=&quot;module&quot;&gt; block. Use htm
+  (https://esm.sh/htm) for JSX-free templating, OR Babel Standalone
+  (&lt;script type=&quot;text/babel&quot; data-type=&quot;module&quot;&gt;) if you prefer JSX — your call.
+- Credentials: a CONFIG object at the top of the script —
+  const CONFIG = { apiUrl: &quot;PASTE_URL&quot;, kbId: &quot;PASTE_KB_ID&quot;, apiKey: &quot;PASTE_JWT&quot; };
+  (the student pastes real values after; no .env, no import.meta.env).
+
+Then implement EXACTLY the same behaviour as the npm brief above:
+- A streamAsk(query, promptConfig) async generator: POST to
+  `${CONFIG.apiUrl}/kb/${CONFIG.kbId}/ask`, header
+  X-NUCLIA-SERVICEACCOUNT: Bearer ${CONFIG.apiKey}, body
+  { query, prefer_markdown:true, rephrase:true, max_tokens:500,
+    prompt:promptConfig, citations:true }; parse the streaming NDJSON
+  (balanced-brace buffering); yield answer-chunk / citations / done.
+- The MultiSurfaceChat component: Prospect/Member toggle, the same two
+  PROMPTS, chat history, streaming append, the first-link → pill-button
+  post-processor, citations under each answer, auto-scroll, disabled
+  input while streaming.
+- Verify the API shape against the current ARAG docs before coding; fail
+  loud on unexpected fields. Native fetch only, no SDK.
+</code></pre>
+<p><strong>Run it:</strong> open <code>index.html</code> in your browser. If the browser blocks the API call from a <code>file://</code> page (CORS), serve the folder with any static server you already have — e.g. <code>python3 -m http.server 8000</code>, then visit <code>http://localhost:8000</code>. Paste your credentials into the <code>CONFIG</code> object (same three values as Step 3 below), reload, and you're done — skip the <code>.env</code> / <code>npm run dev</code> steps.</p>
 <hr>
 <h2 id="build-03-walkthrough--step-3--paste-your-credentials-into-env-3-min">Step 3 — Paste your credentials into <code>.env</code> (3 min)</h2>
 <p>Open the <code>.env</code> file the AI created at the root of the <code>foundations-build-3</code> folder. Replace the three <code>PASTE_*</code> placeholder values with your real credentials from Build 0:</p>
@@ -3423,6 +3483,9 @@ streamAsk(finalQuery, promptConfig);
 npm run dev
 </code></pre>
 <p><strong>You should see:</strong> the same Build 3 chat UI at <code>http://localhost:5173/</code>. Send a test query in each persona mode (Prospect, Member). Confirm both still work.</p>
+<blockquote>
+<p><strong>No-npm path</strong> (see the <a href="#vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">vibe-coding guide</a>). If you built Build 3 as a single <code>index.html</code>, just re-open that file (or serve its folder with <code>python3 -m http.server</code>). Everything Build 4 adds — the language/persona/resource query prefix — goes into that same file; there's no <code>npm run dev</code> to restart.</p>
+</blockquote>
 <p><strong>If Build 3 is broken:</strong> stop here. Fix Build 3 first (see Build 3's &quot;Getting unstuck&quot;). Build 4 needs it as a foundation.</p>
 <p>Stop the dev server (<code>Ctrl+C</code>) before editing files.</p>
 <hr>
@@ -4070,6 +4133,9 @@ npm install dotenv
 <li><code>npm init -y</code> initialised <code>package.json</code>.</li>
 <li>Installed <code>dotenv</code> so Node can read your <code>.env</code> file.</li>
 </ul>
+<blockquote>
+<p><strong>No-npm path</strong> (see the <a href="#vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">vibe-coding guide</a>). Skip <code>npm init</code>/<code>npm install</code> — just <code>mkdir foundations-build-5 &amp;&amp; cd foundations-build-5</code>. Run every script in this Build with <code>--env-file</code>, e.g. <code>node --env-file=.env faq-generator.mjs &quot;onboarding&quot;</code>. When you brief the AI for <code>askForJson</code> (Step 2), tell it to read <code>process.env.NUCLIA_*</code> directly — <strong>do not import dotenv</strong>.</p>
+</blockquote>
 <p>Copy your <code>.env</code> from Build 0:</p>
 <pre><code class="hljs language-bash">cp ../foundations-build-0/.env .
 </code></pre>
@@ -5666,7 +5732,7 @@ X-NUCLIA-SERVICEACCOUNT: Bearer {NUCLIA_API_KEY}.
 <ul>
 <li><strong>Your Build 0 KB</strong> with Build 6's Labeller already configured (with a labelset you designed).</li>
 <li><strong>Your <code>.env</code> file</strong>.</li>
-<li><strong>Your Build 3 React project</strong> (we'll extend it) — or you can scaffold a fresh Vite + React project if you'd rather.</li>
+<li><strong>Your Build 3 React project</strong> (we'll extend it) — or you can scaffold a fresh Vite + React project if you'd rather. <em>(No-npm path: extend your single-file <code>index.html</code> from Build 3 — add the filter UI there and open it in the browser; no Vite, no <code>npm run dev</code>. See the <a href="#vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">vibe-coding guide</a>.)</em></li>
 <li><strong>Your editor</strong>.</li>
 <li><strong>Your AI assistant</strong>.</li>
 <li><strong>A modern browser</strong> — Steps 1–3 are entirely dashboard-driven (no terminal). Steps 4+ vibe-code the UI.</li>
@@ -6382,6 +6448,9 @@ VITE_NUCLIA_API_KEY=...
 <blockquote>
 <p><strong>Alternative:</strong> if you prefer Cytoscape, use <code>npm install cytoscape react-cytoscapejs</code>. We use react-force-graph in the brief below; tell the AI to use whichever you installed.</p>
 </blockquote>
+<blockquote>
+<p><strong>No-npm path</strong> (see the <a href="#vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">vibe-coding guide</a>). Build this as one self-contained <code>index.html</code> — no Vite, no install. Load React + Tailwind from a CDN (esm.sh + cdn.tailwindcss.com) as in Build 3, and load the graph library from the same CDN: <code>import ForceGraph2D from &quot;https://esm.sh/react-force-graph-2d&quot;</code>. Put the <code>graphClient</code> functions (Step 3) and the graph-viewer component (Step 4) inline in one <code>&lt;script type=&quot;module&quot;&gt;</code>, with credentials in a <code>CONFIG</code> object at the top instead of <code>.env</code>. Open <code>index.html</code> in your browser (or serve with <code>python3 -m http.server</code>). If a CDN-loaded graph library gives trouble, tell the AI to render a simple SVG/canvas force layout directly — the teaching point is the graph <em>data</em> (<code>/graph</code> paths), not the rendering library.</p>
+</blockquote>
 <hr>
 <h2 id="build-08-walkthrough--step-3--vibe-code-the-graph-client-40-min">Step 3 — Vibe-code the graph client (40 min)</h2>
 <p>This is the data layer — four functions that call the ARAG graph endpoints.</p>
@@ -6992,6 +7061,9 @@ graph-only demo punchline.)
 <li><strong>Your terminal</strong>, editor, AI assistant, browser.</li>
 </ul>
 <p>If you don't have Build 3 running, you can use Build 4 (the multilingual version layered on Build 3). Both work.</p>
+<blockquote>
+<p><strong>No-npm path</strong> (see the <a href="#vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">vibe-coding guide</a>). The custom-field work in this Build is all done in the dashboard. To see the fields render, extend your single-file <code>index.html</code> from Build 3 (open it in the browser) instead of a Vite project — same component edits, no <code>npm run dev</code>.</p>
+</blockquote>
 <hr>
 <h2 id="build-09-walkthrough--step-1--pick-your-5-hero-resources-10-min">Step 1 — Pick your 5 &quot;hero&quot; resources (10 min)</h2>
 <p>Open the Progress Agentic RAG dashboard. Look at your 10 documents. Pick <strong>5 that would be the most natural CTA targets</strong> — the ones a sales rep would point at first.</p>
@@ -7613,6 +7685,9 @@ npm install
 </code></pre>
 <p>You don't install Tailwind by hand — the AI handles it as part of the comparison-page brief (Step 4), same citizen-developer pattern as Build 3.</p>
 <p>Set up <code>.env</code> with <code>VITE_NUCLIA_*</code>. You'll also need a basic <code>ragClient.ts</code> with a sync <code>ask()</code> function — easier than re-implementing streaming. The AI will scaffold this if you ask in the next step.</p>
+<blockquote>
+<p><strong>No-npm path</strong> (see the <a href="#vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">vibe-coding guide</a>). Skip both options above and build one self-contained <code>index.html</code> — React + Tailwind from a CDN (esm.sh + cdn.tailwindcss.com), as in Build 3. The <code>compositeAsk</code> logic (Step 3) and the comparison UI (Step 4) go inline in one <code>&lt;script type=&quot;module&quot;&gt;</code>, with credentials in a <code>CONFIG</code> object at the top instead of <code>.env</code>. Open it in your browser (or serve with <code>python3 -m http.server</code>) — no <code>npm run dev</code>.</p>
+</blockquote>
 <hr>
 <h2 id="build-10-walkthrough--step-3--vibe-code-compositeask-50-min">Step 3 — Vibe-code <code>compositeAsk</code> (50 min)</h2>
 <p>This is the main file. Brief your AI:</p>
@@ -8214,6 +8289,9 @@ code .
 npm install dotenv
 cp ../foundations-build-0/.env .
 </code></pre>
+<blockquote>
+<p><strong>No-npm path</strong> (see the <a href="#vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">vibe-coding guide</a>). Skip <code>npm init</code>/<code>npm install</code> — just <code>cp ../foundations-build-0/.env .</code>. Run the rate-limited client with <code>node --env-file=.env src/lib/rateLimitedRagClient.mjs</code>, and brief the AI to read <code>process.env.NUCLIA_*</code> directly (no dotenv import).</p>
+</blockquote>
 <hr>
 <h2 id="build-11-walkthrough--step-2--write-the-residency-statement-20-min">Step 2 — Write the residency statement (20 min)</h2>
 <p>This is the artefact the CTO will read. <strong>It must be precise. No hand-waving.</strong></p>

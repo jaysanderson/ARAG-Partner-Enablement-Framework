@@ -40,6 +40,8 @@ npm install dotenv
 cp ../foundations-build-0/.env .
 ```
 
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `cp ../foundations-build-0/.env .`. Run the rate-limited client with `node --env-file=.env src/lib/rateLimitedRagClient.mjs`, and brief the AI to read `process.env.NUCLIA_*` directly (no dotenv import).
+
 ---
 
 ## Step 2 — Write the residency statement (20 min)

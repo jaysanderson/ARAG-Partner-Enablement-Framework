@@ -104,6 +104,8 @@ npm install react-force-graph-2d
 
 > **Alternative:** if you prefer Cytoscape, use `npm install cytoscape react-cytoscapejs`. We use react-force-graph in the brief below; tell the AI to use whichever you installed.
 
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Build this as one self-contained `index.html` — no Vite, no install. Load React + Tailwind from a CDN (esm.sh + cdn.tailwindcss.com) as in Build 3, and load the graph library from the same CDN: `import ForceGraph2D from "https://esm.sh/react-force-graph-2d"`. Put the `graphClient` functions (Step 3) and the graph-viewer component (Step 4) inline in one `<script type="module">`, with credentials in a `CONFIG` object at the top instead of `.env`. Open `index.html` in your browser (or serve with `python3 -m http.server`). If a CDN-loaded graph library gives trouble, tell the AI to render a simple SVG/canvas force layout directly — the teaching point is the graph *data* (`/graph` paths), not the rendering library.
+
 ---
 
 ## Step 3 — Vibe-code the graph client (40 min)

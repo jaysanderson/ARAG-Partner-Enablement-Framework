@@ -91,6 +91,8 @@ You don't install Tailwind by hand — the AI handles it as part of the comparis
 
 Set up `.env` with `VITE_NUCLIA_*`. You'll also need a basic `ragClient.ts` with a sync `ask()` function — easier than re-implementing streaming. The AI will scaffold this if you ask in the next step.
 
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip both options above and build one self-contained `index.html` — React + Tailwind from a CDN (esm.sh + cdn.tailwindcss.com), as in Build 3. The `compositeAsk` logic (Step 3) and the comparison UI (Step 4) go inline in one `<script type="module">`, with credentials in a `CONFIG` object at the top instead of `.env`. Open it in your browser (or serve with `python3 -m http.server`) — no `npm run dev`.
+
 ---
 
 ## Step 3 — Vibe-code `compositeAsk` (50 min)

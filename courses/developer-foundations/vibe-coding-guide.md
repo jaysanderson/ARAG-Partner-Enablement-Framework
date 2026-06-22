@@ -137,6 +137,26 @@ What you *do* type by hand, every Build:
 
 That's the floor. Everything else — dependency installs, config edits, file scaffolding — is the AI's job. If a walkthrough ever has you editing `tailwind.config.js` or running `npm install -D ...` by hand, **that's a bug**. Paste the step into your AI and ask it to do that work for you instead.
 
+## npm or no-npm? (pick the path that fits your machine)
+
+Some partners work in locked-down environments where `npm install` is blocked — the npm registry is firewalled, or IT won't let you install packages. **Every project Build in this course offers two setup paths**, and the one you pick changes only the *setup and run* steps. The thing you actually vibe-code — the API calls, the components, the schemas — is identical on both paths.
+
+Each walkthrough shows both. Pick one and stick with it:
+
+| | **npm path** (default) | **no-npm path** (locked-down friendly) |
+|---|---|---|
+| **Script Builds** (0, 1, 5, 11) | `npm init` + `npm install dotenv`, then `node script.mjs` | No install. Run `node --env-file=.env script.mjs` — Node reads your `.env` itself (Node 20.6+). |
+| **UI Builds** (3, 4, 7, 8, 9, 10) | `npm create vite` + `npm install` + `npm run dev` | One self-contained `index.html` — React + Tailwind loaded from a CDN, no build step. Open it in your browser. |
+
+Two things make this work:
+
+1. **Scripts don't need a package for env vars.** Modern Node reads a `.env` file natively with the `--env-file` flag, so the only third-party package the scripts ever used (`dotenv`) isn't needed. Same `process.env.NUCLIA_*` values, no install. *(The no-npm path still uses **Node** — that's the runtime, a single installer from nodejs.org, not the npm registry. If you can install Node but can't reach the package registry, this path is for you.)*
+2. **UIs don't need a bundler.** React and Tailwind both load straight from a CDN (`esm.sh`, `cdn.tailwindcss.com`) into a plain HTML file — the same idea as the drop-in widgets in Build 2. The AI writes one `index.html`; you open it in a browser. No Vite, no `npm run dev`. If the browser blocks the API call from a `file://` page, serve the folder with any static server you already have (e.g. `python3 -m http.server`).
+
+**Which should you choose?** If `npm install` works on your machine, use the npm path — it's the industry-standard workflow and what you'll use in real customer engagements. If installs are blocked, the no-npm path gets you the exact same result with zero package installs. Either path satisfies the Build and its quiz.
+
+> **Build 13 (the capstone) is npm-only.** It's a full production-grade application (Vite + React + a deploy pipeline), so it assumes a normal dev environment. The no-npm paths are for Builds 0–11, where the goal is learning the primitive, not shipping a production app.
+
 ## Four AI failure modes to watch for
 
 These are the four ways AI assistants reliably go wrong on ARAG tasks. Spot them every time.

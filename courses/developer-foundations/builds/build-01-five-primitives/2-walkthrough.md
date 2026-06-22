@@ -433,6 +433,8 @@ npm install dotenv
 
 **What that did:** created a fresh project folder, copied your `.env` over, initialised `package.json`, installed `dotenv`.
 
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `mkdir` the folder and `cp` the `.env` in. Run each command in Step 10e with `--env-file`, e.g. `node --env-file=.env primitives-demo.mjs find "your question"`. Brief the AI to read `process.env.NUCLIA_*` directly (no dotenv import).
+
 ### 10b. Brief your AI
 
 Open your AI. Paste this **exactly** — don't edit:
@@ -488,6 +490,8 @@ node primitives-demo.mjs ask-schema "anything"
 node primitives-demo.mjs graph "anything"
 node primitives-demo.mjs resource <paste-resource-id-from-find>
 ```
+
+*(No-npm path: add `--env-file=.env` after `node` on each line, e.g. `node --env-file=.env primitives-demo.mjs find "your question"`.)*
 
 **You should see:** one line per primitive, e.g.:
 

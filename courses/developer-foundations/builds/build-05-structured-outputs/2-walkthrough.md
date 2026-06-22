@@ -43,6 +43,8 @@ npm install dotenv
 - `npm init -y` initialised `package.json`.
 - Installed `dotenv` so Node can read your `.env` file.
 
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `mkdir foundations-build-5 && cd foundations-build-5`. Run every script in this Build with `--env-file`, e.g. `node --env-file=.env faq-generator.mjs "onboarding"`. When you brief the AI for `askForJson` (Step 2), tell it to read `process.env.NUCLIA_*` directly — **do not import dotenv**.
+
 Copy your `.env` from Build 0:
 
 ```bash

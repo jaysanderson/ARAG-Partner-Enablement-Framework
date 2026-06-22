@@ -185,6 +185,45 @@ If you used ChatGPT / Claude.ai web, you'll have done that work via copy-paste �
 
 Copy the entire error message + the command that produced it. Paste both back into the same chat: *"I ran [command] and got [error]. Fix."* The AI iterates. This is the four-step vibe-coding loop from the [vibe-coding guide](../../vibe-coding-guide.md#the-four-step-loop-this-is-the-whole-course) — brief, read, run, iterate.
 
+### No-npm alternative — single-file build
+
+If `npm install` is blocked on your machine (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)), build this as **one self-contained `index.html`** instead — no Vite, no install. Same chat experience, same `streamAsk` + two-voice logic.
+
+Make a folder and an empty `index.html` (`mkdir ~/Desktop/foundations-build-3 && cd $_` then create `index.html` in your editor). Then paste this brief instead of the one above:
+
+```
+Build a SINGLE self-contained index.html — no build step, no npm — that
+demonstrates a multi-surface chat against a Progress Agentic RAG Knowledge Box.
+Open-in-the-browser only.
+
+SETUP (all inside the one HTML file):
+- Load React 18 + ReactDOM from a CDN as ES modules from esm.sh
+  (https://esm.sh/react@18 and https://esm.sh/react-dom@18/client).
+- Load Tailwind from https://cdn.tailwindcss.com (script tag).
+- Put all app code in one <script type="module"> block. Use htm
+  (https://esm.sh/htm) for JSX-free templating, OR Babel Standalone
+  (<script type="text/babel" data-type="module">) if you prefer JSX — your call.
+- Credentials: a CONFIG object at the top of the script —
+  const CONFIG = { apiUrl: "PASTE_URL", kbId: "PASTE_KB_ID", apiKey: "PASTE_JWT" };
+  (the student pastes real values after; no .env, no import.meta.env).
+
+Then implement EXACTLY the same behaviour as the npm brief above:
+- A streamAsk(query, promptConfig) async generator: POST to
+  `${CONFIG.apiUrl}/kb/${CONFIG.kbId}/ask`, header
+  X-NUCLIA-SERVICEACCOUNT: Bearer ${CONFIG.apiKey}, body
+  { query, prefer_markdown:true, rephrase:true, max_tokens:500,
+    prompt:promptConfig, citations:true }; parse the streaming NDJSON
+  (balanced-brace buffering); yield answer-chunk / citations / done.
+- The MultiSurfaceChat component: Prospect/Member toggle, the same two
+  PROMPTS, chat history, streaming append, the first-link → pill-button
+  post-processor, citations under each answer, auto-scroll, disabled
+  input while streaming.
+- Verify the API shape against the current ARAG docs before coding; fail
+  loud on unexpected fields. Native fetch only, no SDK.
+```
+
+**Run it:** open `index.html` in your browser. If the browser blocks the API call from a `file://` page (CORS), serve the folder with any static server you already have — e.g. `python3 -m http.server 8000`, then visit `http://localhost:8000`. Paste your credentials into the `CONFIG` object (same three values as Step 3 below), reload, and you're done — skip the `.env` / `npm run dev` steps.
+
 ---
 
 ## Step 3 — Paste your credentials into `.env` (3 min)

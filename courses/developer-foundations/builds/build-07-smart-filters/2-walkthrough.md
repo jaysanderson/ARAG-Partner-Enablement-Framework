@@ -21,7 +21,7 @@ This is the Build that proves *"the cheapest precision lever in ARAG is filters.
 
 - **Your Build 0 KB** with Build 6's Labeller already configured (with a labelset you designed).
 - **Your `.env` file**.
-- **Your Build 3 React project** (we'll extend it) — or you can scaffold a fresh Vite + React project if you'd rather.
+- **Your Build 3 React project** (we'll extend it) — or you can scaffold a fresh Vite + React project if you'd rather. *(No-npm path: extend your single-file `index.html` from Build 3 — add the filter UI there and open it in the browser; no Vite, no `npm run dev`. See the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine).)*
 - **Your editor**.
 - **Your AI assistant**.
 - **A modern browser** — Steps 1–3 are entirely dashboard-driven (no terminal). Steps 4+ vibe-code the UI.

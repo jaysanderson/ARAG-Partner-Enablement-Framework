@@ -300,6 +300,8 @@ npm install dotenv
 
 **You should see:** a `package.json` file appears in your folder, plus a `node_modules` folder (which holds installed packages). Both can be ignored — Node manages them.
 
+> **No-npm path** (locked-down environment — see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). **Skip both commands above** — no `npm init`, no install. You just need your `.env` in this folder. When you run the script in Step 9, pass `--env-file` so Node reads `.env` itself: `node --env-file=.env ask.mjs "your question"`. In the brief below, change requirement 1 to *"Read NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY from `process.env` (do **not** use dotenv — they're loaded via `node --env-file=.env`). Exit with a clear error if any are missing."*
+
 ### 8b. Brief your AI
 
 Open your AI coding assistant (Claude Code, Cursor, ChatGPT, Claude.ai — whichever you picked in the vibe-coding guide).
@@ -390,6 +392,8 @@ In your terminal, still in `~/Desktop/foundations-build-0`:
 ```bash
 node ask.mjs "your question here"
 ```
+
+*(No-npm path: `node --env-file=.env ask.mjs "your question here"`.)*
 
 **You should see:**
 

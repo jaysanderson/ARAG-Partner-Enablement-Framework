@@ -39,6 +39,8 @@ npm run dev
 
 **You should see:** the same Build 3 chat UI at `http://localhost:5173/`. Send a test query in each persona mode (Prospect, Member). Confirm both still work.
 
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). If you built Build 3 as a single `index.html`, just re-open that file (or serve its folder with `python3 -m http.server`). Everything Build 4 adds — the language/persona/resource query prefix — goes into that same file; there's no `npm run dev` to restart.
+
 **If Build 3 is broken:** stop here. Fix Build 3 first (see Build 3's "Getting unstuck"). Build 4 needs it as a foundation.
 
 Stop the dev server (`Ctrl+C`) before editing files.

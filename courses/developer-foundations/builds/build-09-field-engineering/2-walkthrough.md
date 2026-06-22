@@ -25,6 +25,8 @@ Specifically:
 
 If you don't have Build 3 running, you can use Build 4 (the multilingual version layered on Build 3). Both work.
 
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). The custom-field work in this Build is all done in the dashboard. To see the fields render, extend your single-file `index.html` from Build 3 (open it in the browser) instead of a Vite project — same component edits, no `npm run dev`.
+
 ---
 
 ## Step 1 — Pick your 5 "hero" resources (10 min)
