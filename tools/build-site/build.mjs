@@ -1149,8 +1149,13 @@ ${tableRows}
 `;
 }
 
-fs.rmSync(OUT, { recursive: true, force: true });
+// Clean only what we generate — leave hand-authored files in docs/ (e.g.
+// reports) untouched. (Don't rmSync the whole dir; that wipes them.)
 fs.mkdirSync(OUT, { recursive: true });
+for (const f of ['index.html', 'course-overview.html', '.nojekyll']) {
+  fs.rmSync(path.join(OUT, f), { force: true });
+}
+fs.rmSync(path.join(OUT, 'scorm'), { recursive: true, force: true });
 fs.writeFileSync(path.join(OUT, 'index.html'), doc);
 fs.writeFileSync(path.join(OUT, 'course-overview.html'), onePager());
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
