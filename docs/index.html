@@ -1704,6 +1704,23 @@ console.log(<span class="hljs-string">'Unique resource IDs:'</span>, uniqueRids)
 </table>
 <p>Plus one bonus endpoint, <code>/labelsets</code>, that supports primitives 1–3.</p>
 <hr>
+<h2 id="build-01-walkthrough--your-sample-corpus--you-already-have-it">Your sample corpus — you already have it</h2>
+<p>You ingested this corpus in Build 0, so it's <strong>live in your Knowledge Box right now</strong> — nothing to set up, nothing to download. Every query in this Build runs against it, and you have full access.</p>
+<p>It's the <strong>Aurora Outfitters</strong> corpus — a fictional outdoor-gear retailer — about 47 documents across eight content types:</p>
+<ul>
+<li><strong>Products</strong> — hiking boots (the <em>Aurora TerraTrek 7</em>), packs, tents, jackets, sleeping quilts, climbing harnesses.</li>
+<li><strong>Trail guides</strong>, <strong>gear reviews</strong>, and ambassador <strong>videos</strong> + <strong>podcasts</strong>.</li>
+<li><strong>Loyalty</strong>, <strong>brand story</strong>, and <strong>support / policy</strong> docs (returns, sizing, warranty).</li>
+</ul>
+<p><strong>You don't need to know the data to start.</strong> Here are queries that return good results — use any of them as your <code>query</code> value:</p>
+<ul>
+<li><code>what is a good hiking boot?</code></li>
+<li><code>compare the TerraTrek 7 to other boots</code></li>
+<li><code>what is your return policy?</code></li>
+<li><code>recommend a tent for two people</code></li>
+</ul>
+<p>Throughout this Build, wherever a request body shows a <code>query</code>, we use <strong><code>what is a good hiking boot?</code></strong> as the running example — swap in any of the above (or your own) once you've seen it work.</p>
+<hr>
 <h2 id="build-01-walkthrough--step-1--pick-your-api-tool-10-min">Step 1 — Pick your API tool (10 min)</h2>
 <p>You have two options. <strong>Pick one and stick with it through this Build.</strong></p>
 <h3 id="build-01-walkthrough--option-a--postman-recommended-free-well-known">Option A — Postman (recommended, free, well-known)</h3>
@@ -1754,7 +1771,7 @@ console.log(<span class="hljs-string">'Unique resource IDs:'</span>, uniqueRids)
 </tbody>
 </table>
 <pre><code class="hljs language-json">{
-  <span class="hljs-attr">&quot;query&quot;</span>: <span class="hljs-string">&quot;your question here&quot;</span>,
+  <span class="hljs-attr">&quot;query&quot;</span>: <span class="hljs-string">&quot;what is a good hiking boot?&quot;</span>,
   <span class="hljs-attr">&quot;page_size&quot;</span>: <span class="hljs-number">5</span>,
   <span class="hljs-attr">&quot;features&quot;</span>: [<span class="hljs-string">&quot;keyword&quot;</span>, <span class="hljs-string">&quot;semantic&quot;</span>],
   <span class="hljs-attr">&quot;show&quot;</span>: [<span class="hljs-string">&quot;basic&quot;</span>, <span class="hljs-string">&quot;values&quot;</span>, <span class="hljs-string">&quot;origin&quot;</span>]
@@ -1762,7 +1779,7 @@ console.log(<span class="hljs-string">'Unique resource IDs:'</span>, uniqueRids)
 </code></pre>
 <p><strong>What each field does (in plain English):</strong></p>
 <ul>
-<li><code>query</code> — the search phrase. Use something your 10 documents could answer.</li>
+<li><code>query</code> — the search phrase. Use one of the suggested queries above (we'll use <em>what is a good hiking boot?</em>), or anything the Aurora corpus could answer.</li>
 <li><code>page_size</code> — how many resources to return (max relevant matches). 5 is a sensible default.</li>
 <li><code>features</code> — which retrieval engines to use. <code>keyword</code> is exact-match; <code>semantic</code> is meaning-based. Including both gives <strong>hybrid retrieval</strong> — generally best.</li>
 <li><code>show</code> — which fields to include in the response. <code>basic</code> is metadata, <code>values</code> is custom fields, <code>origin</code> is the source filename/URL.</li>
@@ -1772,7 +1789,7 @@ console.log(<span class="hljs-string">'Unique resource IDs:'</span>, uniqueRids)
 <pre><code class="hljs language-bash">curl -s -X POST \
   -H <span class="hljs-string">&quot;X-NUCLIA-SERVICEACCOUNT: Bearer YOUR_JWT&quot;</span> \
   -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
-  -d <span class="hljs-string">'{&quot;query&quot;:&quot;your question&quot;,&quot;page_size&quot;:5,&quot;features&quot;:[&quot;keyword&quot;,&quot;semantic&quot;],&quot;show&quot;:[&quot;basic&quot;,&quot;values&quot;,&quot;origin&quot;]}'</span> \
+  -d <span class="hljs-string">'{&quot;query&quot;:&quot;what is a good hiking boot?&quot;,&quot;page_size&quot;:5,&quot;features&quot;:[&quot;keyword&quot;,&quot;semantic&quot;],&quot;show&quot;:[&quot;basic&quot;,&quot;values&quot;,&quot;origin&quot;]}'</span> \
   <span class="hljs-string">&quot;YOUR_API_URL/kb/YOUR_KB_ID/find&quot;</span>
 </code></pre>
 <p><strong>You should see:</strong> a JSON response containing:</p>
@@ -1802,7 +1819,7 @@ console.log(<span class="hljs-string">'Unique resource IDs:'</span>, uniqueRids)
 </tbody>
 </table>
 <pre><code class="hljs language-json">{
-  <span class="hljs-attr">&quot;query&quot;</span>: <span class="hljs-string">&quot;your question here&quot;</span>,
+  <span class="hljs-attr">&quot;query&quot;</span>: <span class="hljs-string">&quot;what is a good hiking boot?&quot;</span>,
   <span class="hljs-attr">&quot;prefer_markdown&quot;</span>: <span class="hljs-literal">true</span>,
   <span class="hljs-attr">&quot;rephrase&quot;</span>: <span class="hljs-literal">true</span>,
   <span class="hljs-attr">&quot;max_tokens&quot;</span>: <span class="hljs-number">300</span>
@@ -1814,7 +1831,7 @@ console.log(<span class="hljs-string">'Unique resource IDs:'</span>, uniqueRids)
   -H <span class="hljs-string">&quot;X-NUCLIA-SERVICEACCOUNT: Bearer YOUR_JWT&quot;</span> \
   -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
   -H <span class="hljs-string">&quot;x-synchronous: true&quot;</span> \
-  -d <span class="hljs-string">'{&quot;query&quot;:&quot;your question&quot;,&quot;prefer_markdown&quot;:true,&quot;rephrase&quot;:true,&quot;max_tokens&quot;:300}'</span> \
+  -d <span class="hljs-string">'{&quot;query&quot;:&quot;what is a good hiking boot?&quot;,&quot;prefer_markdown&quot;:true,&quot;rephrase&quot;:true,&quot;max_tokens&quot;:300}'</span> \
   <span class="hljs-string">&quot;YOUR_API_URL/kb/YOUR_KB_ID/ask&quot;</span>
 </code></pre>
 <p><strong>You should see:</strong></p>
@@ -1832,7 +1849,7 @@ console.log(<span class="hljs-string">'Unique resource IDs:'</span>, uniqueRids)
 <h3 id="build-01-walkthrough--set-up-1">Set up</h3>
 <p>Drop the <code>x-synchronous: true</code> header. Add a <code>prompt</code> field to the body:</p>
 <pre><code class="hljs language-json">{
-  <span class="hljs-attr">&quot;query&quot;</span>: <span class="hljs-string">&quot;your question here&quot;</span>,
+  <span class="hljs-attr">&quot;query&quot;</span>: <span class="hljs-string">&quot;what is a good hiking boot?&quot;</span>,
   <span class="hljs-attr">&quot;prefer_markdown&quot;</span>: <span class="hljs-literal">true</span>,
   <span class="hljs-attr">&quot;rephrase&quot;</span>: <span class="hljs-literal">true</span>,
   <span class="hljs-attr">&quot;max_tokens&quot;</span>: <span class="hljs-number">300</span>,
@@ -1851,7 +1868,7 @@ console.log(<span class="hljs-string">'Unique resource IDs:'</span>, uniqueRids)
 <pre><code class="hljs language-bash">curl -N -X POST \
   -H <span class="hljs-string">&quot;X-NUCLIA-SERVICEACCOUNT: Bearer YOUR_JWT&quot;</span> \
   -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
-  -d <span class="hljs-string">'{&quot;query&quot;:&quot;your question&quot;,&quot;prefer_markdown&quot;:true,&quot;rephrase&quot;:true,&quot;max_tokens&quot;:300,&quot;prompt&quot;:{&quot;system&quot;:&quot;You are a concise assistant. Answer in 2 sentences maximum.&quot;,&quot;user&quot;:&quot;Context: {context}\n\nQuestion: {question}&quot;}}'</span> \
+  -d <span class="hljs-string">'{&quot;query&quot;:&quot;what is a good hiking boot?&quot;,&quot;prefer_markdown&quot;:true,&quot;rephrase&quot;:true,&quot;max_tokens&quot;:300,&quot;prompt&quot;:{&quot;system&quot;:&quot;You are a concise assistant. Answer in 2 sentences maximum.&quot;,&quot;user&quot;:&quot;Context: {context}\n\nQuestion: {question}&quot;}}'</span> \
   <span class="hljs-string">&quot;YOUR_API_URL/kb/YOUR_KB_ID/ask&quot;</span>
 </code></pre>
 <p><strong>You should see:</strong> a series of NDJSON lines (one JSON object per line), each shaped like:</p>
@@ -2017,7 +2034,7 @@ npm install dotenv
 </code></pre>
 <p><strong>What that did:</strong> created a fresh project folder, copied your <code>.env</code> over, initialised <code>package.json</code>, installed <code>dotenv</code>.</p>
 <blockquote>
-<p><strong>No-npm path</strong> (see the <a href="#vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">vibe-coding guide</a>). Skip <code>npm init</code>/<code>npm install</code> — just <code>mkdir</code> the folder and <code>cp</code> the <code>.env</code> in. Run each command in Step 10e with <code>--env-file</code>, e.g. <code>node --env-file=.env primitives-demo.mjs find &quot;your question&quot;</code>. Brief the AI to read <code>process.env.NUCLIA_*</code> directly (no dotenv import).</p>
+<p><strong>No-npm path</strong> (see the <a href="#vibe-coding-guide--npm-or-no-npm-pick-the-path-that-fits-your-machine">vibe-coding guide</a>). Skip <code>npm init</code>/<code>npm install</code> — just <code>mkdir</code> the folder and <code>cp</code> the <code>.env</code> in. Run each command in Step 10e with <code>--env-file</code>, e.g. <code>node --env-file=.env primitives-demo.mjs find &quot;what is a good hiking boot?&quot;</code>. Brief the AI to read <code>process.env.NUCLIA_*</code> directly (no dotenv import).</p>
 </blockquote>
 <h3 id="build-01-walkthrough--10b-brief-your-ai">10b. Brief your AI</h3>
 <p>Open your AI. Paste this <strong>exactly</strong> — don't edit:</p>
@@ -2059,13 +2076,13 @@ Use plain fetch. No SDK. No external HTTP libraries.
 </ol>
 <p>If any fail, tell the AI: <em>&quot;You did X but it should be Y. Fix it.&quot;</em></p>
 <h3 id="build-01-walkthrough--10e-run-all-five">10e. Run all five</h3>
-<pre><code class="hljs language-bash">node primitives-demo.mjs find <span class="hljs-string">&quot;your question&quot;</span>
-node primitives-demo.mjs ask <span class="hljs-string">&quot;your question&quot;</span>
+<pre><code class="hljs language-bash">node primitives-demo.mjs find <span class="hljs-string">&quot;what is a good hiking boot?&quot;</span>
+node primitives-demo.mjs ask <span class="hljs-string">&quot;what is a good hiking boot?&quot;</span>
 node primitives-demo.mjs ask-schema <span class="hljs-string">&quot;anything&quot;</span>
 node primitives-demo.mjs graph <span class="hljs-string">&quot;anything&quot;</span>
 node primitives-demo.mjs resource &lt;paste-resource-id-from-find&gt;
 </code></pre>
-<p><em>(No-npm path: add <code>--env-file=.env</code> after <code>node</code> on each line, e.g. <code>node --env-file=.env primitives-demo.mjs find &quot;your question&quot;</code>.)</em></p>
+<p><em>(No-npm path: add <code>--env-file=.env</code> after <code>node</code> on each line, e.g. <code>node --env-file=.env primitives-demo.mjs find &quot;what is a good hiking boot?&quot;</code>.)</em></p>
 <p><strong>You should see:</strong> one line per primitive, e.g.:</p>
 <pre><code>5 resources, top score 0.84
 Answer (287 chars), 4 citations
@@ -2110,7 +2127,7 @@ Resource title: &quot;Onboarding Guide&quot;, extracted_text length: 4129 chars
 <p><strong><code>/find</code> returns 0 resources.</strong></p>
 <ul>
 <li>Your query didn't match anything. Try a more obvious question — something that's clearly in your corpus.</li>
-<li>Or check that all 10 documents still show &quot;indexed&quot; in the dashboard.</li>
+<li>Or check that your documents still show &quot;indexed&quot; in the dashboard.</li>
 </ul>
 <p><strong><code>/ask</code> answer says &quot;I don't have enough information.&quot;</strong></p>
 <ul>

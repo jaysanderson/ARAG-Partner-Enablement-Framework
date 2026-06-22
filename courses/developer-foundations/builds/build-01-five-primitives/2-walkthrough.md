@@ -30,6 +30,27 @@ Plus one bonus endpoint, `/labelsets`, that supports primitives 1–3.
 
 ---
 
+## Your sample corpus — you already have it
+
+You ingested this corpus in Build 0, so it's **live in your Knowledge Box right now** — nothing to set up, nothing to download. Every query in this Build runs against it, and you have full access.
+
+It's the **Aurora Outfitters** corpus — a fictional outdoor-gear retailer — about 47 documents across eight content types:
+
+- **Products** — hiking boots (the *Aurora TerraTrek 7*), packs, tents, jackets, sleeping quilts, climbing harnesses.
+- **Trail guides**, **gear reviews**, and ambassador **videos** + **podcasts**.
+- **Loyalty**, **brand story**, and **support / policy** docs (returns, sizing, warranty).
+
+**You don't need to know the data to start.** Here are queries that return good results — use any of them as your `query` value:
+
+- `what is a good hiking boot?`
+- `compare the TerraTrek 7 to other boots`
+- `what is your return policy?`
+- `recommend a tent for two people`
+
+Throughout this Build, wherever a request body shows a `query`, we use **`what is a good hiking boot?`** as the running example — swap in any of the above (or your own) once you've seen it work.
+
+---
+
 ## Step 1 — Pick your API tool (10 min)
 
 You have two options. **Pick one and stick with it through this Build.**
@@ -93,7 +114,7 @@ The simplest primitive. Returns documents matching your query. No LLM involved.
 
 ```json
 {
-  "query": "your question here",
+  "query": "what is a good hiking boot?",
   "page_size": 5,
   "features": ["keyword", "semantic"],
   "show": ["basic", "values", "origin"]
@@ -101,7 +122,7 @@ The simplest primitive. Returns documents matching your query. No LLM involved.
 ```
 
 **What each field does (in plain English):**
-- `query` — the search phrase. Use something your 10 documents could answer.
+- `query` — the search phrase. Use one of the suggested queries above (we'll use *what is a good hiking boot?*), or anything the Aurora corpus could answer.
 - `page_size` — how many resources to return (max relevant matches). 5 is a sensible default.
 - `features` — which retrieval engines to use. `keyword` is exact-match; `semantic` is meaning-based. Including both gives **hybrid retrieval** — generally best.
 - `show` — which fields to include in the response. `basic` is metadata, `values` is custom fields, `origin` is the source filename/URL.
@@ -114,7 +135,7 @@ Click **Send** (or run the `curl` below).
 curl -s -X POST \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer YOUR_JWT" \
   -H "Content-Type: application/json" \
-  -d '{"query":"your question","page_size":5,"features":["keyword","semantic"],"show":["basic","values","origin"]}' \
+  -d '{"query":"what is a good hiking boot?","page_size":5,"features":["keyword","semantic"],"show":["basic","values","origin"]}' \
   "YOUR_API_URL/kb/YOUR_KB_ID/find"
 ```
 
@@ -150,7 +171,7 @@ Same query, but now you want a **generated answer** with citations.
 
 ```json
 {
-  "query": "your question here",
+  "query": "what is a good hiking boot?",
   "prefer_markdown": true,
   "rephrase": true,
   "max_tokens": 300
@@ -166,7 +187,7 @@ curl -s -X POST \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer YOUR_JWT" \
   -H "Content-Type: application/json" \
   -H "x-synchronous: true" \
-  -d '{"query":"your question","prefer_markdown":true,"rephrase":true,"max_tokens":300}' \
+  -d '{"query":"what is a good hiking boot?","prefer_markdown":true,"rephrase":true,"max_tokens":300}' \
   "YOUR_API_URL/kb/YOUR_KB_ID/ask"```
 
 **You should see:**
@@ -192,7 +213,7 @@ Drop the `x-synchronous: true` header. Add a `prompt` field to the body:
 
 ```json
 {
-  "query": "your question here",
+  "query": "what is a good hiking boot?",
   "prefer_markdown": true,
   "rephrase": true,
   "max_tokens": 300,
@@ -213,7 +234,7 @@ Drop the `x-synchronous: true` header. Add a `prompt` field to the body:
 curl -N -X POST \
   -H "X-NUCLIA-SERVICEACCOUNT: Bearer YOUR_JWT" \
   -H "Content-Type: application/json" \
-  -d '{"query":"your question","prefer_markdown":true,"rephrase":true,"max_tokens":300,"prompt":{"system":"You are a concise assistant. Answer in 2 sentences maximum.","user":"Context: {context}\n\nQuestion: {question}"}}' \
+  -d '{"query":"what is a good hiking boot?","prefer_markdown":true,"rephrase":true,"max_tokens":300,"prompt":{"system":"You are a concise assistant. Answer in 2 sentences maximum.","user":"Context: {context}\n\nQuestion: {question}"}}' \
   "YOUR_API_URL/kb/YOUR_KB_ID/ask"
 ```
 
@@ -433,7 +454,7 @@ npm install dotenv
 
 **What that did:** created a fresh project folder, copied your `.env` over, initialised `package.json`, installed `dotenv`.
 
-> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `mkdir` the folder and `cp` the `.env` in. Run each command in Step 10e with `--env-file`, e.g. `node --env-file=.env primitives-demo.mjs find "your question"`. Brief the AI to read `process.env.NUCLIA_*` directly (no dotenv import).
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `mkdir` the folder and `cp` the `.env` in. Run each command in Step 10e with `--env-file`, e.g. `node --env-file=.env primitives-demo.mjs find "what is a good hiking boot?"`. Brief the AI to read `process.env.NUCLIA_*` directly (no dotenv import).
 
 ### 10b. Brief your AI
 
@@ -484,14 +505,14 @@ If any fail, tell the AI: *"You did X but it should be Y. Fix it."*
 ### 10e. Run all five
 
 ```bash
-node primitives-demo.mjs find "your question"
-node primitives-demo.mjs ask "your question"
+node primitives-demo.mjs find "what is a good hiking boot?"
+node primitives-demo.mjs ask "what is a good hiking boot?"
 node primitives-demo.mjs ask-schema "anything"
 node primitives-demo.mjs graph "anything"
 node primitives-demo.mjs resource <paste-resource-id-from-find>
 ```
 
-*(No-npm path: add `--env-file=.env` after `node` on each line, e.g. `node --env-file=.env primitives-demo.mjs find "your question"`.)*
+*(No-npm path: add `--env-file=.env` after `node` on each line, e.g. `node --env-file=.env primitives-demo.mjs find "what is a good hiking boot?"`.)*
 
 **You should see:** one line per primitive, e.g.:
 
@@ -553,7 +574,7 @@ Then take the [Build 1 quiz](3-quiz.md). Pass → start [Build 2](../build-02-dr
 
 **`/find` returns 0 resources.**
 - Your query didn't match anything. Try a more obvious question — something that's clearly in your corpus.
-- Or check that all 10 documents still show "indexed" in the dashboard.
+- Or check that your documents still show "indexed" in the dashboard.
 
 **`/ask` answer says "I don't have enough information."**
 - That's the model **refusing to hallucinate** — good behaviour. Try a better-matched query.
