@@ -497,7 +497,7 @@ Click send. Wait for the file.
 Open `primitives-demo.mjs`. Three checks:
 
 1. **No fake SDK** — uses `fetch(...)`, not `import { Progress Agentic RAG } from 'nuclia'`.
-2. **Right auth header** — `X-NUCLIA-SERVICEACCOUNT: Bearer ...`, not `Authorization`.
+2. **Right auth header** — `X-NUCLIA-SERVICEACCOUNT: Bearer ...`. (`Authorization` also works, but this course standardises on `X-NUCLIA-SERVICEACCOUNT`.)
 3. **`additionalProperties: false`** on the ask-schema body's schema object.
 
 If any fail, tell the AI: *"You did X but it should be Y. Fix it."*
