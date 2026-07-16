@@ -32,7 +32,7 @@ The point of composite RAG is to **fix queries that single-shot fails on**. So f
 In your Build 3 chat (single-shot mode), ask 10-15 questions across your corpus. For each, note:
 
 - **Citation count.** How many sources did the answer cite? (Often 0-2 on weak queries.)
-- **Refusal.** Did the model say *"I don't have enough information"* when you suspect the corpus does?
+- **Refusal.** Did ARAG return *"Not enough data to answer this."* (declining to call the LLM at all) when you suspect the corpus does?
 - **Vagueness.** Was the answer non-specific where you expected detail?
 
 Use a notepad. Score each query 1-5 on "answer quality."

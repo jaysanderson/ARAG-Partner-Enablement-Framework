@@ -27,7 +27,7 @@ D. `<<context>>` and `<<question>>`
 A. P1 — semantic search
 B. P2 — free-form chat
 C. P3 — schema-constrained generation
-D. P5 — secure media
+D. P5 — fetch resource
 
 ---
 

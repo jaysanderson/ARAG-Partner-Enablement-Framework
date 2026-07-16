@@ -240,7 +240,7 @@ Select the whole `/ask` curl command in `scratch.sh` (Cmd/Ctrl + click-drag, or 
 - A field called `retrieval_results` — the documents the answer was grounded in (same shape as `/find`'s response).
 - A field called `retrieval_best_matches` — the ranked list of source IDs.
 
-**If the answer says "I don't have enough information to answer that question":** that's *correct behaviour* on a small corpus. The model is refusing to hallucinate. Try a different query, or ingest more documents.
+**If the answer says "Not enough data to answer this.":** that's *correct behaviour* on a small corpus. When retrieval doesn't surface enough relevant context, ARAG returns this canned response **before ever calling the LLM** — no generation call is made, so no tokens are spent. It's not the model declining to answer; generation never ran. Try a different query, or ingest more documents.
 
 ---
 
@@ -412,7 +412,7 @@ That's it. End-to-end ARAG client, vibe-coded.
 Run it three times with three different queries. Each time, watch the streaming. Notice:
 
 - Some queries return more citations than others.
-- Some queries make the model say "I don't have enough information" — that's grounded refusal.
+- Some queries return "Not enough data to answer this." — that's ARAG declining to call the LLM at all, not the model refusing.
 - The streaming feels fast for short answers, slower for long ones.
 
 If something doesn't work, see "Getting unstuck" below.

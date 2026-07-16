@@ -144,11 +144,11 @@ Every Build past this one drills into one primitive. Today you see all five at o
    { "query": {"prop": "node", "value": "Mara", "match": "fuzzy"}, "top_k": 50 }
    ```
 
-**The single most important filter:** wrap every graph query in `{prop: "generated", by: "data-augmentation"}` to exclude default NER noise (DATE, ORG, MONEY, etc.). See Build 7 for depth.
+**The single most important filter:** wrap every graph query in `{prop: "generated", by: "data-augmentation"}` to exclude default NER noise (DATE, ORG, MONEY, etc.). See Build 8 for depth.
 
 **Customer signals to map to P4:** "find connections between X and Y", "which experts touched these projects", "what's the impact path from policy A to outcome B", "relationship-shaped questions, not document-shaped questions."
 
-## P5 — Stream & secure media  →  `GET /v1/kb/{id}/resource/{id}/...`
+## P5 — Fetch Resource  →  `GET /v1/kb/{id}/resource/{id}/...`
 
 **What it does:** Fetches an individual resource (with all its bundles) and downloads media (video, audio, PDF) with auth headers passed through every segment of DASH streaming.
 
