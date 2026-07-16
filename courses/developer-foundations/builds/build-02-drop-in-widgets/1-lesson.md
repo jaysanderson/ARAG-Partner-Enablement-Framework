@@ -63,36 +63,54 @@ The configuration panel exposes a wide spread of options. Build 2's walkthrough 
 - Pick **search bar + results**, **floating chat**, **inline chat**, **popup**, or any combination.
 - Common Tier 1 mix: search bar at the top of the page + floating chat in the corner.
 
-### Display + layout
+### Widget style
 
-- **Search bar layout**: compact (header-sized), full-width, hero (large with surrounding margin).
-- **Result-list layout**: list / card / compact.
-- **Chat position**: bottom-right, bottom-left, anchored inline in the page flow.
-- **Theme**: light, dark, system-auto.
+You can create multiple named widgets, each with its own style:
 
-### Search behaviour
+- **Embedded in page**
+- **Chat mode**
+- **Popup modal style**
+- **Floating chat button**
 
-- **Placeholder text**.
-- **Autocomplete / suggestions**: on/off.
-- **Search trigger**: search-as-you-type vs. press-Enter.
-- **Keyboard shortcut indicator** (`⌘ K`).
-- **Result count** (page size).
+Style is changeable at any time per widget.
 
-### Generation (chat) behaviour
+### Configuration options
 
-- **Streaming**: token-by-token vs. complete-response.
-- **Citations style**: inline footnotes, trailing list, hidden.
-- **Sources before answer**: show retrieved documents before the generated answer.
-- **Multi-turn / follow-up**: allow conversation memory within a session.
-- **Default suggested questions**.
+#### Cosmetic
+
+- **Theme**: light or dark.
+- **Display search button**.
+- **Customize text blocks visibility** — expanded or collapsed by default.
+- **Customize citation visibility** — expanded or collapsed by default.
+- **Hide Progress Agentic RAG logo from search bar** — growth/enterprise plans only.
+- **Position**, **size**, **panel width**, **panel height**, **bottom offset**, **side offset** (Floating chat button only).
+
+#### Behavioural
+
+- **No chat history** — previous Q&A aren't passed as context when generating a new answer.
+- **Persist chat history** — stored in the browser's localStorage and restored on reload (chat widget only).
+- **Navigate to links origin / files of origin / origin URL** — clicking a result opens the original page/file/URL instead of rendering it in the viewer.
+- **Open in a new tab** — only available when a navigate-to-origin option is on.
+- **Hide download button**.
+- **Permalinks** — adds parameters so users can copy/share a direct link to a specific resource or search result.
+
+#### Text customization
+
+- **Placeholder text** — search bar and chat bar, independently toggleable.
+- **Customize insufficient data message** — the message shown when there's not enough context to answer (HTML markup allowed).
+- **Copy button disclaimer** — shown when a user copies the answer.
+
+#### Feedback
+
+- **Feedback**: no feedback / global feedback on the answer / detailed feedback on answer and search results.
+
+#### Language
+
+- **Language**: free-text field (2-character code) that sets the widget's own interface language. Defaults to the browser's locale; the UI ships translations for `en`, `ca`, `es`, `fr`, but accepts any code.
 
 ### Filters
 
 - Free-text filter expression — accepts any valid Progress Agentic RAG filter path.
-
-### Language
-
-- Pin every answer to a specific language regardless of the query language.
 
 The point of Build 2's walkthrough is to **see all of these options at least once**, not to memorise the JSON. The configurator is the partner's no-code surface; mastering it means a partner can ship customer-customised widget pages without ever opening an editor.
 
