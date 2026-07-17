@@ -223,13 +223,12 @@ Send.
 
 ### 2c. Read the code carefully
 
-This file's quality determines whether the rest of Build 5 is easy or painful. Five checks:
+This file's quality determines whether the rest of Build 5 is easy or painful. Four checks:
 
 1. **The injector is recursive.** Find the function that walks the schema. It must descend into `properties.<key>` AND into `items` (for arrays of objects).
 2. **The three response paths exist.** Search the file for: `answer_json`, `item.object` (or `item?.object`), and a regex like `/\{[\s\S]*\}/` for the text fallback.
 3. **The return shape is `{ result, resources }`.** Search for `resources` and confirm the function pulls it from `data.resources` or `data.retrieval_results?.resources` (with a `{}` fallback) and returns it alongside the parsed JSON.
-4. **Auth header** is `X-NUCLIA-SERVICEACCOUNT`.
-5. **No SDK** — uses plain `fetch`.
+4. **No SDK** — uses plain `fetch`.
 
 If any are missing, tell the AI: *"You forgot [X]. Re-write the file with it."*
 
@@ -374,8 +373,6 @@ It should:
    renderer resolves it to the real document title. Never print the
    model's id field as the source label directly — that's how
    hallucinated captions slip through.
-
-ES modules. Plain Node.js.
 ```
 
 Send.
@@ -460,8 +457,6 @@ and ignore resources (`const { result } = await askForJson(...)`).
 
 Print as a numbered list:
 "1. <name> — <description>"
-
-ES modules.
 ```
 
 ### 4b. Run
@@ -576,8 +571,6 @@ from the normalised data:
   if (normalisedRows.length === 0) {
     console.log("\n(No grounded attributes found that apply to all items.)");
   }
-
-ES modules.
 ```
 
 ### 5b. Pick three items your corpus actually contains

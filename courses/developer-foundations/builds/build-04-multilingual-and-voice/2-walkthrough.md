@@ -283,6 +283,8 @@ If the layout's broken, tell the AI: *"The new controls overlap with the persona
 
 This is where the magic shows. Keep `language="English"`, `segment="Practitioner"`, `resourceTitle=""` for the baseline.
 
+**Open DevTools → Network before you start** and keep it open through all four tests below. Every lever here works by editing the `query` field in the `/ask` request body — seeing that field change in the raw request, not just trusting the rendered answer, is how you actually confirm the mechanism (and it's the same habit that makes Step 9's prefix-vs-filter distinction click).
+
 ### 4a. Test the language lever
 
 1. Type a question your corpus can answer: *"What should I focus on?"* (or whatever fits)
@@ -292,9 +294,9 @@ This is where the magic shows. Keep `language="English"`, `segment="Practitioner
 
 **You should see:** the answer appears in French, then Japanese. Same content, different language.
 
-**If the language doesn't change:**
-- Open DevTools → Network tab → click the `/ask` request → look at the request body. The `query` field should start with `Respond in French:` (or whichever language).
-- If not, the prefix isn't being prepended. Tell AI: *"The language prefix isn't being added to the query. Check the submit handler in MultiSurfaceChat.tsx — the prefix concat is missing."*
+Check the Network tab: the `/ask` request's `query` field should start with `Respond in French:` (or whichever language).
+
+**If the language doesn't change** but the request's `query` field lacks the prefix: the prefix isn't being prepended. Tell AI: *"The language prefix isn't being added to the query. Check the submit handler in MultiSurfaceChat.tsx — the prefix concat is missing."*
 
 ### 4b. Test the segment lever
 
@@ -305,6 +307,8 @@ Language back to English.
 
 **You should see:** the *same content*, framed differently. Beginner answers explain more; Expert answers assume context.
 
+Check the Network tab: the `query` field should start with `The user is a Beginner...` (or `Expert`).
+
 ### 4c. Test the resource-scope lever
 
 1. Pick a document title from your KB (open the Progress Agentic RAG dashboard → list of resources → copy any title verbatim).
@@ -312,6 +316,8 @@ Language back to English.
 3. Ask: *"Summarise this."*
 
 **You should see:** the answer disproportionately references that resource (e.g., quotes paragraphs from it, or names it explicitly). Without the prefix, *"summarise this"* would be ambiguous; with the prefix, the model knows which "this".
+
+Check the Network tab: the `query` field should start with `Regarding the resource titled "..."`.
 
 ### 4d. Test all three combined
 
@@ -321,6 +327,8 @@ Language back to English.
 4. Ask any question.
 
 **You should see:** answer is in Spanish, framed for an expert audience, focused on the named resource. **Three levers, one query, one answer.** Demonstration over.
+
+Check the Network tab: the `query` field should now carry all three fragments concatenated, in order.
 
 ---
 
