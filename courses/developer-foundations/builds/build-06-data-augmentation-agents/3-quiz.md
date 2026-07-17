@@ -40,17 +40,17 @@ D. Re-indexing the corpus
 
 ---
 
-### 5. The Labeller agent supports which two modes?
+### 5. The Labeller agent classifies documents using:
 
-A. Synchronous and asynchronous
-B. Rule-based and model-based
-C. Eager and lazy
-D. Server-side and client-side
+A. A prompt run against the LLM — model-based only, no rule-based/regex mode
+B. Rule-based patterns only (regex, file-path rules)
+C. Your choice of rule-based or model-based, picked per labelset
+D. A separately trained classifier model you upload
 
 ---
 
 ## Answer key
 
-1. B · 2. C · 3. A · 4. C · 5. B
+1. B · 2. C · 3. A · 4. C · 5. A
 
 4+ correct → pass. Continue to [Build 7 — Smart Filters & Labelsets](../build-07-smart-filters/).

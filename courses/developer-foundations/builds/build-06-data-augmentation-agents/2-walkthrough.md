@@ -90,7 +90,7 @@ Pick one question your corpus can answer (e.g. *"Which Aurora boots are recommen
 **Dashboard path (recommended for citizen developers):**
 
 1. In the Progress Agentic RAG dashboard, open your KB.
-2. Find the **Search & Ask** (or **Try the API**, **Playground**, **Search**) panel — most tenants have it in the left nav.
+2. Find the **Search** panel in the left nav.
 3. Type your question and submit. Make sure *"Generative answer"* (or equivalent) is enabled so you get an LLM-generated answer alongside the raw retrieval.
 4. Capture three things:
    - The **answer text** the generator returned.
@@ -259,12 +259,11 @@ Labels:
 4. **Labelset:**
    - **Create labelset** → name it `topic` (or your chosen name).
    - Add each label with a 1-sentence description (from your design above).
-5. **Classification mode** — pick **model-based** (not rule-based).
-6. **Prompt** — paste:
+5. **Prompt** — the Labeller is model-based only (no rule-based/regex mode), so this prompt is what drives classification. Paste:
 
    > *"Classify this document into exactly ONE of these topics: {labels}. Reply with just the label name — nothing else."*
 
-7. **Save** and trigger a run from the **Execution** tab.
+6. **Save** and trigger a run from the **Execution** tab.
 
 > Again — if your dashboard's labels differ slightly, follow the on-screen wording. The shape (agent name + LLM + filter + labelset + prompt) is the stable core.
 
@@ -576,11 +575,11 @@ In `graph-output.md`, paste **5 sample paths** from the dashboard's graph viewer
 
 ## Step 5 — Compare before/after (15 min)
 
-Re-run **the same baseline query** from Step 1c against the same Search & Ask panel — same wording, same panel, same KB. The only thing that's changed is that the three agents have populated the KB with summaries, Q&A pairs, labels, and a typed graph.
+Re-run **the same baseline query** from Step 1c against the same Search panel — same wording, same panel, same KB. The only thing that's changed is that the three agents have populated the KB with summaries, Q&A pairs, labels, and a typed graph.
 
 **Dashboard path:**
 
-1. Open the dashboard's **Search & Ask** (or **Playground** / **Try the API**) panel.
+1. Open the dashboard's **Search** panel.
 2. Paste **the exact same question** you used in Step 1c.
 3. Capture the same three fields:
    - Answer text.
