@@ -303,13 +303,13 @@ npm install dotenv
 
 **You should see:** a `package.json` file appears in your folder, plus a `node_modules` folder (which holds installed packages). Both can be ignored — Node manages them.
 
-> **No-npm path** (locked-down environment — see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). **Skip both commands above** — no `npm init`, no install. You just need your `.env` in this folder. When you run the script in Step 9, pass `--env-file` so Node reads `.env` itself: `node --env-file=.env ask.mjs "your question"`. In the brief below, change requirement 1 to *"Read NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY from `process.env` (do **not** use dotenv — they're loaded via `node --env-file=.env`). Exit with a clear error if any are missing."*
+> **No-npm path** (locked-down environment — see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). **Skip both commands above** — no `npm init`, no install. You just need your `.env` in this folder. When you run the script in Step 9, pass `--env-file` so Node reads `.env` itself: `node --env-file=.env ask.mjs "your question"`. Use the **No-npm brief** in 8b instead of the main brief.
 
 ### 8b. Brief your AI
 
 Open your AI coding assistant (Claude Code, Cursor, ChatGPT, Claude.ai — whichever you picked in the vibe-coding guide).
 
-Copy this brief and paste it in. **Don't edit it.** It's specific on purpose — and it includes a "verify the API before coding" instruction up front so the AI can't guess the response shape:
+**On the npm path?** Copy this brief and paste it in. **Don't edit it.** It's specific on purpose — and it includes a "verify the API before coding" instruction up front so the AI can't guess the response shape:
 
 ```
 Write me a Node.js script called ask.mjs (ES modules / import syntax).
@@ -362,6 +362,59 @@ Use plain fetch. No SDK. No external HTTP library beyond what's built into Node.
 ```
 
 > **Why the "verify the API before coding" preamble matters.** The single most common AI failure mode in this course is the AI confidently writing code against an *imagined* response shape. The opening paragraph forces the assistant to ground its work in the real response from running your scratch.sh — not an internet search, not a guess — the same discipline you'll teach customer engineers in a real engagement. Notice also the explicit `citations: true` body field: without it, the streaming response gives you `retrieval` items (paragraphs that *could* have backed the answer) but no "citations" item (the LLM's actual attribution of each claim to a source). For a real customer demo you want the second — inline source attribution that survives copy-paste.
+
+**On the no-npm path?** Copy this brief instead — it's fully self-contained, paste it as-is, identical to the one above except for requirement 1 (how credentials are read):
+
+```
+Write me a Node.js script called ask.mjs (ES modules / import syntax).
+
+IMPORTANT — verify the API before coding:
+This hits the Progress Agentic RAG (ARAG / Progress Agentic RAG) /ask streaming endpoint.
+Do NOT trust my description of the response schema below — I may have it wrong.
+Do NOT search the internet or fetch external documentation for this. Instead, run the
+curl command(s) in my scratch.sh and check the real output to confirm the actual schema:
+  - the exact set of streaming item.type values emitted
+  - the shape of every field you read — especially whether best_matches is
+    string[] (paragraph-id strings) or object[]
+State the verified assumptions in a header comment.
+
+Requirements:
+1. Read NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY from process.env (do NOT
+   use dotenv — they're loaded via `node --env-file=.env`, which I'll run the
+   script with). Exit with a clear error if any are missing.
+2. Take a query string as a CLI argument: `node ask.mjs "what is X?"`.
+   Exit with a usage message if absent.
+3. POST to {NUCLIA_API_URL}/kb/{NUCLIA_KB_ID}/ask with:
+   - Header: X-NUCLIA-SERVICEACCOUNT: Bearer {NUCLIA_API_KEY}
+   - Header: Content-Type: application/json
+   - Body: { query, prefer_markdown: true, rephrase: true, max_tokens: 500 }
+   I want source attribution in the output, so also request it explicitly:
+   add `citations: true` to the body (or `citations: "llm_footnotes"` if you
+   determine that better suits inline footnotes — tell me which you chose and why).
+4. The response is NDJSON: each object is shaped { "item": { "type": ..., ... } }.
+   Treat the type list as open — handle the ones you need and ignore the rest;
+   do not assume my list is complete or correct.
+5. As answer items arrive, print their text to stdout immediately (stream it,
+   don't buffer the whole answer).
+6. Collect the sources that backed the answer. Be precise about the distinction:
+   - "retrieval" items carry the PARAGRAPHS retrieved (best_matches).
+   - "citations" items (only present because of step 3) carry the mapping of
+     answer spans back to source paragraphs.
+   Derive the resource id from each paragraph id correctly per the shape you
+   verified — do not assume it's a property on an object.
+7. After the stream ends, print "---" then the citations: prefer the answer-span
+   -> source mapping if present, otherwise the deduped list of source resource IDs.
+8. Handle a JSON object that straddles two stream chunks (balanced-brace counting
+   to extract complete objects from the buffer; keep the partial remainder).
+
+Robustness — fail loud, not silent:
+- On non-2xx HTTP, print status + body and exit non-zero.
+- If a field you read is empty or an unexpected type (e.g. best_matches is not
+  what you expected, or zero sources came back), warn to stderr rather than
+  silently producing "(no citations)". I need to see when extraction breaks.
+
+Use plain fetch. No SDK. No external HTTP library beyond what's built into Node.
+```
 
 Click send. Wait for the AI to produce the file.
 

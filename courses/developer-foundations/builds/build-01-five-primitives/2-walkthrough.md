@@ -536,11 +536,13 @@ npm install dotenv
 
 **What that did:** created a fresh project folder, copied your `.env` over, initialised `package.json`, installed `dotenv`.
 
-> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `mkdir` the folder and `cp` the `.env` in. Run each command in Step 10e with `--env-file`, e.g. `node --env-file=.env primitives-demo.mjs find "what is a good hiking boot?"`. Brief the AI to read `process.env.NUCLIA_*` directly (no dotenv import).
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `mkdir` the folder and `cp` the `.env` in. Run each command in Step 10e with `--env-file`, e.g. `node --env-file=.env primitives-demo.mjs find "what is a good hiking boot?"`. Use the **No-npm brief** in 10b instead of the main brief.
 
 ### 10b. Brief your AI
 
-Open your AI. Paste this **exactly** — don't edit:
+Open your AI.
+
+**On the npm path?** Paste this **exactly** — don't edit:
 
 ```
 Write a Node.js CLI tool called primitives-demo.mjs (ES modules / import syntax).
@@ -552,6 +554,40 @@ real output to confirm each response shape before implementing it.
 
 It should:
 1. Use the dotenv package to read NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY from a .env file.
+2. Take two command-line args: the primitive name and a query/id.
+   Usage: node primitives-demo.mjs <primitive> <query-or-id>
+   Where <primitive> is one of: find, ask, ask-schema, graph, resource
+3. Implementation per primitive:
+   - find: POST /kb/{kbId}/find with body {query, page_size: 5, features: ["keyword","semantic"], show: ["basic","values","origin"]}. Use sync (no streaming).
+   - ask: POST /kb/{kbId}/ask with body {query, prefer_markdown: true, rephrase: true, max_tokens: 300}. Add header x-synchronous: true.
+   - ask-schema: POST /kb/{kbId}/ask sync, with a hard-coded follow-up-questions schema (3 questions). The schema must include additionalProperties: false on every object.
+   - graph: POST /kb/{kbId}/graph with body {query: {and: [{prop:"path"}, {prop:"generated", by:"data-augmentation"}]}, top_k: 20}.
+   - resource: GET /kb/{kbId}/resource/{id} with query string show=basic&show=origin&show=extra&show=values&show=extracted
+4. Every request uses the header X-NUCLIA-SERVICEACCOUNT: Bearer {API_KEY} and Content-Type: application/json (for POSTs).
+5. Print ONE LINE summarising what came back:
+   - find: "5 resources, top score 0.87"
+   - ask: "Answer (143 chars), 3 citations"
+   - ask-schema: "3 questions generated"
+   - graph: "0 paths" (or "N paths" if populated)
+   - resource: "Resource title: \"...\", extracted_text length: 2456 chars"
+
+Use plain fetch. No SDK. No external HTTP libraries.
+```
+
+**On the no-npm path?** Paste this instead — fully self-contained, identical except requirement 1 (how credentials are read):
+
+```
+Write a Node.js CLI tool called primitives-demo.mjs (ES modules / import syntax).
+
+IMPORTANT — verify before coding:
+Do NOT search the internet or fetch external documentation. You already ran every one
+of these calls in Steps 3–9 (via curl or Postman) — re-run them if needed and check the
+real output to confirm each response shape before implementing it.
+
+It should:
+1. Read NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY directly from process.env
+   (do NOT use dotenv — they're loaded via `node --env-file=.env`, which I'll run
+   the script with).
 2. Take two command-line args: the primitive name and a query/id.
    Usage: node primitives-demo.mjs <primitive> <query-or-id>
    Where <primitive> is one of: find, ask, ask-schema, graph, resource

@@ -91,13 +91,15 @@ You don't install Tailwind by hand — the AI handles it as part of the comparis
 
 Set up `.env` with `VITE_NUCLIA_*`. You'll also need a basic `ragClient.ts` with a sync `ask()` function — easier than re-implementing streaming. The AI will scaffold this if you ask in the next step.
 
-> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip both options above and build one self-contained `index.html` — React + Tailwind from a CDN (esm.sh + cdn.tailwindcss.com), as in Build 3. The `compositeAsk` logic (Step 3) and the comparison UI (Step 4) go inline in one `<script type="module">`, with credentials in a `CONFIG` object at the top instead of `.env`. Open it in your browser (or serve with `python3 -m http.server`) — no `npm run dev`.
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip both options above and build one self-contained `index.html` — React + Tailwind from a CDN (esm.sh + cdn.tailwindcss.com), as in Build 3. The `compositeAsk` logic (Step 3) and the comparison UI (Step 4) go inline in one `<script type="module">`, with credentials in a `CONFIG` object at the top instead of `.env`. Open it in your browser (or serve with `python3 -m http.server`) — no `npm run dev`. Use the **No-npm brief** in Steps 3 and 4 instead of the main briefs.
 
 ---
 
 ## Step 3 — Vibe-code `compositeAsk` (50 min)
 
-This is the main file. Brief your AI:
+This is the main file.
+
+**On the npm path?** Brief your AI:
 
 ```
 In my Vite + React + TypeScript project, create src/lib/compositeRag.ts.
@@ -179,12 +181,97 @@ Use plain fetch. TypeScript. Add JSDoc comments explaining the
 confidence threshold tuning lever at the top of the file.
 ```
 
+**On the no-npm path?** Paste this instead — same logic, lives inside your single `index.html`:
+
+```
+In my single self-contained index.html, add a compositeAsk section to
+the main <script type="module"> block, near the CONFIG object.
+
+Define an async function:
+
+  compositeAsk(query) -> Promise<{
+    answer: string,
+    citations: Array<{ id, title, confidence }>,
+    steps: Array<{ step, durationMs, outcome }>
+  }>
+
+The function chains ARAG calls. Logic:
+
+Step 1 — INITIAL /ask:
+  POST to ${CONFIG.apiUrl}/kb/${CONFIG.kbId}/ask
+  Header: X-NUCLIA-SERVICEACCOUNT: Bearer ${CONFIG.apiKey}
+  Header: x-synchronous: true
+  Body: { query, prefer_markdown: true, rephrase: true, max_tokens: 400 }
+
+  Extract:
+  - answer (data.answer)
+  - citations (from data.retrieval_results.resources, map id+title;
+    confidence = top paragraph score for that resource)
+
+  Record step: { step: "initial-ask", durationMs, outcome: "N citations, top score X" }
+
+Step 2 — EVALUATE confidence:
+  const confident = citations.length >= 3 && topConfidence >= 0.7
+
+  If confident, RETURN the initial result immediately
+  (with steps array containing just step 1).
+  Record step: { step: "evaluate", outcome: "confident, returning initial" }.
+
+Step 3 — Otherwise, AUGMENT via /find:
+  POST to /kb/{kbId}/find with body:
+    { query, page_size: 5, features: ["keyword","semantic"], show: ["basic","values","origin"] }
+
+  Format the top 5 results into a context block string:
+    "Source 1: <title>\n<first 200 chars of top paragraph>\n\n
+     Source 2: <title>\n<first 200 chars of top paragraph>\n
+     ..."
+
+  Record step: { step: "find", durationMs, outcome: "N additional resources" }.
+
+Step 4 — RE-ASK with augmented context:
+  POST to /ask with body:
+  {
+    query,
+    prefer_markdown: true,
+    rephrase: true,
+    max_tokens: 600,
+    prompt: {
+      system: "You are a knowledgeable assistant. Use the additional context provided to give a more complete answer than the initial retrieval allowed.",
+      user: "Initial context (from default retrieval): {context}\n\nAdditional context (from broader search):\n<context block from step 3>\n\nQuestion: {question}\n\nProvide a complete, well-cited answer."
+    }
+  }
+  Header x-synchronous: true.
+
+  Extract the new answer + citations.
+
+Step 5 — MERGE citations:
+  Combine citations from initial-ask AND re-ask. Dedupe by id.
+  Keep the higher confidence value per id.
+
+  Record step: { step: "re-ask", durationMs, outcome: "merged to M total citations" }.
+
+Step 6 — RETURN:
+  { answer: re-ask answer, citations: merged, steps: [step1, step2, step3, step4, step5] }
+
+TIMEOUTS:
+  Wrap the entire pipeline in a 15-second timeout (use Promise.race
+  with a setTimeout-based reject). If timeout hits, return whatever
+  was successfully completed so far + a step recording "timeout".
+
+CAP RETRIES at 1 — only one augment-and-reask, no recursive composite.
+
+Use plain fetch. Plain JavaScript — no TypeScript. Add comments
+explaining the confidence threshold tuning lever near the top of the
+section. Stay inside the same index.html — no new files.
+```
+
 Send.
 
 ### 3a. Save the output
 
-- **Claude Code / Cursor:** *"Save this as src/lib/compositeRag.ts."*
-- **Web chat:** create the file in VS Code, paste, save.
+- **npm path, Claude Code / Cursor:** *"Save this as src/lib/compositeRag.ts."*
+- **npm path, web chat:** create the file in VS Code, paste, save.
+- **No-npm path:** ask the AI to edit `index.html` directly, or paste the updated `<script>` block back into your editor and save.
 
 ### 3b. Read the code
 
@@ -197,7 +284,9 @@ Four checks:
 
 ### 3c. Smoke test from Node
 
-Create `test-composite.mjs` in the project root:
+**No-npm path:** skip this entirely — go straight to the comparison page in Step 4, same as the npm path ends up doing anyway.
+
+**npm path:** create `test-composite.mjs` in the project root:
 
 ```js
 // Note: this is Node-side, so we substitute import.meta.env
@@ -230,7 +319,7 @@ This is where you'll **see the lift**.
 
 ### 4a. Brief your AI
 
-Paste:
+**On the npm path?** Paste:
 
 ```
 Create src/pages/CompositeComparison.tsx in my Vite + React + TS project.
@@ -283,13 +372,68 @@ Wire into App.tsx — render <CompositeComparison /> as the main page
 Tailwind for styling. TypeScript. Show error states if either call fails.
 ```
 
+**On the no-npm path?** Paste this instead — same layout and logic, inside your single `index.html`:
+
+```
+In my single self-contained index.html, add a CompositeComparison
+component and render it as the main page.
+
+Tailwind is already loaded from the CDN in this file — use it directly,
+no install step.
+
+Layout (Tailwind):
+
+  [ Query input + Submit button ]   <- top, full width
+
+  ┌─────────────────────────┬─────────────────────────┐
+  │  SINGLE-SHOT            │  COMPOSITE              │
+  │                         │                         │
+  │  Answer:                │  Answer:                │
+  │  <text>                 │  <text>                 │
+  │                         │                         │
+  │  Citations: N           │  Citations: M           │
+  │  - <title>              │  - <title>              │
+  │  - <title>              │  - <title>              │
+  │  ...                    │  ...                    │
+  │                         │                         │
+  │  Time: 1.4s             │  Steps:                 │
+  │                         │  - initial-ask (650ms): N citations
+  │                         │  - find (200ms): X resources
+  │                         │  - re-ask (1850ms): merged
+  │                         │  Time: 2.7s             │
+  └─────────────────────────┴─────────────────────────┘
+
+  Citation count bar chart (simple HTML bars; no chart lib needed):
+  Single-shot: ████ 2
+  Composite:   ███████ 5
+
+Behaviour:
+1. On submit, run TWO calls in parallel:
+   - singleShotAsk(query) — a basic sync /ask call (define this inline
+     or reuse the existing streamAsk logic in sync mode).
+   - compositeAsk(query) — already defined in this file.
+2. Show loading state on each panel until its call resolves.
+3. Show results side-by-side.
+4. Show citation-count bar chart below.
+
+Render <CompositeComparison /> as the main page.
+
+Tailwind for styling. Plain JavaScript — no TypeScript. Show error
+states if either call fails. Stay inside the same index.html — no new
+files.
+```
+
 Send. Apply.
 
 ### 4b. Save and test
 
+**npm path:**
+
 ```bash
 npm run dev
 ```
+
+**No-npm path:** reload `index.html` in your browser (or the localhost URL if you're serving it with `python3 -m http.server`).
 
 Open the URL. **You should see:**
 
@@ -320,7 +464,7 @@ Save the table in `comparison-results.md`.
 
 **You want composite to win on at least 3 of 5.** If it doesn't:
 
-- Your **confidence threshold** is wrong. Open `src/lib/compositeRag.ts`. Find the line `confident = citations.length >= 3 && topConfidence >= 0.7`. Try `>= 2` and `>= 0.6` — that makes composite fire more often.
+- Your **confidence threshold** is wrong. Open `src/lib/compositeRag.ts` (no-npm: the compositeAsk section of your `index.html`). Find the line `confident = citations.length >= 3 && topConfidence >= 0.7`. Try `>= 2` and `>= 0.6` — that makes composite fire more often.
 - Or your corpus is too small. Composite shines on richer corpora.
 
 ### Tuning iterations

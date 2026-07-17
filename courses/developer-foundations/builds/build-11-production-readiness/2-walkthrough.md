@@ -40,7 +40,7 @@ npm install dotenv
 cp ../build-0/.env .
 ```
 
-> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `cp ../build-0/.env .`. Run the rate-limited client with `node --env-file=.env src/lib/rateLimitedRagClient.mjs`, and brief the AI to read `process.env.NUCLIA_*` directly (no dotenv import).
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `cp ../build-0/.env .`. Run the rate-limited client with `node --env-file=.env src/lib/rateLimitedRagClient.mjs`. Use the **No-npm brief** in Step 4a instead of the main brief.
 
 ---
 
@@ -112,7 +112,7 @@ This is the **only code file** in Build 11. It demonstrates production patterns:
 
 ### 4a. Brief your AI
 
-Paste:
+**On the npm path?** Paste:
 
 ```
 In src/lib/rateLimitedRagClient.mjs, write a class
@@ -180,17 +180,96 @@ That demo block fires 50 identical queries and reports
 how many got coalesced (should be ~49).
 ```
 
+**On the no-npm path?** Paste this instead — identical except how credentials are read:
+
+```
+In src/lib/rateLimitedRagClient.mjs, write a class
+RateLimitedRagClient that wraps ARAG /ask calls with
+production-grade resilience.
+
+Constructor takes no args (reads NUCLIA_* directly from process.env —
+do NOT import dotenv; the values are loaded via
+`node --env-file=.env`, which I'll run the script with).
+
+Public method:
+  async ask(query: string, prompt?: object): Promise<{
+    answer: string;
+    citations: any[];
+    latencyMs: number;
+    retries: number;
+    fromCoalescing: boolean;
+  }>
+
+Behaviour:
+
+1. COALESCING:
+   - Generate a cache key: `ask:${query}:${JSON.stringify(prompt || {})}`.
+   - Maintain a Map<string, Promise> of in-flight requests.
+   - If a matching in-flight Promise exists when ask() is called,
+     return that Promise directly (mark result.fromCoalescing = true).
+   - Otherwise launch a new request and store it in the map.
+   - Remove from map when the Promise resolves or rejects.
+
+2. BACKOFF on 429:
+   - Wrap the actual fetch in askWithBackoff(query, prompt, attempt=0).
+   - On HTTP 429, wait 2^attempt seconds (capped at 8s), retry.
+   - Max 4 retries.
+   - Track retry count and return in result.retries.
+
+3. TIMEOUT:
+   - 15-second timeout on each individual fetch (use AbortController).
+   - If timeout fires, count as a failed attempt; backoff may still retry.
+
+4. STRUCTURED LOGGING:
+   - At start of each ask(), console.log({ event: 'ask-start', query, ts }).
+   - At end, console.log({ event: 'ask-end', query, latencyMs, retries, status, ts }).
+   - On 429, console.log({ event: 'rate-limited', attempt, backoffMs }).
+
+5. The actual /ask call:
+   - POST to ${process.env.NUCLIA_API_URL}/kb/${process.env.NUCLIA_KB_ID}/ask
+   - Header: X-NUCLIA-SERVICEACCOUNT: Bearer ${process.env.NUCLIA_API_KEY}
+   - Header: x-synchronous: true
+   - Body: { query, prefer_markdown: true, rephrase: true, max_tokens: 400, prompt }
+
+Use ES modules. Plain fetch. No SDK.
+
+At the bottom of the file, export a demo block:
+
+  if (import.meta.url === `file://${process.argv[1]}`) {
+    const client = new RateLimitedRagClient();
+    const promises = Array(50).fill(0).map(() => client.ask("your test question"));
+    const results = await Promise.all(promises);
+    console.log({
+      total: results.length,
+      coalesced: results.filter(r => r.fromCoalescing).length,
+      retries: results.reduce((s, r) => s + r.retries, 0)
+    });
+  }
+
+That demo block fires 50 identical queries and reports
+how many got coalesced (should be ~49).
+```
+
 Send.
 
 ### 4b. Save the output
 
-- **Claude Code / Cursor:** *"Save this as src/lib/rateLimitedRagClient.mjs."*
-- **Web chat:** create the file, paste, save.
+- **npm path, Claude Code / Cursor:** *"Save this as src/lib/rateLimitedRagClient.mjs."*
+- **npm path, web chat:** create the file, paste, save.
+- **No-npm path:** create the file in VS Code, paste, save (or ask an agentic AI to write it directly).
 
 ### 4c. Test the coalescing
 
+**npm path:**
+
 ```bash
 node src/lib/rateLimitedRagClient.mjs
+```
+
+**No-npm path:**
+
+```bash
+node --env-file=.env src/lib/rateLimitedRagClient.mjs
 ```
 
 **You should see** a flurry of `ask-start` logs (all close together), some `ask-end` logs, and at the very end a summary:

@@ -629,7 +629,11 @@ Returns raw JSON — scroll for `answer`, then `retrieval_best_matches` (its len
 
 This Build's one piece of code: a small script that pings all three agents' outputs in one go. Useful for customer engagements — you'll re-run this during ingestion to confirm all three are working.
 
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). No `npm init`/`npm install` needed for this script either way — the only thing npm buys you here is the `dotenv` package. Skip it and run the script with `node --env-file=.env agent-status.mjs <uuid-A> <uuid-B> <uuid-C>` instead. Use the **No-npm brief** in 6a instead of the main brief.
+
 ### 6a. Brief your AI
+
+**On the npm path?**
 
 ```
 Write agent-status.mjs that:
@@ -660,11 +664,45 @@ Use plain fetch, no SDK. ES modules. Add header
 X-NUCLIA-SERVICEACCOUNT: Bearer {NUCLIA_API_KEY}.
 ```
 
+**On the no-npm path?** Paste this instead — identical except how credentials are read:
+
+```
+Write agent-status.mjs that:
+
+1. Reads NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY directly from
+   process.env (do NOT import dotenv — they're loaded via
+   `node --env-file=.env`, which I'll run the script with).
+2. Takes 3 resource IDs as CLI args:
+   node agent-status.mjs <uuid-1> <uuid-2> <uuid-3>
+3. For each resource:
+   a. GET /resource/{id}?show=basic&show=values&show=extracted
+   b. Check:
+      - Generator: does data.texts have new keys (summary, qa_pairs,
+        synthetic_qa, or similar)? PASS if yes.
+      - Labeller: does usermetadata.classifications (or classifications)
+        have at least one entry? PASS if yes.
+   c. POST /graph with query {and: [{prop:"path"}, {prop:"generated",
+      by:"data-augmentation"}]} top_k 50.
+      - Graph: are any paths returned where source.value or destination.value
+        match terms from this resource's title? PASS if yes (PASS with a
+        warning if there are graph paths but none reference this resource).
+4. Print:
+   "Resource <id>:"
+   "  Generator: PASS/FAIL"
+   "  Labeller:  PASS/FAIL — labels: [list]"
+   "  Graph:     PASS/FAIL — N relevant paths"
+
+Use plain fetch, no SDK. ES modules. Add header
+X-NUCLIA-SERVICEACCOUNT: Bearer {NUCLIA_API_KEY}.
+```
+
 ### 6b. Save and run
 
 ```bash
 node agent-status.mjs <uuid-A> <uuid-B> <uuid-C>
 ```
+
+*(No-npm path: `node --env-file=.env agent-status.mjs <uuid-A> <uuid-B> <uuid-C>`.)*
 
 **You should see:** one block per resource, three PASS/FAIL lines per block. Ideally all PASS. If any FAIL, the agent didn't run on that resource — check the dashboard, re-run if needed.
 

@@ -43,7 +43,7 @@ npm install dotenv
 - `npm init -y` initialised `package.json`.
 - Installed `dotenv` so Node can read your `.env` file.
 
-> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `mkdir -p ~/Desktop/developer-foundations/build-5 && cd $_`. Run every script in this Build with `--env-file`, e.g. `node --env-file=.env faq-generator.mjs "onboarding"`. When you brief the AI for `askForJson` (Step 2), tell it to read `process.env.NUCLIA_*` directly — **do not import dotenv**.
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `mkdir -p ~/Desktop/developer-foundations/build-5 && cd $_`. Run every script in this Build with `--env-file`, e.g. `node --env-file=.env faq-generator.mjs "onboarding"`. Use the **No-npm brief** in Step 2a instead of the main brief.
 
 Copy your `.env` from Build 0:
 
@@ -69,7 +69,7 @@ This is the **most important file you'll write in the course**. It's the helper 
 
 ### 2a. Brief your AI
 
-Paste **exactly** (long brief — don't shorten it):
+**On the npm path?** Paste **exactly** (long brief — don't shorten it):
 
 ```
 Create src/lib/askForJson.ts (or askForJson.mjs if you'd rather avoid
@@ -141,12 +141,85 @@ It must do these things:
    back to real document titles).
 ```
 
+**On the no-npm path?** Paste this instead — identical except requirement 1 (how credentials are read):
+
+```
+Create src/lib/askForJson.mjs.
+
+Export an async function:
+
+  askForJson(query, schema) -> Promise<{ result: object, resources: object }>
+
+It must do these things:
+
+1. Read NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY directly from
+   process.env (do NOT import dotenv — they're loaded via
+   `node --env-file=.env`, which I'll run every script with).
+
+2. Recursively walk the input `schema` and inject
+   `additionalProperties: false` at EVERY level where the type is "object".
+   - If a property is itself { type: "object", ... }, inject there too.
+   - If a property is { type: "array", items: { type: "object", ... } },
+     inject on items too.
+   - Do this BEFORE sending to the API.
+   - Don't mutate the caller's schema — work on a deep clone.
+
+3. POST to ${NUCLIA_API_URL}/kb/${NUCLIA_KB_ID}/ask with:
+   - Header: X-NUCLIA-SERVICEACCOUNT: Bearer ${NUCLIA_API_KEY}
+   - Header: Content-Type: application/json
+   - Header: x-synchronous: true
+   - Body: {
+       query,
+       prefer_markdown: false,
+       rephrase: true,
+       answer_json_schema: {
+         name: schema.name || "structured_output",
+         description: schema.description || "Structured response",
+         parameters: schema.parameters || schema
+       }
+     }
+   (the caller can pass either a wrapped { name, description, parameters }
+    object OR just the parameters; handle both shapes gracefully)
+
+4. Parse the response. Handle THREE possible response shapes for the
+   parsed JSON. In all three cases, ALSO surface the `resources` map
+   from the response (it lives at the top level of the /ask response
+   payload alongside the answer; callers need it to look up real
+   document titles by resource id).
+
+   Return shape from the function:
+     { result: <parsed JSON matching schema>, resources: <resources map or {}> }
+
+   a. The happy path: response JSON has `data.answer_json` (an object).
+      result = data.answer_json.
+   b. The streaming-stash path: response has `data.item.object` (an object).
+      result = data.item.object.
+   c. The text-fallback path: the model returned the answer in `data.answer`
+      as a string (sometimes wrapped in ```json fences). Strip the fences,
+      regex match either {[\s\S]*} or [[\s\S]*], JSON.parse — that becomes
+      result.
+
+   In all three paths, resources = (data.resources ?? data.retrieval_results?.resources ?? {}).
+
+   If none of the three paths produce a parseable result object,
+   throw a helpful error including the first 500 chars of the raw response.
+
+5. Use native fetch (Node 18+). NO external HTTP library. NO Progress Agentic RAG SDK.
+
+6. Add JSDoc comments above the function explaining the three response
+   shapes and why we handle all three. Document the return shape:
+   { result, resources } — and why callers that render citations need
+   the resources map (to resolve verbatim resource ids back to real
+   document titles).
+```
+
 Send.
 
 ### 2b. Save the AI's output
 
-- **Claude Code / Cursor:** *"Save this as src/lib/askForJson.mjs (or .ts). Create the lib folder if it doesn't exist."*
-- **Web chat:** create `src/lib/askForJson.mjs` (or `.ts`) in VS Code, paste, save.
+- **npm path, Claude Code / Cursor:** *"Save this as src/lib/askForJson.mjs (or .ts). Create the lib folder if it doesn't exist."*
+- **npm path, web chat:** create `src/lib/askForJson.mjs` (or `.ts`) in VS Code, paste, save.
+- **No-npm path:** create `src/lib/askForJson.mjs` in VS Code, paste, save (or ask an agentic AI to write the file directly).
 
 ### 2c. Read the code carefully
 
@@ -198,6 +271,8 @@ Run:
 ```bash
 node test-wrapper.mjs
 ```
+
+*(No-npm path: `node --env-file=.env test-wrapper.mjs`.)*
 
 **You should see:** a parsed result object and a (possibly empty for this smoke test) resources map:
 

@@ -53,7 +53,7 @@ This file is **tiny** — a single helper function that builds a query prefix fr
 
 ### 2a. Brief your AI
 
-Paste **exactly**:
+**On the npm path?** Paste **exactly**:
 
 ```
 In my Vite + React + TypeScript project, create src/lib/buildPrefix.ts.
@@ -84,12 +84,42 @@ Pure TypeScript. No external dependencies. Include JSDoc comments
 showing example calls and outputs.
 ```
 
+**On the no-npm path?** Paste this instead — same logic, lives inside your single `index.html`:
+
+```
+In my single self-contained index.html (React app, no build step), add a
+buildPrefix helper function inside the main <script type="module"> block,
+near the top alongside the CONFIG object.
+
+Define a function:
+
+  function buildPrefix({ language, segment, resourceTitle } = {})
+
+That returns a string built from three optional fragments:
+
+- If language is set AND not "English" (case-insensitive):
+    "Respond in {language}: "
+- If segment is set:
+    "The user is a {segment}. Frame your answer accordingly. "
+- If resourceTitle is set (non-empty):
+    'Regarding the resource titled "{resourceTitle}": '
+
+Concatenate the fragments in order (language → segment → resource).
+Skip empty/missing fragments cleanly (no extra spaces).
+
+Return an empty string "" if no opts result in a fragment.
+
+Plain JavaScript — no TypeScript, no external dependencies, no new files.
+Include comments showing example calls and outputs.
+```
+
 Send.
 
 ### 2b. Save the AI's output
 
-- **Claude Code / Cursor:** *"Save this as src/lib/buildPrefix.ts."*
-- **Web chat:** in VS Code, create `src/lib/buildPrefix.ts` and paste.
+- **npm path, Claude Code / Cursor:** *"Save this as src/lib/buildPrefix.ts."*
+- **npm path, web chat:** in VS Code, create `src/lib/buildPrefix.ts` and paste.
+- **No-npm path:** ask the AI to edit `index.html` directly, or paste the updated `<script>` block back into your editor and save.
 
 ### 2c. Read the code
 
@@ -101,7 +131,7 @@ Three checks:
 
 ### 2d. Test it (optional but worth 2 minutes)
 
-In your terminal, in the project root:
+**npm path:** in your terminal, in the project root:
 
 ```bash
 node --experimental-strip-types -e "
@@ -114,6 +144,8 @@ console.log('4:', JSON.stringify(buildPrefix({ language: 'French', segment: 'Beg
 ```
 
 (If `--experimental-strip-types` errors out — your Node version is older. Skip this manual check; the next step's UI test verifies correctness.)
+
+**No-npm path:** open `index.html` in your browser, open DevTools → Console, and paste the same four `console.log(buildPrefix(...))` lines above (drop the `import` line — the function is already in scope on the page). If it's not reachable from the console, ask your AI to temporarily add `window.buildPrefix = buildPrefix` for testing, then remove that line afterward.
 
 **Expected outputs:**
 - `1: ""`
@@ -133,7 +165,7 @@ Now the visible work — add three controls to the chat, wire them through `buil
 
 ### 3a. Brief your AI
 
-Paste **exactly**:
+**On the npm path?** Paste **exactly**:
 
 ```
 Update src/components/MultiSurfaceChat.tsx to add three new UI controls
@@ -170,30 +202,73 @@ Wire it in:
 Don't remove anything from the existing component. Just add.
 ```
 
+**On the no-npm path?** Paste this instead — same controls, inside your single `index.html`:
+
+```
+In my single self-contained index.html, update the MultiSurfaceChat
+component to add three new UI controls ABOVE the existing persona toggle:
+
+1. Language dropdown (HTML <select>):
+   - Options: ["English", "Spanish", "French", "German", "Japanese", "Mandarin"]
+   - State: language, default "English"
+
+2. Segment radio buttons (3 options):
+   - Choose sensible defaults for a generic knowledge KB:
+     "Beginner", "Practitioner", "Expert"
+   - State: segment, default "Practitioner"
+
+3. Resource context text input (optional):
+   - Placeholder: "Optional: focus on a resource titled..."
+   - State: resourceTitle, default ""
+
+Layout (Tailwind, already loaded from the CDN in this file):
+- A horizontal flex row above the existing persona toggle.
+- Each control labelled clearly.
+- The whole row collapses to a vertical stack on narrow screens
+  (use flex-wrap or md: breakpoints).
+
+Wire it in:
+- Call the buildPrefix function already defined in this file.
+- In the submit handler, BEFORE calling streamAsk:
+    const prefix = buildPrefix({ language, segment, resourceTitle });
+    const finalQuery = prefix + originalUserQuery;
+    streamAsk(finalQuery, promptConfig);
+- The chat history should still display the ORIGINAL user query
+  (without the prefix) — the prefix is an internal lever.
+
+Don't remove anything from the existing component. Just add. Everything
+stays inside the same index.html — no new files.
+```
+
 Send.
 
 ### 3b. Save the AI's output
 
-- **Claude Code / Cursor:** *"Apply this to src/components/MultiSurfaceChat.tsx."*
-- **Web chat:** copy the updated file, replace `MultiSurfaceChat.tsx` in your editor, save.
+- **npm path, Claude Code / Cursor:** *"Apply this to src/components/MultiSurfaceChat.tsx."*
+- **npm path, web chat:** copy the updated file, replace `MultiSurfaceChat.tsx` in your editor, save.
+- **No-npm path:** ask the AI to edit `index.html` directly, or paste the updated `<script>` block back into your editor and save.
 
 ### 3c. Read the diff
 
 Three checks:
 
 1. The three new controls are above the persona toggle.
-2. `buildPrefix` is imported and called in the submit handler.
+2. `buildPrefix` is imported (npm path) or in scope (no-npm path) and called in the submit handler.
 3. The chat history shows the **original** query (not the query-with-prefix).
 
 If the AI re-wrote the entire component and broke Build 3 features, tell it: *"You removed the [feature]. Re-add it without removing the new controls."*
 
 ### 3d. Run and visually check
 
+**npm path:**
+
 ```bash
 npm run dev
 ```
 
 Open `http://localhost:5173/`.
+
+**No-npm path:** reload `index.html` in your browser (or the localhost URL if you're serving it with `python3 -m http.server`).
 
 **You should see:**
 - A row of three controls at the top (language dropdown, segment radios, resource input).
@@ -255,7 +330,7 @@ This is the **brand-team handoff pattern**. The customer's content/brand team sh
 
 ### 5a. Brief your AI
 
-Paste:
+**On the npm path?** Paste:
 
 ```
 Refactor MultiSurfaceChat.tsx so the language list is a PROP, not hardcoded.
@@ -270,6 +345,25 @@ In App.tsx, demonstrate by passing a custom list:
 
 That way the brand team can configure supported languages without
 touching component code.
+```
+
+**On the no-npm path?** Paste this instead:
+
+```
+In my single self-contained index.html, refactor the MultiSurfaceChat
+component so the language list is a PROP, not hardcoded.
+
+- Add a prop: languages (array of strings)
+- Default value: ["English", "Spanish", "French", "German", "Japanese", "Mandarin"]
+- The dropdown should render from this prop.
+- The default value of the `language` state should be the first item in the prop.
+
+Where MultiSurfaceChat is mounted (the root render call), demonstrate by
+passing a custom list:
+  languages={["English", "Welsh", "Irish Gaelic"]}
+
+That way the brand team can configure supported languages without
+touching component code. Stay inside the same index.html — no new files.
 ```
 
 Send. Apply the changes.
@@ -321,7 +415,7 @@ Run the same query 5–10 times. Inspect each answer.
 
 ### 9b. Replace the prefix scope with a `/find` filter
 
-Brief your AI:
+**On the npm path?** Brief your AI:
 
 ```
 In src/components/MultiSurfaceChat.tsx, when segment === "Prospect",
@@ -338,6 +432,25 @@ features.retrieval (or the equivalent retrieval config object —
 check the request your client is currently building).
 ```
 
+**On the no-npm path?** Brief your AI instead:
+
+```
+In my single self-contained index.html, in the MultiSurfaceChat
+component, when segment === "Prospect", add a server-side filter to
+the /find (or /ask retrieval) request:
+
+  filters: ["/classification.labels/audience/shopper"]
+
+Keep the persona-prefix for voice shaping, but rely on the filter
+for audience scoping. The filter must go in the request body, not
+the query string.
+
+If you're using streamAsk against /ask, the filter goes under
+features.retrieval (or the equivalent retrieval config object —
+check the request your client is currently building). Stay inside
+the same index.html — no new files.
+```
+
 Apply the change. (Your KB needs an `audience` labelset with at least a `shopper` label for this to bind to real content — if you don't have one yet, add a label to 2–3 resources in the Progress Agentic RAG dashboard first, then re-index.)
 
 Re-run the same query from 9a 5–10 times.
@@ -348,7 +461,7 @@ Re-run the same query from 9a 5–10 times.
 
 ## Verification checklist
 
-- [ ] `src/lib/buildPrefix.ts` working — returns the right strings for the example inputs in Step 2d.
+- [ ] `buildPrefix` working — returns the right strings for the example inputs in Step 2d.
 - [ ] Language dropdown switches answer language in 3+ languages.
 - [ ] Segment radio changes answer framing (visible difference between Beginner and Expert).
 - [ ] Resource scope biases the model toward the named resource.
