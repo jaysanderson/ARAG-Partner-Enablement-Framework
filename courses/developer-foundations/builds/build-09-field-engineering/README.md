@@ -10,7 +10,7 @@
 |---|---|
 | **Capability** | Custom JSON-encoded text fields (`callToAction`, `searchResultDisplay`, `videoInfo`) drive AI behaviour |
 | **Tier mapped to** | Tier 2–3 |
-| **Prerequisite** | [Build 7](../build-08-knowledge-graph/) |
+| **Prerequisite** | [Build 8](../build-08-knowledge-graph/) |
 | **Estimated effort** | 2 hours focused |
 
 ## Start here
@@ -28,5 +28,5 @@
 
 ## See also
 
-- Previous: [Build 7](../build-08-knowledge-graph/)
+- Previous: [Build 8](../build-08-knowledge-graph/)
 - Next: [Build 10 — Composite RAG](../build-10-composite-rag/)

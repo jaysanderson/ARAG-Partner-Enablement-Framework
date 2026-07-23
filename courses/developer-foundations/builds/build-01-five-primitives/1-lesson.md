@@ -24,7 +24,7 @@ Every Build past this one drills into one primitive. Today you see all five at o
 **Key body params:**
 - `query` — what you're searching for.
 - `features` — `["keyword"]`, `["semantic"]`, or both (hybrid). Default is semantic. Hybrid lifts recall on named-entity queries (~15-25% improvement on those).
-- `filters` — array of filter paths. Content-type filters look like `/icon/video`, `/icon/application/pdf`. Label filters look like `/classification.labels/<labelset>/<label>`. See Build 6 for depth.
+- `filters` — array of filter paths. Content-type filters look like `/icon/video`, `/icon/application/pdf`. Label filters look like `/classification.labels/<labelset>/<label>`. See Build 7 for depth.
 
 **Response shape (simplified):**
 ```json

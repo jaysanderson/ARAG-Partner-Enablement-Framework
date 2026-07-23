@@ -10,7 +10,7 @@
 |---|---|
 | **Capability** | Chain ARAG calls — retry-on-low-citations, retrieve-then-rerank, multi-pass synthesis |
 | **Tier mapped to** | Tier 3–4 bridge |
-| **Prerequisite** | [Build 8](../build-09-field-engineering/) |
+| **Prerequisite** | [Build 9](../build-09-field-engineering/) |
 | **Estimated effort** | 2.5 hours focused |
 
 ## Start here
@@ -28,5 +28,5 @@
 
 ## See also
 
-- Previous: [Build 8](../build-09-field-engineering/)
+- Previous: [Build 9](../build-09-field-engineering/)
 - Next: [Build 11 — Production Readiness](../build-11-production-readiness/)

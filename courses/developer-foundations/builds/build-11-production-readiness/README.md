@@ -10,7 +10,7 @@
 |---|---|
 | **Capability** | Residency, BYO-LLM, rate limits, observability — the language of the CTO meeting |
 | **Tier mapped to** | Tier 4 (operational) |
-| **Prerequisite** | [Build 9](../build-10-composite-rag/) |
+| **Prerequisite** | [Build 10](../build-10-composite-rag/) |
 | **Estimated effort** | 2 hours focused (mostly conceptual + dashboard config) |
 
 ## Start here
@@ -28,5 +28,5 @@
 
 ## See also
 
-- Previous: [Build 9](../build-10-composite-rag/)
+- Previous: [Build 10](../build-10-composite-rag/)
 - Next: [Build 12 — Capstone Prep](../build-12-capstone-prep/)

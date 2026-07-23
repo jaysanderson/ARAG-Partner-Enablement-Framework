@@ -2,7 +2,7 @@
 
 > Read time: 15 minutes.
 >
-> This is the synthesis Build. Everything from Builds 0–10 composes here.
+> This is the synthesis Build. Everything from Builds 0–11 composes here.
 
 ## Why Build 12 exists
 
@@ -37,7 +37,7 @@ Read the full brief for your chosen variant before this Build's walkthrough.
 Whichever variant you pick, the capstone is built on:
 
 - **One KB** (`kb-atlas-operations` or `kb-aurora-concierge`).
-- **Three labelsets** at minimum (e.g., `business_unit`, `content_type`, `region`).
+- **One labelset** at minimum (e.g., `business_unit` for Atlas, `content_type` for Aurora) — additional labelsets are optional add-ons for the full persona-driven demo.
 - **A data-augmentation agent** producing a typed knowledge graph.
 - **A single Vite + React app** at the partner's domain.
 - **Six demo surfaces**: a landing page, search, conversational concierge, structured-workflows, knowledge-graph viewer, and a flagship composite-RAG flow.
@@ -52,7 +52,7 @@ To vibe-code the capstone, you'll run 8 AI prompts in sequence. Each produces on
 | # | Prompt brief | What it produces |
 |---|---|---|
 | 1 | Scaffold the app | Fresh Vite + React + TypeScript project; Tailwind configured; routing for 6 surfaces; design-system palette applied |
-| 2 | ARAG client wrapper | `src/lib/ragClient.ts` — the wrapper from Builds 0+3+10 with streaming, sync, schema, and composite support |
+| 2 | ARAG client wrapper | `src/lib/ragClient.ts` — the wrapper from Builds 0+3+5+10 with streaming, sync, schema, and composite support |
 | 3 | Header + landing page | Brand header with residency badge + live ingested-corpus stats; landing page with hero copy + featured-content carousel |
 | 4 | Search surface | `/search` route with content-type chips + labelset facets (Build 7) + AI-summary card (Build 5 schema) + paginated results |
 | 5 | Conversational concierge | `/concierge` route with two-voice toggle (Build 3) + multilingual switch (Build 4) + field-engineered CTAs (Build 9) |

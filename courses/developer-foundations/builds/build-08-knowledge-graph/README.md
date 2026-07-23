@@ -10,7 +10,7 @@
 |---|---|
 | **Capability** | Typed knowledge-graph navigation — entities + relations extracted from your corpus by a custom agent |
 | **Tier mapped to** | Tier 4 |
-| **Prerequisite** | [Build 6](../build-07-smart-filters/) |
+| **Prerequisite** | [Build 6](../build-06-data-augmentation-agents/) |
 | **Estimated effort** | 3 hours focused |
 
 ## Start here
@@ -28,5 +28,5 @@
 
 ## See also
 
-- Previous: [Build 6](../build-07-smart-filters/)
+- Previous: [Build 6](../build-06-data-augmentation-agents/)
 - Next: [Build 9 — Field Engineering](../build-09-field-engineering/)

@@ -96,7 +96,7 @@ Walk through each Build folder. Confirm you have working artefacts:
 |---|---|
 | 0 | `ask.mjs` — streaming client demo |
 | 1 | `primitives-demo.mjs` — 5-primitive tour |
-| 2 | `index.html` — branded widgets page (deployed publicly) |
+| 2 | `index.html` — branded widgets page |
 | 3 | `MultiSurfaceChat.tsx` — two-voice chat |
 | 4 | `buildPrefix.ts` — language + segment + scope levers |
 | 5 | `askForJson.mjs` + FAQ + taxonomy + comparison generators |
@@ -126,10 +126,10 @@ Each prompt is **200-500 words**. Don't shortchange this — the difference betw
 | 1 | **Scaffold the app** | Vite + React + TypeScript + Tailwind + 6 routes + a shared design system (colors, typography, brand). |
 | 2 | **`ragClient.ts` wrapper** | Streaming `streamAsk`, sync `ask`, schema-constrained `askForJson`, composite `compositeAsk` — all in one client. |
 | 3 | **Header + landing page** | Brand hero, residency badge, ingested-corpus stats (resources + paragraphs + graph node count from the live KB), navigation to the 6 routes. |
-| 4 | **`/search` route** | Filterable search with content-type chips + labelset facets + an AI summary at the top (uses /ask). |
-| 5 | **`/concierge` route** (or `/incidents` for Atlas) | Two-voice chat with multilingual lever + persona scope + CTA pills from custom fields. |
-| 6 | **`/workflows` route** | Three schema-constrained generators wired as UI (e.g., FAQ-gen, comparison-gen, taxonomy-gen for Aurora; or root-cause-gen, runbook-gen, incident-summary for Atlas). |
-| 7 | **`/graph` route** | Graph viewer with fuzzy search + click-expand + right sidebar with hybrid related-resources. |
+| 4 | **`/search`** (Atlas) or **`/storefront`** (Aurora) route | Filterable search with content-type chips + labelset facets + an AI summary at the top (uses /ask). |
+| 5 | **`/concierge` route** | Two-voice chat with multilingual lever + persona scope + CTA pills from custom fields. |
+| 6 | **`/workflows`** (Atlas) or **`/personalize`** (Aurora) route | Three schema-constrained generators wired as UI (e.g., FAQ-gen, comparison-gen, taxonomy-gen for Aurora; or root-cause-gen, runbook-gen, incident-summary for Atlas). |
+| 7 | **`/graph`** (Atlas) or **`/journey-graph`** (Aurora) route | Graph viewer with fuzzy search + click-expand + right sidebar with hybrid related-resources. |
 | 8 | **Flagship composite flow** | `/incident-root-cause` (Atlas) or `/abandoned-cart` (Aurora) — composite RAG with measurable lift over single-shot. |
 
 ### 4b. Use the prompt anatomy

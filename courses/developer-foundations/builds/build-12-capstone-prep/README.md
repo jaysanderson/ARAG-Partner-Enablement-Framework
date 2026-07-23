@@ -8,9 +8,9 @@
 
 | | |
 |---|---|
-| **Capability** | Compose Builds 0–10 into a capstone plan; write the master prompt set; rehearse the 25-minute demo |
+| **Capability** | Compose Builds 0–11 into a capstone plan; write the master prompt set; rehearse the 25-minute demo |
 | **Tier mapped to** | All tiers (the synthesis) |
-| **Prerequisite** | Builds 0–10 + the final exam |
+| **Prerequisite** | Builds 0–11 + the final exam |
 | **Estimated effort** | 2 hours focused |
 
 ## Start here
@@ -28,5 +28,5 @@
 
 ## See also
 
-- Previous: [Build 10](../build-11-production-readiness/)
-- Capstone: [Build 12](../build-13-capstone/) — [Atlas Operations](../build-13-capstone/atlas-operations/) or [Aurora Concierge](../build-13-capstone/aurora-concierge/)
+- Previous: [Build 11](../build-11-production-readiness/)
+- Capstone: [Build 13](../build-13-capstone/) — [Atlas Operations](../build-13-capstone/atlas-operations/) or [Aurora Concierge](../build-13-capstone/aurora-concierge/)

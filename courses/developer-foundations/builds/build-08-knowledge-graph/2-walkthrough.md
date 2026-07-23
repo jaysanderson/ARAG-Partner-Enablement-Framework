@@ -159,7 +159,8 @@ Base URL: ${import.meta.env.VITE_NUCLIA_API_URL}/kb/${import.meta.env.VITE_NUCLI
 
 CLIENT-SIDE FILTER (applied to nodes):
   Reject any node where:
-  - value matches a GUID/UUID pattern (8-4-4-4-12 hex)
+  - value matches a GUID-shaped pattern (a long hex string, 20+
+    characters, no dashes)
   - group is one of these default NER groups:
     [DATE, ORG, PERSON, MONEY, GPE, LOC, TIME, EVENT, NORP,
      WORK_OF_ART, LAW, LANGUAGE, QUANTITY, ORDINAL, CARDINAL, PERCENT]
@@ -216,7 +217,8 @@ Base URL: ${CONFIG.apiUrl}/kb/${CONFIG.kbId}
 
 CLIENT-SIDE FILTER (applied to nodes):
   Reject any node where:
-  - value matches a GUID/UUID pattern (8-4-4-4-12 hex)
+  - value matches a GUID-shaped pattern (a long hex string, 20+
+    characters, no dashes)
   - group is one of these default NER groups:
     [DATE, ORG, PERSON, MONEY, GPE, LOC, TIME, EVENT, NORP,
      WORK_OF_ART, LAW, LANGUAGE, QUANTITY, ORDINAL, CARDINAL, PERCENT]
@@ -602,7 +604,7 @@ If the list doesn't change when you flip persona, the filter isn't wired to the 
 
 This is the demo moment. Find or construct a question against your KB that **single-shot retrieval cannot answer** — only graph traversal can.
 
-### 6a. Patterns
+### 8a. Patterns
 
 - **Two-hop intersection.** "Which X are connected to BOTH Y and Z?" (e.g., "Which investigators worked on both COMPOUND-A and COMPOUND-B?")
 - **Path traversal.** "How is X connected to Y?" (Walk the path through one or two intermediate entities.)
@@ -610,7 +612,7 @@ This is the demo moment. Find or construct a question against your KB that **sin
 
 Pick one that fits your corpus.
 
-### 6b. Walk through it in the UI
+### 8b. Walk through it in the UI
 
 1. Search for the first entity.
 2. Click it. Note its connections.
@@ -618,7 +620,7 @@ Pick one that fits your corpus.
 4. Walk the graph to the answer.
 5. **Take a screenshot** of the final graph state. Save as `graph-only-answer.png`.
 
-### 6c. Document the walk
+### 8c. Document the walk
 
 In `graph-evidence.md`, write the question + the steps + the answer:
 

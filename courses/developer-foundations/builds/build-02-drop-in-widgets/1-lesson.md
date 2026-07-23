@@ -148,7 +148,7 @@ The slug-substring pattern (`/n/s/...`) is the cheapest filter that doesn't depe
 **Widgets are wrong when:**
 - You need different prompt modes for prospect vs member (Tier 2 — that's Build 3).
 - You need to render structured outputs (Tier 3 — Build 5).
-- You need a knowledge-graph navigation UI (Tier 4 — Build 7).
+- You need a knowledge-graph navigation UI (Tier 4 — Build 8).
 - The interaction needs custom post-processing — CTA pills, multi-step flows, embedded media controls (Build 9 and onward).
 
 The widgets are a **starter**. They get the partner from zero to "live chatbot" in 30 minutes with no code. Almost every customer engagement past Tier 1 outgrows them. That's fine — the widgets close the door, then the custom build opens it wider.
