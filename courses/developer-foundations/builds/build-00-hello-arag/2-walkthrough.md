@@ -35,7 +35,7 @@ Open the Progress Agentic RAG dashboard.
 
 1. Click **"New Knowledge Box"** (or "Create KB" — wording varies).
 2. **Name:** `<your-initials>-foundations` (e.g., `jay-foundations`).
-3. **Region:** **pick the option geographically closest to you** — EU if you're in Europe / EMEA, USA if you're in the Americas. **Then stick with that same region for every Knowledge Box you provision in this course.** Knowledge Boxes in different regions can't share data, and switching mid-course adds confusion. Residency is covered in Build 11.
+3. **Region:** **pick the option geographically closest to you** — the dashboard offers USA (AWS), Europe (AWS or GCP), Australia (AWS), and Israel (AWS). **Then stick with that same region for every Knowledge Box you provision in this course.** Knowledge Boxes in different regions can't share data, and switching mid-course adds confusion. Residency is covered in Build 11.
 4. **Embedding model:** leave on the default (**"Common languages"**) unless your content is English-only or falls outside that set.
 5. Click **Create**.
 

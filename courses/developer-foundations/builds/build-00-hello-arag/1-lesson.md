@@ -32,8 +32,8 @@ A Knowledge Box — **KB** for short — owns:
 - The data-augmentation agent that extracts the typed graph (Build 7).
 - The custom indexed fields you've added (Build 8).
 - The service-account credentials.
-- The residency region (EU or USA — covered in Build 10).
-- The LLM endpoint configuration (BYO-LLM, also Build 10).
+- The residency region (multiple regions across AWS/GCP — covered in Build 11).
+- The LLM endpoint configuration (platform / BYOK / BYO-LLM, also Build 11).
 
 One application typically uses **one KB**. Multi-KB architectures exist but the default — and your default — is one KB per customer. You'll provision yours today.
 

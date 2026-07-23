@@ -8,9 +8,9 @@ A demo against a sandbox closes nothing. The customer signs after their CTO is s
 
 The good news: ARAG handles most of this for you. Residency, rate limiting, model routing — all platform-native. Your job in Build 11 is to know what's available, how to configure it, and how to defend it in 90 seconds to a customer's CTO.
 
-## Data residency: EU vs USA
+## Data residency: five regions
 
-ARAG provisions KBs in either the EU or the USA region. Set at provisioning time. Once set, the KB's content — ingested documents, embeddings, the graph, all metadata — stays in that region.
+ARAG provisions KBs in one of five regions: **USA (AWS)**, **Europe (AWS or GCP)**, **Australia (AWS)**, or **Israel (AWS)**. Set at provisioning time. Once set, the KB's content — ingested documents, embeddings, the graph, all metadata — stays in that region.
 
 **What residency answers:**
 - GDPR concerns.
@@ -18,34 +18,37 @@ ARAG provisions KBs in either the EU or the USA region. Set at provisioning time
 - Customer regulatory requirements explicitly requiring regional processing.
 
 **What residency does NOT answer:**
-- The *LLM* that generates answers. That's BYO-LLM (next section). A KB in EU region can still call out to a US-based LLM if you wire it that way.
+- The *LLM* that generates answers (next section). Platform-billed models carry their own enterprise-ready region flag; BYOK and BYO-LLM route through whatever region the customer's own account or endpoint lives in. A KB in one region can still call out to an LLM hosted elsewhere if you wire it that way.
 - Cross-region failover. ARAG doesn't auto-failover; you architect it with two KBs if a customer needs it.
 
 **The 90-second CTO pitch:**
 
-> "EU customers, your data stays in EU. US customers, yours stays in US. The KB you provision lives in one region or the other. Period. We don't move it. If you need both, you provision two KBs and your application routes by user context."
+> "We provision in five regions — USA, Europe, Australia, and Israel, each on AWS, with Europe also available on GCP. Wherever your data needs to live, the KB you provision lives there. Period. We don't move it. If you need more than one region, you provision multiple KBs and your application routes by user context."
 
-## BYO-LLM: bring your own LLM
+## LLM flexibility: platform, BYOK, and BYO-LLM
 
-ARAG decouples retrieval from generation. The retrieval engine, the graph, the data-augmentation agent — all run on ARAG. The generation step calls out to an LLM endpoint **the customer configures**. Three named providers:
+ARAG decouples retrieval from generation. The retrieval engine, the graph, the data-augmentation agents — all run on ARAG. The generation step calls out to an LLM, and there are three ways to connect one — configured **per KB**, in generative-model settings.
 
-1. **Azure OpenAI** — GPT-4, GPT-4 Turbo, GPT-4o.
-2. **Google Vertex** — Gemini Pro, Gemini Flash.
-3. **AWS Bedrock** — Claude, Llama, Mistral, others.
+1. **Platform-billed (the default).** Pick a model from ARAG's curated provider list — Anthropic (direct, via Vertex AI, or via Bedrock), Google Gemini, OpenAI, Azure OpenAI, Vertex AI, Amazon, Hugging Face, and others. Progress holds the billing relationship with each provider; your usage is billed to you as **Agentic RAG tokens** — the platform's own credit system. Zero provider setup on your side.
+2. **BYOK — Bring Your Own Keys.** Same curated provider list. If you already have a billing account or token credits with any of those providers, supply your own API key/credentials instead of using Progress's. ARAG routes the request through *your* account — you're billed directly by the provider, not by Progress. Same models, your existing relationship. Works for **any provider on the platform's list**, not a fixed few.
+3. **BYO-LLM — Bring Your Own LLM.** For a model that isn't on the platform's list at all — an open-source model, a fine-tuned internal model, an on-prem deployment — connect it directly via an **OpenAI-compatible API endpoint**. Three required fields: API URL, API key, model ID.
 
-Configuration is per-KB. The customer points the KB at *their* tenant — their Azure subscription, their Vertex project, their Bedrock account. ARAG sends prompts; the LLM responds; ARAG threads the response back through retrieval + citation handling.
+**Same model, multiple routes.** The same underlying model is often reachable through more than one provider — GPT-5 via OpenAI directly, or via Azure OpenAI, for example. Each route is a separate configuration entry, and they aren't necessarily interchangeable on compliance grounds even though the model is the same (see the enterprise-ready indicator below).
 
-**What BYO-LLM kills (in order of objection frequency):**
+**Enterprise-ready indicator — platform-billed models only.** For every provider/model combination on the curated list, ARAG flags whether it's **enterprise-ready**: your request stays within your defined region (no cross-region hop to reach that provider's instance) and the provider won't use your data for training. This flag only applies to the **platform-billed** option — once you BYOK or BYO-LLM, you're on the provider's own terms and ARAG isn't the party attesting to them; that due diligence is yours.
 
-| Customer objection | BYO-LLM answer |
+**What each option kills (in order of objection frequency):**
+
+| Customer objection | Answer |
 |---|---|
-| "We already use Azure" | Point the KB at their Azure subscription. Their tenant, their billing, their compliance. |
-| "Vendor lock-in concerns" | They're not locked in — they own the LLM endpoint. ARAG's retrieval is the only proprietary layer. |
-| "Security team needs to audit every LLM call" | Calls go through *their* tenant's logging. They see every request. |
-| "Procurement wants LLM cost on existing contract" | Yes — LLM costs stay on Azure/AWS/GCP. ARAG only bills retrieval + orchestration. |
-| "Want to use [other model]" | If it's on Azure / Vertex / Bedrock, yes. Otherwise, it's a roadmap conversation. |
+| "We already use Azure / OpenAI / Anthropic / etc." | **BYOK** — point ARAG at their existing account. Their tenant, their billing, their compliance. |
+| "Vendor lock-in concerns" | **BYOK** — they're not locked in, they own the LLM billing relationship. ARAG's retrieval is the only proprietary layer. |
+| "Security team needs to audit every LLM call" | **BYOK** — calls go through their own provider account, their own tenant logging. |
+| "Procurement wants LLM cost on existing contract" | **BYOK** — LLM costs stay on their existing provider contract. ARAG only bills retrieval + orchestration. |
+| "Data must never leave our region / train on our content" | **Platform-billed**, filtered to **enterprise-ready** routes only. |
+| "Want to use [an uncommon or internal model]" | If it's on the curated list, platform or BYOK. Otherwise, **BYO-LLM** via the OpenAI-compatible connector — as long as it exposes that API shape. |
 
-**The killer demo move:** flip the BYO-LLM toggle from Azure to Vertex during the demo. The customer sees the application doesn't change. Same KB, same prompt, different model. *Their choice.* That moment kills the lock-in objection cold.
+**The killer demo move:** flip a BYOK connection from one provider to another during the demo — say, from the customer's OpenAI account to their Azure OpenAI account. The customer sees the application doesn't change. Same KB, same prompt, different provider. *Their choice, their tenant.* That moment kills the lock-in objection cold.
 
 ## When BYO-LLM doesn't fit: clean descope
 
@@ -118,11 +121,11 @@ Every production ARAG deployment a Specialist signs off on must track:
 | **Citation rate** — % of `/ask` responses with non-empty citations | The single most important retrieval-quality regression signal. |
 | Per-endpoint request volume | Capacity planning + rate-limit headroom. |
 | 4xx / 5xx response rate | Error tracking. |
-| BYO-LLM endpoint distribution (if multi-endpoint) | Cost allocation. |
+| LLM provider/route distribution (if multi-route: platform / BYOK / BYO-LLM) | Cost allocation. |
 
 Tooling: Grafana, Datadog, New Relic, cloud-native — partner taste. The *metrics* matter; the tool doesn't.
 
-**Citation rate** is the metric you brief the customer's SRE team to alarm on. If it drops 20% week-over-week, something has changed in retrieval — ingest, chunking, labelset, or the BYO-LLM endpoint. Single best leading indicator of platform health.
+**Citation rate** is the metric you brief the customer's SRE team to alarm on. If it drops 20% week-over-week, something has changed in retrieval — ingest, chunking, labelset, or the LLM endpoint. Single best leading indicator of platform health.
 
 ## A rate-limit-aware client (vibe-coded in 5 minutes)
 
@@ -139,10 +142,11 @@ You'll brief the AI to write a wrapper that:
 
 Three deliverables, all mostly conceptual + config:
 
-1. Configure BYO-LLM against your sandbox (Azure / Vertex / Bedrock — whichever you have access to).
-2. Write a residency statement for your KB (4 sentences; the one you read aloud to the CTO).
-3. Vibe-code a rate-limit-aware ARAG client wrapper.
-4. Sketch an observability dashboard with the 6 metrics above.
+1. Write a residency statement for your KB (4 sentences; the one you read aloud to the CTO).
+2. Vibe-code a rate-limit-aware ARAG client wrapper.
+3. Sketch an observability dashboard with the 6 metrics above.
+
+Plus one concept-only task, not a deliverable: know the platform's three LLM connection options (platform-billed, BYOK, BYO-LLM) and the enterprise-ready indicator well enough to talk through them — no hands-on config against a real customer tenant in this Build (see the walkthrough's Step 3).
 
 ## Common pitfalls
 
