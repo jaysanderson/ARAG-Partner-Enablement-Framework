@@ -153,7 +153,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 └─────────────────────────────────────────────────────────────┘
 ```
 
-> **Note on BYO-LLM.** BYO-LLM is a per-KB platform configuration (Azure OpenAI / Google Vertex / AWS Bedrock — see [Build 11 lesson](../../build-11-production-readiness/1-lesson.md#byo-llm-bring-your-own-llm)), not a UI lever in this capstone. Atlas Operations ships with the platform default generator and *no* in-app toggle. The "what about lock-in?" question is answered with the residency badge and the live KB stats in the hero — proof points the demo actually carries. The descoped pattern (no env vars, no UI surface, plus a graph-extraction blocklist so the model can't surface "BYO-LLM" as a product node) is documented in [*When BYO-LLM doesn't fit: clean descope*](../../build-11-production-readiness/1-lesson.md#when-byo-llm-doesnt-fit-clean-descope).
+> **Note on BYO-LLM.** BYO-LLM is a per-KB platform configuration (Azure OpenAI / Google Vertex / AWS Bedrock — see [Build 11 lesson](../../build-11-production-readiness/1-lesson.md#llm-flexibility-platform-byok-and-byo-llm)), not a UI lever in this capstone. Atlas Operations ships with the platform default generator and *no* in-app toggle. The "what about lock-in?" question is answered with the residency badge and the live KB stats in the hero — proof points the demo actually carries. The descoped pattern (no env vars, no UI surface, plus a graph-extraction blocklist so the model can't surface "BYO-LLM" as a product node) is documented in [*When BYO-LLM doesn't fit: clean descope*](../../build-11-production-readiness/1-lesson.md#when-byo-llm-doesnt-fit-clean-descope).
 
 ### 5.2 Frontend stack
 
