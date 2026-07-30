@@ -149,7 +149,7 @@ Foundations Build 8 teaches you to **use** the graph. The Advanced course's *Dat
 For Foundations, the sandbox KB you provisioned in Build 0 doesn't have a custom agent configured. You have two paths:
 
 1. **Use the dashboard to configure a simple agent.** Pick 3–5 entity types and 3–5 relations. Run extraction. Limited but enough to see the graph populate.
-2. **Move directly to vibe-coding the UI** assuming the graph exists, then connect a customer-provided KB during Build 11 capstone prep.
+2. **Move directly to vibe-coding the UI** assuming the graph exists, then connect a customer-provided KB during Build 12 capstone prep.
 
 Path 1 is more satisfying. Path 2 is faster.
 

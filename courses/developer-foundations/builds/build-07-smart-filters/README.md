@@ -8,7 +8,7 @@
 |---|---|
 | **Capability** | Content-type + label-based filtering on `/find` and `/ask` |
 | **Tier mapped to** | Tier 1–2 |
-| **Prerequisite** | [Build 5](../build-05-structured-outputs/) |
+| **Prerequisite** | [Build 6](../build-06-data-augmentation-agents/) |
 | **Estimated effort** | 2 hours focused |
 
 ## Start here

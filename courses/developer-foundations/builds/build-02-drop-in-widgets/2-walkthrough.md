@@ -9,7 +9,7 @@
 A local `index.html` file on your Desktop running a Progress Agentic RAG widget set you configured entirely through the dashboard's Widget configurator. By the end you'll know:
 
 - **Every widget type** the platform ships (search bar, search results, chat, popup) and when to pick each one.
-- **Every display + behaviour option** the configurator exposes (placeholder text, theme, citations style, autocomplete, language, default filters).
+- **Every display + behaviour option** the configurator exposes (widget style, theme, placeholder text, citation visibility, interface language, filters).
 - **The product filter** — a one-line filter expression that narrows results to a subset of the corpus.
 - The shape of the **embed code** the configurator generates, and where it goes in a static HTML file.
 
@@ -63,7 +63,7 @@ This is where Build 2 happens. The Progress Agentic RAG dashboard exposes a **wi
    - A **configuration panel** on the left (tabs / sections covering the widget options).
    - A **live preview** in the middle that updates as you change options.
    - A **code panel** on the right showing the generated embed snippet.
-4. Don't change anything yet. Take a minute to scroll through the configuration panel sections — read the option labels. There are usually 5-7 sections (Widget type, Display, Search behaviour, Generation, Filters, Language, Advanced). The exact wording differs by version.
+4. Don't change anything yet. Take a minute to scroll through the configuration panel sections — read the option labels. There are usually 3-4 sections (Widget type, Widget style, Configuration options, Filters). The exact wording differs by version.
 
 **The takeaway:** every option a partner might want to change in a customer engagement is in this panel. You're going to walk through each one.
 
@@ -90,41 +90,51 @@ The first section of the configurator lets you pick **which widgets** to render.
 
 This is the long step. For each widget you've enabled, the configurator exposes a stack of options. Walk through each one, change it, see how the preview reacts, and read the result against what a customer would want.
 
-### 4a. Search-bar widget options
+### 4a. Create a widget and pick its style
 
-Common options on the search-bar configurator (exact wording varies):
+You can create multiple named widgets, each with its own style:
 
-- **Placeholder text** — what shows in the empty input. Default is usually `"Ask anything…"`. Try `"Search the product catalogue"` or your partner's brand voice.
-- **Layout style** — compact (fits in a header), hero (large with surrounding margin), full-width (spans the container). Pick hero for now to see it dominate the page.
-- **Autocomplete / suggestions** — whether the bar suggests queries as you type. Toggle on.
-- **Show keyboard shortcut** — display `⌘ K` to open the bar with a hotkey.
-- **Search trigger** — search-as-you-type vs. press-Enter-to-search. Try both; press-Enter feels less noisy for most corpora.
+- **Embedded in page**
+- **Chat mode**
+- **Popup modal style**
+- **Floating chat button**
 
-### 4b. Search-results widget options
+Style is changeable at any time per widget.
 
-- **Layout** — list view vs. card view vs. compact. Each has a different vibe.
-- **Show source type** — display the document icon next to the title.
-- **Show excerpts** — render a snippet of the matching text under the title (recommended; without it the results read as filenames).
-- **Show citations** — surface citation chips when the answer references a source.
-- **Result count** — page size for the result list (default 10).
+### 4b. Configuration options
 
-### 4c. Chat widget options
+#### Cosmetic
 
-- **Mode** — `light` (default), `dark`, `auto` (follows system theme).
-- **Position** — bottom-right (default) vs. bottom-left vs. anchored inline.
-- **Open by default** — auto-open the chat panel on page load (rarely a good idea outside a chat-led page).
-- **Citations style** — inline footnotes vs. trailing citation list vs. hidden. Inline is the most explainable.
-- **Streaming** — toggle whether answers stream token-by-token or arrive complete. Streaming is more impressive in demos.
-- **Sources before answer** — show the retrieved documents before the answer is generated. Sometimes useful for trust-building.
-- **Allow follow-up** — multi-turn conversation memory within a session.
+- **Theme** — light or dark.
+- **Display search button**.
+- **Customize text blocks visibility** — expanded or collapsed by default.
+- **Customize citation visibility** — expanded or collapsed by default.
+- **Hide Progress Agentic RAG logo from search bar** — growth/enterprise plans only.
+- **Position**, **size**, **panel width**, **panel height**, **bottom offset**, **side offset** (Floating chat button only).
 
-### 4d. Language
+#### Behavioural
 
-- **Response language** — the configurator can pin every answer to a specific language (Spanish, French, German, Japanese, Mandarin, etc.) regardless of the query language. Default is the language of the query.
+- **No chat history** — previous Q&A aren't passed as context when generating a new answer.
+- **Persist chat history** — stored in the browser's localStorage and restored on reload (chat widget only).
+- **Navigate to links origin / files of origin / origin URL** — clicking a result opens the original page/file/URL instead of rendering it in the viewer.
+- **Open in a new tab** — only available when a navigate-to-origin option is on.
+- **Hide download button**.
+- **Permalinks** — adds parameters so users can copy/share a direct link to a specific resource or search result.
 
-### 4e. Knowledge box scope
+#### Text customization
 
-For most Build 2 demos you'll point at one Knowledge Box. The configurator also lets you point at multiple Knowledge Boxes if your account has them — but multi-KB routing is a Build 11 (production-readiness) conversation, not a Build 2 demo move.
+- **Customize search bar placeholder** — toggle on, then set the placeholder text. Default is `"Type your question here"`.
+- **Customize chat bar placeholder** — same idea for the chat input. Default is `"Let's talk"`.
+- **Customize insufficient data message** — the message shown when there's not enough context to answer (HTML markup allowed). Default is `"Not enough data to answer this."`.
+- **Copy button disclaimer** — shown when a user copies the answer.
+
+#### Feedback
+
+- **Feedback** — no feedback / global feedback on the answer / detailed feedback on answer and search results. Try "Detailed" — it's the most common Tier 1 setting.
+
+#### Language
+
+- **Language** — free-text field (2-character code). Sets the widget's own interface language; defaults to the browser's locale. The UI ships translations for `en`, `ca`, `es`, `fr`, but accepts any code.
 
 **Spend at least 10 minutes** clicking through these options. Watch the preview update. When something visibly changes the experience, note which option it was — you're building the vocabulary you'll use in customer demos.
 
@@ -163,13 +173,13 @@ Now ship it locally.
 **You should see:**
 
 - Your "My ARAG widget" hero header.
-- The search bar configured the way you set it (hero / compact, your placeholder text).
-- The chat bubble in the position and theme you picked.
+- The search bar configured the way you set it (your placeholder text, theme).
+- The chat bubble in the style, position, and theme you picked.
 
 **Test it:**
 
 - Type a query into the search bar and press Enter. Results render below — only product resources (the filter is working).
-- Click the chat bubble. Type the same query. The answer streams in (or arrives complete, depending on your Step 4c choice).
+- Click the chat bubble. Type the same query. The answer streams in.
 
 **If nothing renders:** open the browser's DevTools (right-click → Inspect → Console tab). Look for red errors.
 
@@ -189,13 +199,13 @@ Go back to the configurator. Change three to five options — for example:
 
 - Flip the theme from light to dark.
 - Change the placeholder text.
-- Remove the floating chat; add the popup widget instead.
+- Switch the widget style — e.g. from Embedded in page to Floating chat button.
 - Drop the product filter so all content shows.
-- Switch the response language to Spanish.
+- Switch the interface language to Spanish (`es`).
 
 Copy the new embed code. In VS Code, **File → New File**, save as `index-v2.html` in the same folder. Paste your Step 1 skeleton, then paste the new snippet between the body tags. Save. Double-click to open.
 
-**Open both files side-by-side** in two browser windows. Same Knowledge Box, same corpus, two configurations — same query in each returns different visual treatments, different result scopes, different languages.
+**Open both files side-by-side** in two browser windows. Same Knowledge Box, same corpus, two configurations — same query in each returns different visual treatments and different result scopes.
 
 **This is the demo move for a Tier 1 customer.** A sales rep can change the look-and-feel of the entire experience in 60 seconds without ever calling for a developer. That's the pitch of widgets — and it's what makes them the right starter for any customer who hasn't committed to a custom build yet.
 
@@ -203,11 +213,11 @@ Copy the new embed code. In VS Code, **File → New File**, save as `index-v2.ht
 
 ## Key Takeaways
 
-By the end of this Build you should be able to recite the configurator's seven panels and what each one controls — without notes. Specifically:
+By the end of this Build you should be able to recite what the configurator's panels control — without notes. Specifically:
 
 - **The dashboard does the work, not the editor.** The Progress Agentic RAG widget configurator is the no-code surface partners use 90% of the time. Code only appears at the very end when you paste one snippet into a local HTML file.
 - **Four widget types**: `<nuclia-search-bar>`, `<nuclia-search-results>`, `<nuclia-chat>` (floating or inline), `<nuclia-popup>`. Pick the combination that fits the customer's site — most Tier 1 demos use search + chat together.
-- **Display + behaviour options** are exposed in the configurator's panels: placeholder text, layout style, theme, autocomplete, citations style (inline / trailing / hidden), streaming, multi-turn, language. Every option is a customer-conversation lever.
+- **Display + behaviour options** are exposed in the configurator's panels: widget style (Embedded in page / Chat mode / Popup modal style / Floating chat button), theme, chat-history behaviour, navigation and feedback toggles, placeholder and insufficient-data-message text, interface language. Every option is a customer-conversation lever.
 - **Filtering is one expression**. The configurator's filter panel writes the same `filters` attribute you'd hand-author. The `/n/s/-product-` slug-substring pattern in this Build is the simplest no-labelset filter; once Build 6 is done you'll use labelset filters (`/classification.labels/<labelset>/<label>`) for anything richer.
 - **The embed code is just three custom-element tags plus a script** — your KB ID, zone, API key are baked in by the dashboard. One paste. No build step. The whole demo runs as a local file you double-click; no hosting, no deploy, no public URL.
 - **When widgets are the wrong choice**: different prompt voices per audience (Build 3 territory), structured outputs (Build 5), knowledge-graph navigation (Build 8), custom CTA pills or post-processing (Build 9+). Past Tier 1 the widget abstraction starts to limit you; that's when you graduate to hand-rolled React.
@@ -224,7 +234,7 @@ This is the institutional knowledge for the next partner running this demo.
 
 ## Verification checklist
 
-- [ ] At least **5 configurator options** changed from defaults — written down which 5, so you can recite them later (e.g. "placeholder, theme, layout, citation style, filter").
+- [ ] At least **5 configurator options** changed from defaults — written down which 5, so you can recite them later (e.g. "placeholder, theme, widget style, citation visibility, filter").
 - [ ] **Product filter** working — search returns product resources only.
 - [ ] `index.html` opens by double-click on your Desktop and renders the configured widgets.
 - [ ] **Both widget types** demoed — search bar with results AND a chat surface.

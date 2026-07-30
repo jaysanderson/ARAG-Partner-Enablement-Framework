@@ -35,8 +35,8 @@ Open the Progress Agentic RAG dashboard.
 
 1. Click **"New Knowledge Box"** (or "Create KB" — wording varies).
 2. **Name:** `<your-initials>-foundations` (e.g., `jay-foundations`).
-3. **Region:** **pick the option geographically closest to you** — EU if you're in Europe / EMEA, USA if you're in the Americas. **Then stick with that same region for every Knowledge Box you provision in this course.** Knowledge Boxes in different regions can't share data, and switching mid-course adds confusion. Residency is covered in Build 11.
-4. **Generative model:** leave on **"Default Progress Agentic RAG model."** We'll cover BYO-LLM in Build 11.
+3. **Region:** **pick the option geographically closest to you** — the dashboard offers USA (AWS), Europe (AWS or GCP), Australia (AWS), and Israel (AWS). **Then stick with that same region for every Knowledge Box you provision in this course.** Knowledge Boxes in different regions can't share data, and switching mid-course adds confusion. Residency is covered in Build 11.
+4. **Embedding model:** leave on the default (**"Common languages"**) unless your content is English-only or falls outside that set.
 5. Click **Create**.
 
 Wait ~30 seconds. The KB appears in your dashboard.
@@ -141,7 +141,7 @@ Look at the 37 documents you uploaded. Think of a 4–6-word question your conte
 - "How does the onboarding process work?"
 - "What did Mara recommend for hiking?"
 
-Whatever fits your content. Write it down.
+Whatever fits your content. Write it down — save your question and the three examples above into a `questions.txt` in your `build-0` folder. You'll reuse this same corpus in later Builds, so having a few tested questions on hand saves you from re-deriving them each time.
 
 ### 5b. Build your scratch curl in VS Code
 
@@ -240,7 +240,7 @@ Select the whole `/ask` curl command in `scratch.sh` (Cmd/Ctrl + click-drag, or 
 - A field called `retrieval_results` — the documents the answer was grounded in (same shape as `/find`'s response).
 - A field called `retrieval_best_matches` — the ranked list of source IDs.
 
-**If the answer says "I don't have enough information to answer that question":** that's *correct behaviour* on a small corpus. The model is refusing to hallucinate. Try a different query, or ingest more documents.
+**If the answer says "Not enough data to answer this.":** that's *correct behaviour* on a small corpus. When retrieval doesn't surface enough relevant context, ARAG returns this canned response **before ever calling the LLM** — no generation call is made, so no tokens are spent. It's not the model declining to answer; generation never ran. Try a different query, or ingest more documents.
 
 ---
 
@@ -303,13 +303,13 @@ npm install dotenv
 
 **You should see:** a `package.json` file appears in your folder, plus a `node_modules` folder (which holds installed packages). Both can be ignored — Node manages them.
 
-> **No-npm path** (locked-down environment — see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). **Skip both commands above** — no `npm init`, no install. You just need your `.env` in this folder. When you run the script in Step 9, pass `--env-file` so Node reads `.env` itself: `node --env-file=.env ask.mjs "your question"`. In the brief below, change requirement 1 to *"Read NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY from `process.env` (do **not** use dotenv — they're loaded via `node --env-file=.env`). Exit with a clear error if any are missing."*
+> **No-npm path** (locked-down environment — see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). **Skip both commands above** — no `npm init`, no install. You just need your `.env` in this folder. When you run the script in Step 9, pass `--env-file` so Node reads `.env` itself: `node --env-file=.env ask.mjs "your question"`. Use the **No-npm brief** in 8b instead of the main brief.
 
 ### 8b. Brief your AI
 
 Open your AI coding assistant (Claude Code, Cursor, ChatGPT, Claude.ai — whichever you picked in the vibe-coding guide).
 
-Copy this brief and paste it in. **Don't edit it.** It's specific on purpose — and it includes a "verify the API before coding" instruction up front so the AI can't guess the response shape:
+**On the npm path?** Copy this brief and paste it in. **Don't edit it.** It's specific on purpose — and it includes a "verify the API before coding" instruction up front so the AI can't guess the response shape:
 
 ```
 Write me a Node.js script called ask.mjs (ES modules / import syntax).
@@ -317,8 +317,8 @@ Write me a Node.js script called ask.mjs (ES modules / import syntax).
 IMPORTANT — verify the API before coding:
 This hits the Progress Agentic RAG (ARAG / Progress Agentic RAG) /ask streaming endpoint.
 Do NOT trust my description of the response schema below — I may have it wrong.
-Before writing code, confirm the current schema against the Progress Agentic RAG/Progress ARAG
-docs (the AskResponse and FindResults interfaces in particular):
+Do NOT search the internet or fetch external documentation for this. Instead, run the
+curl command(s) in my scratch.sh and check the real output to confirm the actual schema:
   - the exact set of streaming item.type values emitted
   - the shape of every field you read — especially whether best_matches is
     string[] (paragraph-id strings) or object[]
@@ -361,7 +361,60 @@ Robustness — fail loud, not silent:
 Use plain fetch. No SDK. No external HTTP library beyond what's built into Node.
 ```
 
-> **Why the "verify the API before coding" preamble matters.** The single most common AI failure mode in this course is the AI confidently writing code against an *imagined* response shape. The opening paragraph forces the assistant to ground its work in the actual current docs — the same discipline you'll teach customer engineers in a real engagement. Notice also the explicit `citations: true` body field: without it, the streaming response gives you `retrieval` items (paragraphs that *could* have backed the answer) but no "citations" item (the LLM's actual attribution of each claim to a source). For a real customer demo you want the second — inline source attribution that survives copy-paste.
+> **Why the "verify the API before coding" preamble matters.** The single most common AI failure mode in this course is the AI confidently writing code against an *imagined* response shape. The opening paragraph forces the assistant to ground its work in the real response from running your scratch.sh — not an internet search, not a guess — the same discipline you'll teach customer engineers in a real engagement. Notice also the explicit `citations: true` body field: without it, the streaming response gives you `retrieval` items (paragraphs that *could* have backed the answer) but no "citations" item (the LLM's actual attribution of each claim to a source). For a real customer demo you want the second — inline source attribution that survives copy-paste.
+
+**On the no-npm path?** Copy this brief instead — it's fully self-contained, paste it as-is, identical to the one above except for requirement 1 (how credentials are read):
+
+```
+Write me a Node.js script called ask.mjs (ES modules / import syntax).
+
+IMPORTANT — verify the API before coding:
+This hits the Progress Agentic RAG (ARAG / Progress Agentic RAG) /ask streaming endpoint.
+Do NOT trust my description of the response schema below — I may have it wrong.
+Do NOT search the internet or fetch external documentation for this. Instead, run the
+curl command(s) in my scratch.sh and check the real output to confirm the actual schema:
+  - the exact set of streaming item.type values emitted
+  - the shape of every field you read — especially whether best_matches is
+    string[] (paragraph-id strings) or object[]
+State the verified assumptions in a header comment.
+
+Requirements:
+1. Read NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY from process.env (do NOT
+   use dotenv — they're loaded via `node --env-file=.env`, which I'll run the
+   script with). Exit with a clear error if any are missing.
+2. Take a query string as a CLI argument: `node ask.mjs "what is X?"`.
+   Exit with a usage message if absent.
+3. POST to {NUCLIA_API_URL}/kb/{NUCLIA_KB_ID}/ask with:
+   - Header: X-NUCLIA-SERVICEACCOUNT: Bearer {NUCLIA_API_KEY}
+   - Header: Content-Type: application/json
+   - Body: { query, prefer_markdown: true, rephrase: true, max_tokens: 500 }
+   I want source attribution in the output, so also request it explicitly:
+   add `citations: true` to the body (or `citations: "llm_footnotes"` if you
+   determine that better suits inline footnotes — tell me which you chose and why).
+4. The response is NDJSON: each object is shaped { "item": { "type": ..., ... } }.
+   Treat the type list as open — handle the ones you need and ignore the rest;
+   do not assume my list is complete or correct.
+5. As answer items arrive, print their text to stdout immediately (stream it,
+   don't buffer the whole answer).
+6. Collect the sources that backed the answer. Be precise about the distinction:
+   - "retrieval" items carry the PARAGRAPHS retrieved (best_matches).
+   - "citations" items (only present because of step 3) carry the mapping of
+     answer spans back to source paragraphs.
+   Derive the resource id from each paragraph id correctly per the shape you
+   verified — do not assume it's a property on an object.
+7. After the stream ends, print "---" then the citations: prefer the answer-span
+   -> source mapping if present, otherwise the deduped list of source resource IDs.
+8. Handle a JSON object that straddles two stream chunks (balanced-brace counting
+   to extract complete objects from the buffer; keep the partial remainder).
+
+Robustness — fail loud, not silent:
+- On non-2xx HTTP, print status + body and exit non-zero.
+- If a field you read is empty or an unexpected type (e.g. best_matches is not
+  what you expected, or zero sources came back), warn to stderr rather than
+  silently producing "(no citations)". I need to see when extraction breaks.
+
+Use plain fetch. No SDK. No external HTTP library beyond what's built into Node.
+```
 
 Click send. Wait for the AI to produce the file.
 
@@ -377,7 +430,7 @@ The AI will give you a file. Two ways to save it:
 Open `ask.mjs` in your editor and scan it. Three checks:
 
 1. Does it use `fetch(...)` (built into Node 18+) — **not** an `import` of some SDK like `nuclia`?
-2. Does the auth header say `X-NUCLIA-SERVICEACCOUNT`? (Not `Authorization`.)
+2. Does the auth header say `X-NUCLIA-SERVICEACCOUNT`? (`Authorization` also works, but this course standardises on `X-NUCLIA-SERVICEACCOUNT`.)
 3. Does the URL look like `${NUCLIA_API_URL}/kb/${NUCLIA_KB_ID}/ask`?
 
 If yes → run it. If no → tell the AI: *"This uses [whatever's wrong]. Please rewrite using [what should be correct]."* The AI will fix it.
@@ -412,7 +465,7 @@ That's it. End-to-end ARAG client, vibe-coded.
 Run it three times with three different queries. Each time, watch the streaming. Notice:
 
 - Some queries return more citations than others.
-- Some queries make the model say "I don't have enough information" — that's grounded refusal.
+- Some queries return "Not enough data to answer this." — that's ARAG declining to call the LLM at all, not the model refusing.
 - The streaming feels fast for short answers, slower for long ones.
 
 If something doesn't work, see "Getting unstuck" below.

@@ -20,11 +20,11 @@ The five primitives (refresher from the lesson):
 
 | # | Primitive | Endpoint | Customer signal |
 |---|---|---|---|
-| **P1** Retrieve | `/find` | "Find me documents about X." |
-| **P2** Generate | `/ask` | "Answer the question with citations." |
-| **P3** Constrain | `/ask` + `answer_json_schema` | "I need structured output, not prose." |
-| **P4** Reason | `/graph` | "Show me connections between X and Y." |
-| **P5** Stream-secure | `/resource/{id}` | "Give me the full document content." |
+| **P1** | Retrieve | `/find` | "Find me documents about X." |
+| **P2** | Generate | `/ask` | "Answer the question with citations." |
+| **P3** | Constrain | `/ask` + `answer_json_schema` | "I need structured output, not prose." |
+| **P4** | Reason | `/graph` | "Show me connections between X and Y." |
+| **P5** | Fetch Resource | `/resource/{id}` | "Give me the full document content." |
 
 Plus one bonus endpoint, `/labelsets`, that supports primitives 1–3.
 
@@ -127,6 +127,18 @@ The simplest primitive. Returns documents matching your query. No LLM involved.
 - `features` — which retrieval engines to use. `keyword` is exact-match; `semantic` is meaning-based. Including both gives **hybrid retrieval** — generally best.
 - `show` — which fields to include in the response. `basic` is metadata, `values` is custom fields, `origin` is the source filename/URL.
 
+**Copy and import the below curl into Postman:**
+
+```bash
+curl -s -X POST \
+  -H "X-NUCLIA-SERVICEACCOUNT: Bearer {{NUCLIA_API_KEY}}" \
+  -H "Content-Type: application/json" \
+  -d '{"query":"what is a good hiking boot?","page_size":5,"features":["keyword","semantic"],"show":["basic","values","origin"]}' \
+  "{{NUCLIA_API_URL}}/kb/{{NUCLIA_KB_ID}}/find"
+```
+
+In Postman: **Import** (top left) → **Raw text** → paste → **Import**. Method, URL, headers, and body all auto-fill — no manual entry needed.
+
 ### Run it
 
 Click **Send** (or run the `curl` below).
@@ -180,6 +192,19 @@ Same query, but now you want a **generated answer** with citations.
 
 **Why `x-synchronous: true`?** Without it, `/ask` returns NDJSON streaming chunks (one JSON object per line). For inspecting in a GUI tool, sync mode is much friendlier — you get one nice JSON blob.
 
+**Copy and import the below curl into Postman:**
+
+```bash
+curl -s -X POST \
+  -H "X-NUCLIA-SERVICEACCOUNT: Bearer {{NUCLIA_API_KEY}}" \
+  -H "Content-Type: application/json" \
+  -H "x-synchronous: true" \
+  -d '{"query":"what is a good hiking boot?","prefer_markdown":true,"rephrase":true,"max_tokens":300}' \
+  "{{NUCLIA_API_URL}}/kb/{{NUCLIA_KB_ID}}/ask"
+```
+
+In Postman: **Import** (top left) → **Raw text** → paste → **Import**. Method, URL, headers, and body all auto-fill — no manual entry needed.
+
 `curl` equivalent:
 
 ```bash
@@ -199,7 +224,7 @@ curl -s -X POST \
 
 **Key insight:** compare `retrieval_results.resources` to the `resources` from your Step 3 `/find` call. **They look almost identical.** That's because `/ask` is literally `/find` + LLM in one round trip. Same retrieval shape; new `answer` field on top.
 
-If the answer says *"I don't have enough information to answer that question"* — that's correct behaviour. The model refuses to hallucinate. Try a different question that more obviously fits your corpus.
+If the answer says *"Not enough data to answer this."* — that's correct behaviour. When retrieval doesn't surface enough relevant context, ARAG returns this canned response **before ever calling the LLM** — no generation call is made, so no tokens are spent. It's not the model declining to answer; generation never ran. Try a different question that more obviously fits your corpus.
 
 ---
 
@@ -227,6 +252,18 @@ Drop the `x-synchronous: true` header. Add a `prompt` field to the body:
 **What's the `prompt` object?**
 - `system` — instructions that shape the model's voice and behaviour.
 - `user` — the template the model sees. `{context}` is replaced with the retrieved paragraphs; `{question}` is replaced with the query.
+
+**Copy and import the below curl into Postman:**
+
+```bash
+curl -s -X POST \
+  -H "X-NUCLIA-SERVICEACCOUNT: Bearer {{NUCLIA_API_KEY}}" \
+  -H "Content-Type: application/json" \
+  -d '{"query":"what is a good hiking boot?","prefer_markdown":true,"rephrase":true,"max_tokens":300,"prompt":{"system":"You are a concise assistant. Answer in 2 sentences maximum.","user":"Context: {context}\n\nQuestion: {question}"}}' \
+  "{{NUCLIA_API_URL}}/kb/{{NUCLIA_KB_ID}}/ask"
+```
+
+In Postman: **Import** (top left) → **Raw text** → paste → **Import**. Method, URL, headers, and body all auto-fill — no manual entry needed.
 
 `curl` equivalent — use `-N` so streaming actually streams:
 
@@ -293,6 +330,19 @@ Method/URL same as before. Add the `x-synchronous: true` header back (easier to 
 - `additionalProperties: false` is **critical** — it tells the model "no extra fields allowed." This forces the model into strict mode. Build 5 covers why.
 - `required: ["questions"]` means the model **must** include this field.
 
+**Copy and import the below curl into Postman:**
+
+```bash
+curl -s -X POST \
+  -H "X-NUCLIA-SERVICEACCOUNT: Bearer {{NUCLIA_API_KEY}}" \
+  -H "Content-Type: application/json" \
+  -H "x-synchronous: true" \
+  -d '{"query":"Suggest 4 follow-up questions based on the corpus.","answer_json_schema":{"name":"follow_ups","description":"Generates 4 follow-up questions based on the corpus.","parameters":{"type":"object","additionalProperties":false,"properties":{"questions":{"type":"array","items":{"type":"string"}}},"required":["questions"]}}}' \
+  "{{NUCLIA_API_URL}}/kb/{{NUCLIA_KB_ID}}/ask"
+```
+
+In Postman: **Import** (top left) → **Raw text** → paste → **Import**. Method, URL, headers, and body all auto-fill — no manual entry needed.
+
 `curl` equivalent:
 
 ```bash
@@ -338,6 +388,16 @@ Quick one. Returns the labelsets configured on your KB.
 | **Method** | `GET` |
 | **URL** | `{{NUCLIA_API_URL}}/kb/{{NUCLIA_KB_ID}}/labelsets` |
 
+**Copy and import the below curl into Postman:**
+
+```bash
+curl -s \
+  -H "X-NUCLIA-SERVICEACCOUNT: Bearer {{NUCLIA_API_KEY}}" \
+  "{{NUCLIA_API_URL}}/kb/{{NUCLIA_KB_ID}}/labelsets"
+```
+
+In Postman: **Import** (top left) → **Raw text** → paste → **Import**. Method, URL, and headers all auto-fill — no manual entry needed.
+
 `curl`:
 
 ```bash
@@ -379,6 +439,18 @@ The graph endpoint. Walks typed entity relationships extracted by the **Graph da
 
 **What this asks:** "Give me up to 20 graph paths, where the path was *generated* by the *data-augmentation* agent." The second filter excludes ARAG's default NER noise (random DATE, ORG, MONEY entities). **Always include it.**
 
+**Copy and import the below curl into Postman:**
+
+```bash
+curl -s -X POST \
+  -H "X-NUCLIA-SERVICEACCOUNT: Bearer {{NUCLIA_API_KEY}}" \
+  -H "Content-Type: application/json" \
+  -d '{"query":{"and":[{"prop":"path"},{"prop":"generated","by":"data-augmentation"}]},"top_k":20}' \
+  "{{NUCLIA_API_URL}}/kb/{{NUCLIA_KB_ID}}/graph"
+```
+
+In Postman: **Import** (top left) → **Raw text** → paste → **Import**. Method, URL, headers, and body all auto-fill — no manual entry needed.
+
 `curl`:
 
 ```bash
@@ -394,7 +466,7 @@ Save the empty response. You'll re-run the same call in Build 8 and see it popul
 
 ---
 
-## Step 9 — P5 Stream-secure: `/resource/{id}` (10 min)
+## Step 9 — P5 Fetch Resource: `/resource/{id}` (10 min)
 
 Final primitive. Returns the **full content** of a single resource — extracted text, all metadata, custom fields, the lot.
 
@@ -409,6 +481,16 @@ Go back to your Step 3 `/find` response. Pick any resource ID from the `best_mat
 | **Method** | `GET` |
 | **URL** | `{{NUCLIA_API_URL}}/kb/{{NUCLIA_KB_ID}}/resource/{paste-resource-id-here}` |
 | **Query params** | `show=basic&show=origin&show=extra&show=values&show=extracted` |
+
+**Copy and import the below curl into Postman** (replace `PASTE_RESOURCE_ID` with the ID you grabbed above):
+
+```bash
+curl -s \
+  -H "X-NUCLIA-SERVICEACCOUNT: Bearer {{NUCLIA_API_KEY}}" \
+  "{{NUCLIA_API_URL}}/kb/{{NUCLIA_KB_ID}}/resource/PASTE_RESOURCE_ID?show=basic&show=origin&show=extra&show=values&show=extracted"
+```
+
+In Postman: **Import** (top left) → **Raw text** → paste → **Import**, then swap `PASTE_RESOURCE_ID` in the URL for your real ID. Method, URL, and headers otherwise auto-fill — no manual entry needed.
 
 `curl`:
 
@@ -454,17 +536,58 @@ npm install dotenv
 
 **What that did:** created a fresh project folder, copied your `.env` over, initialised `package.json`, installed `dotenv`.
 
-> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `mkdir` the folder and `cp` the `.env` in. Run each command in Step 10e with `--env-file`, e.g. `node --env-file=.env primitives-demo.mjs find "what is a good hiking boot?"`. Brief the AI to read `process.env.NUCLIA_*` directly (no dotenv import).
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `mkdir` the folder and `cp` the `.env` in. Run each command in Step 10e with `--env-file`, e.g. `node --env-file=.env primitives-demo.mjs find "what is a good hiking boot?"`. Use the **No-npm brief** in 10b instead of the main brief.
 
 ### 10b. Brief your AI
 
-Open your AI. Paste this **exactly** — don't edit:
+Open your AI.
+
+**On the npm path?** Paste this **exactly** — don't edit:
 
 ```
 Write a Node.js CLI tool called primitives-demo.mjs (ES modules / import syntax).
 
+IMPORTANT — verify before coding:
+Do NOT search the internet or fetch external documentation. You already ran every one
+of these calls in Steps 3–9 (via curl or Postman) — re-run them if needed and check the
+real output to confirm each response shape before implementing it.
+
 It should:
 1. Use the dotenv package to read NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY from a .env file.
+2. Take two command-line args: the primitive name and a query/id.
+   Usage: node primitives-demo.mjs <primitive> <query-or-id>
+   Where <primitive> is one of: find, ask, ask-schema, graph, resource
+3. Implementation per primitive:
+   - find: POST /kb/{kbId}/find with body {query, page_size: 5, features: ["keyword","semantic"], show: ["basic","values","origin"]}. Use sync (no streaming).
+   - ask: POST /kb/{kbId}/ask with body {query, prefer_markdown: true, rephrase: true, max_tokens: 300}. Add header x-synchronous: true.
+   - ask-schema: POST /kb/{kbId}/ask sync, with a hard-coded follow-up-questions schema (3 questions). The schema must include additionalProperties: false on every object.
+   - graph: POST /kb/{kbId}/graph with body {query: {and: [{prop:"path"}, {prop:"generated", by:"data-augmentation"}]}, top_k: 20}.
+   - resource: GET /kb/{kbId}/resource/{id} with query string show=basic&show=origin&show=extra&show=values&show=extracted
+4. Every request uses the header X-NUCLIA-SERVICEACCOUNT: Bearer {API_KEY} and Content-Type: application/json (for POSTs).
+5. Print ONE LINE summarising what came back:
+   - find: "5 resources, top score 0.87"
+   - ask: "Answer (143 chars), 3 citations"
+   - ask-schema: "3 questions generated"
+   - graph: "0 paths" (or "N paths" if populated)
+   - resource: "Resource title: \"...\", extracted_text length: 2456 chars"
+
+Use plain fetch. No SDK. No external HTTP libraries.
+```
+
+**On the no-npm path?** Paste this instead — fully self-contained, identical except requirement 1 (how credentials are read):
+
+```
+Write a Node.js CLI tool called primitives-demo.mjs (ES modules / import syntax).
+
+IMPORTANT — verify before coding:
+Do NOT search the internet or fetch external documentation. You already ran every one
+of these calls in Steps 3–9 (via curl or Postman) — re-run them if needed and check the
+real output to confirm each response shape before implementing it.
+
+It should:
+1. Read NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY directly from process.env
+   (do NOT use dotenv — they're loaded via `node --env-file=.env`, which I'll run
+   the script with).
 2. Take two command-line args: the primitive name and a query/id.
    Usage: node primitives-demo.mjs <primitive> <query-or-id>
    Where <primitive> is one of: find, ask, ask-schema, graph, resource
@@ -497,7 +620,7 @@ Click send. Wait for the file.
 Open `primitives-demo.mjs`. Three checks:
 
 1. **No fake SDK** — uses `fetch(...)`, not `import { Progress Agentic RAG } from 'nuclia'`.
-2. **Right auth header** — `X-NUCLIA-SERVICEACCOUNT: Bearer ...`, not `Authorization`.
+2. **Right auth header** — `X-NUCLIA-SERVICEACCOUNT: Bearer ...`. (`Authorization` also works, but this course standardises on `X-NUCLIA-SERVICEACCOUNT`.)
 3. **`additionalProperties: false`** on the ask-schema body's schema object.
 
 If any fail, tell the AI: *"You did X but it should be Y. Fix it."*
@@ -576,8 +699,8 @@ Then take the [Build 1 quiz](3-quiz.md). Pass → start [Build 2](../build-02-dr
 - Your query didn't match anything. Try a more obvious question — something that's clearly in your corpus.
 - Or check that your documents still show "indexed" in the dashboard.
 
-**`/ask` answer says "I don't have enough information."**
-- That's the model **refusing to hallucinate** — good behaviour. Try a better-matched query.
+**`/ask` answer says "Not enough data to answer this."**
+- That's ARAG declining to call the LLM at all, not the model refusing — good behaviour. Try a better-matched query.
 
 **`/ask` with schema — `answer_json` is null.**
 - Missing `additionalProperties: false`. Add it to every `object` in the schema.

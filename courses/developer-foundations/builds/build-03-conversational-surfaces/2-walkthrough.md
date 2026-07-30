@@ -47,13 +47,15 @@ Open your AI assistant. Paste this brief **verbatim**:
 
 ```
 Build me a Vite + React + TypeScript app called `build-3` in
-~/Desktop/developer-foundations (my course folder) that demonstrates a
+~/Desktop/developer-foundations (my course folder from Build 0 — create
+this folder first if it doesn't already exist) that demonstrates a
 multi-surface chat experience against a Progress Agentic RAG (ARAG /
 Progress Agentic RAG) Knowledge Box.
 
 PROJECT SETUP:
-1. From ~/Desktop/developer-foundations, scaffold a fresh Vite + React +
-   TS project (`npm create vite@latest build-3 -- --template react-ts`),
+1. From ~/Desktop/developer-foundations (create it first if it's not
+   there), scaffold a fresh Vite + React + TS project
+   (`npm create vite@latest build-3 -- --template react-ts`),
    `cd` into it, `npm install`.
 2. Install and configure Tailwind CSS end-to-end:
    - Install tailwindcss + postcss + autoprefixer as dev dependencies.
@@ -190,12 +192,12 @@ Copy the entire error message + the command that produced it. Paste both back in
 
 If `npm install` is blocked on your machine (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)), build this as **one self-contained `index.html`** instead — no Vite, no install. Same chat experience, same `streamAsk` + two-voice logic.
 
-Make a folder and an empty `index.html` (`mkdir -p ~/Desktop/developer-foundations/build-3 && cd $_` then create `index.html` in your editor). Then paste this brief instead of the one above:
+Make a folder and an empty `index.html` (`mkdir -p ~/Desktop/developer-foundations/build-3 && cd $_` — create `~/Desktop/developer-foundations` first if it doesn't already exist — then create `index.html` in your editor). Then paste this brief — it's fully self-contained, paste it as-is instead of the one above:
 
 ```
 Build a SINGLE self-contained index.html — no build step, no npm — that
-demonstrates a multi-surface chat against a Progress Agentic RAG Knowledge Box.
-Open-in-the-browser only.
+demonstrates a multi-surface chat experience against a Progress Agentic RAG
+(ARAG / Progress Agentic RAG) Knowledge Box. Open-in-the-browser only.
 
 SETUP (all inside the one HTML file):
 - Load React 18 + ReactDOM from a CDN as ES modules from esm.sh
@@ -206,24 +208,88 @@ SETUP (all inside the one HTML file):
   (<script type="text/babel" data-type="module">) if you prefer JSX — your call.
 - Credentials: a CONFIG object at the top of the script —
   const CONFIG = { apiUrl: "PASTE_URL", kbId: "PASTE_KB_ID", apiKey: "PASTE_JWT" };
-  (the student pastes real values after; no .env, no import.meta.env).
+  (I'll paste real values in after; no .env, no import.meta.env).
 
-Then implement EXACTLY the same behaviour as the npm brief above:
-- A streamAsk(query, promptConfig) async generator: POST to
-  `${CONFIG.apiUrl}/kb/${CONFIG.kbId}/ask`, header
-  X-NUCLIA-SERVICEACCOUNT: Bearer ${CONFIG.apiKey}, body
-  { query, prefer_markdown:true, rephrase:true, max_tokens:500,
-    prompt:promptConfig, citations:true }; parse the streaming NDJSON
-  (balanced-brace buffering); yield answer-chunk / citations / done.
-- The MultiSurfaceChat component: Prospect/Member toggle, the same two
-  PROMPTS, chat history, streaming append, the first-link → pill-button
-  post-processor, citations under each answer, auto-scroll, disabled
-  input while streaming.
-- Verify the API shape against the current ARAG docs before coding; fail
-  loud on unexpected fields. Native fetch only, no SDK.
+VERIFY THE API BEFORE CODING:
+This hits the ARAG /ask streaming endpoint. Do NOT trust my description
+of the response schema below — confirm against the current Progress Agentic RAG /
+Progress ARAG docs (the AskResponse and FindResults interfaces). State
+the verified assumptions in a comment near the top of the script.
+
+IMPLEMENT streamAsk(query, promptConfig):
+An async generator function that:
+1. POSTs to `${CONFIG.apiUrl}/kb/${CONFIG.kbId}/ask`
+2. Headers:
+     X-NUCLIA-SERVICEACCOUNT: Bearer ${CONFIG.apiKey}
+     Content-Type: application/json
+3. Body: { query, prefer_markdown: true, rephrase: true,
+   max_tokens: 500, prompt: promptConfig, citations: true }
+4. Reads the streaming NDJSON response with native fetch + ReadableStream.
+   Tracks balanced JSON object boundaries (handle the case where one
+   JSON object straddles two stream chunks — accumulate the buffer until
+   a complete object is parseable, then yield).
+5. Yields:
+   - { type: 'answer-chunk', text: string } for each fragment of
+     answer text the model emits
+   - { type: 'citations', citations: Array<{ id: string; title: string }> }
+     once, when the retrieval block arrives — derive titles from
+     results.resources[id].title
+   - { type: 'done' } when status.code === '0' lands
+6. Fail loud (console.warn) if a field has an unexpected shape or empty
+   citations come back — don't swallow it. I need to see when extraction
+   breaks.
+
+IMPLEMENT the MultiSurfaceChat component:
+1. Has a persona toggle at the top: two radio buttons, "Prospect"
+   (default) and "Member".
+2. Maintains chat history in state — array of
+   { role: 'user' | 'assistant', text: string,
+     citations?: Array<{id: string, title: string}> }.
+3. Has a text input + submit button below the history.
+4. On submit:
+   - Append a user message to history.
+   - Append an empty assistant message.
+   - Pick the prompt config based on active persona.
+   - Call streamAsk(userMessage, promptConfig).
+   - For each 'answer-chunk', append text to the latest assistant message.
+   - For 'citations', set citations on the latest assistant message.
+   - On 'done', stop.
+5. Chat-bubble style — user on the right, assistant on the left.
+6. Renders assistant text through a formatAssistantHtml() helper:
+   - Finds the first markdown link [label](url).
+   - Replaces it with a Tailwind-styled pill button (inline-block
+     rounded-full px-4 py-1 bg-blue-600 text-white no-underline).
+   - Truncates everything AFTER the first link — the model often keeps
+     talking past the CTA; we cut that off.
+   - Converts **bold** markers to <strong>.
+   - Returns the resulting HTML string.
+7. Renders citations under each assistant message as small links
+   ("Source: [title]").
+8. Disables the submit button while a response is streaming.
+9. Auto-scrolls to the bottom on new messages.
+
+Constants at the top of the script:
+
+const PROMPTS = {
+  prospect: {
+    system: "You are a knowledgeable assistant. STRICT RULES: (1) Maximum 3 sentences. (2) End with ONE call-to-action link from the context, in markdown link format. (3) STOP immediately after the link.",
+    user: "Context (includes CallToAction fields): {context}\n\nQuestion: {question}"
+  },
+  member: {
+    system: "You are an expert research assistant with full corpus access. Provide a detailed, well-cited answer. Reference specific resources. 3-4 sentences max.",
+    user: "Based on: {context}\n\nAnswer: {question}"
+  }
+};
+
+RENDER: a centred max-width container with comfortable padding, a header
+reading "Build 3 — Multi-Surface Chat" and a small subtitle "Streaming
+chat with two prompt voices, powered by Progress Agentic RAG.", then the
+chat component. No router, no other pages.
+
+Native fetch only. No SDK. Fail loud, not silent.
 ```
 
-**Run it:** open `index.html` in your browser. If the browser blocks the API call from a `file://` page (CORS), serve the folder with any static server you already have — e.g. `python3 -m http.server 8000`, then visit `http://localhost:8000`. Paste your credentials into the `CONFIG` object (same three values as Step 3 below), reload, and you're done — skip the `.env` / `npm run dev` steps.
+**Run it:** open `index.html` in your browser. If the browser blocks the API call from a `file://` page (CORS), serve the folder with any static server you already have — e.g. `python3 -m http.server 8000`, then visit `http://localhost:8000`. Paste your credentials into the `CONFIG` object, reload, and you're done — **skip Step 3** (no `.env`, no `npm run dev`).
 
 ---
 
@@ -329,8 +395,8 @@ This is the institutional knowledge for the next partner who has to ship a simil
 
 ## Verification checklist
 
-- [ ] `build-3/` exists inside your `~/Desktop/developer-foundations` folder. `npm run dev` runs and the app loads at localhost.
-- [ ] `.env` has your three real credentials (not the `PASTE_*` placeholders).
+- [ ] `build-3/` exists inside your `~/Desktop/developer-foundations` folder, with the app running — `npm run dev` at localhost (npm path) or `index.html` open in your browser (no-npm path).
+- [ ] Your three real credentials are in place — `.env` (npm path) or the `CONFIG` object in `index.html` (no-npm path). Not the `PASTE_*` placeholders.
 - [ ] **Prospect mode**: answer is 3 sentences max + a pill-styled CTA button at the end.
 - [ ] **Member mode**: detailed answer + citation chips. No pill button.
 - [ ] Same question, two different experiences — you can describe the difference in one sentence.

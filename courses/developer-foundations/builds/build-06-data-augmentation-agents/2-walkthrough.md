@@ -90,7 +90,7 @@ Pick one question your corpus can answer (e.g. *"Which Aurora boots are recommen
 **Dashboard path (recommended for citizen developers):**
 
 1. In the Progress Agentic RAG dashboard, open your KB.
-2. Find the **Search & Ask** (or **Try the API**, **Playground**, **Search**) panel — most tenants have it in the left nav.
+2. Find the **Search** panel in the left nav.
 3. Type your question and submit. Make sure *"Generative answer"* (or equivalent) is enabled so you get an LLM-generated answer alongside the raw retrieval.
 4. Capture three things:
    - The **answer text** the generator returned.
@@ -259,12 +259,11 @@ Labels:
 4. **Labelset:**
    - **Create labelset** → name it `topic` (or your chosen name).
    - Add each label with a 1-sentence description (from your design above).
-5. **Classification mode** — pick **model-based** (not rule-based).
-6. **Prompt** — paste:
+5. **Prompt** — the Labeller is model-based only (no rule-based/regex mode), so this prompt is what drives classification. Paste:
 
    > *"Classify this document into exactly ONE of these topics: {labels}. Reply with just the label name — nothing else."*
 
-7. **Save** and trigger a run from the **Execution** tab.
+6. **Save** and trigger a run from the **Execution** tab.
 
 > Again — if your dashboard's labels differ slightly, follow the on-screen wording. The shape (agent name + LLM + filter + labelset + prompt) is the stable core.
 
@@ -576,11 +575,11 @@ In `graph-output.md`, paste **5 sample paths** from the dashboard's graph viewer
 
 ## Step 5 — Compare before/after (15 min)
 
-Re-run **the same baseline query** from Step 1c against the same Search & Ask panel — same wording, same panel, same KB. The only thing that's changed is that the three agents have populated the KB with summaries, Q&A pairs, labels, and a typed graph.
+Re-run **the same baseline query** from Step 1c against the same Search panel — same wording, same panel, same KB. The only thing that's changed is that the three agents have populated the KB with summaries, Q&A pairs, labels, and a typed graph.
 
 **Dashboard path:**
 
-1. Open the dashboard's **Search & Ask** (or **Playground** / **Try the API**) panel.
+1. Open the dashboard's **Search** panel.
 2. Paste **the exact same question** you used in Step 1c.
 3. Capture the same three fields:
    - Answer text.
@@ -629,7 +628,11 @@ Returns raw JSON — scroll for `answer`, then `retrieval_best_matches` (its len
 
 This Build's one piece of code: a small script that pings all three agents' outputs in one go. Useful for customer engagements — you'll re-run this during ingestion to confirm all three are working.
 
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). No `npm init`/`npm install` needed for this script either way — the only thing npm buys you here is the `dotenv` package. Skip it and run the script with `node --env-file=.env agent-status.mjs <uuid-A> <uuid-B> <uuid-C>` instead. Use the **No-npm brief** in 6a instead of the main brief.
+
 ### 6a. Brief your AI
+
+**On the npm path?**
 
 ```
 Write agent-status.mjs that:
@@ -660,11 +663,45 @@ Use plain fetch, no SDK. ES modules. Add header
 X-NUCLIA-SERVICEACCOUNT: Bearer {NUCLIA_API_KEY}.
 ```
 
+**On the no-npm path?** Paste this instead — identical except how credentials are read:
+
+```
+Write agent-status.mjs that:
+
+1. Reads NUCLIA_API_URL, NUCLIA_KB_ID, NUCLIA_API_KEY directly from
+   process.env (do NOT import dotenv — they're loaded via
+   `node --env-file=.env`, which I'll run the script with).
+2. Takes 3 resource IDs as CLI args:
+   node agent-status.mjs <uuid-1> <uuid-2> <uuid-3>
+3. For each resource:
+   a. GET /resource/{id}?show=basic&show=values&show=extracted
+   b. Check:
+      - Generator: does data.texts have new keys (summary, qa_pairs,
+        synthetic_qa, or similar)? PASS if yes.
+      - Labeller: does usermetadata.classifications (or classifications)
+        have at least one entry? PASS if yes.
+   c. POST /graph with query {and: [{prop:"path"}, {prop:"generated",
+      by:"data-augmentation"}]} top_k 50.
+      - Graph: are any paths returned where source.value or destination.value
+        match terms from this resource's title? PASS if yes (PASS with a
+        warning if there are graph paths but none reference this resource).
+4. Print:
+   "Resource <id>:"
+   "  Generator: PASS/FAIL"
+   "  Labeller:  PASS/FAIL — labels: [list]"
+   "  Graph:     PASS/FAIL — N relevant paths"
+
+Use plain fetch, no SDK. ES modules. Add header
+X-NUCLIA-SERVICEACCOUNT: Bearer {NUCLIA_API_KEY}.
+```
+
 ### 6b. Save and run
 
 ```bash
 node agent-status.mjs <uuid-A> <uuid-B> <uuid-C>
 ```
+
+*(No-npm path: `node --env-file=.env agent-status.mjs <uuid-A> <uuid-B> <uuid-C>`.)*
 
 **You should see:** one block per resource, three PASS/FAIL lines per block. Ideally all PASS. If any FAIL, the agent didn't run on that resource — check the dashboard, re-run if needed.
 

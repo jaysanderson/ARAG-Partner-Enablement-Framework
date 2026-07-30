@@ -14,7 +14,7 @@ Three production-readiness artefacts:
 
 Plus a `production-checklist.md`.
 
-> BYO-LLM is **taught** in this Build's [`lesson.md`](1-lesson.md#byo-llm-bring-your-own-llm) and reviewed by quiz, but it is **not a walkthrough deliverable** — you don't ship a `byo-llm-config.md` or a toggle here. See Step 3 below + the lesson's [*When BYO-LLM doesn't fit: clean descope*](1-lesson.md#when-byo-llm-doesnt-fit-clean-descope) section for why.
+> LLM connection options (platform-billed, BYOK, BYO-LLM) are **taught** in this Build's [`lesson.md`](1-lesson.md#llm-flexibility-platform-byok-and-byo-llm) and reviewed by quiz, but configuring BYOK/BYO-LLM against a real account is **not a walkthrough deliverable** — you don't ship a `byo-llm-config.md` or a toggle here. See Step 3 below + the lesson's [*When BYO-LLM doesn't fit: clean descope*](1-lesson.md#when-byo-llm-doesnt-fit-clean-descope) section for why.
 
 ## What you'll need open
 
@@ -40,7 +40,7 @@ npm install dotenv
 cp ../build-0/.env .
 ```
 
-> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `cp ../build-0/.env .`. Run the rate-limited client with `node --env-file=.env src/lib/rateLimitedRagClient.mjs`, and brief the AI to read `process.env.NUCLIA_*` directly (no dotenv import).
+> **No-npm path** (see the [vibe-coding guide](../../vibe-coding-guide.md#npm-or-no-npm-pick-the-path-that-fits-your-machine)). Skip `npm init`/`npm install` — just `cp ../build-0/.env .`. Run the rate-limited client with `node --env-file=.env src/lib/rateLimitedRagClient.mjs`. Use the **No-npm brief** in Step 4a instead of the main brief.
 
 ---
 
@@ -52,10 +52,12 @@ This is the artefact the CTO will read. **It must be precise. No hand-waving.**
 
 Open the Progress Agentic RAG dashboard. For your KB, capture:
 
-- **Region** — EU or US (or other).
+- **Region** — USA, Europe (AWS or GCP), Australia, or Israel.
 - **Endpoint URL** — your `NUCLIA_API_URL` from Build 0.
 - **Zone identifier** — typically the prefix of the URL (e.g., `aws-eu-1`).
 - **Default generative model** — usually shown in Settings → Generative model.
+- **LLM connection type** — platform-billed (default), BYOK, or BYO-LLM.
+- **Enterprise-ready status** — only applicable if platform-billed; check the flag next to your chosen provider/model in the dashboard's LLM list. Not applicable for BYOK/BYO-LLM — that's the customer's own agreement with their provider.
 
 ### 2b. Write the statement
 
@@ -69,16 +71,19 @@ The <KB name> Knowledge Box is provisioned in the <REGION> region
 knowledge graph, and extracted metadata reside within <jurisdiction>
 jurisdiction.
 
-The LLM endpoint is BYO-LLM (Bring Your Own LLM) and is configured to
-a customer-owned tenant (currently: <provider, e.g., Azure OpenAI in
-Sweden Central>). The model never sees ARAG infrastructure — every
-generation request leaves Progress Agentic RAG and lands in the customer's own
-cloud account, billed to the customer's own tenant.
+The LLM is <platform-billed / BYOK / BYO-LLM> — currently
+<provider, e.g., Azure OpenAI in Sweden Central>. <If platform-billed:
+this provider/model route is marked enterprise-ready in the dashboard,
+meaning requests stay in-region and the provider does not train on
+submitted data.> <If BYOK/BYO-LLM: the model never sees ARAG
+infrastructure — every generation request leaves Progress Agentic RAG
+and lands in the customer's own account/endpoint, billed to the
+customer directly; region and data-training terms are the customer's
+own agreement with that provider, not something ARAG attests to.>
 
-For EU-residency requirements, both the KB and the LLM endpoint are
-provisioned in EU regions. For US-based workloads, both are
-US-provisioned. Cross-region operation is not supported by default
-and requires explicit configuration.
+For <REGION>-residency requirements, both the KB and the LLM route are
+provisioned in <REGION>. Cross-region operation is not supported by
+default and requires explicit configuration.
 
 Authentication uses scoped service-account JWTs with TTL <ttl-value>
 and revocation via the Progress Agentic RAG dashboard. PII handling follows the
@@ -96,13 +101,13 @@ Save the file.
 
 ---
 
-## Step 3 — BYO-LLM: concept-only in this Build (5 min)
+## Step 3 — LLM connection: concept-only in this Build (5 min)
 
-BYO-LLM is covered in detail in this Build's [`lesson.md`](1-lesson.md#byo-llm-bring-your-own-llm) — concept, architecture, the three named provider patterns (Azure OpenAI, Google Vertex, AWS Bedrock), and the customer objections it neutralises.
+Platform-billed, BYOK, and BYO-LLM are covered in detail in this Build's [`lesson.md`](1-lesson.md#llm-flexibility-platform-byok-and-byo-llm) — the three connection options, the enterprise-ready indicator, and the customer objections BYOK/BYO-LLM neutralise.
 
-**It is not a walkthrough deliverable.** Most partners running this Build do not have a customer Azure/Vertex/Bedrock tenant to point a KB at — and shipping a non-functional toggle in a real customer build is worse than shipping no toggle (see [*When BYO-LLM doesn't fit: clean descope*](1-lesson.md#when-byo-llm-doesnt-fit-clean-descope) in the lesson). Configuring BYO-LLM is a per-tenant platform task you run **during the co-engineered POC with the customer**, not a Foundations exercise.
+**Configuring BYOK or BYO-LLM against a real customer account is not a walkthrough deliverable.** Most partners running this Build do not have a customer's own OpenAI/Azure/Anthropic/etc. account or an OpenAI-compatible endpoint to point a KB at — and shipping a non-functional toggle in a real customer build is worse than shipping no toggle (see [*When BYO-LLM doesn't fit: clean descope*](1-lesson.md#when-byo-llm-doesnt-fit-clean-descope) in the lesson). That configuration is a per-tenant platform task you run **during the co-engineered POC with the customer**, not a Foundations exercise. Platform-billed models, by contrast, always work in a demo — no customer credentials required.
 
-What you owe this Build's reviewer on BYO-LLM is **fluent talk-track**, not a config file. Read the lesson's two H2 sections, then in your residency statement (Step 2) be ready to answer the follow-up question — *"is the LLM EU-resident too?"* — in one sentence, without hand-waving. That's the bar.
+What you owe this Build's reviewer here is **fluent talk-track**, not a config file. Read the lesson's LLM-flexibility section, then in your residency statement (Step 2) be ready to answer the follow-up question — *"is the LLM EU-resident too, and is it enterprise-ready?"* — in one sentence, without hand-waving. That's the bar.
 
 ---
 
@@ -112,7 +117,7 @@ This is the **only code file** in Build 11. It demonstrates production patterns:
 
 ### 4a. Brief your AI
 
-Paste:
+**On the npm path?** Paste:
 
 ```
 In src/lib/rateLimitedRagClient.mjs, write a class
@@ -180,17 +185,96 @@ That demo block fires 50 identical queries and reports
 how many got coalesced (should be ~49).
 ```
 
+**On the no-npm path?** Paste this instead — identical except how credentials are read:
+
+```
+In src/lib/rateLimitedRagClient.mjs, write a class
+RateLimitedRagClient that wraps ARAG /ask calls with
+production-grade resilience.
+
+Constructor takes no args (reads NUCLIA_* directly from process.env —
+do NOT import dotenv; the values are loaded via
+`node --env-file=.env`, which I'll run the script with).
+
+Public method:
+  async ask(query: string, prompt?: object): Promise<{
+    answer: string;
+    citations: any[];
+    latencyMs: number;
+    retries: number;
+    fromCoalescing: boolean;
+  }>
+
+Behaviour:
+
+1. COALESCING:
+   - Generate a cache key: `ask:${query}:${JSON.stringify(prompt || {})}`.
+   - Maintain a Map<string, Promise> of in-flight requests.
+   - If a matching in-flight Promise exists when ask() is called,
+     return that Promise directly (mark result.fromCoalescing = true).
+   - Otherwise launch a new request and store it in the map.
+   - Remove from map when the Promise resolves or rejects.
+
+2. BACKOFF on 429:
+   - Wrap the actual fetch in askWithBackoff(query, prompt, attempt=0).
+   - On HTTP 429, wait 2^attempt seconds (capped at 8s), retry.
+   - Max 4 retries.
+   - Track retry count and return in result.retries.
+
+3. TIMEOUT:
+   - 15-second timeout on each individual fetch (use AbortController).
+   - If timeout fires, count as a failed attempt; backoff may still retry.
+
+4. STRUCTURED LOGGING:
+   - At start of each ask(), console.log({ event: 'ask-start', query, ts }).
+   - At end, console.log({ event: 'ask-end', query, latencyMs, retries, status, ts }).
+   - On 429, console.log({ event: 'rate-limited', attempt, backoffMs }).
+
+5. The actual /ask call:
+   - POST to ${process.env.NUCLIA_API_URL}/kb/${process.env.NUCLIA_KB_ID}/ask
+   - Header: X-NUCLIA-SERVICEACCOUNT: Bearer ${process.env.NUCLIA_API_KEY}
+   - Header: x-synchronous: true
+   - Body: { query, prefer_markdown: true, rephrase: true, max_tokens: 400, prompt }
+
+Use ES modules. Plain fetch. No SDK.
+
+At the bottom of the file, export a demo block:
+
+  if (import.meta.url === `file://${process.argv[1]}`) {
+    const client = new RateLimitedRagClient();
+    const promises = Array(50).fill(0).map(() => client.ask("your test question"));
+    const results = await Promise.all(promises);
+    console.log({
+      total: results.length,
+      coalesced: results.filter(r => r.fromCoalescing).length,
+      retries: results.reduce((s, r) => s + r.retries, 0)
+    });
+  }
+
+That demo block fires 50 identical queries and reports
+how many got coalesced (should be ~49).
+```
+
 Send.
 
 ### 4b. Save the output
 
-- **Claude Code / Cursor:** *"Save this as src/lib/rateLimitedRagClient.mjs."*
-- **Web chat:** create the file, paste, save.
+- **npm path, Claude Code / Cursor:** *"Save this as src/lib/rateLimitedRagClient.mjs."*
+- **npm path, web chat:** create the file, paste, save.
+- **No-npm path:** create the file in VS Code, paste, save (or ask an agentic AI to write it directly).
 
 ### 4c. Test the coalescing
 
+**npm path:**
+
 ```bash
 node src/lib/rateLimitedRagClient.mjs
+```
+
+**No-npm path:**
+
+```bash
+node --env-file=.env src/lib/rateLimitedRagClient.mjs
 ```
 
 **You should see** a flurry of `ask-start` logs (all close together), some `ask-end` logs, and at the very end a summary:
@@ -249,8 +333,9 @@ Create `dashboard-spec.md`:
 - Current req/min / rate limit (e.g., 2400), as percentage.
 - ALARM: > 80% for 15 min straight — request rate-limit increase from Progress Agentic RAG.
 
-### BYO-LLM cost
-- LLM tokens / day, $ / day from the customer's tenant billing.
+### LLM cost
+- Platform-billed: Agentic RAG tokens / day from the Progress Agentic RAG billing dashboard.
+- BYOK / BYO-LLM: LLM tokens / day, $ / day from the customer's own provider billing.
 - ALARM: cost > 2x rolling 7-day average.
 
 ## Tools
@@ -284,8 +369,9 @@ For each item, tick when verified for the customer's environment.
 
 ## Residency
 - [ ] KB region documented and matches customer's data-residency policy.
-- [ ] BYO-LLM configured against customer's own tenant.
-- [ ] BYO-LLM region co-located with KB region (EU/EU or US/US).
+- [ ] LLM connection type documented (platform-billed / BYOK / BYO-LLM).
+- [ ] If platform-billed: provider/model route confirmed enterprise-ready in the dashboard.
+- [ ] If BYOK / BYO-LLM: configured against customer's own account/endpoint, region co-located with KB region.
 - [ ] No cross-region traffic for content data.
 
 ## Authentication
@@ -307,7 +393,7 @@ For each item, tick when verified for the customer's environment.
 - [ ] /find latency dashboard up.
 - [ ] Citation-rate dashboard + alarm (< 80% for 2hrs).
 - [ ] 4xx/5xx error rate dashboard + alarm.
-- [ ] BYO-LLM cost dashboard + anomaly alarm.
+- [ ] LLM cost dashboard + anomaly alarm.
 
 ## Operations
 - [ ] Runbook for "answers stopped citing" (check upstream ingestion).
@@ -321,8 +407,8 @@ For each item, tick when verified for the customer's environment.
 - [ ] Audit log forwarding configured if customer needs it.
 
 ## Cost
-- [ ] LLM cost forecast per customer per month documented.
-- [ ] Cost anomaly alarms on customer's BYO-LLM tenant.
+- [ ] LLM cost forecast per customer per month documented (Agentic RAG tokens if platform-billed; provider billing if BYOK/BYO-LLM).
+- [ ] Cost anomaly alarms on the relevant billing account (Progress or customer's own provider tenant).
 - [ ] Quarterly cost review meeting scheduled with customer's finance.
 ```
 
@@ -358,7 +444,7 @@ If any of those three questions takes more than a click to answer, tighten the s
 ## Verification checklist
 
 - [ ] `residency-statement.md` written and read-aloud-ready.
-- [ ] BYO-LLM lesson read; residency-statement follow-up ("is the LLM EU-resident?") answerable in one sentence without hand-waving.
+- [ ] LLM-flexibility lesson read; residency-statement follow-up ("is the LLM EU-resident, and is it enterprise-ready?") answerable in one sentence without hand-waving.
 - [ ] `src/lib/rateLimitedRagClient.mjs` runs the demo block and shows ~49/50 coalescing.
 - [ ] `dashboard-spec.md` saved with widget definitions + alarm thresholds.
 - [ ] `production-checklist.md` saved.

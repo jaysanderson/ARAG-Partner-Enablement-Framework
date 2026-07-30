@@ -166,7 +166,7 @@ These anchors get embedded into every document the corpus generator produces. Th
 └─────────────────────────────────────────────────────────────┘
 ```
 
-> **Note on BYO-LLM.** BYO-LLM is a per-KB platform configuration (Azure OpenAI / Google Vertex / AWS Bedrock — see [Build 11 lesson](../../build-11-production-readiness/1-lesson.md#byo-llm-bring-your-own-llm)), not a UI lever in this capstone. Aurora Concierge ships with the platform default generator and *no* in-app toggle. When the CIO joins the second meeting and asks "what about Azure?" the answer is the Build 11 lesson talk-track: BYO-LLM is wired at the platform level during the co-engineered POC against the customer's own tenant — it's not a click in the demo. See [*When BYO-LLM doesn't fit: clean descope*](../../build-11-production-readiness/1-lesson.md#when-byo-llm-doesnt-fit-clean-descope).
+> **Note on BYO-LLM.** BYO-LLM is a per-KB platform configuration (Azure OpenAI / Google Vertex / AWS Bedrock — see [Build 11 lesson](../../build-11-production-readiness/1-lesson.md#llm-flexibility-platform-byok-and-byo-llm)), not a UI lever in this capstone. Aurora Concierge ships with the platform default generator and *no* in-app toggle. When the CIO joins the second meeting and asks "what about Azure?" the answer is the Build 11 lesson talk-track: BYO-LLM is wired at the platform level during the co-engineered POC against the customer's own tenant — it's not a click in the demo. See [*When BYO-LLM doesn't fit: clean descope*](../../build-11-production-readiness/1-lesson.md#when-byo-llm-doesnt-fit-clean-descope).
 
 ### 5.2 Frontend stack
 

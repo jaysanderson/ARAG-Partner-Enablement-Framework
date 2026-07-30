@@ -4,7 +4,7 @@
 
 ---
 
-### 1. The auth header on every ARAG API request is:
+### 1. ARAG accepts both `Authorization: Bearer <jwt>` and `X-NUCLIA-SERVICEACCOUNT: Bearer <jwt>`. Which one does this course use throughout?
 
 A. `Authorization: Bearer <jwt>`
 B. `X-NUCLIA-SERVICEACCOUNT: Bearer <jwt>`

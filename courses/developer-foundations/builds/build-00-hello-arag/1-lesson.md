@@ -19,7 +19,7 @@ Progress Agentic RAG is a platform. The five primitives — **R**etrieve, **G**e
 For Build 0, you only need two of them:
 
 - **`/find`** — retrieval. Sends a query, returns the matching paragraphs ranked by score.
-- **`/ask`** — generation. Sends a query, returns an LLM answer **grounded in retrieved paragraphs**, plus the citation list, in a single round trip.
+- **`/ask`** — retrieval & generation. Sends a query, returns an LLM answer **grounded in retrieved paragraphs**, plus the citation list, in a single round trip.
 
 That last point is the platform's competitive position. ARAG doesn't make you wire retrieval to generation yourself. The `/ask` endpoint does retrieval + generation + citation extraction in one call. Every "we built RAG ourselves" competitor has glue code maintaining that integration. You don't.
 
@@ -32,8 +32,8 @@ A Knowledge Box — **KB** for short — owns:
 - The data-augmentation agent that extracts the typed graph (Build 7).
 - The custom indexed fields you've added (Build 8).
 - The service-account credentials.
-- The residency region (EU or USA — covered in Build 10).
-- The LLM endpoint configuration (BYO-LLM, also Build 10).
+- The residency region (multiple regions across AWS/GCP — covered in Build 11).
+- The LLM endpoint configuration (platform / BYOK / BYO-LLM, also Build 11).
 
 One application typically uses **one KB**. Multi-KB architectures exist but the default — and your default — is one KB per customer. You'll provision yours today.
 
@@ -52,6 +52,8 @@ That JWT is:
 - Scoped to the operations the service account is permitted (read, write, admin).
 
 There's no OAuth, no session token, no API-key-in-query-string. **One header, one JWT.** If you see your AI assistant generating anything else, stop it.
+
+> **`Authorization: Bearer <jwt>` also works** — ARAG accepts it as an alternative to `X-NUCLIA-SERVICEACCOUNT`. This course standardises on `X-NUCLIA-SERVICEACCOUNT` throughout so every example, screenshot, and troubleshooting step matches what you see on screen. Use it unless you have a specific reason to do otherwise.
 
 ## The two endpoints you'll touch today
 
@@ -98,7 +100,7 @@ Things to internalise:
 - Every paragraph has a **score** between 0 and 1. Lower-bound it (~0.6) when you want high precision.
 - For video/audio, the paragraph carries its **timestamp**. This is how Build 8 builds deep-link-to-the-moment UX.
 
-### `/ask` — generation grounded in retrieval
+### `/ask` — retrieval & generation
 
 ```bash
 POST /v1/kb/{kbId}/ask
@@ -141,7 +143,7 @@ The Build 0 walkthrough has you do both: provision a KB (platform) and ask an AI
 
 ## Common pitfalls
 
-- **Authenticating with the wrong header.** It's `X-NUCLIA-SERVICEACCOUNT`. Not `Authorization`.
+- **Authenticating with a header other than `X-NUCLIA-SERVICEACCOUNT`.** `Authorization` also works, but this course standardises on `X-NUCLIA-SERVICEACCOUNT` — use it so your setup matches the lessons.
 - **Forgetting `rephrase: true`.** Free quality lift. Always set it.
 - **Forgetting `prefer_markdown: true`.** Without it, your answers come back as wall-of-text, no formatting.
 - **Asking the AI to write code before testing `curl` manually.** Always verify the endpoint behaviour with `curl` first. Then ask the AI to wrap it.

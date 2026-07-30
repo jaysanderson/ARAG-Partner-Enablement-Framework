@@ -141,16 +141,20 @@ Now the AI starts using your fields.
 
 ### 5a. Open your existing chat project
 
+**npm path:**
+
 ```bash
 cd ~/Desktop/developer-foundations/build-3   # or whichever has your MultiSurfaceChat
 npm run dev
 ```
 
+**No-npm path:** reopen your `index.html` from Build 3 (with any Build 4/6/7 additions already layered in) in your browser.
+
 Confirm the chat still works.
 
 ### 5b. Brief your AI
 
-Paste:
+**On the npm path?** Paste:
 
 ```
 Open src/components/MultiSurfaceChat.tsx in my Vite + React project.
@@ -183,11 +187,48 @@ already converts the first markdown link to a pill button — that
 behaviour should still work.
 ```
 
+**On the no-npm path?** Paste this instead:
+
+```
+In my single self-contained index.html, in the MultiSurfaceChat
+component, find the PROMPTS constant.
+
+Update PROMPTS.prospect.system to:
+  "You are a knowledgeable assistant. STRICT RULES:
+   (1) Maximum 3 sentences.
+   (2) End your answer with the call-to-action from the most-relevant
+       resource's callToAction field in the context, formatted as a
+       markdown link [label](url).
+   (3) STOP immediately after the link — do not add any further text.
+   (4) If no callToAction is present in the context, end with a generic
+       'Learn more →' link to the most-relevant resource."
+
+Update PROMPTS.prospect.user to:
+  "Context (each resource may include a callToAction field with a branded
+   CTA sentence and URL): {context}
+
+   Question: {question}
+
+   Respond concisely. End with one call-to-action link from the
+   most-relevant resource's callToAction. STOP after the link."
+
+Do not change PROMPTS.member.
+
+If the answer is rendering through formatAssistantHtml, that helper
+already converts the first markdown link to a pill button — that
+behaviour should still work. Stay inside the same index.html — no new
+files.
+```
+
 Send. Apply the patch.
 
 ### 5c. Test
 
-Restart the dev server (`Ctrl+C` then `npm run dev`). With **Prospect mode** selected, ask a query that should match one of your hero resources.
+**npm path:** restart the dev server (`Ctrl+C` then `npm run dev`).
+
+**No-npm path:** reload `index.html` in your browser.
+
+With **Prospect mode** selected, ask a query that should match one of your hero resources.
 
 **You should see:** the answer ends with a pill button labelled with text from your `callToAction` field, linking to its URL.
 
@@ -207,7 +248,7 @@ Now the UI side. Citations under each chat answer should show the customer-frien
 
 ### 6a. Brief your AI
 
-Paste:
+**On the npm path?** Paste:
 
 ```
 In src/components/MultiSurfaceChat.tsx, find where citations are rendered
@@ -239,6 +280,44 @@ currently, you'll need to:
 - Update src/lib/ragClient.ts so when it yields {type: 'citations'},
   it includes for each citation: { id, title, searchResultDisplay }.
 - Extract searchResultDisplay from the resources object in the retrieval item.
+```
+
+**On the no-npm path?** Paste this instead:
+
+```
+In my single self-contained index.html, in the MultiSurfaceChat
+component, find where citations are rendered under each assistant
+message.
+
+Update the citation rendering to:
+
+1. For each citation:
+   - Find the matching resource in the streamed citations data.
+   - Try to extract its searchResultDisplay field value (stringified JSON).
+   - JSON.parse it inside a try/catch.
+   - If parse succeeds, render:
+     <div>
+       <span class="title">{parsed.title}</span>
+       <span class="description">{parsed.description}</span>
+       <span class="cta-label-badge">{parsed.ctaLabel}</span>
+     </div>
+   - If parse fails or field is missing, render the raw title as before.
+
+2. Style the citation card with Tailwind (already loaded from the CDN
+   in this file):
+   - Title bold, ~16px
+   - Description smaller, gray
+   - ctaLabel rendered as a small pill badge
+
+3. Don't break the existing behaviour for citations without searchResultDisplay.
+
+If the streaming citations data doesn't include the searchResultDisplay field
+currently, you'll need to:
+- Update the streamAsk function so when it yields {type: 'citations'},
+  it includes for each citation: { id, title, searchResultDisplay }.
+- Extract searchResultDisplay from the resources object in the retrieval item.
+
+Stay inside the same index.html — no new files.
 ```
 
 Send. Apply.

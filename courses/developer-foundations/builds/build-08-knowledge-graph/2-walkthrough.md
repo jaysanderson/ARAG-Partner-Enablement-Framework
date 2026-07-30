@@ -114,7 +114,7 @@ This is the data layer — four functions that call the ARAG graph endpoints.
 
 ### 3a. Brief your AI
 
-Paste **exactly**:
+**On the npm path?** Paste **exactly**:
 
 ```
 In my Vite + React + TypeScript project, create src/lib/graphClient.ts.
@@ -159,7 +159,8 @@ Base URL: ${import.meta.env.VITE_NUCLIA_API_URL}/kb/${import.meta.env.VITE_NUCLI
 
 CLIENT-SIDE FILTER (applied to nodes):
   Reject any node where:
-  - value matches a GUID/UUID pattern (8-4-4-4-12 hex)
+  - value matches a GUID-shaped pattern (a long hex string, 20+
+    characters, no dashes)
   - group is one of these default NER groups:
     [DATE, ORG, PERSON, MONEY, GPE, LOC, TIME, EVENT, NORP,
      WORK_OF_ART, LAW, LANGUAGE, QUANTITY, ORDINAL, CARDINAL, PERCENT]
@@ -170,12 +171,70 @@ Export TypeScript interfaces for Node, Path, Resource.
 No SDK. Plain fetch only.
 ```
 
+**On the no-npm path?** Paste this instead — same four functions, inside your single `index.html`:
+
+```
+In my single self-contained index.html, add a graphClient section to the
+main <script type="module"> block, near the CONFIG object.
+
+Define FOUR async functions, each using plain fetch with the
+X-NUCLIA-SERVICEACCOUNT: Bearer ${CONFIG.apiKey} header and
+Content-Type: application/json.
+
+Base URL: ${CONFIG.apiUrl}/kb/${CONFIG.kbId}
+
+1. queryNodesByGroup(group)
+   - POST to /graph/nodes
+   - Body: { query: { prop: 'node', group }, top_k: 500 }
+   - Returns the `.nodes` array
+   - Apply client-side filter (see below)
+
+2. queryFuzzyNodes(value)
+   - POST to /graph/nodes
+   - Body: { query: { prop: 'node', value, match: 'fuzzy' }, top_k: 50 }
+   - Returns the `.nodes` array
+   - Apply client-side filter
+
+3. queryPaths(node)  // node = { value, group }
+   - POST to /graph
+   - Body: {
+       query: {
+         and: [
+           { prop: 'path', source: node, undirected: true },
+           { prop: 'generated', by: 'data-augmentation' }
+         ]
+       },
+       top_k: 100
+     }
+   - Returns the `.paths` array
+   - For each path, apply the client-side filter to source AND destination;
+     drop paths whose endpoints fail the filter
+
+4. searchRelatedResources(entityValue)
+   - POST to /find
+   - Body: { query: entityValue, features: ['keyword', 'semantic'], page_size: 8, show: ['basic','values','origin'] }
+   - Returns the `.resources` object as an array of { id, title, excerpt }
+
+CLIENT-SIDE FILTER (applied to nodes):
+  Reject any node where:
+  - value matches a GUID-shaped pattern (a long hex string, 20+
+    characters, no dashes)
+  - group is one of these default NER groups:
+    [DATE, ORG, PERSON, MONEY, GPE, LOC, TIME, EVENT, NORP,
+     WORK_OF_ART, LAW, LANGUAGE, QUANTITY, ORDINAL, CARDINAL, PERCENT]
+  Otherwise accept.
+
+Plain JavaScript — no TypeScript, no SDK, no new files. Stay inside the
+same index.html.
+```
+
 Send.
 
 ### 3b. Save the output
 
-- **Claude Code / Cursor:** *"Save this as src/lib/graphClient.ts."*
-- **Web chat:** create the file, paste, save.
+- **npm path, Claude Code / Cursor:** *"Save this as src/lib/graphClient.ts."*
+- **npm path, web chat:** create the file, paste, save.
+- **No-npm path:** ask the AI to edit `index.html` directly, or paste the updated `<script>` block back into your editor and save.
 
 ### 3c. Read the code
 
@@ -188,7 +247,7 @@ Four checks:
 
 ### 3d. Quick smoke test
 
-Add this to `App.tsx` temporarily:
+**npm path:** add this to `App.tsx` temporarily:
 
 ```tsx
 import { useEffect } from 'react';
@@ -208,6 +267,16 @@ export default App;
 
 Run `npm run dev`. Open the page. Open DevTools → Console. **You should see** a paths array logged.
 
+**No-npm path:** open `index.html` in your browser, open DevTools → Console, and run:
+
+```js
+queryPaths({ value: "PASTE_REAL_ENTITY_VALUE", group: "PASTE_REAL_GROUP" })
+  .then(paths => console.log("Paths:", paths))
+  .catch(err => console.error(err));
+```
+
+(If `queryPaths` isn't reachable from the console, ask your AI to temporarily add `window.queryPaths = queryPaths` for testing, then remove that line afterward.)
+
 If you see 0 paths but `curl` returned paths, the AI's filter is over-rejecting. Tell AI: *"The client filter rejects too much. My curl returned 20 paths; my queryPaths returns 0. Make the filter less aggressive — only reject GUID-shaped values and exact default NER groups."*
 
 ### 3e. Save prompt log
@@ -220,7 +289,7 @@ Create `prompt-log.md`. Add the Step 3 brief.
 
 This is the visual centrepiece. The brief tells the AI to install + configure Tailwind first (same citizen-developer pattern as Build 3), then build the component.
 
-Brief your AI:
+**On the npm path?** Brief your AI:
 
 ```
 Create src/pages/GraphPage.tsx.
@@ -282,12 +351,75 @@ The graph viz library is react-force-graph-2d. Refer to its README
 for the node/link data shape if needed.
 ```
 
+**On the no-npm path?** Paste this instead — same layout and logic, inside your single `index.html`:
+
+```
+In my single self-contained index.html, add a GraphPage component and
+render it as the main page.
+
+Tailwind and the graph library are already loaded from CDN in this file
+(cdn.tailwindcss.com, and https://esm.sh/react-force-graph-2d) — use
+them directly, no install step.
+
+Layout (Tailwind):
+  [ fuzzy search input + autocomplete chips ]   <- top
+  ┌────────────────────────────────┬─────────────────────┐
+  │                                │                     │
+  │   Force-directed graph         │   Right sidebar     │
+  │   visualization (center)       │   (selected entity  │
+  │                                │    detail)          │
+  │                                │                     │
+  └────────────────────────────────┴─────────────────────┘
+
+Top bar:
+- A text input. State: search, default "".
+- On change (debounced 300ms), call queryFuzzyNodes(search).
+- Show up to 10 matching nodes as clickable chips below the input.
+- Clicking a chip selects that node (see below).
+
+Graph viz (use react-force-graph-2d):
+- State: graphData, default { nodes: [], links: [] }.
+- On mount, fetch all nodes for a default group (e.g., your first entity
+  type — make this a constant near the top of the script) and populate
+  graphData.
+- Each node has: id (composite key of value + group), value, group, color.
+- Each link has: source, target, label (relation type).
+- Color nodes by group using a palette of 8 distinct colors
+  (auto-assign as new groups are encountered).
+
+Selection state:
+- State: selected, default null.
+- Clicking a chip OR a graph node sets selected.
+- On select:
+    1. Fetch queryPaths(selected) -> expands graphData (merge new nodes
+       and edges, dedupe by composite key).
+    2. Fetch searchRelatedResources(selected.value) -> show in sidebar.
+
+Right sidebar:
+- If selected is null, show "Click an entity to see details."
+- If selected is set, show:
+    - Entity name + group badge (colored chip).
+    - Section "Paths" — group paths by relation type. For each,
+      list "<source> -[relation]-> <destination>".
+    - Section "Related resources" — list resource cards with title
+      and excerpt.
+
+Use Tailwind for styling. Plain JavaScript — no TypeScript. Loading
+states everywhere data is being fetched. Stay inside the same
+index.html — no new files.
+
+If the CDN-loaded graph library gives trouble, render a simple
+SVG/canvas force layout directly — the teaching point is the graph
+*data*, not the rendering library.
+```
+
 Send.
 
 ### 4a. Save the output
 
-- **Claude Code / Cursor:** *"Save this as src/pages/GraphPage.tsx. Update App.tsx to render it."*
-- **Web chat:** create the file. Update `App.tsx` manually to import and render `<GraphPage />`.
+- **npm path, Claude Code / Cursor:** *"Save this as src/pages/GraphPage.tsx. Update App.tsx to render it."*
+- **npm path, web chat:** create the file. Update `App.tsx` manually to import and render `<GraphPage />`.
+- **No-npm path:** ask the AI to edit `index.html` directly, or paste the updated `<script>` block back into your editor and save.
 
 ### 4b. Read the code
 
@@ -299,9 +431,13 @@ Three checks:
 
 ### 4c. Run it
 
+**npm path:**
+
 ```bash
 npm run dev
 ```
+
+**No-npm path:** reload `index.html` in your browser (or the localhost URL if you're serving it with `python3 -m http.server`).
 
 Open the URL. **You should see:**
 
@@ -347,9 +483,11 @@ Step 3 gave you `queryPaths` — an outbound-only `/graph` query. It works for h
 
 Fix it by firing inbound and outbound in parallel and merging.
 
+> **No-npm path:** wherever this section says `src/lib/graphClient.ts` or `src/pages/GraphPage.tsx`, read that as "the graphClient / GraphPage section of your single `index.html`" — same logic, plain JavaScript instead of the TypeScript shown, no new files.
+
 ### 6a. Add `queryPathsTo` to graphClient
 
-In `src/lib/graphClient.ts`, add a near-clone of `queryPaths` that swaps `source` for `destination`:
+In `src/lib/graphClient.ts` (no-npm: the graphClient section of your `index.html`), add a near-clone of `queryPaths` that swaps `source` for `destination`:
 
 ```ts
 export async function queryPathsTo(node: { value: string; group: string }) {
@@ -390,13 +528,17 @@ export async function queryPathsAround(node: { value: string; group: string }) {
 
 ### 6c. Swap GraphPage to call `queryPathsAround`
 
-Open `src/pages/GraphPage.tsx`. Find every call to `queryPaths(selected)` and replace with `queryPathsAround(selected)`. There should be one (in the selection effect) — possibly two if the AI used it on initial mount.
+Open `src/pages/GraphPage.tsx` (no-npm: the GraphPage section of your `index.html`). Find every call to `queryPaths(selected)` and replace with `queryPathsAround(selected)`. There should be one (in the selection effect) — possibly two if the AI used it on initial mount.
 
 ### 6d. Verify
+
+**npm path:**
 
 ```bash
 npm run dev
 ```
+
+**No-npm path:** reload `index.html` in your browser.
 
 Pick a leaf-shaped entity from your corpus — something you know is *referenced by* other things but rarely originates relations (a competitor product name, a regulation cited by many documents, a venue mentioned in event records). Click it.
 
@@ -410,9 +552,11 @@ If you still see an empty canvas, your entity genuinely has zero edges in either
 
 The sidebar's "Related resources" section from Step 4 is the seed. This step upgrades it from a flat list into a **persona-split commerce surface** — Prospects see products and guides, Members see ambassador content and endorsements too. That split is what turns the graph from a pretty diagram into a pipeline driver.
 
+> **No-npm path:** same file-path note as Step 6 — `src/lib/graphClient.ts` and `src/pages/GraphPage.tsx` below mean "the corresponding section of your single `index.html`."
+
 ### 7a. Confirm `searchRelatedResources` iterates the resources map
 
-Open `src/lib/graphClient.ts` → `searchRelatedResources`. Confirm it does:
+Open `src/lib/graphClient.ts` (no-npm: the graphClient section of your `index.html`) → `searchRelatedResources`. Confirm it does:
 
 ```ts
 return Object.entries(raw.resources ?? {}).slice(0, 8).map(([id, r]) => ({
@@ -460,7 +604,7 @@ If the list doesn't change when you flip persona, the filter isn't wired to the 
 
 This is the demo moment. Find or construct a question against your KB that **single-shot retrieval cannot answer** — only graph traversal can.
 
-### 6a. Patterns
+### 8a. Patterns
 
 - **Two-hop intersection.** "Which X are connected to BOTH Y and Z?" (e.g., "Which investigators worked on both COMPOUND-A and COMPOUND-B?")
 - **Path traversal.** "How is X connected to Y?" (Walk the path through one or two intermediate entities.)
@@ -468,7 +612,7 @@ This is the demo moment. Find or construct a question against your KB that **sin
 
 Pick one that fits your corpus.
 
-### 6b. Walk through it in the UI
+### 8b. Walk through it in the UI
 
 1. Search for the first entity.
 2. Click it. Note its connections.
@@ -476,7 +620,7 @@ Pick one that fits your corpus.
 4. Walk the graph to the answer.
 5. **Take a screenshot** of the final graph state. Save as `graph-only-answer.png`.
 
-### 6c. Document the walk
+### 8c. Document the walk
 
 In `graph-evidence.md`, write the question + the steps + the answer:
 

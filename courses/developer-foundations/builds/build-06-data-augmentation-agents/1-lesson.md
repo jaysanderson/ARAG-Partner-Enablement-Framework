@@ -39,16 +39,13 @@ The least-understood of the three. Most partners don't even know it exists.
 
 You already met this one in passing — it's the "classifier" behind the labelsets you'll wire in Build 7. Now treat it as a named agent.
 
-**What it does:** at ingest, the labeller assigns one or more labels per labelset to each resource (or each paragraph, if configured for paragraph-level labelling). Two modes:
-
-- **Rule-based.** You provide patterns (regex, file-path rules, metadata heuristics). The labeller applies them deterministically. Cheap and exact.
-- **Model-based.** You provide a prompt — *"Classify this document into one of: onboarding, troubleshooting, policy, release-note, billing."* The labeller runs the prompt against the document. More flexible, less deterministic.
+**What it does:** at ingest, the labeller assigns labels per labelset to each resource (or each paragraph, if configured for paragraph-level labelling). It's **model-based only** — there's no rule-based / regex mode. Configuration has two parts: for **each label**, you write a short description of how to identify it (e.g., for a `topic` labelset: `onboarding` — *"helps a new user get started or set up the product"*, `policy` — *"describes an official rule, standard, or compliance requirement"*); separately, you choose whether classification is **limited to a single label** per document or **allows multiple labels**.
 
 **Why this matters:** labels are the cheapest precision lever in retrieval (you saw this in Build 1's hint about filters). The labeller is what populates them — without it, you'd be hand-labelling every document forever.
 
 **Customer-facing pitch:** *"Your content team designs the taxonomy; the labeller tags every document and paragraph in your corpus automatically; your search box gets filter chips that actually work."*
 
-**Configuration:** dashboard → KB → Augmentation → Labeller. Choose rule-based or model-based. Provide rules or prompt. Pick the labelset to populate. Run.
+**Configuration:** dashboard → KB → Augmentation → Labeller. Pick the labelset to populate. Write an identification description for each label. Choose single-label or multi-label classification. Run.
 
 Build 7 is the application — designing the labelset, populating it via the labeller, wiring filters into a search UI.
 

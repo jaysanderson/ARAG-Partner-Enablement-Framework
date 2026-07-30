@@ -58,7 +58,7 @@ const scopePrefix = resourceTitle
 
 "Ask about this PDF" / "Chat with this video." The retrieval still searches the full KB — but the model sees the resource title in the query and biases toward paragraphs from that resource.
 
-This is **pseudo-scoping**. It's not strict (the retriever can still pull paragraphs from other documents if they're relevant). For 90% of "ask about this resource" customer asks, that's fine. For strict scoping (only retrieve from one resource), use a `filter` on the `/find`-style endpoint with a resource-id filter. Build 6 covers filter composition.
+This is **pseudo-scoping**. It's not strict (the retriever can still pull paragraphs from other documents if they're relevant). For 90% of "ask about this resource" customer asks, that's fine. For strict scoping (only retrieve from one resource), use a `filter` on the `/find`-style endpoint with a resource-id filter. Build 7 covers filter composition.
 
 ## Composing the three
 

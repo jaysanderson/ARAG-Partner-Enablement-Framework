@@ -22,21 +22,21 @@ D. Unlimited.
 
 ---
 
-### 3. BYO-LLM is configured:
+### 3. A customer already has a billing account with Anthropic and wants ARAG to use it instead of Progress's. This is:
 
-A. Globally across all KBs.
-B. Per HTTP request.
-C. Per KB, in generative-model settings.
-D. By the Progress Agentic RAG ops team only.
+A. BYO-LLM — connect via the OpenAI-compatible endpoint.
+B. BYOK — supply their own Anthropic key; Anthropic is already on the platform's provider list.
+C. Not possible — Progress must always hold the billing relationship.
+D. A residency configuration, not an LLM configuration.
 
 ---
 
-### 4. What does BYO-LLM let the customer point the KB at?
+### 4. The "enterprise-ready" indicator (region-locked, no training on your data) applies to:
 
-A. Their own LLM tenant.
-B. Their database.
-C. Their CDN.
-D. Their dashboard.
+A. Every LLM connection, regardless of billing.
+B. Only platform-billed models — BYOK and BYO-LLM are the customer's own provider agreement.
+C. Only BYO-LLM connections.
+D. Only the default Progress Agentic RAG model.
 
 ---
 
@@ -51,6 +51,6 @@ D. Average answer length.
 
 ## Answer key
 
-1. C · 2. C · 3. C · 4. A · 5. B
+1. C · 2. C · 3. B · 4. B · 5. B
 
 4+ correct → pass. Continue to [Build 12](../build-12-capstone-prep/).

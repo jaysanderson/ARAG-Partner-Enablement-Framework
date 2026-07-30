@@ -202,7 +202,7 @@ Append the three result counts (3a, 3b, 3c) to `labelset-design.md` so reviewers
 
 ## Step 4 — Extend the React project (10 min)
 
-If you want to extend Build 3:
+**npm path.** If you want to extend Build 3:
 
 ```bash
 cd ~/Desktop/developer-foundations/build-3
@@ -224,11 +224,15 @@ Create or copy `.env` with your three `VITE_NUCLIA_*` credentials.
 
 We'll add a new component, `SearchPage.tsx`, that the AI builds.
 
+**No-npm path.** Re-open your `index.html` from Build 3 (with whatever Build 4/6 additions you've layered in since) — this Build's filter UI goes into that same file. No new project, no `.env`; credentials stay in the `CONFIG` object already there.
+
 ---
 
 ## Step 5 — Vibe-code the filterable search page (50 min)
 
-This is the meaty step. Brief your AI:
+This is the meaty step.
+
+**On the npm path?** Brief your AI:
 
 ```
 In my Vite + React + TypeScript project, create
@@ -300,12 +304,81 @@ Specifics:
 Use plain fetch. No SDK.
 ```
 
+**On the no-npm path?** Paste this instead — same layout and logic, inside your single `index.html`:
+
+```
+In my single self-contained index.html, add a SearchPage component and
+render it as the main page.
+
+Pick a styling approach that fits a clean, modern search UI — Tailwind
+is already loaded from the CDN in this file, use it.
+
+Then create the page. It's a search-and-filter page with this layout:
+
+  [search input]   <- top, full width
+  ─────────────────
+  [content-type chip strip]   <- horizontal row below input
+  ─────────────────
+  [topic facets sidebar]  [results list]   <- two columns
+
+Specifics:
+
+1. Search input at top. State: query, default "". When the user
+   presses Enter or stops typing for 500ms (debounce), re-fetch results.
+
+2. Content-type chips (a horizontal row): "All", "Videos", "PDFs",
+   "Audio", "Docs". State: contentType, default null. Click a chip →
+   set the active contentType. Click again → clear.
+   - "All" → no filter
+   - "Videos" → "/icon/video"
+   - "PDFs" → "/icon/application/pdf"
+   - "Audio" → "/icon/audio"
+   - "Docs" → "/icon/application/vnd.openxmlformats-officedocument.wordprocessingml.document" or similar
+
+3. On mount, fetch GET /labelsets and extract the labelset named "topic"
+   (or whatever labelset name I configured — make this a constant near
+   the top of the script). State: topicLabels, default [].
+
+4. Topic facets sidebar (left column): a list of toggle buttons, one
+   per label in topicLabels. State: activeTopics, default []. Clicking
+   a topic toggles it in/out of the array. Style active topics so
+   they're visually distinct.
+
+5. When query, contentType, or activeTopics change, fire POST /find with:
+   {
+     query,
+     page_size: 10,
+     features: ["keyword", "semantic"],
+     show: ["basic", "values", "origin"],
+     filters: [
+       ...(contentType ? [contentType] : []),
+       ...activeTopics.map(label => `/classification.labels/topic/${label}`)
+     ]
+   }
+
+6. Auth: X-NUCLIA-SERVICEACCOUNT: Bearer ${CONFIG.apiKey}.
+   URL: ${CONFIG.apiUrl}/kb/${CONFIG.kbId}/find
+
+7. Render the results in the right column:
+   - One card per resource
+   - Card shows: title, top paragraph excerpt (truncated to ~200 chars),
+     small content-type icon, and any classifications under the resource.
+
+8. Style the whole page for a clean, modern feel — clear hierarchy,
+   readable type, hover states on chips and facets. Loading state
+   ("Searching...") while a request is in flight. Error state if the
+   API fails.
+
+Use plain fetch. No SDK. Stay inside the same index.html — no new files.
+```
+
 Send.
 
 ### 5a. Save the AI's output
 
-- **Claude Code / Cursor:** *"Save this as src/components/SearchPage.tsx. Update App.tsx to render it as the main page."*
-- **Web chat:** create the file in VS Code; manually update `App.tsx` to import and render `<SearchPage />`.
+- **npm path, Claude Code / Cursor:** *"Save this as src/components/SearchPage.tsx. Update App.tsx to render it as the main page."*
+- **npm path, web chat:** create the file in VS Code; manually update `App.tsx` to import and render `<SearchPage />`.
+- **No-npm path:** ask the AI to edit `index.html` directly, or paste the updated `<script>` block back into your editor and save.
 
 ### 5b. Read the code before running
 
@@ -326,13 +399,17 @@ Create `prompt-log.md` in the project root. Paste the Step 5 brief.
 
 ## Step 6 — Test the UI (15 min)
 
-Run the dev server:
+**npm path.** Run the dev server:
 
 ```bash
 npm run dev
 ```
 
-Open `http://localhost:5173/`. **You should see:**
+Open `http://localhost:5173/`.
+
+**No-npm path.** Reload `index.html` in your browser (or the localhost URL if you're serving it with `python3 -m http.server`).
+
+**You should see:**
 
 - A search input at top.
 - A row of content-type chips.
@@ -357,7 +434,7 @@ Open browser **DevTools → Network** and click each `/find` request as you togg
 | Topic sidebar is empty | Labelset name in code doesn't match dashboard | Open `SearchPage.tsx`, find the labelset-name constant, fix it |
 | Clicking chips does nothing | `useEffect` doesn't depend on `contentType`/`activeTopics` | Tell AI: *"Toggling filter chips doesn't refetch. Add the filter state to the useEffect dependency array."* |
 | Same results regardless of filters | Filter array isn't being passed in request body | DevTools → Network → check request body |
-| 401/403 errors | Wrong JWT or expired | Re-paste from dashboard into `.env`. Restart `npm run dev` |
+| 401/403 errors | Wrong JWT or expired | Re-paste from dashboard into `.env` (npm path, then restart `npm run dev`) or into `CONFIG` (no-npm path, then reload) |
 | Slow when typing fast | No debounce | Tell AI: *"Add a 500ms debounce on the search input."* |
 
 ---

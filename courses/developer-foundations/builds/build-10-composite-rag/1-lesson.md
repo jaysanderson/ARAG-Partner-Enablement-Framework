@@ -51,7 +51,7 @@ Typical lift on hard queries: +20–35% answer quality (measured against a curat
 
 - Initial `/ask`.
 - Extract entities or topics from the answer.
-- Graph-traverse from those entities (Build 7).
+- Graph-traverse from those entities (Build 8).
 - Re-ask with entity-expanded context.
 
 This is the Aurora Concierge abandoned-cart pattern. Used when the model needs to know about *related* concepts to give a good answer, not just the directly-retrieved ones.
