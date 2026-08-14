@@ -47,3 +47,13 @@ Both corpora ship with this course:
 - `business_unit/` — the Atlas Global Industries (enterprise operations) corpus, also used by the Atlas Operations capstone.
 
 They're the same corpora the two Build 13 capstone briefs use, so the patterns you learn here carry straight through to the capstone.
+
+## Supplemental labels for Search Configuration & Widget Deployment
+
+Three additional `content_type/` labels were added for the [Search Configuration & Widget Deployment](../../../../search-configuration-and-widget-deployment/README.md) course. They're new label folders, not additions to the eight above — Build 0's 37 markdown + 10 binary / 8-label counts above are unchanged, and Build 0's own walkthrough only ever asks students to upload the original eight.
+
+- `content_type/spec_sheet/` (2 PDFs) — `skyline-45l-spec-sheet.pdf` and `tour-du-mont-blanc-topo-guide.pdf`, multi-page PDFs with real embedded diagrams, product illustrations, and topographic relief maps. Used in Build 04 (`visual-rag-and-images`) to demonstrate the `page_image` and `paragraph_image` RAG image strategies — strategies that need genuine multi-page image content to produce a visible difference, which is why they're PDFs rather than markdown.
+- `content_type/field_notes/` (4 md) — short dispatches that state explicit ambassador → product → trail relations in prose (who tested what, where, and what it's recommended for). Used in Build 03 (`rag-context-strategies`) for a small `graph_beta` knowledge-graph extraction exercise sized for a single-session walkthrough.
+- `content_type/field_demo/` (2 md) — a paired main-field / updates-field pair (`skyline-45l-warranty-main.md` + `skyline-45l-warranty-updates.md`) meant to be ingested as two fields of *one* resource via a direct API call, not folder-upload. Used in Build 03 to demonstrate the `field_extension` RAG strategy — the main field alone gives a stale answer; the strategy pulls the updates field in as context.
+
+Not required for Build 0 or the Build 13 capstones — upload them only if you're working through Search Configuration & Widget Deployment.
