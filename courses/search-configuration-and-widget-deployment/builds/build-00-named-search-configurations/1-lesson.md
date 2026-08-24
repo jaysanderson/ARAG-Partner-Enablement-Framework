@@ -8,7 +8,7 @@ Every build after this one hands you a new dashboard tab or a new API parameter 
 
 ## What you already know
 
-You already know `/find` and `/ask` from [Developer Foundations Build 0](../../../developer-foundations/builds/build-00-hello-arag/) and [Build 1](../../../developer-foundations/builds/build-01-five-primitives/): `/find` retrieves matching paragraphs, `/ask` retrieves and generates a grounded answer with citations, both authenticated with the same `X-NUCLIA-SERVICEACCOUNT: Bearer <jwt>` header. That's not being re-taught here — if any of the last sentence was news to you, go do Foundations Build 0 first.
+You already know `/find` and `/ask` from [Developer Foundations Build 0](../../../developer-foundations/builds/build-00-hello-arag/) and [Build 1](../../../developer-foundations/builds/build-01-five-primitives/): `/find` retrieves matching paragraphs, `/ask` retrieves and generates a grounded answer with citations, both authenticated with the same `X-NUCLIA-SERVICEACCOUNT: Bearer <jwt>` header. That's not being re-taught here — if any of the last sentence was new to you, go do Foundations Build 0 first.
 
 ## The one new concept: stored search configurations
 
