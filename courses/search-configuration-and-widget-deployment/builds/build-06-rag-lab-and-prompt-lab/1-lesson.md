@@ -4,7 +4,7 @@
 
 ## Why this is in the course
 
-By now you can set every lever that shapes a `/find` or `/ask` call: search features and filters (Build 01), prompts, model choice, and reasoning effort (Build 02), `rag_strategies` (Build 03), `rag_images_strategies` (Build 04), and Result Display (Build 05). Every one of those levers can be changed and saved without anyone confirming the change actually made the answer better. Shipping a new prompt or a new `generativeModel` straight to a customer-facing widget on a hunch is how "the answers are too generic" turns into "the answers changed and now they're wrong in a different way." This Build is the checkpoint between tuning and shipping: compare candidates side by side against real queries, then commit only the one that won.
+By now you can set every lever that shapes a `/find` or `/ask` call: search features and filters (Build 01), prompts, model choice, and reasoning effort (Build 02), `rag_strategies` (Build 03), `rag_images_strategies` (Build 04), and Result Display (Build 05). Every one of those levers can be changed and saved without anyone confirming the change actually made the answer better. Shipping a new prompt or a new `generative_model` straight to a customer-facing widget on a hunch is how "the answers are too generic" turns into "the answers changed and now they're wrong in a different way." This Build is the checkpoint between tuning and shipping: compare candidates side by side against real queries, then commit only the one that won.
 
 **This Build introduces no new configuration surface.** Nothing here is a new parameter. Everything you compare in the lab is a combination of settings you already know from Builds 01–05 — the lab's job is letting you see two or three of those combinations answer the same question at the same time, not teaching you a new lever.
 
@@ -23,7 +23,7 @@ You're not choosing between "use RAG Lab" or "use Prompt Lab" for a given task �
 
 Every earlier Build in this course changed one lever at a time, tested it, and moved on. That's fine for learning what a lever does in isolation. It's a poor way to decide what to actually ship, for two reasons:
 
-1. **Levers interact.** A prompt that reads well against the platform-default `generativeModel` can read completely differently once you switch models (Build 02's gotcha) or once a `rag_strategies` entry changes what context the model even sees. You don't know until you test the *combination*.
+1. **Levers interact.** A prompt that reads well against the platform-default `generative_model` can read completely differently once you switch models (Build 02's gotcha) or once a `rag_strategies` entry changes what context the model even sees. You don't know until you test the *combination*.
 2. **A single test query lies.** One question that happens to work doesn't tell you whether the combination holds up against the spread of things real users actually type. The walkthrough has you build a small fixed set of test queries for exactly this reason — run every candidate combination against the same queries, not a different one each time.
 
 The lab exists so that comparison happens in a sandbox, against real retrieval and real generation, before a configuration change reaches a live widget.
@@ -33,7 +33,7 @@ The lab exists so that comparison happens in a sandbox, against real retrieval a
 When you sit down in the lab, the dials you're turning are all familiar:
 
 - **Search behaviour** (Build 01) — features, filters, rank fusion, reranking — determines what candidates even reach generation.
-- **Prompts and model** (Build 02) — `prompt.system` / `prompt.user`, `generativeModel`, `reasoning.effort` — determines tone, length, and how well the model reasons over what it's given.
+- **Prompts and model** (Build 02) — `prompt.system` / `prompt.user`, `generative_model`, `reasoning.effort` — determines tone, length, and how well the model reasons over what it's given.
 - **`rag_strategies`** (Build 03) — hierarchy, neighbouring paragraphs, field extension, and the rest — determines what context actually gets assembled before the prompt ever runs.
 - **`rag_images_strategies`** (Build 04) — page image, paragraph image — relevant when the test corpus includes documents where the answer lives in a diagram or photo.
 - **Result Display** (Build 05) — shapes what the end user sees once an answer comes back, though the lab's comparison is mostly about the answer itself, not its display wrapper.
@@ -56,8 +56,8 @@ curl -s -X POST "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/search_configurations/shopper_
     "kind": "ask",
     "config": {
       "prompt": {"system": "You are Aurora Outfitters'\'' shopping assistant. Answer concisely and cite your sources."},
-      "generativeModel": "chatgpt-azure-4o",
-      "rag_strategies": [{"name": "field_extension"}]
+      "generative_model": "chatgpt-azure-4o",
+      "rag_strategies": [{"name": "field_extension", "fields": ["main", "updates"]}]
     }
   }'
 ```

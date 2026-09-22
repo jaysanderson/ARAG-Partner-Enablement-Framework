@@ -139,6 +139,42 @@ curl -s "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" \
 
 ---
 
+## Step 6 — Commit the winning strategy as a named search configuration (10 min)
+
+Every other Build in this course ends by putting its work somewhere production can reach it, and this one shouldn't be the exception — a `rag_strategies` choice that lives only in your shell history isn't a deliverable.
+
+Of everything you tested, `field_extension` is the one with a demonstrated, reproducible win: Step 4 proved the no-strategy call gives a stale warranty answer and the strategy call gives the correct one. Commit that, plus `hierarchy` as the cheap grounding default from Step 1:
+
+```bash
+curl -s -X POST "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/search_configurations/support_context_tuned" \
+  -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
+  -H "content-type: application/json" \
+  -d '{
+    "kind": "ask",
+    "config": {
+      "rag_strategies": [
+        {"name": "hierarchy"},
+        {"name": "field_extension", "fields": ["main", "updates"]}
+      ]
+    }
+  }'
+```
+
+Verify it by name, with no inline strategy:
+
+```bash
+curl -s "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" \
+  -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
+  -H "content-type: application/json" \
+  -d '{"query": "Is hardware failure on my Skyline 45L still covered after 2 years?", "search_configuration": "support_context_tuned"}'
+```
+
+The answer should resolve to Repair-for-Life coverage, same as Step 4's strategy call — the stored configuration is doing the work now.
+
+> **Why not commit all five?** Every strategy you stack costs tokens on every call. `metadata_extension`, `prequeries`, and `graph_beta` each earned their exercise, but none of them fixed a *failure* the way `field_extension` did. Ship the ones that solve a demonstrated problem, not the ones you enjoyed testing.
+
+---
+
 ## Verification checklist
 
 - [ ] Ran the same query under `hierarchy`, `neighbouring_paragraphs`, and `full_resource`, and can explain the token-cost/context-completeness tradeoff between them from what you observed.
@@ -146,6 +182,7 @@ curl -s "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" \
 - [ ] `prequeries` call visibly shifted which resources got cited, compared to the same query with no `rag_strategies`.
 - [ ] Two-field warranty resource created via the API; the `field_extension` call resolves the warranty question correctly and the no-strategy call gives the stale answer.
 - [ ] Graph agent created and run; a `graph_beta` query surfaced a multi-hop ambassador/product/trail relationship.
+- [ ] `support_context_tuned` search configuration created and verified by name.
 - [ ] `prompt-log.md` saved with any debugging prompts used.
 
 Then take the [Build 03 quiz](3-quiz.md). Pass → start [Build 04](../build-04-visual-rag-and-images/).

@@ -98,31 +98,16 @@ Prefix both commands with `time` if you want a rough latency comparison. Read bo
 
 ## Step 5 — Set a token limit and observe truncation (15 min)
 
-Cap output hard enough to see it bite:
+> **This step is dashboard-first, on purpose.** The token-limit fields are `GenerativeAnswerConfig` **widget-configuration** names (see the lesson's naming rule) — they are not `snake_case` `/ask` request-body parameters, so pasting them into a curl body does nothing observable. Set them where they actually live, then use **Get code** to see what your tenant sends.
 
-```bash
-curl -s "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" \
-  -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
-  -H "content-type: application/json" \
-  -d '{
-    "query": "Compare all of Aurora'\''s tents and recommend one for alpine conditions.",
-    "limitTokenConsumption": true,
-    "outputTokenConsumptionLimit": 40
-  }'
-```
+1. In the dashboard's **Generative answer and RAG** section, find the token-limit controls. Turn `limitTokenConsumption` **on** and set `outputTokenConsumptionLimit` to **40** — aggressively low, deliberately.
+2. Run this query in the dashboard's test panel:
 
-The answer should cut off mid-thought well before it's actually finished comparing the tents. Rerun with the cap removed (or raised to something reasonable, like `500`) and confirm the answer completes:
+   > *Compare all of Aurora's tents and recommend one for alpine conditions.*
 
-```bash
-curl -s "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" \
-  -H "X-NUCLIA-SERVICEACCOUNT: Bearer $NUCLIA_API_KEY" \
-  -H "content-type: application/json" \
-  -d '{
-    "query": "Compare all of Aurora'\''s tents and recommend one for alpine conditions.",
-    "limitTokenConsumption": true,
-    "outputTokenConsumptionLimit": 500
-  }'
-```
+   The answer should cut off mid-thought, well before it has finished comparing the Cumulus 2P and the Stratus 1P.
+3. Raise `outputTokenConsumptionLimit` to **500** and re-run the same query. Confirm the answer now completes.
+4. Click **Get code** on this configuration and read the request body it emits. That's the authoritative request-body spelling for your tenant — note it in your `prompt-log.md`, because it's the thing you'd hand a customer's backend team.
 
 This is the exact failure mode a production widget hits if someone sets a cost-control token limit too aggressively — answers that just stop. Keep this in mind before shipping a tight cap on a customer-facing surface.
 
@@ -130,7 +115,7 @@ This is the exact failure mode a production widget hits if someone sets a cost-c
 
 ## Step 6 — Save the tuned setup as a named search configuration (10 min)
 
-Combine the shopping-assistant prompt, a sane reasoning effort, and a production-reasonable token cap. Save it as `shopper_generation_tuned`, following Build 00's pattern:
+Combine the shopping-assistant prompt with a sane reasoning effort and save it as `shopper_generation_tuned`, following Build 00's pattern. (The token caps from Step 5 stay on the widget configuration — they aren't request-body parameters, so they don't belong in a stored `search_configuration` block.)
 
 ```bash
 curl -s -X POST "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/search_configurations/shopper_generation_tuned" \
@@ -142,9 +127,7 @@ curl -s -X POST "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/search_configurations/shopper_
       "prompt": {
         "system": "You are Aurora Outfitters'\'' shopping assistant. Answer concisely, recommend a specific product by name when relevant, and keep an upbeat, trail-ready tone."
       },
-      "reasoning": {"effort": "low"},
-      "limitTokenConsumption": true,
-      "tokenConsumptionLimit": 4000
+      "reasoning": {"effort": "low"}
     }
   }'
 ```
@@ -177,7 +160,7 @@ Add to (or create) `prompt-log.md` in your project folder: paste any prompts you
 - [ ] Shopping-assistant system prompt tested inline — the answer's tone visibly shifts versus the bare-default call.
 - [ ] `generate_answer: false` tested — confirmed the right resources were retrieved before touching the prompt.
 - [ ] `reasoning.effort` compared at `none` and `high` on the multi-step tent-and-warranty question — you can name at least one thing the higher-effort answer got right that the lower-effort one missed.
-- [ ] Token limit tested — a tight `outputTokenConsumptionLimit` visibly truncates an answer; a higher one doesn't.
+- [ ] Token limit tested in the dashboard — a tight `outputTokenConsumptionLimit` visibly truncates an answer; a higher one doesn't. **Get code** inspected and the emitted request body noted.
 - [ ] `shopper_generation_tuned` search configuration created and confirmed via `search_configuration` call.
 - [ ] `shopper_generation_tuned` visible in the dashboard's saved-configurations list.
 - [ ] `prompt-log.md` updated.
@@ -191,9 +174,9 @@ Then take the [Build 02 quiz](3-quiz.md). Pass → start [Build 03](../build-03-
 | Error / symptom | Likely cause | Fix |
 |---|---|---|
 | `generate_answer: false` still returns an `answer` field | Sent as a query-string param instead of in the JSON body, or the key is misspelled | Confirm it's a top-level key in the POST body — `generate_answer`, not `generateAnswer` (that spelling is the widget-config name, not the request field) |
-| `reasoning` has no visible effect on the answer | The `generativeModel` configured on this KB isn't a reasoning-capable model | Check which model the KB is using; `reasoning` is a no-op on models that don't support it |
+| `reasoning` has no visible effect on the answer | The `generative_model` configured on this KB isn't a reasoning-capable model | Check which model the KB is using; `reasoning` is a no-op on models that don't support it |
 | Higher `reasoning.effort` doesn't noticeably improve the multi-step answer | The corpus is small enough that even low effort finds both facts | Try an even more compound question, or trust the latency difference as the observable effect this time |
-| `outputTokenConsumptionLimit` truncation looks identical with and without the cap | The uncapped answer was already shorter than your cap | Lower the cap further, or pick a query that naturally produces a longer answer (a comparison across more resources) |
+| `outputTokenConsumptionLimit` truncation looks identical with and without the cap | Either the uncapped answer was already shorter than your cap, or you set the field in a curl body instead of the dashboard (it is a widget-config field, not a request-body parameter) | Lower the cap further, or pick a query that naturally produces a longer answer (a comparison across more resources) |
 | `POST /search_configurations/{name}` returns 404 | KB ID in `.env` doesn't match the KB you're testing against | Re-check `NUCLIA_KB_ID` |
 | Saved configuration doesn't reflect the tuned prompt when called by name | Typo in the configuration name, or the POST in Step 6 returned a non-2xx you missed | Re-run Step 6, check the HTTP status, re-verify with Step 7 |
 | Dashboard's Generative Answer tab test panel shows a different tone than your curl call | The dashboard panel may have its own saved prompt applied before yours | Clear any pre-set dashboard prompt fields, or just trust the curl call as source of truth |

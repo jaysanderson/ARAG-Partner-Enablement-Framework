@@ -7,7 +7,7 @@
 ### 1. A customer says "the answer is wrong." What's the first move this Build recommends?
 
 A. Rewrite the system prompt immediately
-B. Switch to a different `generativeModel`
+B. Switch to a different `generative_model`
 C. Set `generate_answer: false` and check whether the right paragraphs were retrieved
 D. Raise `reasoning.effort` to `xhigh`
 
@@ -22,16 +22,16 @@ D. `rephrase: true` turns query rephrasing on; `prompt.rephrase` is a template f
 
 ---
 
-### 3. Why is switching `generativeModel` not a drop-in swap?
+### 3. You configure a token limit in the dashboard, then hand a customer's backend team the field name `limitTokenConsumption` to put in their `/ask` request body. What goes wrong?
 
-A. It changes latency, cost, and answer style, so a prompt or RAG strategy tuned for one model may need retuning for another
-B. It requires re-ingesting the whole corpus
-C. It disables `reasoning` for every model
-D. It automatically resets all saved search configurations
+A. Nothing — dashboard field names and request-body parameters are always identical
+B. `camelCase` names are widget/dashboard configuration fields; `/ask` request bodies are `snake_case`, so the backend team needs the API spelling — use **Get code** to get it
+C. The field only works on `/find`, so they should call that instead
+D. Token limits can't be set from a backend at all, only from a widget
 
 ---
 
-### 4. `preferMarkdown: true` is a bad idea when:
+### 4. `prefer_markdown: true` is a bad idea when:
 
 A. The Knowledge Box is in a single language
 B. The consuming surface doesn't render Markdown, so literal `**` and `#` characters show up in the answer
@@ -51,6 +51,6 @@ D. Setting the reasoning budget for one resource only
 
 ## Answer key
 
-1. C · 2. D · 3. A · 4. B · 5. C
+1. C · 2. D · 3. B · 4. B · 5. C
 
 4+ correct → pass. Continue to [Build 03](../build-03-rag-context-strategies/).

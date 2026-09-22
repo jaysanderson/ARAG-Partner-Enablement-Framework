@@ -5,7 +5,7 @@
 > **Tracks served:** Solution (primary), Deliver (primary), Sell (secondary — Builds 00–02 and 07–08 only)
 > **Prerequisites:** [Developer Foundations](../developer-foundations/README.md) Builds 0–2 (`/find`/`/ask` basics, the five primitives, drop-in widgets)
 > **Total time:** 15–19 hours per individual, spread over 2–4 weeks
-> **Format:** 10 short Builds + 1 capstone
+> **Format:** 9 short Builds + 1 capstone
 > **Status:** Shipped (curriculum, corpus, rubrics)
 
 ---
@@ -60,7 +60,7 @@ Total course effort: ~15–19 hours of focused work for Builds 00–08, plus 1�
 A Search Configuration & Widget Deployment Practitioner can, without supervision:
 
 - Set every Search tab option (`features`, `filter_expression`, `rank_fusion`, reranking, `rephrase`, `query_prepend`, `autofilter`) and explain what each one changes about retrieval.
-- Set every Generative Answer option (system/user/rephrase prompt, `generativeModel`, `reasoning`, token limits, `preferMarkdown`) and use `generate_answer:false` to debug retrieval independent of generation.
+- Set every Generative Answer option (system/user/rephrase prompt, `generative_model`, `reasoning`, token limits, `prefer_markdown`) and use `generate_answer:false` to debug retrieval independent of generation — and know which of those names are API request-body parameters versus widget-configuration fields.
 - Pick the right `rag_strategies` entry (`full_resource`, `hierarchy`, `neighbouring_paragraphs`, `field_extension`, `metadata_extension`, `prequeries`, `graph_beta`) for a given context-construction problem, and explain why the wrong one either bloats the context or misses the answer.
 - Use `rag_images_strategies` (`page_image`, `paragraph_image`) correctly for documents where the answer lives in a diagram or photo, not the surrounding text.
 - Configure Result Display for two different audiences from the same Knowledge Box, and set up basic User Intent Routing between two named search configurations.

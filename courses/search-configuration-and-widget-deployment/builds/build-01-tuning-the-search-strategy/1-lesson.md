@@ -8,7 +8,18 @@
 
 ## Search modes and `features`
 
-`/ask` runs **semantic search, keyword search, and graph search** by default. `/find` runs **semantic search and fulltext search** by default. Each mode catches something the others miss: semantic search matches meaning, keyword/fulltext search matches exact terms, graph search follows entity relationships.
+`/ask` runs **semantic, keyword, and graph search** by default. `/find` runs **semantic and fulltext search** by default.
+
+Those are four distinct `features` values, and the two lexical ones are not the same thing:
+
+| Feature | What it matches |
+|---|---|
+| `semantic` | Meaning — vector similarity against the query's embedding |
+| `keyword` | Individual terms within paragraphs, BM25-scored |
+| `fulltext` | Terms across the whole document's indexed text |
+| `relations` | Entity relationships in the knowledge graph |
+
+Keep `keyword` and `fulltext` straight — the quiz depends on it, and so does reading a `features` array correctly when a customer sends you one.
 
 The `features` parameter overrides which modes run. The clearest reason to override it: **cross-language search**. If your Knowledge Box is in English and a user searches in Spanish, keyword search can false-match — words that look identical across languages but mean different things will score as hits they shouldn't be. Passing semantic-only features sidesteps that:
 
@@ -66,9 +77,26 @@ curl -s "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/find" \
 
 ## Reranking — a second pass for order quality
 
-Reranking is an optional step **after** rank fusion: a cross-encoder model re-reads the unified candidate list and reorders it. Where RRF only looks at rank position, a reranker actually re-scores relevance against the query.
+Reranking is a step **after** rank fusion: a cross-encoder model re-reads the unified candidate list and reorders it. Where RRF only looks at rank position, a reranker actually re-scores relevance against the query.
+
+**It is on by default.** The parameter is `reranker`, and the two values you'll use are:
+
+| Value | Effect |
+|---|---|
+| `predict` | The default — cross-encoder reranking runs |
+| `noop` | Reranking off |
+
+So in practice you are not switching reranking *on*; you are deciding whether to switch it *off* to buy latency back:
+
+```json
+{ "query": "waterproof boot for wet rock", "reranker": "noop" }
+```
+
+> **Gotcha.** `reranker: true` is accepted by the API and returns **zero results** — it is not a boolean. Use the string values above.
 
 > **Gotcha.** Reranking is a second model pass over every candidate, so it adds latency and cost. It's worth it when result **ordering** quality matters more than speed — e.g. showing a user the top 3 results and needing #1 to actually be the best one. It's less worth it for high-QPS backend use where the extra round-trip adds up fast.
+
+You'll measure that latency cost yourself in the walkthrough rather than take it on faith — it's the one option in this Build whose tradeoff you can only judge against your own corpus and your own latency budget.
 
 ## Filters — the full attribute list
 
@@ -104,9 +132,30 @@ Reranking is an optional step **after** rank fusion: a cross-encoder model re-re
 
 Reach for `filter_expression` once a filter needs more than "match this path" — negation, mixing field-level and paragraph-level conditions, or combining conditions with an explicit boolean operator.
 
+To filter by classification label in `filter_expression`, the prop is **`label`** (singular) with `labelset` and `label` keys:
+
+```json
+{ "filter_expression": { "field": {"prop": "label", "labelset": "content_type", "label": "product"} } }
+```
+
+Compose it with other conditions using a nested `and`:
+
+```json
+{ "filter_expression": { "field": {"and": [
+    {"prop": "label", "labelset": "content_type", "label": "product"},
+    {"prop": "language", "language": "en"}
+]}}}
+```
+
+> **Gotcha — `filters` and `filter_expression` are mutually exclusive.** Send both on the same request and you get **zero results**, with no error. Each works perfectly alone (`filters` with a path, `filter_expression` with a prop), but the combination silently returns nothing. Pick one mechanism per call and express every condition in it. This is the single most common way to get an inexplicably empty result set on a filter you're sure is correct.
+
+> **Gotcha — invalid filters fail silently.** A misspelled `prop`, a wrong key name, or an unsupported value does **not** return a 400. It returns `0` results, exactly like a valid filter that matched nothing. So an empty result set never tells you whether your filter is wrong or merely restrictive. Debug by removing the filter entirely to confirm the query itself matches, then adding conditions back one at a time.
+
 ## `autofilters` — a response field, not a setting
 
 `autofilters` shows up in the `/find` **response**, not the request. It's an array of strings reporting which filters the query engine applied automatically — most commonly filters derived from entities the engine detected in the query text itself. Read it as a diagnostic: if a result set looks narrower than expected, check `autofilters` before assuming your own filter is misbehaving. It isn't a toggle you set.
+
+> **Precondition — you will not see this on a fresh Knowledge Box.** Auto-filtering is driven by *detected entities*, so it only appears once entity extraction has actually run and populated the KB's entity groups. On a KB whose entity groups exist but are empty — the default state after a plain folder upload — the `autofilters` key is simply absent from every response, no matter what you query or whether you pass `autofilter: true`. Check with `GET /kb/{kbId}/entitiesgroups`: if every group reports 0 entities, there is nothing to auto-filter on. Extraction is covered in [Developer Foundations Build 6](../../../developer-foundations/builds/build-06-data-augmentation-agents/) and [Build 8](../../../developer-foundations/builds/build-08-knowledge-graph/). The same precondition governs Build 07's `autocompleteFromNERs`.
 
 ## Where this lives in the dashboard
 

@@ -33,7 +33,7 @@ Write these four down somewhere you'll paste them into the lab repeatedly — yo
 
 1. In your Progress Agentic RAG dashboard, open the Knowledge Box and find the **Advanced** section in the left-hand nav.
 2. Inside it, open the **Prompt Lab**. You should see a **RAG Lab** tab alongside it — confirm both are part of the same lab area, not two separate screens.
-3. Look for controls to set a prompt, pick a `generativeModel`, and (on the RAG Lab tab) pick a `rag_strategies` entry. Don't run anything yet — just confirm you can find all three controls before you start comparing.
+3. Look for controls to set a prompt, pick a `generative_model`, and (on the RAG Lab tab) pick a `rag_strategies` entry. Don't run anything yet — just confirm you can find all three controls before you start comparing.
 
 **The takeaway:** everything you're about to set in this lab writes to the same parameters you already tested individually in Builds 02 and 03. The lab just lets you hold more than one of them steady while you vary the others.
 
@@ -72,7 +72,7 @@ curl -s "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" \
   -d '{
     "query": "Is my Skyline 45L warranty still valid after 2 years?",
     "prompt": {"system": "You are Aurora Outfitters'\'' shopping assistant. Answer concisely and cite your sources."},
-    "rag_strategies": [{"name": "field_extension"}]
+    "rag_strategies": [{"name": "field_extension", "fields": ["main", "updates"]}]
   }'
 ```
 
@@ -82,7 +82,7 @@ curl -s "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" \
 
 ## Step 5 — Run combination C: a different model (15 min)
 
-Keep combination B's prompt and `rag_strategies`, but switch `generativeModel` to a different supported LLM in the lab. Run the same four queries again.
+Keep combination B's prompt and `rag_strategies`, but switch `generative_model` to a different supported LLM in the lab. Run the same four queries again.
 
 ```bash
 curl -s "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" \
@@ -91,8 +91,8 @@ curl -s "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" \
   -d '{
     "query": "Is my Skyline 45L warranty still valid after 2 years?",
     "prompt": {"system": "You are Aurora Outfitters'\'' shopping assistant. Answer concisely and cite your sources."},
-    "rag_strategies": [{"name": "field_extension"}],
-    "generativeModel": "<a second model from your tenant'\''s supported list>"
+    "rag_strategies": [{"name": "field_extension", "fields": ["main", "updates"]}],
+    "generative_model": "<a second model from your tenant'\''s supported list>"
   }'
 ```
 
@@ -118,7 +118,7 @@ Pick the combination that wins on balance — not necessarily the one that's bes
 
 ## Step 7 — Commit the winner as a named search configuration (10 min)
 
-Take your winning combination's exact parameters and commit them, per Build 00's pattern:
+Take your winning combination's exact parameters and commit them, per Build 00's pattern. **Use the parameters you actually picked** — if combination B won, drop the `generative_model` line rather than pasting combination C's model in:
 
 ```bash
 curl -s -X POST "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/search_configurations/shopper_lab_winner" \
@@ -128,8 +128,8 @@ curl -s -X POST "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/search_configurations/shopper_
     "kind": "ask",
     "config": {
       "prompt": {"system": "You are Aurora Outfitters'\'' shopping assistant. Answer concisely and cite your sources."},
-      "rag_strategies": [{"name": "field_extension"}],
-      "generativeModel": "chatgpt-azure-4o"
+      "rag_strategies": [{"name": "field_extension", "fields": ["main", "updates"]}],
+      "generative_model": "<the model your winning combination used>"
     }
   }'
 ```
@@ -176,7 +176,7 @@ Then take the [Build 06 quiz](3-quiz.md). Pass → start [Build 07](../build-07-
 | Error / symptom | Likely cause | Fix |
 |---|---|---|
 | RAG Lab tab is missing, only Prompt Lab shows | Older tenant version, or RAG strategy comparison not yet enabled on your account | Confirm with your Progress partner manager; in the meantime run the `rag_strategies` half of this walkthrough by curl only |
-| Query 2 still resolves incorrectly even with `field_extension` set | The two-field demo resource may not be ingested, or the strategy name/shape doesn't match your tenant version | Confirm both `skyline-45l-warranty-main.md` and `skyline-45l-warranty-updates.md` are ingested as fields on the same resource in the dashboard's resource browser |
+| Query 2 still resolves incorrectly even with `field_extension` set | Most often the `fields` array is missing — `field_extension` needs to be told *which* fields to pull in (Build 03 Step 4). Otherwise the two-field demo resource isn't ingested correctly | Confirm the strategy reads `{"name": "field_extension", "fields": ["main", "updates"]}`, then confirm both `skyline-45l-warranty-main.md` and `skyline-45l-warranty-updates.md` are ingested as two fields on the *same* resource in the dashboard's resource browser |
 | Lab and curl give different answers for the "same" combination | The lab may have a stale prompt or model selection left over from a previous session | Re-check every field in the lab panel before running; don't assume it kept your last setting |
 | `POST /search_configurations/shopper_lab_winner` returns 404 | KB ID in `.env` doesn't match the KB you're testing against | Re-check `NUCLIA_KB_ID` |
 | Calling `shopper_lab_winner` by name gives a different answer than your winning lab run | The committed `config` block doesn't exactly match what you tested — a field got dropped or mistyped in the `POST` body | Compare the `POST` body line-by-line against the winning combination's exact parameters from Step 4/5/6 |

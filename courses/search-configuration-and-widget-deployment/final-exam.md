@@ -4,7 +4,7 @@
 >
 > **Gate.** This exam must be passed before you start the [Build 09 capstone](builds/build-09-capstone/).
 >
-> **Drawn from.** The per-Build quick quizzes across Builds 00–08. If you passed each quiz, you have already seen the concept tested here.
+> **Drawn from.** The per-Build quick quizzes across Builds 00–08, and the hands-on measurements those Builds' walkthroughs ask you to make. If you passed each quiz and actually worked the walkthroughs, you have already seen every concept tested here.
 >
 > **Submission.** Send your answers to `#exam-submissions`. A Progress Solution lead grades within 5 business days.
 
@@ -145,12 +145,12 @@ D. Deploy widgets directly to a customer's website
 
 ---
 
-### 16. The Progress Agentic RAG widget library ships as:
+### 16. A customer's backend team asks for the exact `/ask` request body behind a dashboard setting you configured. What do you hand them?
 
-A. A jQuery plugin
-B. An iframe embed
-C. A React component package on npm
-D. Standard Web Components from a CDN script
+A. The `camelCase` dashboard field names verbatim — the two surfaces use identical names
+B. The `snake_case` request-body parameters — dashboard and widget config fields are `camelCase` and will be rejected as request parameters; **Get code** emits the authoritative request
+C. Nothing — dashboard settings have no API equivalent
+D. A screenshot of the configuration panel
 
 ---
 
@@ -193,6 +193,6 @@ D. It makes an already-embedded widget pick up a later dashboard configuration c
 ## Answer key
 
 1. A · 2. B · 3. C · 4. D · 5. A · 6. B · 7. C · 8. D · 9. A · 10. B
-11. C · 12. D · 13. A · 14. B · 15. C · 16. D · 17. A · 18. B · 19. C · 20. D
+11. C · 12. D · 13. A · 14. B · 15. C · 16. B · 17. A · 18. B · 19. C · 20. D
 
 16+ correct → pass. Continue to the [Build 09 capstone](builds/build-09-capstone/).

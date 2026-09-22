@@ -84,53 +84,70 @@ whatever language I have set up — ask me if unsure).
 
 Requirements:
 
-1. One route, e.g. POST /api/arag-proxy, that accepts the same request
-   body shape the ARAG widget sends to /find or /ask.
+1. A CATCH-ALL route mounted at /api, not a single named endpoint.
+   The widget treats /api as a base URL and appends whatever ARAG
+   path it needs — suggestions while typing, /find or /ask for the
+   query, plus resource and thumbnail fetches for the result list.
+   So: app.all('/api/*', ...) and forward the remaining path
+   verbatim. Preserve the method AND the query string. A proxy that
+   only handles one POST route will render a widget that looks alive
+   but has broken autocomplete and missing thumbnails.
 
 2. The route must NOT read any API key from the incoming request. The
    real service-account key lives ONLY in a server-side environment
-   variable, e.g. NUCLIA_API_KEY, read via process.env — never sent
-   by the client, never present in any file the browser can read.
+   variable, NUCLIA_API_KEY, read via process.env — never sent by the
+   client, never present in any file the browser can read.
 
 3. On each incoming request, the server:
-   a. Reads NUCLIA_API_URL and NUCLIA_KB_ID from process.env too.
-   b. Forwards the request body to
-      ${NUCLIA_API_URL}/kb/${NUCLIA_KB_ID}/find (or /ask, mirror
-      whatever endpoint the widget is calling)
+   a. Reads NUCLIA_API_URL from process.env.
+   b. Forwards to ${NUCLIA_API_URL}${pathAfter/api}${queryString}
       using native fetch — NO external HTTP library, NO Progress
       Agentic RAG SDK.
    c. Sets the header X-NUCLIA-SERVICEACCOUNT: Bearer ${NUCLIA_API_KEY}
       on that outbound server-side request only.
-   d. Returns ARAG's response body and status back to the caller
-      unchanged.
+   d. Streams or returns ARAG's response body, status, and
+      content-type back to the caller unchanged. Thumbnails are
+      binary — don't assume every response is JSON.
 
-4. CORS: allow requests from my local dev origin (http://localhost or
-   file://) so the widget running in my browser can reach this proxy.
+4. CORS: allow requests from my local dev origin so the widget running
+   in my browser can reach this proxy.
 
-5. Log each request's path and response status to the console (no
-   need for anything fancier).
+5. Log each request's method, forwarded path, and response status to
+   the console (no need for anything fancier).
 
-Give me a .env.example listing NUCLIA_API_URL, NUCLIA_KB_ID,
-NUCLIA_API_KEY as placeholders, and the exact command to run the
-server locally.
+Give me a .env.example listing NUCLIA_API_URL and NUCLIA_API_KEY as
+placeholders, and the exact command to run the server locally.
 ```
 
 Send it. Save the output, fill in your real `.env` values (copy them from your existing sandbox credentials — never commit `.env`), and start the server.
 
 ### 3b. Point the widget at your proxy
 
-In your `index.html` from Step 2, find the widget's endpoint-related attributes (however your configurator's generated snippet exposes the base URL) and repoint them at your local proxy's route instead of ARAG directly. Remove the `apikey` attribute entirely — the widget shouldn't hold a key anymore; the proxy holds it.
+In your `index.html` from Step 2, make exactly three changes to the widget tag:
 
-Reload `index.html`. Run a search.
+1. Add `backend="http://localhost:8000/api"` (match your proxy's actual host and port) — this is the base URL the widget will append ARAG paths onto.
+2. Add `proxy="true"`.
+3. **Delete the `apikey` attribute.** The widget shouldn't hold a key anymore; the proxy holds it.
+
+```html
+<nuclia-search-bar
+  knowledgebox="YOUR_KB_UUID"
+  backend="http://localhost:8000/api"
+  proxy="true"
+  csspath="./aurora-widget-theme.css"
+></nuclia-search-bar>
+```
+
+Reload `index.html`. Run a search — and type slowly enough to see whether autocomplete suggestions still appear, since that's the first thing a single-route proxy breaks.
 
 ### 3c. Prove the key never reaches the browser
 
 Open DevTools → **Network** tab. Run a query in the widget. Click the request the widget's own JavaScript initiated.
 
-- **You should see:** a request to your proxy's route (e.g. `POST /api/arag-proxy`), with **no** `X-NUCLIA-SERVICEACCOUNT` header and no key anywhere in its request headers or body.
+- **You should see:** requests to your proxy's host (e.g. `POST http://localhost:8000/api/v1/kb/.../find`), with **no** `X-NUCLIA-SERVICEACCOUNT` header and no key anywhere in their request headers or body.
 - Then look at your proxy server's own terminal logs (or, if you want to see the second hop directly, temporarily log the outgoing request headers in your proxy code) — that's where `X-NUCLIA-SERVICEACCOUNT` gets attached, server-side, never visible to the browser.
 
-If the key shows up anywhere in the Network tab on a request the page's own JS made, the proxy isn't doing its job — go back to your AI: *"The widget's request to my proxy still has an API key attached. Where's it coming from, and how do I stop the widget from sending it at all?"* (Usually the fix is removing the `apikey` attribute from the widget tag, not a proxy bug.)
+If the key shows up anywhere in the Network tab on a request the page's own JS made, the proxy isn't doing its job — go back to your AI: *"The widget's request to my proxy still has an API key attached. Where's it coming from, and how do I stop the widget from sending it at all?"* (Usually the fix is removing the `apikey` attribute from the widget tag, not a proxy bug — with `proxy="true"` set, the widget expects the server to supply credentials.)
 
 ### 3d. Save your prompt log
 
@@ -144,7 +161,7 @@ Create `prompt-log.md`. Paste the Step 3a brief and any follow-up debugging prom
 2. Paste this new snippet into a fresh test file (or swap it into your Step 2 file) and load it in your browser. Run a query, confirm it works.
 3. Now go change something on the **underlying search configuration**, not the widget snippet. A good, visible choice: flip a Result Display option from [Build 05](../build-05-result-display-and-intent-routing/) — for example, toggle `showResultType` from `citations` to `all-resources`, or flip `displayThumbnails` on if it was off. Save the change in the dashboard.
 4. **Do not touch the widget snippet again.** Go back to the already-open (or freshly reloaded) test page and reload it.
-5. **Confirm:** the result list's behaviour changed to match your Step 3 dashboard edit — more (or fewer) results shown, thumbnails appearing where they weren't — with the exact same HTML file, the exact same snippet, no regeneration, no repaste.
+5. **Confirm:** the result list's behaviour changed to match the Step 4.3 dashboard edit — more (or fewer) results shown, thumbnails appearing where they weren't — with the exact same HTML file, the exact same snippet, no regeneration, no repaste.
 
 > **Gotcha.** If the reload doesn't show the change, double check you actually toggled Synchronized configuration **on** before copying the snippet you're testing with — a snippet copied before you enabled it is still the frozen-snapshot kind, and no dashboard edit will ever reach it. Regenerate and re-copy after confirming the toggle is on.
 
@@ -156,7 +173,7 @@ Create `prompt-log.md`. Paste the Step 3a brief and any follow-up debugging prom
 
 Before you concluded Step 4 worked, or any time you want a faster check than reloading a deployed page, use the dashboard's own widget preview — it runs the widget and lets you test it directly, without embedding it anywhere.
 
-Repeat the Step 4c change (or make a new small one) and check it two ways:
+Repeat the Step 4.3 change (or make a new small one) and check it two ways:
 
 1. **Dashboard preview first** — confirm the configuration change is visibly reflected in the dashboard's own preview pane. This tells you the configuration itself saved correctly.
 2. **Then reload your deployed test page** — confirm the same change shows up there too. This tells you Synchronized configuration actually propagated it.
@@ -170,7 +187,8 @@ Two different questions, two different checks. If the dashboard preview shows th
 - [ ] `csspath` CSS file applied to the widget; brand colours and font visible.
 - [ ] Confirmed at least one element needed `!important` to override the widget's built-in style — you saw it fail without, then work with it.
 - [ ] `index.html` opens locally by double-click, no proxy, styled correctly — and you can state out loud why this is fine for a sandbox file but not for anything a real customer's traffic reaches.
-- [ ] Proxy backend running; widget re-pointed at it with the `apikey` attribute removed.
+- [ ] Proxy backend running as a catch-all; widget re-pointed with `backend` + `proxy="true"` and the `apikey` attribute removed.
+- [ ] Autocomplete and thumbnails still work through the proxy — proof it forwards paths, not one route.
 - [ ] DevTools Network tab confirms no service-account key on any request the page's own JS initiated.
 - [ ] Synchronized configuration enabled on the tested snippet.
 - [ ] A Result Display change (Build 05) made in the dashboard, reflected in the already-embedded widget on reload — no snippet regeneration.
@@ -188,6 +206,9 @@ Then take the [Build 08 quiz](3-quiz.md). Pass → start [Build 09 — Capstone]
 
 **`csspath` gives a 404 or the widget looks completely unstyled.**
 - Check the path is relative to where the widget script resolves it from, not relative to your OS filesystem. Try an absolute path or a fully-qualified URL if a relative one isn't resolving.
+
+**Search works through the proxy, but autocomplete is dead and/or thumbnails are broken.**
+- Your proxy is handling one route instead of forwarding paths. The widget calls several ARAG endpoints off the `backend` base URL, not just `/ask`. Go back to your AI: *"Make this a catch-all proxy that forwards any path under /api to ARAG, preserving method, query string and content-type."*
 
 **The widget on my local no-proxy file works, but the same snippet fails once pointed at my proxy — CORS error or "Failed to fetch" in the console.**
 - Confirm your proxy's CORS configuration allows the origin you're loading the widget from (`http://localhost:PORT` or `file://`, depending on how you're serving the test page — `file://` origins are the trickiest for CORS; consider serving the test file from a simple local static server instead of double-clicking it once you're testing the proxy). Also confirm the proxy is actually running and the widget's endpoint attribute points at the right host and port.

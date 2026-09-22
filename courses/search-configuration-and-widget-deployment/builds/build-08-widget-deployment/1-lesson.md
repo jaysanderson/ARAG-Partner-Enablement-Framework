@@ -60,14 +60,31 @@ The one thing worth restating precisely, because it's the hinge this whole Build
 
 The mechanism, confirmed straight from the docs: **behind a proxy**, you keep your Knowledge Box's real API key server-side. The proxy injects the key into the request header before forwarding to ARAG, so the call isn't rejected — but the key is never present in your frontend code. The scenario this solves: a client-facing application where exposing your ARAG API key is not an option. Users' requests hit your backend with no key attached; your backend attaches the real key and talks to ARAG on their behalf.
 
-Concretely, for a widget deployment, the proxy is a small backend endpoint that:
+Concretely, for a widget deployment, the proxy is a small backend that:
 
 1. Receives the widget's request with **no** API key attached.
 2. Injects the real service-account key server-side.
 3. Forwards the request to ARAG.
 4. Returns ARAG's response back to the widget.
 
-Then you point the widget's endpoint attribute at your proxy instead of directly at ARAG, so the browser never holds the key at all — there's nothing in the page source to leak, because the key was never shipped to the page in the first place.
+Two widget attributes switch it into this mode:
+
+- **`backend`** — the base URL of your proxy (e.g. `http://localhost:8000/api`) instead of ARAG's own endpoint.
+- **`proxy="true"`** — tells the widget it's talking through a proxy.
+
+And you **remove `apikey` entirely**. That's the whole client-side change:
+
+```html
+<nuclia-search-bar
+  knowledgebox="YOUR_KB_UUID"
+  backend="http://localhost:8000/api"
+  proxy="true"
+></nuclia-search-bar>
+```
+
+There's nothing in the page source to leak, because the key was never shipped to the page in the first place.
+
+> **The proxy must forward paths, not one route.** `backend` is a *base URL*: the widget appends whatever API path it needs onto it, and it needs several — suggestions as the user types, `/find` or `/ask` for the query, plus resource and thumbnail fetches for the result list. A proxy that hardcodes a single `/ask` route will render a widget that looks alive but has broken autocomplete and missing thumbnails. Write it as a catch-all that passes the incoming path straight through to ARAG.
 
 Brief your AI assistant per this course's parent Foundations conventions: no ARAG SDK import, plain `fetch` server-side, the service-account header set only in backend code:
 
@@ -75,7 +92,7 @@ Brief your AI assistant per this course's parent Foundations conventions: no ARA
 X-NUCLIA-SERVICEACCOUNT: Bearer <jwt>
 ```
 
-Any simple stack works — a small Node/Express endpoint is the easiest starting point, but the shape is the same regardless of language: one route, no key on the client, `fetch` on the server.
+Any simple stack works — a small Node/Express app is the easiest starting point, but the shape is the same regardless of language: one catch-all route, no key on the client, `fetch` on the server.
 
 ## Step 3 of deployment: Synchronized configuration
 

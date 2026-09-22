@@ -6,14 +6,14 @@
 
 | | |
 |---|---|
-| **Capability** | Tour the Generative Answer tab's generation half — prompts (system/user/rephrase), `generate_answer` debugging, `generativeModel`, `reasoning`, token limits, `preferMarkdown`, `askSpecificResource` — and save a tuned setup as a named search configuration |
+| **Capability** | Tour the Generative Answer tab's generation half — prompts (system/user/rephrase), `generate_answer` debugging, `generative_model`, `reasoning`, token limits, `prefer_markdown`, `askSpecificResource` — and save a tuned setup as a named search configuration |
 | **Tier mapped to** | Tier 1–2 |
 | **Prerequisite** | [Build 01 — Tuning the Search Strategy](../build-01-tuning-the-search-strategy/) |
 | **Estimated effort** | 1.5 hours focused |
 
 ## Start here
 
-1. **[lesson.md](1-lesson.md)** — prompt structure and the `rephrase`-toggle-vs-`rephrase`-prompt distinction, `generate_answer` as a debugging tool, `generativeModel`, `reasoning`, token limits, `preferMarkdown`, `askSpecificResource`/`specificResourceSlug`, a brief `useImages` mention, `usePrompt`/`useSystemPrompt`.
+1. **[lesson.md](1-lesson.md)** — the snake_case/camelCase naming rule, prompt structure and the `rephrase`-toggle-vs-`rephrase`-prompt distinction, `generate_answer` as a debugging tool, `generative_model`, `reasoning`, token limits, `prefer_markdown`, `askSpecificResource`/`specificResourceSlug`, a brief `useImages` mention, `usePrompt`/`useSystemPrompt`.
 2. **[walkthrough.md](2-walkthrough.md)** — write a shopping-assistant system prompt, test `generate_answer:false`, compare `reasoning` effort levels on a multi-step question, set a token limit, save the result as a named search configuration.
 3. **[quiz.md](3-quiz.md)** — 5 multiple-choice.
 
@@ -21,7 +21,8 @@
 
 - Set a system/user/rephrase prompt at configuration level or per-call, and explain precisely how `prompt.rephrase` (a prompt template) differs from Build 01's `rephrase: true` (a boolean toggle).
 - Use `generate_answer: false` to isolate a retrieval problem from a generation problem before touching a prompt — the first move on any "the answer is wrong" ticket.
-- Explain the `generativeModel` gotcha: switching models changes latency, cost, and style, and can require retuning a prompt or RAG strategy built for a different model.
+- Explain the `generative_model` gotcha: switching models changes latency, cost, and style, and can require retuning a prompt or RAG strategy built for a different model.
+- State which Generative Answer names are `snake_case` API request-body parameters and which are `camelCase` widget-configuration fields, and use **Get code** to get the authoritative request for any dashboard setting.
 - Set `reasoning.effort` and `reasoning.budget_tokens` appropriately for a question's actual complexity, instead of defaulting every call to maximum reasoning.
 - Cap per-call spend with `limitTokenConsumption`, `tokenConsumptionLimit`, and `outputTokenConsumptionLimit`.
 - Know when `preferMarkdown` helps (a Markdown-aware surface) versus when it makes an answer look worse (a plain-text surface).

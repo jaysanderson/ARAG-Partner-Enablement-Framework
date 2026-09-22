@@ -8,7 +8,9 @@ Builds 01–04 tuned what the platform retrieves and generates. None of that con
 
 ## Result Display: what the result list shows
 
-Every field below is a key in `ResultDisplayConfig`, settable on the dashboard's Result Display tab or inline on `/find`/`/ask`.
+Every field below is a key in `ResultDisplayConfig` — a **widget/dashboard configuration object**, set on the Result Display tab and stored with a widget or a named search configuration.
+
+> **Not request-body parameters.** These are `camelCase` configuration fields (Build 02's naming rule), not `snake_case` `/find`/`/ask` request parameters. That distinction is more than cosmetic here: result display governs what the *rendering surface* shows, so the right place to verify a change is the widget preview, not a raw JSON response. The API returns the same resources and citations either way. Where a display setting has a true API-level counterpart, this lesson says so explicitly — `hideAnswer` vs `generate_answer` below is exactly that case.
 
 ### The on/off switch
 
@@ -63,7 +65,7 @@ Routing is a genuinely different mechanism from anything in Builds 01–04. It d
 { "useRouting": true, "routing": { "rules": [ /* ... */ ] } }
 ```
 
-`useRouting` is the on/off gate for the whole feature. `routing` carries the actual rule set, an object with three confirmed properties.
+`useRouting` is the on/off gate for the whole feature. `routing` carries the actual rule set. Like `ResultDisplayConfig`, `RoutingConfig` is a **widget/dashboard configuration object** — you set it in the widget builder (Build 07), not as an `/ask` request-body parameter.
 
 ### Rules: natural-language prompts, not keyword matches
 

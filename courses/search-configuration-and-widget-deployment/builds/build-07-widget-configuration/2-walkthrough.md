@@ -76,7 +76,9 @@ Back to the **Widget Builder list view** from Step 1 — this is the part of the
 
 ## Step 5 — Confirm the API-equivalent, optional (10 min)
 
-If you want to see the widget-field-to-API-parameter mapping from the lesson made concrete, run the same pre-scoped query `aurora-public-search` runs, directly against `/ask`, using the `shopper_display` configuration and an inline filter:
+If you want to see the widget-field-to-API-parameter mapping from the lesson made concrete, run the same pre-scoped query `aurora-public-search` runs, directly against `/ask`, using the `shopper_display` configuration and an inline filter.
+
+Note the `filter_expression` shape below: Build 01 showed you `{"prop": "language"}`; this is the label form, `{"prop": "label", "labelset": ..., "label": ...}` — the `filter_expression` equivalent of Build 01's `/classification.labels/content_type/product` filter path. Same restriction, expressed in the composable syntax. Note `prop` is **`label`**, singular; `"labels"` is silently accepted and returns nothing.
 
 ```bash
 curl -s "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" \
@@ -86,13 +88,33 @@ curl -s "$NUCLIA_API_URL/kb/$NUCLIA_KB_ID/ask" \
     "query": "waterproof boot",
     "search_configuration": "shopper_display",
     "filter_expression": {
-      "field": {"prop": "labels", "labelset": "content_type", "label": "product"}
+      "field": {"prop": "label", "labelset": "content_type", "label": "product"}
     },
     "highlight": true
   }'
 ```
 
 Compare the citations/results to what the `aurora-public-search` live preview showed in Step 2. Same underlying call, two surfaces — exactly the table at the end of the lesson.
+
+---
+
+## Step 6 — Save your prompts (5 min)
+
+Add to (or create) `prompt-log.md` in your project folder: paste any prompts you used to work out which dashboard control corresponds to a `SearchBoxConfig` field whose name didn't match the lesson's terminology, or to debug a pre-scoping filter that returned nothing.
+
+---
+
+## Verification checklist
+
+- [ ] `aurora-public-search` built on `shopper_display`, pre-scoped to `product`, `labelFilterCounts` on, `highlight` on — confirmed a non-product query returns nothing.
+- [ ] `aurora-staff-search` (renamed from `aurora-internal-search`) built on `staff_display`, filter panel on, `editorial_status` hidden from that panel, `autocompleteFromNERs` on and confirmed against a partial entity name.
+- [ ] `aurora-staff-search-es` created via **duplicate**, response language changed to Spanish, every `SearchBoxConfig` field otherwise identical to its source.
+- [ ] Used **preview**, **rename**, and **duplicate** from the Widget Builder list view — not just the single-widget configurator.
+- [ ] (Optional) Ran the Step 5 `curl` call and matched it against the `aurora-public-search` preview.
+- [ ] `prompt-log.md` updated.
+- [ ] All three widgets still exist in the list at the end of this walkthrough.
+
+Then take the [Build 07 quiz](3-quiz.md). Pass → start [Build 08](../build-08-widget-deployment/).
 
 ---
 
@@ -110,13 +132,6 @@ Compare the citations/results to what the `aurora-public-search` live preview sh
 
 ---
 
-## Verification checklist
+## Next
 
-- [ ] `aurora-public-search` built on `shopper_display`, pre-scoped to `product`, `labelFilterCounts` on, `highlight` on — confirmed a non-product query returns nothing.
-- [ ] `aurora-staff-search` (renamed from `aurora-internal-search`) built on `staff_display`, filter panel on, `editorial_status` hidden from that panel, `autocompleteFromNERs` on and confirmed against a partial entity name.
-- [ ] `aurora-staff-search-es` created via **duplicate**, response language changed to Spanish, every `SearchBoxConfig` field otherwise identical to its source.
-- [ ] Used **preview**, **rename**, and **duplicate** from the Widget Builder list view — not just the single-widget configurator.
-- [ ] (Optional) Ran the Step 5 `curl` call and matched it against the `aurora-public-search` preview.
-- [ ] All three widgets still exist in the list at the end of this walkthrough.
-
-Then take the [Build 07 quiz](3-quiz.md). Pass → start [Build 08](../build-08-widget-deployment/).
+[Build 08 — Widget Deployment](../build-08-widget-deployment/) — CSS styling, a local no-proxy quick test, the production proxy pattern, and Synchronized configuration.

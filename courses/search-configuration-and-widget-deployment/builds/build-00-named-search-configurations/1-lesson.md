@@ -66,6 +66,21 @@ Three reasons partners ship this way instead of hand-carrying parameters:
 2. **Switch behaviour without touching code.** A widget, a mobile app, and an internal tool can all reference the same named configuration, or each reference a different one (`shopper_default` vs `staff_internal`) for different audiences from the same Knowledge Box.
 3. **It's what the dashboard already does.** When you click **Create widget** in the dashboard (you did this in Foundations Build 2), the dashboard saves your Search-tab and Generative-Answer-tab choices as a named search configuration behind the scenes, then points the generated widget snippet at it. Builds 01 through 08 of this course are, mechanically, "what goes into that stored configuration, and how."
 
+## Creating vs. updating
+
+`POST` **creates only.** Once a name exists, posting to it again returns **`409 Conflict`** — it does not overwrite. To change a stored configuration, use `PATCH` on the same URL:
+
+```bash
+curl -s -X PATCH "https://{zone}.rag.progress.cloud/api/v1/kb/{kbId}/search_configurations/shopper_default" \
+  -H "X-NUCLIA-SERVICEACCOUNT: Bearer $JWT" \
+  -H "content-type: application/json" \
+  -d '{"kind": "ask", "config": { ... }}'
+```
+
+`GET` reads one back, `DELETE` removes it (`204`). `PUT` is not supported — it returns `404`.
+
+This matters more than it looks: you will re-run these walkthrough steps as you tune, and a `409` on the second run is the expected response, not a sign anything is broken.
+
 ## Gotcha
 
 A configuration's `kind` locks it to one endpoint. A `kind: "find"` configuration can't be referenced from `/ask`, and vice versa — if you need the same filter logic on both endpoints, you create two configurations (or, more commonly, just create the `ask` one and call `/find` with `generate_answer:false`, which Build 02 covers).
