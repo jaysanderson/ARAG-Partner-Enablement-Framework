@@ -29,8 +29,13 @@ this tool is build-time only and ships nothing to the browser.
   ordered topic index, per-build Overview / Lesson / Walkthrough / Quiz
   sections with prev/next links, the final exam, then the capstone brief as
   the final section. All navigation is in-page `#anchors`.
-- **Not published:** corpus folders and anything outside the course. Links to
-  unpublished files are rendered as plain text so the file has no dead links.
+- **Bundled assets:** the Build 0 corpus folder is zipped at build time into
+  `docs/assets/agentic-rag-datasets.zip`, and into the Build 0, Build 13 and
+  full-course SCORM packages as `scormcontent/assets/…`. Every link into a
+  `corpus/` folder becomes a download link for that zip, and Build 0 and the
+  capstone brief open with a "Course files" download box.
+- **Not published:** anything else outside the course. Links to unpublished
+  files are rendered as plain text so the file has no dead links.
 
 ## SCORM package (for LMS import)
 
@@ -40,10 +45,12 @@ The build emits **a folder of SCORM 2004 4th Edition packages** into
 
 - `developer-foundations-scorm2004_4.zip` — the full course
 - `build-00-…` through `build-12-…` — **one package per build** (that build's
-  Overview / Lesson / Walkthrough / Quiz; the build quiz reports its score
-  and passed/failed at 4/5)
+  Overview / Lesson / Walkthrough / Quiz plus the vibe-coding guide as a
+  reference page; the build quiz reports its score and passed/failed at 4/5)
 - `build-13-capstone-…` — the capstone brief + both variants (completes on
   launch; no quiz)
+- `vibe-coding-guide-…` — the guide on its own, for a module-level LMS
+  item (completes on launch; no quiz)
 - `final-exam-…` — the 20-question exam on its own (pass 16+)
 
 Every package shares the structure:

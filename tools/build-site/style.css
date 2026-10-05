@@ -279,14 +279,14 @@ main details summary { cursor: pointer; }
 .pager a:hover { text-decoration: underline; }
 .pager .next { text-align: right; margin-left: auto; }
 
-/* ---------- capstone submit box ---------- */
+/* ---------- capstone submit box / course-files box ---------- */
 
-.submit-box {
+.submit-box, .asset-box {
   margin: 2rem 0; padding: 1rem 1.3rem;
   border: 2px solid var(--accent); border-radius: 10px;
   background: #f2faf6;
 }
-.submit-box h2 { border-top: none; margin-top: 0.2rem; padding-top: 0; }
+.submit-box h2, .asset-box h2 { border-top: none; margin-top: 0.2rem; padding-top: 0; }
 mark.placeholder {
   background: var(--mark);
   border: 1px dashed #d4a72c;

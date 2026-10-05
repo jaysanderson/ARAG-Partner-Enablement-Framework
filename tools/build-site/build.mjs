@@ -386,6 +386,7 @@ function rewriteLinks(html, page) {
     const [target, frag = ''] = href.split(/(?=#)/);
     let resolved = path.posix.normalize(path.posix.join(srcDir, decodeURI(target)));
     if (resolved === '.' || resolved === './') resolved = '';
+    if (/(^|\/)corpus(\/|$)/.test(resolved)) return assetLink(DATASETS, inner); // corpus → bundled dataset zip
     if (resolved.startsWith('..')) return inner; // escapes the course → unpublished
     const id =
       srcToId.get(resolved) ??
@@ -570,6 +571,50 @@ const SUBMIT_BLOCK = `
 // Build
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Bundled course assets. The dataset zip is built from Build 0's corpus folder
+// (a superset of both capstone corpora) and shipped inside the packages that
+// need it — scormcontent/assets/<name> in SCORM, docs/assets/<name> on the web
+// — so every corpus link in the course resolves to a real download.
+// ---------------------------------------------------------------------------
+
+function walkFiles(absDir, rel) {
+  const out = [];
+  const entries = fs.readdirSync(absDir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name));
+  for (const e of entries) {
+    if (e.name === '.DS_Store') continue;
+    const r = `${rel}/${e.name}`;
+    if (e.isDirectory()) out.push(...walkFiles(path.join(absDir, e.name), r));
+    else out.push({ name: r, data: fs.readFileSync(path.join(absDir, e.name)) });
+  }
+  return out;
+}
+
+const DATASETS = (() => {
+  const files = walkFiles(path.join(SRC, 'builds', 'build-00-hello-arag', 'corpus'), 'corpus');
+  const data = buildZip(files);
+  return {
+    name: 'agentic-rag-datasets.zip',
+    label: 'Agentic RAG Datasets',
+    data,
+    fileCount: files.length,
+    sizeMb: (data.length / 1048576).toFixed(1),
+  };
+})();
+
+// Builds whose packages carry the dataset zip (the full course always does),
+// and the pages that open with a download box for it.
+const ASSET_BUILDS = new Set(['build-00-hello-arag', 'build-13-capstone']);
+const ASSET_BOX_PAGES = new Set(['build-00', 'build-00-walkthrough', 'build-13']);
+
+const assetLink = (a, inner) => `<a href="assets/${a.name}" download>${inner}</a>`;
+const assetBox = (a) => `
+<section class="asset-box">
+  <h2>Course files</h2>
+  <p>${assetLink(a, `Download ${escapeHtml(a.label)}`)} (zip, ${a.sizeMb} MB, ${a.fileCount} files). Unzip it: <code>corpus/content_type/</code> is the Build 0 and Aurora Concierge corpus, <code>corpus/business_unit/</code> is the Atlas Operations corpus.</p>
+</section>
+`;
+
 const sectionHtml = new Map(
   order.map((page) => {
     let body;
@@ -582,12 +627,21 @@ const sectionHtml = new Map(
     } else {
       body = rewriteLinks(renderMarkdown(read(page.src), page.id), page);
     }
+    if (ASSET_BOX_PAGES.has(page.id)) body = assetBox(DATASETS) + body;
     return [page.id, sectionShell(page, body)];
   }),
 );
 
 // For per-build packages: prune links that point at pages outside the
 // package — pager entries disappear, prose links fall back to plain text.
+// For packages that don't carry the bundled assets: drop the download box and
+// turn asset links back into plain text.
+function stripAssets(html) {
+  return html
+    .replace(/<section class="asset-box">[\s\S]*?<\/section>\n?/g, '')
+    .replace(/<a[^>]*href="assets\/[^"]*"[^>]*>([\s\S]*?)<\/a>/g, '$1');
+}
+
 function subsetClean(html, idSet) {
   html = html.replace(/<nav class="pager">([\s\S]*?)<\/nav>/g, (m, inner) => {
     const cleaned = inner.replace(/<a[^>]*href="#([a-z0-9-]+?)(?:--[^"]*)?"[^>]*>[\s\S]*?<\/a>/g, (a, id) =>
@@ -635,6 +689,7 @@ function sidebarFor(pkg) {
   const labelFor = (p) => {
     if (p.id.endsWith('-atlas')) return 'Atlas Operations';
     if (p.id.endsWith('-aurora')) return 'Aurora Concierge';
+    if (p.id === 'vibe-coding-guide') return 'Vibe-coding guide';
     if (p.partLabel && p.partLabel !== 'Overview') return p.partLabel;
     if (p.kind === 'capstone') return 'Capstone brief';
     return p.title;
@@ -804,6 +859,7 @@ function docFor(pkg) {
   const idSet = new Set(pkg.pages.map((p) => p.id));
   let sections = pkg.pages.map((p) => sectionHtml.get(p.id)).join('\n');
   if (!isFull) sections = subsetClean(sections, idSet);
+  if (!pkg.assets?.length) sections = stripAssets(sections);
   const router = routerScript({
     defaultId: pkg.pages[0].id,
     examId: pkg.examId ?? null,
@@ -839,14 +895,16 @@ ${GRADER}</script>
 `;
 }
 
-// Package definitions: the full course, one per build, the capstone, and the
-// final exam — each becomes its own SCORM zip in docs/scorm/.
+// Package definitions: the full course, one per build, the capstone, the
+// vibe-coding guide on its own (for an LMS module-level item), and the final
+// exam — each becomes its own SCORM zip in docs/scorm/.
 const FULL_PKG = {
   slug: 'developer-foundations',
   title: 'Developer Foundations',
   description: 'The on-ramp course for partners building on Progress Agentic RAG: thirteen builds plus a capstone.',
   pages: order,
   examId: 'final-exam',
+  assets: [DATASETS],
 };
 const packages = [
   FULL_PKG,
@@ -856,8 +914,9 @@ const packages = [
       slug: b.dir,
       title: b.title,
       description: `${b.title} — Developer Foundations, the Progress Agentic RAG partner course.`,
-      pages: order.filter((p) => p.build === b.dir),
+      pages: [...order.filter((p) => p.build === b.dir), bySrc('vibe-coding-guide.md')],
       examId: `${b.id}-quiz`,
+      assets: ASSET_BUILDS.has(b.dir) ? [DATASETS] : [],
     })),
   ...buildMeta
     .filter((b) => b.isCapstone)
@@ -865,9 +924,17 @@ const packages = [
       slug: b.dir,
       title: b.title,
       description: `${b.title} — Developer Foundations, the Progress Agentic RAG partner course.`,
-      pages: order.filter((p) => p.build === b.dir),
+      pages: [...order.filter((p) => p.build === b.dir), bySrc('vibe-coding-guide.md')],
       completeOnLaunch: true,
+      assets: ASSET_BUILDS.has(b.dir) ? [DATASETS] : [],
     })),
+  {
+    slug: 'vibe-coding-guide',
+    title: 'Vibe-Coding Guide',
+    description: 'Read before Build 0: the vibe-coding mental model the Developer Foundations course runs on.',
+    pages: [bySrc('vibe-coding-guide.md')],
+    completeOnLaunch: true,
+  },
   {
     slug: 'final-exam',
     title: 'Developer Foundations — Final Exam',
@@ -913,6 +980,7 @@ function scormManifest(driverFiles, pkg) {
   const fileList = [
     ...driverFiles.filter((f) => f.name.startsWith('scormdriver/')).map((f) => f.name),
     'scormcontent/index.html',
+    ...(pkg.assets ?? []).map((a) => `scormcontent/assets/${a.name}`),
   ]
     .map((f) => `      <file href="${f}" />`)
     .join('\n');
@@ -1160,6 +1228,12 @@ fs.writeFileSync(path.join(OUT, 'index.html'), doc);
 fs.writeFileSync(path.join(OUT, 'course-overview.html'), onePager());
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
 
+// Web build: the bundled assets next to index.html.
+fs.rmSync(path.join(OUT, 'assets'), { recursive: true, force: true });
+fs.mkdirSync(path.join(OUT, 'assets'), { recursive: true });
+fs.writeFileSync(path.join(OUT, 'assets', DATASETS.name), DATASETS.data);
+console.log(`  asset → docs/assets/${DATASETS.name} (${Math.round(DATASETS.data.length / 1024)} KB, ${DATASETS.fileCount} files)`);
+
 // scorm-template/ carries the reference package root verbatim (xsds, dtds,
 // metadata.xml, ScormEnginePackageProperties.xsd, scormdriver/) — everything
 // except the generated manifest, per-package metadata, and the content.
@@ -1175,6 +1249,7 @@ for (const pkg of packages) {
     { name: 'metadata.xml', data: Buffer.from(metadataFor(templateMeta, pkg), 'utf8') },
     ...driverFiles,
     { name: 'scormcontent/index.html', data: Buffer.from(pkgDoc, 'utf8') },
+    ...(pkg.assets ?? []).map((a) => ({ name: `scormcontent/assets/${a.name}`, data: a.data })),
   ]);
   const file = `scorm/${pkg.slug}-scorm2004_4.zip`;
   fs.writeFileSync(path.join(OUT, file), zip);
