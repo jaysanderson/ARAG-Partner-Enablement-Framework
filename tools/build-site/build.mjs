@@ -601,7 +601,7 @@ const DATASETS = (() => {
 
 // Builds whose packages carry the dataset zip (the full course always does),
 // and the pages that open with a download box for it.
-const ASSET_BUILDS = new Set(['build-00-hello-arag', 'build-13-capstone']);
+const ASSET_BUILDS = new Set(['build-00-hello-arag', 'build-12-capstone-prep', 'build-13-capstone']);
 const ASSET_BOX_PAGES = new Set(['build-00', 'build-00-walkthrough', 'build-13']);
 
 const assetLink = (a, inner) => `<a href="assets/${a.name}" download>${inner}</a>`;
@@ -903,6 +903,14 @@ const FULL_PKG = {
   examId: 'final-exam',
   assets: [DATASETS],
 };
+// Reference pages a per-build package carries beyond its own four (and the
+// vibe-coding guide, which every build gets): pages its content sends the
+// learner to read. Build 12's whole job is to read the Build 13 briefs.
+const REF_PAGES = {
+  'build-12-capstone-prep': ['build-13', 'build-13-atlas', 'build-13-aurora'],
+};
+const refPagesFor = (dir) => (REF_PAGES[dir] ?? []).map((id) => pages.find((p) => p.id === id)).filter(Boolean);
+
 const packages = [
   FULL_PKG,
   ...buildMeta
@@ -911,7 +919,7 @@ const packages = [
       slug: b.dir,
       title: b.title,
       description: `${b.title} — Developer Foundations, the Progress Agentic RAG partner course.`,
-      pages: [...order.filter((p) => p.build === b.dir), bySrc('vibe-coding-guide.md')],
+      pages: [...order.filter((p) => p.build === b.dir), bySrc('vibe-coding-guide.md'), ...refPagesFor(b.dir)],
       examId: `${b.id}-quiz`,
       assets: ASSET_BUILDS.has(b.dir) ? [DATASETS] : [],
     })),
