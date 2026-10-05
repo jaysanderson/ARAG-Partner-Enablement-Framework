@@ -13,7 +13,7 @@
 
 ## Start here
 
-Work through the four files for this Build in order:
+Work through the three files for this Build in order:
 
 1. **[lesson.md](1-lesson.md)** — what ARAG is, the auth model, the three endpoints you'll touch today. Read first.
 2. **[walkthrough.md](2-walkthrough.md)** — vibe-coded exercise: provision a KB, make calls, ask an AI to write `ask.mjs` for you, verify.

@@ -21,7 +21,8 @@ this tool is build-time only and ships nothing to the browser.
   marks each question, shows the correct answer on misses, and scores against
   the quiz's real pass mark (parsed from its answer key at build time —
   4/5 per build, 16/20 on the final exam). No persistence; a reload resets.
-  The static "Reveal answer key" `<details>` stays as a fallback.
+  The markdown's "## Answer key" section is consumed at build time and never
+  rendered, so learners cannot see the key.
 - Targets modern browsers (Chrome, Edge, Safari, Firefox).
 - Code blocks are syntax-highlighted at build time (classes baked into the
   HTML, palette in the inlined CSS).

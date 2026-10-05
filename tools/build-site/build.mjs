@@ -5,8 +5,7 @@
  * Reads markdown from courses/developer-foundations/ (source of truth — never
  * modified) and writes ONE self-contained HTML file: docs/index.html.
  * CSS is inlined; the only JavaScript is a ~20-line inline hash router that
- * shows one course page at a time (SPA feel) — quiz answer keys use native
- * <details>/<summary>. Without JavaScript the file degrades to one scrolling
+ * shows one course page at a time (SPA feel). Without JavaScript the file degrades to one scrolling
  * document (<noscript> style). The file opens by double-clicking it, attaches
  * to an email, and works identically on any static host.
  *
@@ -401,7 +400,8 @@ function rewriteLinks(html, page) {
 // Quizzes + final exam become runnable: options turn into radio groups, a
 // "Check my answers" button grades against the answer key (parsed from the
 // "## Answer key" section at build time) and reports the score against the
-// quiz's pass mark. The static reveal-the-key <details> stays as a fallback.
+// quiz's pass mark. The "## Answer key" section is consumed at build time and
+// never rendered — learners only ever see the grader's feedback.
 function renderQuiz(md, prefix) {
   const m = md.match(/^## Answer key\s*$/m);
   if (!m) return renderMarkdown(md, prefix);
@@ -437,10 +437,7 @@ function renderQuiz(md, prefix) {
     `<div class="quiz-controls">
 <button type="button" class="button quiz-check" data-pass="${pass}">Check my answers</button>
 <p class="quiz-result" hidden></p>
-</div>\n` +
-    '<details class="answer-key"><summary>Reveal answer key</summary>\n' +
-    renderMarkdown(tail, prefix) +
-    '</details>\n'
+</div>\n`
   );
 }
 
