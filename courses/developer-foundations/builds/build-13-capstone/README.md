@@ -53,7 +53,7 @@ Each variant brief is a complete build spec. The application you ship covers:
 
 ### Corpus ingest — no scripts required
 
-Both capstones use Progress Agentic RAG's **"Upload folder"** dashboard option with the **"use folder names as label names"** toggle. The bundled corpus folders (`corpus/business_unit/` for Atlas, `corpus/content_type/` for Aurora) are pre-organised so a partner picks the folder in the dashboard's "Upload folder" picker, enables the folder-names-as-labels option, and Progress Agentic RAG applies the primary labelset automatically — no Node.js, no env vars, no terminal commands required for the basic path. A seed script is an optional path for partners scaling beyond the bundled corpus or wanting to apply additional labelsets programmatically. Per-capstone ingest instructions are in each variant's `corpus/README.md`.
+Both capstones use Progress Agentic RAG's **"Upload folder"** dashboard option with the **"use folder names as label names"** toggle. The bundled corpus folders (`corpus/business_unit/` for Atlas, `corpus/content_type/` for Aurora) are pre-organised so a partner picks the folder in the dashboard's "Upload folder" picker, enables the folder-names-as-labels option, and Progress Agentic RAG applies the primary labelset automatically — no Node.js, no env vars, no terminal commands required for the basic path. A seed script is an optional path for partners scaling beyond the bundled corpus or wanting to apply additional labelsets programmatically. Per-capstone ingest instructions are in each variant's `corpus/README.md`. Taking the course in an LMS or from the single-page site? Download **Agentic RAG Datasets** from the box at the top of this page — both corpus folders are inside.
 
 ---
 

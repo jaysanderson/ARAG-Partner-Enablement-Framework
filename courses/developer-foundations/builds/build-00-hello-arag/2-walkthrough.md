@@ -106,7 +106,7 @@ Save the file.
 Back in the Progress Agentic RAG dashboard, open your Knowledge Box. You're going to use the **Upload folder** option with the **"use folder names as label names"** feature — this is the workflow you'll re-use in every build, including the capstone.
 
 1. In the dashboard navigate to **Resources** → **Upload** → **Upload folder** (exact wording varies by tenant — look for an "Upload folder" option, distinct from the single-file uploader).
-2. In your file explorer, locate the **`courses/developer-foundations/builds/build-00-hello-arag/corpus/content_type/`** folder. **Pick that folder** (the `content_type/` one — not its parent `corpus/`, not its children).
+2. In your file explorer, locate the **`content_type/`** folder — inside the unzipped **Agentic RAG Datasets** download (box at the top of this page), or at `courses/developer-foundations/builds/build-00-hello-arag/corpus/content_type/` if you cloned the repo. **Pick that folder** (the `content_type/` one — not its parent `corpus/`, not its children).
 3. **Enable the "use folder names as label names" option.** This is the toggle/checkbox that tells Progress Agentic RAG to read your folder structure as labelset metadata. With it on:
    - The parent folder's name (`content_type`) becomes the **labelset name**.
    - Each subfolder's name (`product`, `trail_guide`, `gear_review`, etc.) becomes a **label value** applied to every document inside.
@@ -496,7 +496,7 @@ If something doesn't work, see "Getting unstuck" below.
 - The AI explains and proposes a fix. You apply it. Re-run.
 
 **I can't find the sample corpus.**
-- The `corpus/content_type/` folder ships with this course under `build-00-hello-arag/`. If your course was delivered as a single page or an LMS package, ask your programme lead for the corpus folder (or its ZIP) — you need the `content_type/` folder on disk for the Step 4 upload.
+- The corpus ships inside this course as **Agentic RAG Datasets** — the download box at the top of this walkthrough and of the Build 0 overview. Unzip it and you have `corpus/content_type/` on disk for the Step 4 upload. If you cloned the repo instead, the same folder is at `builds/build-00-hello-arag/corpus/content_type/`.
 
 ---
 

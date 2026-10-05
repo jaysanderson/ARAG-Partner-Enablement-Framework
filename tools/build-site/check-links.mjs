@@ -22,6 +22,11 @@ for (const m of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
       console.log(`MISSING ANCHOR → ${url}`);
       bad++;
     }
+  } else if (url.startsWith('assets/')) {
+    if (!fs.existsSync(path.join(path.dirname(FILE), url))) {
+      console.log(`MISSING ASSET → ${url}`);
+      bad++;
+    }
   } else {
     console.log(`RELATIVE FILE LINK (should be a #fragment) → ${url}`);
     bad++;
