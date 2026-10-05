@@ -105,6 +105,7 @@ The framework's competency ladder is delivered through courses. Each course bund
 | Course | Status | Awarded cert | Doc |
 |---|---|---|---|
 | **Developer Foundations** | Shipped | Developer Foundations Practitioner | `courses/developer-foundations/README.md` |
+| **Search Configuration & Widget Deployment** | Shipped | Search Configuration & Widget Deployment Practitioner | `courses/search-configuration-and-widget-deployment/README.md` |
 | **Advanced Extraction & Retrieval Strategies** | Shipped | AE&RS Specialist | `courses/advanced-extraction-and-retrieval-strategies/README.md` |
 | **Advanced Search & Retrieval Agents** | Draft 1 | AS&RA Specialist | `courses/advanced-search-and-retrieval-agents/README.md` |
 | **Sales Foundations** | Planned (target Q3) | Sales Foundations Practitioner | TBD |
@@ -207,6 +208,7 @@ Every asset has a name, an owner, a version, and a corresponding build. No orpha
 |  reference repo | Cross-course | GTM | **Shipped** |
 | Umbrella framework (this doc) | All courses | GTM | **Shipped** |
 | Developer Foundations course doc | Foundations | GTM | **Shipped** (`courses/developer-foundations/README.md`) |
+| Search Configuration & Widget Deployment course doc | Solution / Deliver | GTM | **Shipped** (`courses/search-configuration-and-widget-deployment/README.md`) |
 | Advanced Extraction & Retrieval Strategies course doc | Advanced | GTM | **Shipped** (`courses/advanced-extraction-and-retrieval-strategies/README.md`) |
 | Advanced Search & Retrieval Agents course doc | Advanced | GTM | **Draft 1 shipped** (`courses/advanced-search-and-retrieval-agents/README.md`) |
 | ARAG primitives slide deck | Foundations Build 0 | GTM | TODO |
