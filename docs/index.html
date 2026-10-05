@@ -233,22 +233,6 @@ button.button { border: none; cursor: pointer; font-family: inherit; font-size: 
 .quiz-result.pass { color: var(--accent-ink); }
 .quiz-result.fail { color: #c92a2a; }
 
-/* ---------- quiz answer key ---------- */
-
-details.answer-key {
-  margin: 1.5rem 0;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--wash);
-  padding: 0.6rem 1rem;
-}
-details.answer-key summary {
-  cursor: pointer;
-  font-weight: 700;
-  color: var(--accent-ink);
-}
-details.answer-key[open] summary { margin-bottom: 0.5rem; }
-
 /* content-authored <details> blocks get a lighter treatment */
 main details { margin: 0.8rem 0; }
 main details summary { cursor: pointer; }
@@ -319,7 +303,6 @@ mark.placeholder {
 @media print {
   section.page { display: block !important; }
   .section-header, .site-footer, .pager { display: none; }
-  details.answer-key { display: block; }
   main { max-width: 100%; }
 }
 
@@ -787,7 +770,7 @@ mark.placeholder {
 </tbody>
 </table>
 <h2 id="build-00--start-here">Start here</h2>
-<p>Work through the four files for this Build in order:</p>
+<p>Work through the three files for this Build in order:</p>
 <ol>
 <li><strong><a href="#build-00-lesson">lesson.md</a></strong> — what ARAG is, the auth model, the three endpoints you'll touch today. Read first.</li>
 <li><strong><a href="#build-00-walkthrough">walkthrough.md</a></strong> — vibe-coded exercise: provision a KB, make calls, ask an AI to write <code>ask.mjs</code> for you, verify.</li>
@@ -1518,12 +1501,6 @@ console.log(<span class="hljs-string">'Unique resource IDs:'</span>, uniqueRids)
 <button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
 <p class="quiz-result" hidden></p>
 </div>
-<details class="answer-key"><summary>Reveal answer key</summary>
-<ol>
-<li>B · 2. C · 3. B · 4. B · 5. B</li>
-</ol>
-<p>4+ correct → pass. Continue to <a href="#build-01">Build 1</a>.</p>
-</details>
 
 <nav class="pager"><a class="prev" href="#build-00-walkthrough">&larr; Build 0 — Hello ARAG — Walkthrough</a><a class="next" href="#build-01">Build 1 — The Five Primitives — Overview &rarr;</a></nav>
 </section>
@@ -2373,12 +2350,6 @@ Resource title: &quot;Onboarding Guide&quot;, extracted_text length: 4129 chars
 <button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
 <p class="quiz-result" hidden></p>
 </div>
-<details class="answer-key"><summary>Reveal answer key</summary>
-<ol>
-<li>B · 2. B · 3. C · 4. C · 5. B</li>
-</ol>
-<p>4+ correct → pass. Continue to <a href="#build-02">Build 2</a>.</p>
-</details>
 
 <nav class="pager"><a class="prev" href="#build-01-walkthrough">&larr; Build 1 — The Five Primitives — Walkthrough</a><a class="next" href="#build-02">Build 2 — Drop-in Widgets — Overview &rarr;</a></nav>
 </section>
@@ -2874,12 +2845,6 @@ Resource title: &quot;Onboarding Guide&quot;, extracted_text length: 4129 chars
 <button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
 <p class="quiz-result" hidden></p>
 </div>
-<details class="answer-key"><summary>Reveal answer key</summary>
-<ol>
-<li>B · 2. C · 3. B · 4. B · 5. D</li>
-</ol>
-<p>4+ correct → pass. Continue to <a href="#build-03">Build 3</a>.</p>
-</details>
 
 <nav class="pager"><a class="prev" href="#build-02-walkthrough">&larr; Build 2 — Drop-in Widgets — Walkthrough</a><a class="next" href="#build-03">Build 3 — Conversational Surfaces — Overview &rarr;</a></nav>
 </section>
@@ -3547,12 +3512,6 @@ After updating, restart the dev server if needed and tell me to refresh.
 <button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
 <p class="quiz-result" hidden></p>
 </div>
-<details class="answer-key"><summary>Reveal answer key</summary>
-<ol>
-<li>B · 2. B · 3. C · 4. B · 5. C</li>
-</ol>
-<p>4+ correct → pass. Continue to <a href="#build-04">Build 4</a>.</p>
-</details>
 
 <nav class="pager"><a class="prev" href="#build-03-walkthrough">&larr; Build 3 — Conversational Surfaces — Walkthrough</a><a class="next" href="#build-04">Build 4 — Multilingual &amp; Voice Switching — Overview &rarr;</a></nav>
 </section>
@@ -4193,12 +4152,6 @@ the same index.html — no new files.
 <button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
 <p class="quiz-result" hidden></p>
 </div>
-<details class="answer-key"><summary>Reveal answer key</summary>
-<ol>
-<li>C · 2. C · 3. C · 4. C · 5. B</li>
-</ol>
-<p>4+ correct → pass. Continue to <a href="#build-05">Build 5</a>.</p>
-</details>
 
 <nav class="pager"><a class="prev" href="#build-04-walkthrough">&larr; Build 4 — Multilingual &amp; Voice Switching — Walkthrough</a><a class="next" href="#build-05">Build 5 — Structured Outputs — Overview &rarr;</a></nav>
 </section>
@@ -5139,12 +5092,6 @@ from the normalised data:
 <button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
 <p class="quiz-result" hidden></p>
 </div>
-<details class="answer-key"><summary>Reveal answer key</summary>
-<ol>
-<li>B · 2. B · 3. B · 4. B · 5. A</li>
-</ol>
-<p>4+ correct → pass. Continue to <a href="#build-06">Build 6</a>.</p>
-</details>
 
 <nav class="pager"><a class="prev" href="#build-05-walkthrough">&larr; Build 5 — Structured Outputs — Walkthrough</a><a class="next" href="#build-06">Build 6 — Data-Augmentation Agents — Overview &rarr;</a></nav>
 </section>
@@ -6023,12 +5970,6 @@ X-NUCLIA-SERVICEACCOUNT: Bearer {NUCLIA_API_KEY}.
 <button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
 <p class="quiz-result" hidden></p>
 </div>
-<details class="answer-key"><summary>Reveal answer key</summary>
-<ol>
-<li>B · 2. C · 3. A · 4. C · 5. A</li>
-</ol>
-<p>4+ correct → pass. Continue to <a href="#build-07">Build 7 — Smart Filters &amp; Labelsets</a>.</p>
-</details>
 
 <nav class="pager"><a class="prev" href="#build-06-walkthrough">&larr; Build 6 — Data-Augmentation Agents — Walkthrough</a><a class="next" href="#build-07">Build 7 — Smart Filters &amp; Labelsets — Overview &rarr;</a></nav>
 </section>
@@ -6655,12 +6596,6 @@ Use plain fetch. No SDK. Stay inside the same index.html — no new files.
 <button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
 <p class="quiz-result" hidden></p>
 </div>
-<details class="answer-key"><summary>Reveal answer key</summary>
-<ol>
-<li>B · 2. B · 3. C · 4. B · 5. B</li>
-</ol>
-<p>4+ correct → pass. Continue to <a href="#build-08">Build 8</a>.</p>
-</details>
 
 <nav class="pager"><a class="prev" href="#build-07-walkthrough">&larr; Build 7 — Smart Filters &amp; Labelsets — Walkthrough</a><a class="next" href="#build-08">Build 8 — Knowledge Graph 101 — Overview &rarr;</a></nav>
 </section>
@@ -7533,12 +7468,6 @@ graph-only demo punchline.)
 <button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
 <p class="quiz-result" hidden></p>
 </div>
-<details class="answer-key"><summary>Reveal answer key</summary>
-<ol>
-<li>C · 2. B · 3. B · 4. B · 5. C</li>
-</ol>
-<p>4+ correct → pass. Continue to <a href="#build-09">Build 9</a>.</p>
-</details>
 
 <nav class="pager"><a class="prev" href="#build-08-walkthrough">&larr; Build 8 — Knowledge Graph 101 — Walkthrough</a><a class="next" href="#build-09">Build 9 — Field Engineering — Overview &rarr;</a></nav>
 </section>
@@ -8172,12 +8101,6 @@ except for example field values.
 <button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
 <p class="quiz-result" hidden></p>
 </div>
-<details class="answer-key"><summary>Reveal answer key</summary>
-<ol>
-<li>B · 2. C · 3. B · 4. B · 5. C</li>
-</ol>
-<p>4+ correct → pass. Continue to <a href="#build-10">Build 10</a>.</p>
-</details>
 
 <nav class="pager"><a class="prev" href="#build-09-walkthrough">&larr; Build 9 — Field Engineering — Walkthrough</a><a class="next" href="#build-10">Build 10 — Composite RAG — Overview &rarr;</a></nav>
 </section>
@@ -8892,12 +8815,6 @@ Two factors:
 <button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
 <p class="quiz-result" hidden></p>
 </div>
-<details class="answer-key"><summary>Reveal answer key</summary>
-<ol>
-<li>B · 2. B · 3. B · 4. C · 5. B</li>
-</ol>
-<p>4+ correct → pass. Continue to <a href="#build-11">Build 11</a>.</p>
-</details>
 
 <nav class="pager"><a class="prev" href="#build-10-walkthrough">&larr; Build 10 — Composite RAG — Walkthrough</a><a class="next" href="#build-11">Build 11 — Production Readiness — Overview &rarr;</a></nav>
 </section>
@@ -9588,12 +9505,6 @@ For each item, tick when verified for the customer's environment.
 <button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
 <p class="quiz-result" hidden></p>
 </div>
-<details class="answer-key"><summary>Reveal answer key</summary>
-<ol>
-<li>C · 2. C · 3. B · 4. B · 5. B</li>
-</ol>
-<p>4+ correct → pass. Continue to <a href="#build-12">Build 12</a>.</p>
-</details>
 
 <nav class="pager"><a class="prev" href="#build-11-walkthrough">&larr; Build 11 — Production Readiness — Walkthrough</a><a class="next" href="#build-12">Build 12 — Capstone Prep — Overview &rarr;</a></nav>
 </section>
@@ -9807,7 +9718,7 @@ code .
 <hr>
 <h2 id="build-12-walkthrough--step-2--choose-your-variant-25-min">Step 2 — Choose your variant (25 min)</h2>
 <h3 id="build-12-walkthrough--2a-read-both-capstone-briefs-in-full">2a. Read both capstone briefs in full</h3>
-<p>Open each in your editor:</p>
+<p>Both briefs are in this module — see <strong>Capstone brief</strong>, <strong>Atlas Operations</strong> and <strong>Aurora Concierge</strong> in the sidebar. Open each:</p>
 <ul>
 <li><strong><a href="#build-13-atlas">Atlas Operations</a></strong> — Enterprise / Operations buyer (CTO, CIO, Head of Infrastructure). Pitch: <em>&quot;our ops team can't find anything fast enough; incidents take 4x as long as they should.&quot;</em></li>
 <li><strong><a href="#build-13-aurora">Aurora Concierge</a></strong> — CX / Digital buyer (CMO, Head of Digital, VP CX). Pitch: <em>&quot;our customers ask the same questions over and over and our agents can't keep up.&quot;</em></li>
@@ -10104,12 +10015,6 @@ Requesting review-board sign-off to start Build 13.
 <button type="button" class="button quiz-check" data-pass="4">Check my answers</button>
 <p class="quiz-result" hidden></p>
 </div>
-<details class="answer-key"><summary>Reveal answer key</summary>
-<ol>
-<li>B · 2. B · 3. B · 4. C · 5. B</li>
-</ol>
-<p>4+ correct → pass. Continue to <a href="#build-13">Build 13 — The Capstone</a>.</p>
-</details>
 
 <nav class="pager"><a class="prev" href="#build-12-walkthrough">&larr; Build 12 — Capstone Prep — Walkthrough</a><a class="next" href="#final-exam">Developer Foundations — Final Exam &rarr;</a></nav>
 </section>
@@ -10291,13 +10196,6 @@ Requesting review-board sign-off to start Build 13.
 <button type="button" class="button quiz-check" data-pass="16">Check my answers</button>
 <p class="quiz-result" hidden></p>
 </div>
-<details class="answer-key"><summary>Reveal answer key</summary>
-<ol>
-<li>B · 2. B · 3. C · 4. C · 5. B · 6. B · 7. C · 8. B · 9. B · 10. B</li>
-<li>C · 12. B · 13. C · 14. B · 15. B · 16. C · 17. C · 18. A · 19. B · 20. B</li>
-</ol>
-<p>16+ correct → pass. Submit your Build 12 plan to the review board, then start <a href="#build-13">Build 13 — The Capstone</a>.</p>
-</details>
 
 <nav class="pager"><a class="prev" href="#build-12-quiz">&larr; Build 12 — Capstone Prep — Quiz</a><a class="next" href="#build-13">Build 13 — The Capstone (pick your wow build) &rarr;</a></nav>
 </section>
